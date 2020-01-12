@@ -9,6 +9,7 @@ using Resolution = std::pair<u16, u16>;
 
 class IPlatform
 {
+	friend class Platform;
 public:
 	virtual ~IPlatform() = 0;
 
@@ -50,7 +51,7 @@ protected:
 		virtual void OnEvent() = 0;
 
 		virtual bool IsOpen() = 0;
-		
+
 		struct WindowDesc
 		{
 			ray_string Name;
@@ -67,15 +68,15 @@ class WindowsPlatform : public IPlatform
 {
 	friend class Platform;
 public:
-	~WindowsPlatform() override {} 
+	~WindowsPlatform() override {}
 	void Preinit() override;
 	void Init() override;
 	void Destroy() override;
 
 #ifdef RAY_PLATFORM_WIN
-		void SetParams(HINSTANCE hInstance, LPSTR lpCmdLine, s32 nCmdShow) override;
-		LRESULT CALLBACK EventDespatcher(HWND, UINT, WPARAM, LPARAM) override;
-		HWND GetHWND() { return m_Window->m_hMainWnd; }
+	void SetParams(HINSTANCE hInstance, LPSTR lpCmdLine, s32 nCmdShow) override;
+	LRESULT CALLBACK EventDespatcher(HWND, UINT, WPARAM, LPARAM) override;
+	HWND GetHWND() { return m_Window->m_hMainWnd; }
 #endif
 
 	ray_string GetPlatformName() override { return TEXT("Windows x64"); }
@@ -121,7 +122,7 @@ private:
 LRESULT CALLBACK WindowsPlatform::EventDespatcher(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 	//Event* e;
-	switch (uMsg) 
+	switch (uMsg)
 	{
 	case WM_DESTROY:
 		PostQuitMessage(NULL);
@@ -238,7 +239,7 @@ void WindowsPlatform::Window::Create(ray_string Name, u16 Width, u16 Height)
 	m_WinDesc.Name = Name;
 	m_WinDesc.res.first = Width;
 	m_WinDesc.res.second = Height;
-	
+
 	TCHAR ClassName[] = TEXT("Ray Engine Class");
 	m_WndClass.cbSize = sizeof(m_WndClass);
 	m_WndClass.style = CS_HREDRAW | CS_VREDRAW | CS_OWNDC;
@@ -255,12 +256,12 @@ void WindowsPlatform::Window::Create(ray_string Name, u16 Width, u16 Height)
 
 	RAY_ASSERT(RegisterClassEx(&m_WndClass), TEXT("Error register class!"))
 
-	m_hMainWnd = CreateWindow(ClassName, Name.c_str(), WS_OVERLAPPEDWINDOW, CW_USEDEFAULT, 
-		NULL, Width, Height, (HWND)NULL, NULL, HINSTANCE(m_hInstance), NULL);
+		m_hMainWnd = CreateWindow(ClassName, Name.c_str(), WS_OVERLAPPEDWINDOW, CW_USEDEFAULT,
+			NULL, Width, Height, (HWND)NULL, NULL, HINSTANCE(m_hInstance), NULL);
 
 	RAY_ASSERT(m_hMainWnd, TEXT("Window in not initializing!"))
 
-	ShowWindow(m_hMainWnd, m_nCmdShow);
+		ShowWindow(m_hMainWnd, m_nCmdShow);
 	UpdateWindow(m_hMainWnd);
 }
 
@@ -301,7 +302,7 @@ void LinuxPlatform::Destroy()
 }
 
 #ifdef RAY_PLATFORM_LINUX
-void LinuxPlatform::SetParams(char ** argc, int argv)
+void LinuxPlatform::SetParams(char** argc, int argv)
 {
 }
 #endif //RAY_PLATFORM_LINUX
@@ -331,7 +332,7 @@ LinuxPlatform::~LinuxPlatform()
 
 void LinuxPlatform::Window::Create(ray_string Name, u16 Width, u16 Height)
 {
-	
+
 }
 
 void LinuxPlatform::Window::Destroy()
@@ -367,7 +368,7 @@ void Platform::Init(char** argc, int argv)
 void Platform::Destroy()
 {
 	RAY_ASSERT(s_Instance, TEXT("IPlatform instance is nullpointer"))
-	s_Instance->Destroy();
+		s_Instance->Destroy();
 
 	if (s_Instance)
 		delete s_Instance;
@@ -403,6 +404,16 @@ void Platform::SetCallback(EventCallback callback)
 bool Platform::HasFeature(CPU::Feature feature)
 {
 	return  CPU::has_feature(&(s_Instance->GetProcessorInfo()), feature);
+}
+
+u16 Platform::GetWidth()
+{
+	return s_Instance->GetWindow()->m_WinDesc.res.first;
+}
+
+u16 Platform::GetHeight()
+{
+	return s_Instance->GetWindow()->m_WinDesc.res.second;
 }
 
 #ifdef RAY_PLATFORM_WIN

@@ -21,7 +21,7 @@ public:
 	void Destroy() override;
 	void BeginFrame() override;
 	void EndFrame() override;
-	
+
 private:
 	D3D_DRIVER_TYPE m_DriverType;
 	D3D_FEATURE_LEVEL m_FeatureLevel;
@@ -29,9 +29,19 @@ private:
 	ID3D11DeviceContext* m_Context;
 	IDXGISwapChain* m_SwapChain;
 	ID3D11RenderTargetView* m_RenderTargetView;
-	ID3D11InputLayout* m_VertexLayout;
-	ID3D11Buffer* m_VertexBuffer;
-	ShaderDX shader;
+	ID3D11Texture2D* m_DepthStencilBuffer;
+	ID3D11DepthStencilState* m_DepthStencilState;
+	ID3D11DepthStencilView* m_DepthStencilView;
+	ID3D11RasterizerState* m_RasterState;
+	u32 m_VideoCardMemory;
+	char m_VideoCardDescr[128];
+
+	bool m_VSyncEnabled;
+	bool m_Fullscreen;
+
+	DirectX::XMMATRIX m_ProjectionMatrix;
+	DirectX::XMMATRIX m_OrthoMatrix;
+	DirectX::XMMATRIX m_WorldMatrix;
 
 };
 

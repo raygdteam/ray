@@ -19,6 +19,8 @@ public:
 	static void Destroy();
 
 	static ray_string GetPlatformName();
+	static u16 GetWidth();
+	static u16 GetHeight();
 
 	static void OnEvent();
 	static bool WindowIsOpen();
