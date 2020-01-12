@@ -1,0 +1,6 @@
+*.DotSettings.User
+Game/build/**
+Game/build
+Game/intermediate/**
+Game/intermediate
+.vs

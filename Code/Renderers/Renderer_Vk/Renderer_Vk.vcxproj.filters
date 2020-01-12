@@ -1,0 +1,26 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="VulkanRenderer.cpp" />
+    <ClCompile Include="pch.cpp" />
+    <ClCompile Include="entry_point.cpp" />
+    <ClCompile Include="utils\utils.cpp">
+      <Filter>utils</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="pch.hpp" />
+    <ClInclude Include="VulkanRenderer.hpp" />
+    <ClInclude Include="utils\utils.hpp">
+      <Filter>utils</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="utils">
+      <UniqueIdentifier>{2fa09979-6cf8-4787-8413-f6988c5982b0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="classes">
+      <UniqueIdentifier>{acf4e5b6-8819-4f64-abed-e48811b2be18}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

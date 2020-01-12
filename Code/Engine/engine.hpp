@@ -1,0 +1,19 @@
+#pragma once
+#include "../Core/application.h"
+#include "Level.hpp"
+
+namespace ray::engine {
+
+	class engine
+	{
+	public:
+		static void start(core::application* app);
+		static void preinitialize(core::application* app);
+		static void initialize();
+		static Level get_active_level();
+	private:
+		static void run();
+		static void destroy();
+	};
+
+}
