@@ -6,6 +6,7 @@ namespace ray::renderer::vulkan
 	class VulkanRenderer : public ray::renderer::IRenderer
 	{
 		vk::UniqueInstance _instance;
+		vk::PhysicalDevice _physicalDevice;
 		vk::UniqueDevice _device;
 		vk::UniqueSurfaceKHR _surface;
 		vk::UniqueSwapchainKHR _swapchain;
@@ -15,7 +16,11 @@ namespace ray::renderer::vulkan
 		vk::UniqueCommandPool _commandPool;
 		vk::UniqueCommandBuffer _commandBuffer;
 		uint32_t _imageIndex = 0;
+		uint32_t _graphicsFamilyIndex, _presentFamilyIndex;
+		vk::Extent2D _screenResolution;
 
+		bool createSwapchain();
+		bool createCommandBuffers();
 	public:
 		VulkanRenderer();
 		~VulkanRenderer();
@@ -25,5 +30,7 @@ namespace ray::renderer::vulkan
 		void Draw() override;
 		void BeginFrame() override;
 		void EndFrame() override;
+
+		void WindowSizeChanged(u32 width, u32 height) override;
 	};
 }

@@ -147,7 +147,7 @@ vk::SurfaceFormatKHR pickSurfaceFormat(std::vector<vk::SurfaceFormatKHR> const& 
 vk::PresentModeKHR pickPresentMode(std::vector<vk::PresentModeKHR> const& presentModes)
 {
 	vk::PresentModeKHR pickedMode = vk::PresentModeKHR::eFifo;
-	for (const auto& presentMode : presentModes)
+	/*for (const auto& presentMode : presentModes)
 	{
 		if (presentMode == vk::PresentModeKHR::eMailbox)
 		{
@@ -159,7 +159,7 @@ vk::PresentModeKHR pickPresentMode(std::vector<vk::PresentModeKHR> const& presen
 		{
 			pickedMode = presentMode;
 		}
-	}
+	}*/
 	return pickedMode;
 }
 

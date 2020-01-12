@@ -4,3 +4,4 @@ Game/build
 Game/intermediate/**
 Game/intermediate
 .vs
+*.vcxproj.user

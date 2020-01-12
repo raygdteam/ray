@@ -11,6 +11,7 @@ namespace ray::engine {
 		static void preinitialize(core::application* app);
 		static void initialize();
 		static Level get_active_level();
+		static void schedule_renderer_reload();
 	private:
 		static void run();
 		static void destroy();

@@ -21,6 +21,7 @@ namespace ray::renderer
 		virtual void BeginFrame() = 0;
 		virtual void EndFrame() = 0;
 
+		virtual void WindowSizeChanged(u32 width, u32 height) = 0;
 
 		static IRenderer* create_renderer(eRendererType type);
 	};

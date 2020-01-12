@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "platform.hpp"
+#include "engine.hpp"
 
 #ifdef RAY_PLATFORM_WIN
 LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
@@ -32,6 +33,8 @@ public:
 
 	virtual void OnEvent() = 0;
 	virtual bool WindowIsOpen() = 0;
+
+	virtual bool CanTick() = 0;
 
 protected:
 	CPU::processor m_proc;
@@ -88,6 +91,19 @@ public:
 
 	void SetCallback(EventCallback callback) { m_Window->m_Callback = callback; }
 
+	bool CanTick()
+	{
+		MSG msg;
+		if (PeekMessage(&msg, m_Window->m_hMainWnd, 0, 0, PM_REMOVE))
+		{
+			TranslateMessage(&msg);
+			DispatchMessage(&msg);
+			return false;
+		}
+		else
+			return true;
+	}
+
 protected:
 	class Window : public IWindow
 	{
@@ -126,6 +142,9 @@ LRESULT CALLBACK WindowsPlatform::EventDespatcher(HWND hWnd, UINT uMsg, WPARAM w
 	{
 	case WM_DESTROY:
 		PostQuitMessage(NULL);
+		break;
+	case WM_SIZE:
+		ray::engine::engine::schedule_renderer_reload();
 		break;
 	default:
 		return DefWindowProc(hWnd, uMsg, wParam, lParam);
@@ -414,6 +433,10 @@ u16 Platform::GetWidth()
 u16 Platform::GetHeight()
 {
 	return s_Instance->GetWindow()->m_WinDesc.res.second;
+}
+bool Platform::CanTick()
+{
+	return s_Instance->CanTick();
 }
 
 #ifdef RAY_PLATFORM_WIN

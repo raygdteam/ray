@@ -7,6 +7,7 @@ class RendererGL :
 	public ray::renderer::IRenderer
 {
 public:
+	void WindowSizeChanged(u32 width, u32 height) override {}
 	RendererGL();
 	~RendererGL() override;
 

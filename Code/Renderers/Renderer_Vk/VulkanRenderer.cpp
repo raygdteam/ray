@@ -46,10 +46,37 @@ VkBool32 debugUtilsMessengerCallback(VkDebugUtilsMessageSeverityFlagBitsEXT mess
 namespace ray::renderer::vulkan
 {
 	VulkanRenderer::VulkanRenderer()
-	{ }
+	{
+		_screenResolution = vk::Extent2D(Platform::GetWidth(), Platform::GetHeight());
+	}
 
 	VulkanRenderer::~VulkanRenderer()
 	{ }
+
+	bool VulkanRenderer::createSwapchain()
+	{
+		_swapchain = utilities::create_swapchain_khr(_physicalDevice, _device, _surface.get(), _screenResolution,
+			vk::ImageUsageFlagBits::eColorAttachment,
+			_graphicsFamilyIndex, _presentFamilyIndex);
+		spdlog::trace("vulkanrenderer: created swapchain at @{}", (void*)& _swapchain.get());
+
+		_swapchainImages = _device->getSwapchainImagesKHR(_swapchain.get());
+		return true;
+	}
+
+	bool VulkanRenderer::createCommandBuffers()
+	{
+		/** COMMAND POOL **/
+		vk::CommandPoolCreateInfo cpCreateInfo;
+		cpCreateInfo.setFlags(vk::CommandPoolCreateFlagBits::eTransient)
+			.setQueueFamilyIndex(_graphicsFamilyIndex);
+		_commandPool = _device->createCommandPoolUnique(cpCreateInfo);
+
+		/** COMMAND BUFFER **/
+		_commandBuffer.swap(_device->allocateCommandBuffersUnique(vk::CommandBufferAllocateInfo(_commandPool.get(), vk::CommandBufferLevel::ePrimary, 1))[0]);
+
+		return true;
+	}
 
 	bool VulkanRenderer::Init()
 	{
@@ -65,27 +92,28 @@ namespace ray::renderer::vulkan
 		spdlog::trace("vulkanrenderer: created instance at @{}", (void*)&_instance.get());
 
 		/** PHYSICAL DEVICES **/
-		auto physicalDevice = _instance->enumeratePhysicalDevices().front();
-		auto props = physicalDevice.getProperties();
+		_physicalDevice = _instance->enumeratePhysicalDevices().front();
+		auto props = _physicalDevice.getProperties();
 
 		spdlog::trace("vulkanrenderer: physical device: {}", props.deviceName);
 
 		/** WINDOW **/
-		utilities::surface_data surface_data(_instance, vk::Extent2D(800, 600), Platform::GetHWND());
+		utilities::surface_data surface_data(_instance, _screenResolution, Platform::GetHWND());
 		_surface.swap(surface_data.surface);
 
 		/** GRAPHICS AND PRESENT QUEUE FAMILY INDEXES **/
-		std::pair<uint32_t, uint32_t> graphicsAndPresentQueueFamilyIndex = utilities::findGraphicsAndPresentQueueFamilyIndex(physicalDevice, _surface.get());
+		std::pair<uint32_t, uint32_t> graphicsAndPresentQueueFamilyIndex = utilities::findGraphicsAndPresentQueueFamilyIndex(_physicalDevice, _surface.get());
+		_graphicsFamilyIndex = graphicsAndPresentQueueFamilyIndex.first;
+		_presentFamilyIndex = graphicsAndPresentQueueFamilyIndex.second;
+		spdlog::trace("vulkanrenderer: graphics queue family index = {}", _graphicsFamilyIndex);
+		spdlog::trace("vulkanrenderer: present queue family index = {}", _presentFamilyIndex);
 
 		/** LOGICAL DEVICE **/
-		_device = utilities::create_device(physicalDevice, graphicsAndPresentQueueFamilyIndex.first, { VK_KHR_SWAPCHAIN_EXTENSION_NAME });
+		_device = utilities::create_device(_physicalDevice, graphicsAndPresentQueueFamilyIndex.first, { VK_KHR_SWAPCHAIN_EXTENSION_NAME });
 		spdlog::trace("vulkanrenderer: created device at @{}", (void*)&_device.get());
 
 		/** SWAPCHAIN **/
-		_swapchain = utilities::create_swapchain_khr(physicalDevice, _device, _surface.get(), vk::Extent2D(800, 600),
-			vk::ImageUsageFlagBits::eColorAttachment, 
-			graphicsAndPresentQueueFamilyIndex.first, graphicsAndPresentQueueFamilyIndex.second);
-		spdlog::trace("vulkanrenderer: created swapchain at @{}", (void*)&_swapchain.get());
+		if (!createSwapchain()) return false;
 
 		/** SEMAPHORE **/
 		_acquireSemaphore = utilities::create_semaphore(_device);
@@ -94,17 +122,7 @@ namespace ray::renderer::vulkan
 		/** QUEUE **/
 		_queue = _device->getQueue(graphicsAndPresentQueueFamilyIndex.first, 0);
 
-		/** SWAPCHAIN IMAGES **/
-		_swapchainImages = _device->getSwapchainImagesKHR(_swapchain.get());
-
-		/** COMMAND POOL **/
-		vk::CommandPoolCreateInfo cpCreateInfo;
-		cpCreateInfo.setFlags(vk::CommandPoolCreateFlagBits::eTransient)
-		.setQueueFamilyIndex(graphicsAndPresentQueueFamilyIndex.first);
-		_commandPool = _device->createCommandPoolUnique(cpCreateInfo);
-
-		/** COMMAND BUFFER **/
-		_commandBuffer.swap(_device->allocateCommandBuffersUnique(vk::CommandBufferAllocateInfo(_commandPool.get(), vk::CommandBufferLevel::ePrimary, 1))[0]);
+		if (!createCommandBuffers()) return false;
 
 		return true;
 	}
@@ -143,5 +161,22 @@ namespace ray::renderer::vulkan
 		vk::PresentInfoKHR presentInfo(1, &_releaseSemaphore.get(), 1, &_swapchain.get(), &_imageIndex);
 		assert(_queue.presentKHR(presentInfo) == vk::Result::eSuccess);
 		_device->waitIdle();
+	}
+
+	void VulkanRenderer::WindowSizeChanged(u32 width, u32 height)
+	{
+		_device->waitIdle();
+
+		_screenResolution = vk::Extent2D(width, height);
+
+		for (vk::Image swapchain_image : _swapchainImages)
+			_device->destroyImage(swapchain_image);
+
+		_device->freeCommandBuffers(_commandPool.get(), 1, &_commandBuffer.get());
+
+		_swapchain.reset();
+
+		createSwapchain();
+		createCommandBuffers();
 	}
 }

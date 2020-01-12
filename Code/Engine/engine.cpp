@@ -16,12 +16,14 @@ public:
 	void on_event(Event& e);
 	bool on_window_close(Event& e);
 	ray::Level get_active_level();
+	void schedule_renderer_reload();
 
 private:
 	ray::core::application* _current_app;
 	bool bRunning;
 	ray::renderer::IRenderer* _renderer;
 	std::shared_ptr<ray::Level> _active_level;
+	bool bWindowSizeChanged = false;
 };
 
 void engine_impl::preinitialize(ray::core::application* app)
@@ -50,9 +52,19 @@ void engine_impl::initialize()
 
 void engine_impl::run()
 {
+	bWindowSizeChanged = false;
 	while (Platform::WindowIsOpen())
 	{
 		Platform::OnEvent();
+
+		if (bWindowSizeChanged)
+		{
+			bWindowSizeChanged = false;
+			_renderer->WindowSizeChanged(Platform::GetWidth(), Platform::GetHeight());
+		}
+
+		if(!Platform::CanTick())
+			continue;
 
 		_renderer->BeginFrame();
 
@@ -89,6 +101,11 @@ ray::Level engine_impl::get_active_level()
 	return *_active_level.get();
 }
 
+void engine_impl::schedule_renderer_reload()
+{
+	bWindowSizeChanged = true;
+}
+
 engine_impl _engine;
 
 void ray::engine::engine::start(core::application* app)
@@ -119,6 +136,11 @@ void ray::engine::engine::initialize()
 ray::Level ray::engine::engine::get_active_level()
 {
 	return _engine.get_active_level();
+}
+
+void ray::engine::engine::schedule_renderer_reload()
+{
+	_engine.schedule_renderer_reload();
 }
 
 void ray::engine::engine::run()
