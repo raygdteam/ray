@@ -57,7 +57,7 @@ namespace ray::renderer::vulkan
 	{
 		_swapchain = utilities::create_swapchain_khr(_physicalDevice, _device, _surface.get(), _screenResolution,
 			vk::ImageUsageFlagBits::eColorAttachment,
-			_graphicsFamilyIndex, _presentFamilyIndex);
+			_graphicsFamilyIndex, _presentFamilyIndex, _swapchain.get());
 		spdlog::trace("vulkanrenderer: created swapchain at @{}", (void*)& _swapchain.get());
 
 		_swapchainImages = _device->getSwapchainImagesKHR(_swapchain.get());
@@ -169,14 +169,14 @@ namespace ray::renderer::vulkan
 
 		_screenResolution = vk::Extent2D(width, height);
 
-		for (vk::Image swapchain_image : _swapchainImages)
+		/*for (vk::Image swapchain_image : _swapchainImages)
 			_device->destroyImage(swapchain_image);
 
 		_device->freeCommandBuffers(_commandPool.get(), 1, &_commandBuffer.get());
 
-		_swapchain.reset();
+		//_swapchain.reset();*/
 
 		createSwapchain();
-		createCommandBuffers();
+		//createCommandBuffers();
 	}
 }
