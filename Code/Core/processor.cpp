@@ -121,7 +121,7 @@ namespace ray::core::hardware
 	pcstr get_cpu_model_name() //Любезно взято из Unreal Engine 4
 	{
 		// @see for more information http://msdn.microsoft.com/en-us/library/vstudio/hskdteyh(v=vs.100).aspx
-		char model_name[0x40] = { 0 };
+		char* model_name = (char*)malloc(0x40);
 		registers regs;
 		const size_t regs_size = sizeof(regs);
 
@@ -138,18 +138,19 @@ namespace ray::core::hardware
 				memcpy(model_name + regs_size * index, (s32*)&regs, regs_size);
 			}
 		}
-
+		
 		return model_name;
 	}
 
 	void init_processor_windows(processor* proc)
 	{
-		proc->vendor = (strcmp(get_vendor_name(), "Genuines32el") == 0) ? Vendor::INTEL :
+		proc->vendor = (strcmp(get_vendor_name(), "GenuineIntel") == 0) ? Vendor::INTEL :
 			(strcmp(get_vendor_name(), "AuthenticAMD") == 0) ? Vendor::AMD : Vendor::NONE;
-
 		proc->cpu.features = get_cpu_features();
 		proc->cpu.cache = get_cache_info();
 		proc->model = get_cpu_model_name();
+		/*std::string model_name = proc->model;*/
+		spdlog::info("core: detected cpu {}", proc->model);
 	}
 
 	void init_processor_linux(processor* proc)
@@ -160,6 +161,11 @@ namespace ray::core::hardware
 	bool has_feature(processor* proc, Feature feature)
 	{
 		return proc->cpu.features & (u32)feature;
+	}
+
+	void clear_processor_info(processor* proc)
+	{
+		free((void*)proc->model);
 	}
 
 	void prefetch_block(const void * InPtr, s32 NumBytes) //Любезно взято из Unreal Engine 4

@@ -223,6 +223,7 @@ void WindowsPlatform::Init()
 void WindowsPlatform::Destroy()
 {
 	m_Window->Destroy();
+	clear_processor_info(&m_proc);
 	delete m_Window;
 }
 

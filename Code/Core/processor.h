@@ -43,14 +43,15 @@ namespace ray::core::hardware
 
 	struct processor
 	{
-		CPU			cpu;
-		Vendor		vendor;
+		CPU	cpu;
+		Vendor vendor;
 		pcstr model;
 	};
 
-	void	init_processor_windows(processor* proc);
-	void	init_processor_linux(processor* proc);
-	bool	has_feature(processor* proc, Feature feature);
+	void	init_processor_windows(processor*);
+	void	init_processor_linux(processor*);
+	bool	has_feature(processor*, Feature);
+	void	clear_processor_info(processor*);
 
 	//optimization
 	__forceinline void prefetch_block(const void* InPtr, s32 NumBytes = 1);
