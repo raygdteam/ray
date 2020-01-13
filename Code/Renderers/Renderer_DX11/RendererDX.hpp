@@ -6,13 +6,16 @@
 
 #include "ShaderDX.hpp"
 
-class RendererDX :
-	public ray::renderer::IRenderer
+namespace ray::renderer::directx11
 {
-public:
-	void WindowSizeChanged(u32 width, u32 height) override {}
-	RendererDX();
-	~RendererDX() override {}
+
+	class RendererDX :
+		public ray::renderer::IRenderer
+	{
+	public:
+		void WindowSizeChanged(u32 width, u32 height) override {}
+		RendererDX();
+		~RendererDX() override {}
 
 		bool Init() override;
 		void Draw() override;
@@ -45,5 +48,5 @@ public:
 
 }
 
-
+}
 
