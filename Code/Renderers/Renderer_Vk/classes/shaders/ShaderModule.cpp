@@ -189,7 +189,7 @@ void ShaderModule::Initialize(vk::UniqueDevice const& device, pcstr path, vk::Sh
 	glslang::FinalizeProcess();
 	spdlog::debug("vulkanrenderer: built shader {}", path);
 
-	file_system::write_file_bin(_path.c_str(), res);
+	//file_system::write_file_bin(_path.c_str(), res);
 	
 	vk::ShaderModuleCreateInfo shaderModuleCreateInfo(vk::ShaderModuleCreateFlags(), res.size() * sizeof(u32), (u32*)res.data());
 	_shader = device->createShaderModuleUnique(shaderModuleCreateInfo);

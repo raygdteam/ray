@@ -1,13 +1,15 @@
 #include <pch.hpp>
 #include "utils.hpp"
 
+// #define VK_DEBUG 0
+
 namespace ray::renderer::vulkan::utilities
 {
 
 vk::UniqueInstance create_instance(std::vector<pcstr> const& extensions,
 	std::vector<pcstr> const& layers)
 {
-#ifdef RAY_DEBUG
+#ifdef VK_DEBUG
 	{
 		unsigned version = vk::enumerateInstanceVersion();
 		spdlog::debug("vulkanrenderer: vulkan version {}", version);
