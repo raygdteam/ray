@@ -147,7 +147,7 @@ vk::SurfaceFormatKHR pickSurfaceFormat(std::vector<vk::SurfaceFormatKHR> const& 
 vk::PresentModeKHR pickPresentMode(std::vector<vk::PresentModeKHR> const& presentModes)
 {
 	vk::PresentModeKHR pickedMode = vk::PresentModeKHR::eFifo;
-	for (const auto& presentMode : presentModes)
+	/*for (const auto& presentMode : presentModes)
 	{
 		if (presentMode == vk::PresentModeKHR::eMailbox)
 		{
@@ -159,7 +159,7 @@ vk::PresentModeKHR pickPresentMode(std::vector<vk::PresentModeKHR> const& presen
 		{
 			pickedMode = presentMode;
 		}
-	}
+	}*/
 	return pickedMode;
 }
 
@@ -243,7 +243,7 @@ vk::UniqueSemaphore create_semaphore(vk::UniqueDevice const& device)
 
 vk::UniqueSwapchainKHR create_swapchain_khr(vk::PhysicalDevice const& physicalDevice, vk::UniqueDevice const& device,
 	vk::SurfaceKHR const& surface, vk::Extent2D const& extent, vk::ImageUsageFlags usage, uint32_t graphicsFamilyIndex,
-	uint32_t presentFamilyIndex)
+	uint32_t presentFamilyIndex, vk::SwapchainKHR old)
 {
 	vk::SurfaceFormatKHR surfaceFormat = pickSurfaceFormat(physicalDevice.getSurfaceFormatsKHR(surface));
 
@@ -269,6 +269,8 @@ vk::UniqueSwapchainKHR create_swapchain_khr(vk::PhysicalDevice const& physicalDe
 	vk::PresentModeKHR presentMode = pickPresentMode(physicalDevice.getSurfacePresentModesKHR(surface));
 	vk::SwapchainCreateInfoKHR swapChainCreateInfo({}, surface, surfaceCapabilities.minImageCount, surfaceFormat.format, surfaceFormat.colorSpace, swapchainExtent, 1, usage, vk::SharingMode::eExclusive,
 		0, nullptr, preTransform, compositeAlpha, presentMode, true);
+	if(&old != nullptr)
+		swapChainCreateInfo.oldSwapchain = old;
 
 	if (graphicsFamilyIndex != presentFamilyIndex)
 	{

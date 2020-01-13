@@ -29,6 +29,7 @@ public:
 
 	static bool HasFeature(ray::core::hardware::Feature feature);
 
+	static bool CanTick();
 };
 
 
