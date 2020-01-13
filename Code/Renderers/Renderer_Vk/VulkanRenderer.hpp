@@ -15,6 +15,7 @@ namespace ray::renderer::vulkan
 		std::vector<vk::Image> _swapchainImages;
 		vk::UniqueCommandPool _commandPool;
 		vk::UniqueCommandBuffer _commandBuffer;
+		vk::UniqueRenderPass _renderPass;
 		uint32_t _imageIndex = 0;
 		uint32_t _graphicsFamilyIndex, _presentFamilyIndex;
 		vk::Extent2D _screenResolution;

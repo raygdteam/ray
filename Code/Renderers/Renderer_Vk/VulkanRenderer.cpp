@@ -2,6 +2,7 @@
 #include "VulkanRenderer.hpp"
 #include <iostream>
 #include "utils/utils.hpp"
+#include "classes/shaders/ShaderModule.hpp"
 
 VkBool32 debugUtilsMessengerCallback(VkDebugUtilsMessageSeverityFlagBitsEXT messageSeverity, VkDebugUtilsMessageTypeFlagsEXT messageTypes,
 	VkDebugUtilsMessengerCallbackDataEXT const* pCallbackData, void* /*pUserData*/)
@@ -122,7 +123,14 @@ namespace ray::renderer::vulkan
 		/** QUEUE **/
 		_queue = _device->getQueue(graphicsAndPresentQueueFamilyIndex.first, 0);
 
+		/** COMMAND BUFFERS **/
 		if (!createCommandBuffers()) return false;
+
+		/** RENDER PASS **/
+		_renderPass = utilities::create_render_pass(_physicalDevice, _surface.get(), _device);
+
+		classes::shaders::ShaderModule shader;
+		shader.Initialize(_device, "/resources/shaders/vulkan/shader.vert", vk::ShaderStageFlagBits::eVertex);
 
 		return true;
 	}
@@ -168,15 +176,6 @@ namespace ray::renderer::vulkan
 		_device->waitIdle();
 
 		_screenResolution = vk::Extent2D(width, height);
-
-		/*for (vk::Image swapchain_image : _swapchainImages)
-			_device->destroyImage(swapchain_image);
-
-		_device->freeCommandBuffers(_commandPool.get(), 1, &_commandBuffer.get());
-
-		//_swapchain.reset();*/
-
 		createSwapchain();
-		//createCommandBuffers();
 	}
 }

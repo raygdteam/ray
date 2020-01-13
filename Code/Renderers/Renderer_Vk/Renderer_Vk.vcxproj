@@ -101,7 +101,7 @@
       <LanguageStandard>stdcpplatest</LanguageStandard>
     </ClCompile>
     <Lib>
-      <AdditionalDependencies>vulkan-1.lib</AdditionalDependencies>
+      <AdditionalDependencies>vulkan-1.lib;glslangd.lib;OSDependentd.lib;HLSLd.lib;SPIRVd.lib;OGLCompilerd.lib</AdditionalDependencies>
     </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -146,12 +146,15 @@
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="classes\RendererPipeline.cpp" />
+    <ClCompile Include="classes\shaders\ShaderModule.cpp" />
     <ClCompile Include="entry_point.cpp" />
     <ClCompile Include="pch.cpp" />
     <ClCompile Include="utils\utils.cpp" />
     <ClCompile Include="VulkanRenderer.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="classes\RendererPipeline.hpp" />
     <ClInclude Include="pch.hpp" />
     <ClInclude Include="utils\utils.hpp" />
     <ClInclude Include="VulkanRenderer.hpp" />
@@ -160,6 +163,9 @@
     <ProjectReference Include="..\..\Core\Core.vcxproj">
       <Project>{7fcc5351-334c-4c2c-8742-430179a78f1e}</Project>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="classes\shaders\ShaderModule.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

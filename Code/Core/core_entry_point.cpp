@@ -25,6 +25,15 @@ namespace ray::core {
 			RAY_VERSION_PATCH, RAY_VERSION_CODENAME);
 
 		file_system::initialize();
+
+		// TODO: костыль. перенести в platform или чтото
+		char* path = new char[360];
+		size_t size = 360;
+		_dupenv_s(&path, &size, "localappdata");
+		std::string s(path);
+		s.append("\\ray");
+		file_system::query_mount(s.c_str(), "/local");
+		delete path;
 	}
 
 }

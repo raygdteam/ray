@@ -7,12 +7,21 @@
     <ClCompile Include="utils\utils.cpp">
       <Filter>utils</Filter>
     </ClCompile>
+    <ClCompile Include="classes\RendererPipeline.cpp">
+      <Filter>classes</Filter>
+    </ClCompile>
+    <ClCompile Include="classes\shaders\ShaderModule.cpp">
+      <Filter>classes\shaders</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.hpp" />
     <ClInclude Include="VulkanRenderer.hpp" />
     <ClInclude Include="utils\utils.hpp">
       <Filter>utils</Filter>
+    </ClInclude>
+    <ClInclude Include="classes\RendererPipeline.hpp">
+      <Filter>classes</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -22,5 +31,13 @@
     <Filter Include="classes">
       <UniqueIdentifier>{acf4e5b6-8819-4f64-abed-e48811b2be18}</UniqueIdentifier>
     </Filter>
+    <Filter Include="classes\shaders">
+      <UniqueIdentifier>{f6e0731e-71be-4311-b600-c64db91b28ec}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="classes\shaders\ShaderModule.hpp">
+      <Filter>classes\shaders</Filter>
+    </None>
   </ItemGroup>
 </Project>

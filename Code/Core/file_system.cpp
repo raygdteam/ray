@@ -6,18 +6,8 @@
 #include <map>
 #include "fs external lib/physfs.h"
 
-class temp_fs
-{
-	std::map<pcstr, pcstr> _data;
-public:
-	pcstr read_file(pcstr path) { return _data[path]; }
-	void write(pcstr path, pcstr contents) { _data[path] = contents; }
-};
-
 class file_system_impl
 {
-	temp_fs _temp_fs;
-	// virtual path, real path
 	std::map<pcstr, pcstr> _mounts;
 public:
 	void initialize();
@@ -26,6 +16,7 @@ public:
 	uint8_t* const read_file_bin(pcstr path);
 	void write_file(pcstr path, pcstr contents);
 	s64 file_size(pcstr path);
+	void write_file_bin(pcstr path, std::vector<u32> data);
 };
 
 void file_system_impl::initialize()
@@ -42,7 +33,10 @@ void file_system_impl::query_mount(pcstr path, pcstr virtual_path)
 	bool isDir = std::filesystem::is_directory(path);
 	auto currentPath = std::filesystem::current_path();
 
-	RAY_ASSERT(isDir, "проверьте рабочую директорию")
+	if(!isDir)
+	{
+		std::filesystem::create_directory(path);
+	}
 
 	PHYSFS_mount((currentPath / path).generic_string().c_str(), virtual_path, 1);
 	spdlog::info("file_system: mounted '{}' to '{}'", path, virtual_path);
@@ -100,6 +94,13 @@ s64 file_system_impl::file_size(pcstr path)
 	return (s64)size;
 }
 
+void file_system_impl::write_file_bin(pcstr path, std::vector<u32> data)
+{
+	PHYSFS_File* handle = PHYSFS_openWrite(path);
+	PHYSFS_write(handle, data.data(), sizeof(u32), data.size());
+	PHYSFS_close(handle);
+}
+
 file_system_impl _file_system;
 
 void ray::file_system::query_mount(pcstr path, pcstr virtual_path) { _file_system.query_mount(path, virtual_path); }
@@ -109,6 +110,11 @@ void ray::file_system::initialize() { _file_system.initialize(); }
 pcstr ray::file_system::read_file(pcstr path) { return _file_system.read_file(path); }
 
 void ray::file_system::write_file(pcstr path, pcstr contents) { _file_system.write_file(path, contents); }
+
+void ray::file_system::write_file_bin(pcstr path, std::vector<u32> contents)
+{
+	_file_system.write_file_bin(path, contents);
+}
 
 uint8_t* ray::file_system::read_file_bin(pcstr path) { return _file_system.read_file_bin(path); }
 

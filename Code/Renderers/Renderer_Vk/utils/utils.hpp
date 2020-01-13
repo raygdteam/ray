@@ -17,6 +17,7 @@ std::pair<uint32_t, uint32_t> findGraphicsAndPresentQueueFamilyIndex(vk::Physica
 vk::UniqueSemaphore create_semaphore(vk::UniqueDevice const& device);
 vk::UniqueSwapchainKHR create_swapchain_khr(vk::PhysicalDevice const& physicalDevice, vk::UniqueDevice const& device, vk::SurfaceKHR const& surface, vk::Extent2D const& extent, vk::ImageUsageFlags usage,
 	uint32_t graphicsFamilyIndex, uint32_t presentFamilyIndex, vk::SwapchainKHR old);
+vk::UniqueRenderPass create_render_pass(vk::PhysicalDevice const& physicalDevice, vk::SurfaceKHR const& surface, vk::UniqueDevice const& device);
 
 struct swapchain_data
 {
