@@ -1,77 +1,119 @@
 #include "pch.hpp"
 #include "ShaderDX.hpp"
 #include <Core/file_system.hpp>
+#include "utils.hpp"
 
-ID3D11Device* ShaderDX::m_sDevice = nullptr;
+using namespace ray::renderer::directx11::utilities;
 
-ShaderDX::ShaderDX()
+namespace ray::renderer::directx11
 {
 
-}
+	ShaderDX::ShaderDX()
+		: m_VertexShader(nullptr)
+		, m_PixelShader(nullptr)
+		, m_Layout(nullptr)
+		, m_MatrixBuffer(nullptr)
+	{}
 
-ShaderDX::~ShaderDX()
-{
-
-}
-
-void ShaderDX::Compile()
-{
-
-}
-
-void ShaderDX::SetVertexShader(ray_string& path)
-{
-	HRESULT hr = S_OK;
-
-	// Компиляция вершинного шейдера
-	*m_VertexBlob = NULL;
-	hr = _Compile(path.c_str(), "VertexMain", "vs_4_0", m_VertexBlob);
-	if (FAILED(hr))
+	ShaderDX::~ShaderDX()
 	{
-		spdlog::critical("Error compiling Vertex Shader!");
-		return;
+
 	}
 
-	// Создание вершинного шейдера
-	hr = m_sDevice->CreateVertexShader((*m_VertexBlob)->GetBufferPointer(), (*m_VertexBlob)->GetBufferSize(), NULL, &m_VertexShader);
-	if (FAILED(hr))
+	void ShaderDX::Compile()
 	{
-		spdlog::critical("Error creating Vertex Shader!");
-		FREE_MEM((*m_VertexBlob))
-		return;
-	}
-}
 
-void ShaderDX::SetPixelShader(ray_string& path)
-{
-	HRESULT hr = S_OK;
-
-	*m_PixelBlob = NULL;
-	hr = _Compile(path.c_str(), "PixelMain", "ps_4_0", m_PixelBlob);
-	if (FAILED(hr))
-	{
-		spdlog::critical("Error compiling Pixel Shader!");
-		return;
 	}
 
-	hr = m_sDevice->CreatePixelShader((*m_PixelBlob)->GetBufferPointer(), (*m_PixelBlob)->GetBufferSize(), NULL, &m_PixelShader);
-	if (FAILED(hr))
+	void ShaderDX::SetSources(std::string& VertexSrc, std::string& PixelSrc)
 	{
-		spdlog::critical("Error creating Pixel Shader!");
-		FREE_MEM((*m_PixelBlob))
+		SetSources(VertexSrc.c_str(), PixelSrc.c_str());
+	}
+
+	void ShaderDX::SetSources(pcstr VertexSrc, pcstr PixelSrc)
+	{
+		HRESULT result;
+		ID3D10Blob* errorMessage;
+		ID3D10Blob* vertexShaderBuffer;
+		ID3D10Blob* pixelShaderBuffer;
+		D3D11_INPUT_ELEMENT_DESC polygonLayout[2];
+		u32 numElements;
+		D3D11_BUFFER_DESC matrixBufferDesc;
+
+
+		// Initialize the pointers this function will use to null.
+		errorMessage = 0;
+		vertexShaderBuffer = 0;
+		pixelShaderBuffer = 0;
+
+		// Compile the vertex shader code.
+		result = D3DCompileFromFile((WCHAR*)VertexSrc, NULL, NULL, "ColorVertexShader", "vs_5_0", D3D10_SHADER_ENABLE_STRICTNESS, 0,
+			&vertexShaderBuffer, &errorMessage);
+		if (FAILED(result))
+		{
+			// If the shader failed to compile it should have writen something to the error message.
+			if (errorMessage)
+			{
+				OutputShaderErrorMessage(errorMessage, Platform::GetHWND(), (WCHAR*)VertexSrc);
+			}
+			// If there was  nothing in the error message then it simply could not find the shader file itself.
+			else
+			{
+				MessageBox(Platform::GetHWND(), (WCHAR*)VertexSrc, L"Missing Shader File", MB_OK);
+			}
+
 			return;
+		}
+
+		// Compile the pixel shader code.
+		result = D3DCompileFromFile((WCHAR*)PixelSrc, NULL, NULL, "ColorPixelShader", "ps_5_0", D3D10_SHADER_ENABLE_STRICTNESS, 0,
+			&pixelShaderBuffer, &errorMessage);
+		if (FAILED(result))
+		{
+			// If the shader failed to compile it should have writen something to the error message.
+			if (errorMessage)
+			{
+				OutputShaderErrorMessage(errorMessage, Platform::GetHWND(), (WCHAR*)PixelSrc);
+			}
+			// If there was nothing in the error message then it simply could not find the file itself.
+			else
+			{
+				MessageBox(Platform::GetHWND(), (WCHAR*)PixelSrc, L"Missing Shader File", MB_OK);
+			}
+			return;
+		}
+
+		// Create the vertex shader from the buffer.
+		result = GetDevice()->CreateVertexShader(vertexShaderBuffer->GetBufferPointer(), vertexShaderBuffer->GetBufferSize(), NULL, &m_VertexShader);
+		if (FAILED(result))
+		{
+			return;
+		}
+
+		// Create the pixel shader from the buffer.
+		result = GetDevice()->CreatePixelShader(pixelShaderBuffer->GetBufferPointer(), pixelShaderBuffer->GetBufferSize(), NULL, &m_PixelShader);
+		if (FAILED(result))
+		{
+			return;
+		}
 	}
+
+	void ShaderDX::UseShader()
+	{
+	}
+
+	void ShaderDX::Destroy()
+	{
+	}
+
+	void ShaderDX::SetMatrixes(DirectX::XMMATRIX, DirectX::XMMATRIX, DirectX::XMMATRIX)
+	{
+	}
+
+	void ShaderDX::OutputShaderErrorMessage(ID3D10Blob*, HWND, WCHAR*)
+	{
+	}
+
 }
 
-HRESULT ShaderDX::_Compile(const WCHAR* FileName, LPCSTR Entry, LPCSTR ShaderModel, ID3DBlob** Out)
-{
-	HRESULT hr = S_OK;
 
-	hr = D3DCompileFromFile(FileName, NULL, NULL,
-		Entry, ShaderModel, 0,
-		0, Out, NULL);
-
-	//auto file = ray::file_system::read_file(FileName);
-
-	return hr;
-}

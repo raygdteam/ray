@@ -11,7 +11,7 @@ namespace ray::renderer::detail::dx
 
 	IRenderer* create()
 	{
-		return new RendererDX;
+		return new ray::renderer::directx11::RendererDX;
 	}
 
 }

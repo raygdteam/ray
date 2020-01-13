@@ -4,10 +4,21 @@
     <ClInclude Include="pch.hpp" />
     <ClInclude Include="RendererDX.hpp" />
     <ClInclude Include="ShaderDX.hpp" />
+    <ClInclude Include="utils.hpp">
+      <Filter>utils</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="RendererDX.cpp" />
     <ClCompile Include="ShaderDX.cpp" />
     <ClCompile Include="entry_point.cpp" />
+    <ClCompile Include="utils.cpp">
+      <Filter>utils</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="utils">
+      <UniqueIdentifier>{5db0db95-76fd-412b-96d1-770d9f52d30b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
 </Project>

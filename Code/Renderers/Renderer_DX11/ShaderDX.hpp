@@ -1,39 +1,46 @@
 #pragma once
 #include <d3d11.h>
 #include <d3dcompiler.h>
+#include <directxmath.h>
 #include "../../Engine/ishader.hpp"
 
-class ShaderDX :
-	public IShader
+namespace ray::renderer::directx11
 {
-public:
-	ShaderDX();
-	~ShaderDX() override;
 
-	void Compile() override;
-	void SetVertexShader(ray_string&) override;
-	void SetPixelShader(ray_string&) override;
-	u32 GetProgram() override { return (u32)0; }
+	class ShaderDX :
+		public IShader
+	{
+	public:
+		ShaderDX();
+		~ShaderDX() override;
 
-	void SetVertexBlob(ID3DBlob** Blob) { m_VertexBlob = Blob; }
-	void SetPixelBlob(ID3DBlob** Blob) { m_PixelBlob = Blob; }
-	static void SetDevice(ID3D11Device* Device) { m_sDevice = Device; }
+		void Compile() override;
+		void SetSources(std::string&, std::string&) override;
+		void SetSources(pcstr, pcstr) override;
+		void UseShader() override;
+		void Destroy() override;
 
-	ID3D11VertexShader* GetVertexShader() const { return m_VertexShader; }
-	ID3D11PixelShader* GetPixelShader() const { return m_PixelShader; }
+		void SetMatrixes(DirectX::XMMATRIX, DirectX::XMMATRIX, DirectX::XMMATRIX);
+	private:
+		struct MatrixBufferType
+		{
+			DirectX::XMMATRIX World;
+			DirectX::XMMATRIX View;
+			DirectX::XMMATRIX Projection;
+		};
 
-private:
-	HRESULT _Compile(const WCHAR*, LPCSTR, LPCSTR, ID3DBlob**);
+	private:
+		void OutputShaderErrorMessage(ID3D10Blob*, HWND, WCHAR*);
 
-private:
-	ray_string m_VertexSource;
-	ray_string m_PixelSource;
-	ID3D11VertexShader* m_VertexShader;
-	ID3D11PixelShader* m_PixelShader;
-	ID3DBlob** m_VertexBlob;
-	ID3DBlob** m_PixelBlob;
+	private:
+		ID3D11VertexShader* m_VertexShader;
+		ID3D11PixelShader* m_PixelShader;
+		ID3D11InputLayout* m_Layout;
+		ID3D11Buffer* m_MatrixBuffer;
 
-	static ID3D11Device* m_sDevice;
+	};
 
-};
+}
+
+
 
