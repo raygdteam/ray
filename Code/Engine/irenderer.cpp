@@ -19,23 +19,23 @@ using DefaultRenderer = RendererGL;
 
 namespace ray::renderer::detail
 {
-namespace vk
-{
-	bool is_supported();
-	IRenderer* create();
-}
+	namespace vk
+	{
+		bool is_supported();
+		IRenderer* create();
+	}
 
-namespace dx
-{
-	bool is_supported();
-	IRenderer* create();
-}
+	namespace dx
+	{
+		bool is_supported();
+		IRenderer* create();
+	}
 
-namespace gl
-{
-	bool is_supported();
-	IRenderer* create();
-}
+	namespace opengl
+	{
+		bool is_supported();
+		IRenderer* create();
+	}
 }
 
 class NullRenderer : public ray::renderer::IRenderer
@@ -66,8 +66,8 @@ namespace ray::renderer
 		case Dx11:
 			renderer = detail::dx::create();
 			break;
-		case Gl:
-			renderer = detail::gl::create();
+		case OpenGL:
+			renderer = detail::opengl::create();
 			break;
 		case Null: 
 			renderer = new NullRenderer;

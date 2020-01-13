@@ -19,14 +19,12 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="pch.hpp" />
-    <ClInclude Include="renderer_gl.hpp" />
-    <ClInclude Include="vertex_buffer_gl.hpp" />
-  </ItemGroup>
-  <ItemGroup>
     <ClCompile Include="entry_point.cpp" />
     <ClCompile Include="renderer_gl.cpp" />
-    <ClCompile Include="vertex_buffer_gl.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="pch.hpp" />
+    <ClInclude Include="renderer_gl.hpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>

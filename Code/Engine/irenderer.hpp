@@ -6,7 +6,7 @@ namespace ray::renderer
 	{
 		Null,
 		Dx11,
-		Gl,
+		OpenGL,
 		Vk
 	};
 

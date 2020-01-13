@@ -45,8 +45,4 @@ namespace ray::renderer::directx11
 		DirectX::XMMATRIX m_WorldMatrix;
 
 	};
-
 }
-
-}
-
