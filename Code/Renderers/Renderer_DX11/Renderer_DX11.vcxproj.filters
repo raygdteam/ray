@@ -7,6 +7,7 @@
     <ClInclude Include="utils.hpp">
       <Filter>utils</Filter>
     </ClInclude>
+    <ClInclude Include="GraphicsPipline.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="RendererDX.cpp" />
@@ -15,6 +16,7 @@
     <ClCompile Include="utils.cpp">
       <Filter>utils</Filter>
     </ClCompile>
+    <ClCompile Include="GraphicsPipline.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="utils">

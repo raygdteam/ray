@@ -13,10 +13,6 @@ namespace ray::renderer::directx11
 	RendererDX::RendererDX()
 		: m_DriverType(D3D_DRIVER_TYPE_NULL)
 		, m_FeatureLevel(D3D_FEATURE_LEVEL_11_0)
-		/*, m_Device(nullptr)
-		, m_Context(nullptr)
-		, m_SwapChain(nullptr)
-		, m_RenderTargetView(nullptr)*/
 		, m_DepthStencilBuffer(nullptr)
 		, m_DepthStencilState(nullptr)
 		, m_DepthStencilView(nullptr)
@@ -40,7 +36,6 @@ namespace ray::renderer::directx11
 		s32 error;
 		DXGI_SWAP_CHAIN_DESC swapChainDesc;
 		D3D_FEATURE_LEVEL featureLevel;
-		ID3D11Texture2D* backBufferPtr = nullptr;
 		D3D11_TEXTURE2D_DESC depthBufferDesc;
 		D3D11_DEPTH_STENCIL_DESC depthStencilDesc;
 		D3D11_DEPTH_STENCIL_VIEW_DESC depthStencilViewDesc;

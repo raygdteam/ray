@@ -44,7 +44,7 @@ void engine_impl::initialize()
 	spdlog::info("+------------------------------------+");
 
 	Platform::SetCallback(std::bind(&engine_impl::on_event, this, std::placeholders::_1));
-	_renderer = ray::renderer::IRenderer::create_renderer(ray::renderer::eRendererType::Dx11);
+	_renderer = ray::renderer::IRenderer::create_renderer(ray::renderer::eRendererType::Vk);
 	_renderer->Init();
 
 	_current_app->on_startup();
