@@ -19,10 +19,14 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="classes\shader\shader.cpp" />
+    <ClCompile Include="classes\vertex\vertex.cpp" />
     <ClCompile Include="entry_point.cpp" />
     <ClCompile Include="renderer_gl.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="classes\shader\shader.hpp" />
+    <ClInclude Include="classes\vertex\vertex.hpp" />
     <ClInclude Include="pch.hpp" />
     <ClInclude Include="renderer_gl.hpp" />
   </ItemGroup>
@@ -108,7 +112,7 @@
       <PreprocessorDefinitions>RAY_RENDERER_GL_DEBUG;RAY_RENDERER_GL_X64;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <LanguageStandard>stdcpplatest</LanguageStandard>
       <AdditionalIncludeDirectories>$(SolutionDir)code\common;$(SolutionDir)sdk\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PrecompiledHeader>Create</PrecompiledHeader>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.hpp</PrecompiledHeaderFile>
     </ClCompile>
     <Lib>

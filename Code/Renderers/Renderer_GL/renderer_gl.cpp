@@ -1,19 +1,7 @@
 #include "pch.hpp"
 #include "renderer_gl.hpp"
 
-
-RendererGL::RendererGL()
-{
-}
-
-
-RendererGL::~RendererGL()
-{
-}
-
-void RendererGL::Draw()
-{
-}
+#include "classes/vertex/vertex.hpp"
 
 bool RendererGL::Init()
 {
@@ -60,6 +48,14 @@ bool RendererGL::Init()
 
 #endif
 
+	glewInit();
+
+	float points[] = {
+0.0f,  0.5f,  0.0f,
+0.5f, -0.5f,  0.0f,
+-0.5f, -0.5f,  0.0f
+	};
+
 	return true;
 }
 
@@ -82,7 +78,10 @@ void RendererGL::Destroy()
 void RendererGL::BeginFrame()
 {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	glClearColor(1.f, 0.f, 0.f, 1.f);
+}
+
+void RendererGL::Draw()
+{
 }
 
 void RendererGL::EndFrame()

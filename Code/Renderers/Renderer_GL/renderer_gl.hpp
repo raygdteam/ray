@@ -8,8 +8,6 @@ class RendererGL :
 {
 public:
 	void WindowSizeChanged(u32 width, u32 height) override {}
-	RendererGL();
-	~RendererGL() override;
 
 	void Draw() override;
 	bool Init() override;
@@ -20,6 +18,5 @@ public:
 private:
 	HDC m_hDC;
 	HGLRC m_hRC;
-
 };
 

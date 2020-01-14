@@ -44,7 +44,7 @@ void engine_impl::initialize()
 	spdlog::info("+------------------------------------+");
 
 	Platform::SetCallback(std::bind(&engine_impl::on_event, this, std::placeholders::_1));
-	_renderer = ray::renderer::IRenderer::create_renderer(ray::renderer::eRendererType::Vk);
+	_renderer = ray::renderer::IRenderer::create_renderer(ray::renderer::eRendererType::OpenGL);
 	_renderer->Init();
 
 	_current_app->on_startup();
@@ -68,7 +68,7 @@ void engine_impl::run()
 
 		_renderer->BeginFrame();
 
-		//drawing
+		// Отрисовка
 		_renderer->Draw();
 
 		_renderer->EndFrame();
@@ -97,7 +97,7 @@ bool engine_impl::on_window_close(Event & e)
 
 ray::Level engine_impl::get_active_level()
 {
-	// TODO: это не должно быть так!
+	// TODO: Это не должно быть так.
 	return *_active_level.get();
 }
 
@@ -110,14 +110,14 @@ engine_impl _engine;
 
 void ray::engine::engine::start(core::application* app)
 {
-	time_t startup;
-	time(&startup);
-	
+	clock_t startup = clock();
+
 	preinitialize(app);
 	initialize();
 
-	double initTime = difftime(time(0), startup);
-	spdlog::info("initialization took {}s", initTime);
+	double initTime = difftime(clock(), startup);
+
+	spdlog::info("initialization took {}ms", initTime);
 
 	run();
 	destroy();
