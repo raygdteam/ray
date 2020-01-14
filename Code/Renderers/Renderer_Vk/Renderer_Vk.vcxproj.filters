@@ -7,9 +7,6 @@
     <ClCompile Include="utils\utils.cpp">
       <Filter>utils</Filter>
     </ClCompile>
-    <ClCompile Include="classes\RendererPipeline.cpp">
-      <Filter>classes</Filter>
-    </ClCompile>
     <ClCompile Include="classes\shaders\ShaderModule.cpp">
       <Filter>classes\shaders</Filter>
     </ClCompile>
@@ -20,8 +17,8 @@
     <ClInclude Include="utils\utils.hpp">
       <Filter>utils</Filter>
     </ClInclude>
-    <ClInclude Include="classes\RendererPipeline.hpp">
-      <Filter>classes</Filter>
+    <ClInclude Include="classes\graphics\GraphicsPipeline.hpp">
+      <Filter>classes\graphics</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -33,6 +30,9 @@
     </Filter>
     <Filter Include="classes\shaders">
       <UniqueIdentifier>{f6e0731e-71be-4311-b600-c64db91b28ec}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="classes\graphics">
+      <UniqueIdentifier>{60b1e39e-20ab-4e2e-b683-3c499f4b6bed}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

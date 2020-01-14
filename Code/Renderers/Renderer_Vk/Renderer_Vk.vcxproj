@@ -146,7 +146,6 @@
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="classes\RendererPipeline.cpp" />
     <ClCompile Include="classes\shaders\ShaderModule.cpp" />
     <ClCompile Include="entry_point.cpp" />
     <ClCompile Include="pch.cpp" />
@@ -154,7 +153,7 @@
     <ClCompile Include="VulkanRenderer.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="classes\RendererPipeline.hpp" />
+    <ClInclude Include="classes\graphics\GraphicsPipeline.hpp" />
     <ClInclude Include="pch.hpp" />
     <ClInclude Include="utils\utils.hpp" />
     <ClInclude Include="VulkanRenderer.hpp" />

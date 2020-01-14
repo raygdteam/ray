@@ -11,6 +11,7 @@ T clamp(T original, T min, T max)
 	return original;
 }
 
+vk::SurfaceFormatKHR pickSurfaceFormat(std::vector<vk::SurfaceFormatKHR> const& formats);
 vk::UniqueInstance create_instance(std::vector<pcstr> const& extensions, std::vector<pcstr> const& layers);
 vk::UniqueDevice create_device(vk::PhysicalDevice physicalDevice, uint32_t queueFamilyIndex, std::vector<pcstr> const& extensions);
 std::pair<uint32_t, uint32_t> findGraphicsAndPresentQueueFamilyIndex(vk::PhysicalDevice physicalDevice, vk::SurfaceKHR const& surface);

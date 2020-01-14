@@ -1,5 +1,6 @@
 #pragma once
 #include "pch.hpp"
+#include "classes/shaders/ShaderModule.hpp"
 
 namespace ray::renderer::vulkan
 {
@@ -13,9 +14,16 @@ namespace ray::renderer::vulkan
 		vk::UniqueSemaphore _acquireSemaphore, _releaseSemaphore;
 		vk::Queue _queue;
 		std::vector<vk::Image> _swapchainImages;
+		std::vector<vk::UniqueImageView> _swapchainImageViews;
+		std::vector<vk::UniqueFramebuffer> _framebuffers;
 		vk::UniqueCommandPool _commandPool;
 		vk::UniqueCommandBuffer _commandBuffer;
 		vk::UniqueRenderPass _renderPass;
+		vk::UniquePipelineLayout _pipelineLayout;
+		vk::UniquePipelineCache _pipelineCache;
+		vk::UniquePipeline _pipeline;
+		classes::shaders::ShaderModule _vertexShader, _fragmentShader;
+		
 		uint32_t _imageIndex = 0;
 		uint32_t _graphicsFamilyIndex, _presentFamilyIndex;
 		vk::Extent2D _screenResolution;

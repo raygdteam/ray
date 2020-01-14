@@ -9,6 +9,8 @@ class ShaderModule
 	vk::UniqueShaderModule _shader;
 public:
 	void Initialize(vk::UniqueDevice const& device, pcstr path, vk::ShaderStageFlagBits shaderFlags);
+	vk::UniqueShaderModule const& get()
+	{ return _shader; }
 };
 
 }
