@@ -44,7 +44,7 @@ void engine_impl::initialize()
 	spdlog::info("+------------------------------------+");
 
 	Platform::SetCallback(std::bind(&engine_impl::on_event, this, std::placeholders::_1));
-	_renderer = ray::renderer::IRenderer::create_renderer(ray::renderer::eRendererType::Vk);
+	_renderer = ray::renderer::IRenderer::create_renderer(ray::renderer::eRendererType::OpenGL);
 	_renderer->Init();
 
 	_current_app->on_startup();
@@ -113,11 +113,14 @@ void ray::engine::engine::start(core::application* app)
 	clock_t startup = clock();
 
 	preinitialize(app);
+	clock_t preinitializeEnd = clock();
+
+	spdlog::info("preinitialization took {}ms", difftime(preinitializeEnd, startup));
+
 	initialize();
+	clock_t initializeeEnd = clock();
 
-	double initTime = difftime(clock(), startup);
-
-	spdlog::info("initialization took {}ms", initTime);
+	spdlog::info("initialization took {}ms", difftime(initializeeEnd, startup));
 
 	run();
 	destroy();

@@ -1,5 +1,5 @@
 #include "pch.hpp"
-#include "renderer_gl.hpp"
+#include "Renderer.hpp"
 
 namespace ray::renderer::detail::opengl
 {
@@ -10,6 +10,6 @@ namespace ray::renderer::detail::opengl
 
 	IRenderer* create()
 	{
-		return new RendererGL;
+		return new Renderer;
 	}
 }

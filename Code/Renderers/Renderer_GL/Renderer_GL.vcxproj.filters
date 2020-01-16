@@ -1,34 +1,55 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClCompile Include="renderer_gl.cpp" />
     <ClCompile Include="entry_point.cpp" />
-    <ClCompile Include="classes\shader\shader.cpp">
-      <Filter>classes\shader</Filter>
+    <ClCompile Include="Renderer.cpp" />
+    <ClCompile Include="Classes\Shader\Program.cpp">
+      <Filter>Classes\Shader</Filter>
     </ClCompile>
-    <ClCompile Include="classes\vertex\vertex.cpp">
-      <Filter>classes\vertex</Filter>
+    <ClCompile Include="Classes\Shader\Shader.cpp">
+      <Filter>Classes\Shader</Filter>
+    </ClCompile>
+    <ClCompile Include="Classes\Model\Mesh.cpp">
+      <Filter>Classes\Model</Filter>
+    </ClCompile>
+    <ClCompile Include="Classes\Model\Model.cpp">
+      <Filter>Classes\Model</Filter>
+    </ClCompile>
+    <ClCompile Include="Classes\Camera\Camera.cpp">
+      <Filter>Classes\Camera</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="renderer_gl.hpp" />
     <ClInclude Include="pch.hpp" />
-    <ClInclude Include="classes\shader\shader.hpp">
-      <Filter>classes\shader</Filter>
+    <ClInclude Include="Renderer.hpp" />
+    <ClInclude Include="Classes\Shader\Program.hpp">
+      <Filter>Classes\Shader</Filter>
     </ClInclude>
-    <ClInclude Include="classes\vertex\vertex.hpp">
-      <Filter>classes\vertex</Filter>
+    <ClInclude Include="Classes\Shader\Shader.hpp">
+      <Filter>Classes\Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="Classes\Model\Mesh.hpp">
+      <Filter>Classes\Model</Filter>
+    </ClInclude>
+    <ClInclude Include="Classes\Model\Model.hpp">
+      <Filter>Classes\Model</Filter>
+    </ClInclude>
+    <ClInclude Include="Classes\Camera\Camera.hpp">
+      <Filter>Classes\Camera</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <Filter Include="classes">
-      <UniqueIdentifier>{6253e460-3210-4327-91c1-68281b440315}</UniqueIdentifier>
+    <Filter Include="Classes">
+      <UniqueIdentifier>{20ee55f1-26b4-4533-adef-f8520e7771c6}</UniqueIdentifier>
     </Filter>
-    <Filter Include="classes\shader">
-      <UniqueIdentifier>{537cac8e-e903-4bb7-be4b-d4eefa772ebd}</UniqueIdentifier>
+    <Filter Include="Classes\Shader">
+      <UniqueIdentifier>{3c45aa04-a5c0-4fab-a17f-0e2c8cfa948f}</UniqueIdentifier>
     </Filter>
-    <Filter Include="classes\vertex">
-      <UniqueIdentifier>{2e4e675c-0e57-4a98-8c81-f9d592028f0f}</UniqueIdentifier>
+    <Filter Include="Classes\Model">
+      <UniqueIdentifier>{455dcadf-f5ea-446e-97b3-943254dd6e72}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Classes\Camera">
+      <UniqueIdentifier>{195d2557-0b1a-4713-b415-8996b5f4ee52}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

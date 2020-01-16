@@ -8,7 +8,7 @@ public:
 	pcstr get_resources_path() override;
 };
 
-void test_application::on_startup() { spdlog::info("Starting up 'test_application' version nikita"); }
+void test_application::on_startup() { spdlog::info("Starting up 'test_application' version nikita is educated programmer"); }
 
 pcstr test_application::get_resources_path() { return "../../../resources"; }
 

@@ -1,10 +1,6 @@
 #pragma once
-#ifdef RAY_PLATFORM_WIN
-#include <Windows.h>
-#endif
 
-class RendererGL :
-	public ray::renderer::IRenderer
+class Renderer : public ray::renderer::IRenderer
 {
 public:
 	void WindowSizeChanged(u32 width, u32 height) override {}
@@ -19,4 +15,3 @@ private:
 	HDC m_hDC;
 	HGLRC m_hRC;
 };
-

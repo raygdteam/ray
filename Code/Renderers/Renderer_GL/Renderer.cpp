@@ -1,9 +1,17 @@
 #include "pch.hpp"
-#include "renderer_gl.hpp"
+#include "Renderer.hpp"
 
-#include "classes/vertex/vertex.hpp"
+#include "Classes/Shader/Shader.hpp"
+#include "Classes/Shader/Program.hpp"
 
-bool RendererGL::Init()
+#include "Classes/Model/Model.hpp"
+#include "Classes/Camera/Camera.hpp"
+
+Camera* camera;
+Program* program;
+Model* model;
+
+bool Renderer::Init()
 {
 	glEnable(GL_DEPTH_TEST);
 
@@ -27,9 +35,7 @@ bool RendererGL::Init()
 		DescribePixelFormat(m_hDC, iPixelFormat, sizeof(pfd), &bestMatch_pfd);
 
 		if (bestMatch_pfd.cDepthBits < pfd.cDepthBits)
-		{
 			return false;
-		}
 
 		if (SetPixelFormat(m_hDC, iPixelFormat, &pfd) == FALSE)
 		{
@@ -45,21 +51,33 @@ bool RendererGL::Init()
 
 	m_hRC = wglCreateContext(m_hDC);
 	wglMakeCurrent(m_hDC, m_hRC);
-
 #endif
 
 	glewInit();
 
-	float points[] = {
-0.0f,  0.5f,  0.0f,
-0.5f, -0.5f,  0.0f,
--0.5f, -0.5f,  0.0f
-	};
+	model = new Model("cube.obj");
+
+	program = new Program();
+	auto vertexShader = new Shader("/resources/shaders/opengl/vs.glsl", GL_VERTEX_SHADER);
+	auto fragmentShader = new Shader("/resources/shaders/opengl/fs.glsl", GL_FRAGMENT_SHADER);
+
+	vertexShader->Compile();
+	fragmentShader->Compile();
+
+	program->Attach(vertexShader);
+	program->Attach(fragmentShader);
+
+	program->Link();
+
+	camera = new Camera();
+
+	glEnableVertexAttribArray(program->Attrib("vert"));
+	glVertexAttribPointer(program->Attrib("vert"), 3, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat), NULL);
 
 	return true;
 }
 
-void RendererGL::Destroy()
+void Renderer::Destroy()
 {
 	if (m_hRC != NULL)
 	{
@@ -75,16 +93,22 @@ void RendererGL::Destroy()
 	}
 }
 
-void RendererGL::BeginFrame()
+void Renderer::BeginFrame()
 {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	glClearColor(0.5f, 0.0f, 0.5f, 1.f);
 }
 
-void RendererGL::Draw()
+void Renderer::Draw()
 {
+	program->Use();
+
+	program->SetUniform("camera", camera->matrix());
+
+	model->Draw();
 }
 
-void RendererGL::EndFrame()
+void Renderer::EndFrame()
 {
 	SwapBuffers(m_hDC);
 }

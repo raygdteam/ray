@@ -19,16 +19,22 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="classes\shader\shader.cpp" />
-    <ClCompile Include="classes\vertex\vertex.cpp" />
+    <ClCompile Include="Classes\Camera\Camera.cpp" />
+    <ClCompile Include="Classes\Model\Mesh.cpp" />
+    <ClCompile Include="Classes\Model\Model.cpp" />
+    <ClCompile Include="Classes\Shader\Program.cpp" />
+    <ClCompile Include="Classes\Shader\Shader.cpp" />
     <ClCompile Include="entry_point.cpp" />
-    <ClCompile Include="renderer_gl.cpp" />
+    <ClCompile Include="Renderer.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="classes\shader\shader.hpp" />
-    <ClInclude Include="classes\vertex\vertex.hpp" />
+    <ClInclude Include="Classes\Camera\Camera.hpp" />
+    <ClInclude Include="Classes\Model\Mesh.hpp" />
+    <ClInclude Include="Classes\Model\Model.hpp" />
+    <ClInclude Include="Classes\Shader\Program.hpp" />
+    <ClInclude Include="Classes\Shader\Shader.hpp" />
     <ClInclude Include="pch.hpp" />
-    <ClInclude Include="renderer_gl.hpp" />
+    <ClInclude Include="Renderer.hpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>
@@ -54,7 +60,7 @@
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v142</PlatformToolset>
-    <CharacterSet>Unicode</CharacterSet>
+    <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
