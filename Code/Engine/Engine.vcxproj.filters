@@ -13,10 +13,14 @@
     <ClCompile Include="ishader.cpp">
       <Filter>renderer</Filter>
     </ClCompile>
-    <ClCompile Include="actor.cpp" />
-    <ClCompile Include="Level.cpp" />
     <ClCompile Include="IComponent.cpp">
       <Filter>renderer\components</Filter>
+    </ClCompile>
+    <ClCompile Include="actor.cpp">
+      <Filter>world</Filter>
+    </ClCompile>
+    <ClCompile Include="Level.cpp">
+      <Filter>world</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -29,11 +33,14 @@
     <Filter Include="renderer\components">
       <UniqueIdentifier>{07c3501f-6a8c-4b27-a1c1-a933e7353b51}</UniqueIdentifier>
     </Filter>
-    <Filter Include="event system">
-      <UniqueIdentifier>{31c542d2-64a6-4737-bf61-b20b574640ff}</UniqueIdentifier>
-    </Filter>
     <Filter Include="resources">
       <UniqueIdentifier>{06d26d1b-f32d-4be1-a35f-c45e6f650dc5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="world">
+      <UniqueIdentifier>{db8354a6-693d-453c-b0f1-a77b8f5a8c55}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="event">
+      <UniqueIdentifier>{17362c6a-1a97-4506-902c-6e75a8157fa5}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -48,19 +55,23 @@
     <ClInclude Include="irenderer.hpp">
       <Filter>renderer</Filter>
     </ClInclude>
-    <ClInclude Include="event.hpp">
-      <Filter>event system</Filter>
-    </ClInclude>
-    <ClInclude Include="window_event.h">
-      <Filter>event system</Filter>
-    </ClInclude>
     <ClInclude Include="ishader.hpp">
       <Filter>renderer</Filter>
     </ClInclude>
-    <ClInclude Include="actor.hpp" />
-    <ClInclude Include="Level.hpp" />
     <ClInclude Include="IComponent.hpp">
       <Filter>renderer\components</Filter>
+    </ClInclude>
+    <ClInclude Include="actor.hpp">
+      <Filter>world</Filter>
+    </ClInclude>
+    <ClInclude Include="Level.hpp">
+      <Filter>world</Filter>
+    </ClInclude>
+    <ClInclude Include="resources.hpp">
+      <Filter>resources</Filter>
+    </ClInclude>
+    <ClInclude Include="event\event_system.hpp">
+      <Filter>event</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

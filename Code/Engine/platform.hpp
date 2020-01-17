@@ -1,6 +1,4 @@
 #pragma once
-#include "event.hpp"
-#include "window_event.h"
 #include "../Core/core.h"
 #include <Windows.h>
 
@@ -24,8 +22,6 @@ public:
 
 	static void OnEvent();
 	static bool WindowIsOpen();
-
-	static void SetCallback(EventCallback callback);
 
 	static bool HasFeature(ray::core::hardware::Feature feature);
 

@@ -2,8 +2,6 @@
 #include "../Core/core_init.h"
 #include "engine.hpp"
 #include "irenderer.hpp"
-#include "event.hpp"
-#include "window_event.h"
 #include "Level.hpp"
 
 class engine_impl
@@ -13,8 +11,7 @@ public:
 	void initialize();
 	void run();
 	void destroy();
-	void on_event(Event& e);
-	bool on_window_close(Event& e);
+	bool on_window_close();
 	ray::Level get_active_level();
 	void schedule_renderer_reload();
 
@@ -43,8 +40,7 @@ void engine_impl::initialize()
 	spdlog::info("|        Ilya, Seva, Nikita          |");
 	spdlog::info("+------------------------------------+");
 
-	Platform::SetCallback(std::bind(&engine_impl::on_event, this, std::placeholders::_1));
-	_renderer = ray::renderer::IRenderer::create_renderer(ray::renderer::eRendererType::OpenGL);
+	_renderer = ray::renderer::IRenderer::create_renderer(ray::renderer::eRendererType::Vk);
 	_renderer->Init();
 
 	_current_app->on_startup();
@@ -68,7 +64,6 @@ void engine_impl::run()
 
 		_renderer->BeginFrame();
 
-		// Отрисовка
 		_renderer->Draw();
 
 		_renderer->EndFrame();
@@ -83,13 +78,7 @@ void engine_impl::destroy()
 	delete _current_app;
 }
 
-void engine_impl::on_event(Event& e)
-{
-	EventDispatcher dispatcher(e);
-	dispatcher.Dispatch<WindowCloseEvent>(std::bind(&engine_impl::on_window_close, this, std::placeholders::_1));
-}
-
-bool engine_impl::on_window_close(Event & e)
+bool engine_impl::on_window_close()
 {
 	bRunning = false;
 	return true;

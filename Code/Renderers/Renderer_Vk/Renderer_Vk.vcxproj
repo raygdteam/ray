@@ -146,7 +146,11 @@
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="classes\graphics\GraphicsPipeline.cpp" />
     <ClCompile Include="classes\shaders\ShaderModule.cpp" />
+    <ClCompile Include="classes\uniform\UniformBuffer.cpp" />
+    <ClCompile Include="classes\vertex\IndexBuffer.cpp" />
+    <ClCompile Include="classes\vertex\VertexBuffer.cpp" />
     <ClCompile Include="entry_point.cpp" />
     <ClCompile Include="pch.cpp" />
     <ClCompile Include="utils\utils.cpp" />
@@ -154,6 +158,11 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="classes\graphics\GraphicsPipeline.hpp" />
+    <ClInclude Include="classes\graphics\Pipeline.hpp" />
+    <ClInclude Include="classes\uniform\UniformBuffer.hpp" />
+    <ClInclude Include="classes\uniform\UniformBufferObject.hpp" />
+    <ClInclude Include="classes\vertex\IndexBuffer.hpp" />
+    <ClInclude Include="classes\vertex\Vertex.hpp" />
     <ClInclude Include="pch.hpp" />
     <ClInclude Include="utils\utils.hpp" />
     <ClInclude Include="VulkanRenderer.hpp" />
@@ -165,6 +174,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="classes\shaders\ShaderModule.hpp" />
+    <None Include="classes\vertex\VertexBuffer.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

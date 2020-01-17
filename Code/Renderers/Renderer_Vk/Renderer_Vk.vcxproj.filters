@@ -10,6 +10,18 @@
     <ClCompile Include="classes\shaders\ShaderModule.cpp">
       <Filter>classes\shaders</Filter>
     </ClCompile>
+    <ClCompile Include="classes\graphics\GraphicsPipeline.cpp">
+      <Filter>classes\graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="classes\vertex\VertexBuffer.cpp">
+      <Filter>classes\vertex</Filter>
+    </ClCompile>
+    <ClCompile Include="classes\vertex\IndexBuffer.cpp">
+      <Filter>classes\vertex</Filter>
+    </ClCompile>
+    <ClCompile Include="classes\uniform\UniformBuffer.cpp">
+      <Filter>classes\uniform</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.hpp" />
@@ -19,6 +31,21 @@
     </ClInclude>
     <ClInclude Include="classes\graphics\GraphicsPipeline.hpp">
       <Filter>classes\graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="classes\graphics\Pipeline.hpp">
+      <Filter>classes\graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="classes\vertex\Vertex.hpp">
+      <Filter>classes\vertex</Filter>
+    </ClInclude>
+    <ClInclude Include="classes\vertex\IndexBuffer.hpp">
+      <Filter>classes\vertex</Filter>
+    </ClInclude>
+    <ClInclude Include="classes\uniform\UniformBufferObject.hpp">
+      <Filter>classes\uniform</Filter>
+    </ClInclude>
+    <ClInclude Include="classes\uniform\UniformBuffer.hpp">
+      <Filter>classes\uniform</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -34,10 +61,19 @@
     <Filter Include="classes\graphics">
       <UniqueIdentifier>{60b1e39e-20ab-4e2e-b683-3c499f4b6bed}</UniqueIdentifier>
     </Filter>
+    <Filter Include="classes\vertex">
+      <UniqueIdentifier>{94917803-6978-4024-880b-61dcff14b77c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="classes\uniform">
+      <UniqueIdentifier>{44055b24-f0af-4d5b-9f4f-9fd218d3dffc}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="classes\shaders\ShaderModule.hpp">
       <Filter>classes\shaders</Filter>
+    </None>
+    <None Include="classes\vertex\VertexBuffer.hpp">
+      <Filter>classes\vertex</Filter>
     </None>
   </ItemGroup>
 </Project>

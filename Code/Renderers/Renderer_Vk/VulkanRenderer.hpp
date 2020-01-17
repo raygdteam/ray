@@ -1,6 +1,7 @@
 #pragma once
 #include "pch.hpp"
 #include "classes/shaders/ShaderModule.hpp"
+#include "classes/graphics/GraphicsPipeline.hpp"
 
 namespace ray::renderer::vulkan
 {
@@ -19,17 +20,23 @@ namespace ray::renderer::vulkan
 		vk::UniqueCommandPool _commandPool;
 		vk::UniqueCommandBuffer _commandBuffer;
 		vk::UniqueRenderPass _renderPass;
-		vk::UniquePipelineLayout _pipelineLayout;
-		vk::UniquePipelineCache _pipelineCache;
-		vk::UniquePipeline _pipeline;
+		classes::graphics::GraphicsPipeline _graphicsPipeline;
 		classes::shaders::ShaderModule _vertexShader, _fragmentShader;
 		
 		uint32_t _imageIndex = 0;
 		uint32_t _graphicsFamilyIndex, _presentFamilyIndex;
 		vk::Extent2D _screenResolution;
 
+		std::vector<classes::vertex::Vertex> _vertices;
+		std::vector<u32> _indices = {
+			0, 1, 2, 2, 3, 0
+		};
+
 		bool createSwapchain();
+		void createSwapchainResources();
 		bool createCommandBuffers();
+		bool canRender();
+
 	public:
 		VulkanRenderer();
 		~VulkanRenderer();
