@@ -70,5 +70,8 @@
     <ClInclude Include="component\IComponent.hpp">
       <Filter>components</Filter>
     </ClInclude>
+    <ClInclude Include="world\Level.hpp">
+      <Filter>world</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

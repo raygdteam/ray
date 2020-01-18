@@ -120,7 +120,7 @@
       <PrecompiledHeaderFile>pch.hpp</PrecompiledHeaderFile>
     </ClCompile>
     <Lib>
-      <AdditionalDependencies>GLFW\glfw3.lib;GLEW\glew32.lib;SOIL\soil.lib;OpenGL32.lib;Assimp\assimp-vc140-mt.lib;freetype\freetype.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>GLFW\glfw3.lib;GLEW\glew32.lib;SOIL\soil.lib;OpenGL32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">

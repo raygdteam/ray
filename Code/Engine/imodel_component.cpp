@@ -1,6 +1,6 @@
 #include "pch.h"
 #include "imodel_component.hpp"
-#include "Level.hpp"
+#include "world/Level.hpp"
 
 
 IModelComponent::IModelComponent()

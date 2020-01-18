@@ -15,6 +15,7 @@ unsigned long thread::_thread_entrypoint(void* pthis)
 {
 	auto function = *static_cast<std::function<void()>*>(pthis);
 	function();
+	return 0;
 }
 
 thread::thread(std::function<void()> delegate) : _delegate(delegate), _handle(nullptr)

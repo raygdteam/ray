@@ -193,6 +193,7 @@
     <ClInclude Include="platform.hpp" />
     <ClInclude Include="resources.hpp" />
     <ClInclude Include="world\Actor.hpp" />
+    <ClInclude Include="world\Level.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Core\Core.vcxproj">

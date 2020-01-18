@@ -2,7 +2,7 @@
 #include "../Core/core_init.h"
 #include "engine.hpp"
 #include "irenderer.hpp"
-#include "Level.hpp"
+
 
 class engine_impl
 {
@@ -41,7 +41,7 @@ void engine_impl::initialize()
 	spdlog::info("|        Ilya, Seva, Nikita          |");
 	spdlog::info("+------------------------------------+");
 
-	_renderer = ray::renderer::IRenderer::create_renderer(ray::renderer::eRendererType::Vk);
+	_renderer = ray::renderer::IRenderer::create_renderer(ray::renderer::eRendererType::OpenGL);
 	_renderer->Init();
 
 	_current_app->on_startup();
@@ -73,7 +73,7 @@ void engine_impl::run()
 		auto currentTime = std::chrono::high_resolution_clock::now();
 		float deltaTime = std::chrono::duration<float, std::chrono::milliseconds::period>(currentTime - startTime).count();
 
-		_active_level->Tick(deltaTime);
+		//_active_level->Tick(deltaTime);
 
 		_renderer->BeginFrame();
 		_renderer->Draw();

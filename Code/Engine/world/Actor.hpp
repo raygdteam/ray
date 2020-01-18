@@ -32,6 +32,10 @@ protected:
 };
 
 
+class IActor : public IActorUtility
+{
+protected:
 
+};
 
 }
