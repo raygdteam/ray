@@ -39,6 +39,12 @@
     <Filter Include="components">
       <UniqueIdentifier>{f21ed414-3a0a-4588-9c1e-91be5e3c0d7f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="config">
+      <UniqueIdentifier>{9a4e8693-3e9b-4e67-bd27-898c073113f9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="config\models">
+      <UniqueIdentifier>{d9336ca6-9d44-430e-bb74-ff3bb23828d2}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">
@@ -72,6 +78,12 @@
     </ClInclude>
     <ClInclude Include="world\Level.hpp">
       <Filter>world</Filter>
+    </ClInclude>
+    <ClInclude Include="config\models\renderer.hpp">
+      <Filter>config\models</Filter>
+    </ClInclude>
+    <ClInclude Include="config\models\window.hpp">
+      <Filter>config\models</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

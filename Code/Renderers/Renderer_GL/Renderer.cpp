@@ -10,7 +10,7 @@
 
 Program* program;
 Texture* texture;
-GLuint VBO, VAO, EBO;
+GLuint vbo, vao, ebo;
 
 bool Renderer::Init()
 {
@@ -81,16 +81,16 @@ bool Renderer::Init()
 		1, 2, 3
 	};
 
-	glGenVertexArrays(1, &VAO);
-	glGenBuffers(1, &VBO);
-	glGenBuffers(1, &EBO);
+	glGenVertexArrays(1, &vao);
+	glGenBuffers(1, &vbo);
+	glGenBuffers(1, &ebo);
 
-	glBindVertexArray(VAO);
+	glBindVertexArray(vao);
 
-	glBindBuffer(GL_ARRAY_BUFFER, VBO);
+	glBindBuffer(GL_ARRAY_BUFFER, vbo);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
 
 	// position attribute
@@ -132,11 +132,16 @@ void Renderer::Draw()
 {
 	texture->Bind();
 	program->Use();
-	glBindVertexArray(VAO);
+	glBindVertexArray(vao);
 	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 }
 
 void Renderer::EndFrame()
 {
 	SwapBuffers(m_hDC);
+}
+
+void Renderer::WindowSizeChanged(u32 width, u32 height)
+{
+	glViewport(0, 0, width, height);
 }

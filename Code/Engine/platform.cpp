@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "platform.hpp"
 #include "engine.hpp"
+#include "config/models/window.hpp"
 
 #ifdef RAY_PLATFORM_WIN
 LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
@@ -208,8 +209,8 @@ void WindowsPlatform::Init()
 	CPU::init_processor_windows(&m_proc);
 	GetSupportedResolutions();
 
-	Resolution Res = m_Resolutions[4];
-	m_Window->Create(TEXT("Ray Engine"), Res.first, Res.second);
+	//m_Window->Create(TEXT("Ray Engine"), Res.first, Res.second);
+	m_Window->Create(TEXT("Ray Engine"), ray::config::model::window.width, ray::config::model::window.height);
 }
 
 void WindowsPlatform::Destroy()
@@ -317,7 +318,7 @@ void LinuxPlatform::Init()
 	CPU::init_processor_linux(&m_proc);
 	GetSupportedResolutions();
 
-	m_Window->Create(TEXT("Ray Engine"), 800, 600);
+	m_Window->Create(TEXT("Ray Engine"), ray::config::model::window.width, ray::config::model::window.height);
 }
 
 void LinuxPlatform::Destroy()

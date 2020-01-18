@@ -3,7 +3,7 @@
 class Renderer : public ray::renderer::IRenderer
 {
 public:
-	void WindowSizeChanged(u32 width, u32 height) override {}
+	void WindowSizeChanged(u32 width, u32 height) override;
 
 	void Draw() override;
 	bool Init() override;

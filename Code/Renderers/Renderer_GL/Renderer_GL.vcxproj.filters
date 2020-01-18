@@ -15,6 +15,9 @@
     <ClCompile Include="Classes\Texture\Texture.cpp">
       <Filter>Classes\Texture</Filter>
     </ClCompile>
+    <ClCompile Include="Classes\Text\Text.cpp">
+      <Filter>Classes\Text</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.hpp" />
@@ -31,6 +34,9 @@
     <ClInclude Include="Classes\Texture\Texture.hpp">
       <Filter>Classes\Texture</Filter>
     </ClInclude>
+    <ClInclude Include="Classes\Text\Text.hpp">
+      <Filter>Classes\Text</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Classes">
@@ -44,6 +50,9 @@
     </Filter>
     <Filter Include="Classes\Texture">
       <UniqueIdentifier>{c5aeb264-cea4-43cb-916b-631ce029c419}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Classes\Text">
+      <UniqueIdentifier>{cd099d52-4517-4cae-833d-9c794aa6a72e}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

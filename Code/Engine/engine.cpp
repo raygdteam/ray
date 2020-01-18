@@ -2,7 +2,7 @@
 #include "../Core/core_init.h"
 #include "engine.hpp"
 #include "irenderer.hpp"
-
+#include "config/models/renderer.hpp"
 
 class engine_impl
 {
@@ -41,7 +41,7 @@ void engine_impl::initialize()
 	spdlog::info("|        Ilya, Seva, Nikita          |");
 	spdlog::info("+------------------------------------+");
 
-	_renderer = ray::renderer::IRenderer::create_renderer(ray::renderer::eRendererType::Vk);
+	_renderer = ray::renderer::IRenderer::create_renderer(ray::config::model::renderer.api);
 	_renderer->Init();
 
 	_current_app->on_startup();

@@ -43,7 +43,7 @@
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v142</PlatformToolset>
-    <CharacterSet>MultiByte</CharacterSet>
+    <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
@@ -183,6 +183,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="component\IComponent.hpp" />
+    <ClInclude Include="config\models\renderer.hpp" />
+    <ClInclude Include="config\models\window.hpp" />
     <ClInclude Include="engine.hpp" />
     <ClInclude Include="event\event_system.hpp" />
     <ClInclude Include="IComponent.hpp" />
