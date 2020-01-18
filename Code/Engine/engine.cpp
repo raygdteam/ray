@@ -41,7 +41,7 @@ void engine_impl::initialize()
 	spdlog::info("|        Ilya, Seva, Nikita          |");
 	spdlog::info("+------------------------------------+");
 
-	_renderer = ray::renderer::IRenderer::create_renderer(ray::renderer::eRendererType::OpenGL);
+	_renderer = ray::renderer::IRenderer::create_renderer(ray::renderer::eRendererType::Vk);
 	_renderer->Init();
 
 	_current_app->on_startup();

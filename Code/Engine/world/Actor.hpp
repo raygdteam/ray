@@ -34,8 +34,13 @@ protected:
 
 class IActor : public IActorUtility
 {
+	glm::vec3 GetPosition() override { return _position; }
+	glm::vec3 GetRotation() override { return _rotation; }
+	glm::vec3 GetScale() override { return _scale; }
 protected:
-
+	glm::vec3 _position;
+	glm::vec3 _rotation;
+	glm::vec3 _scale;
 };
 
 }

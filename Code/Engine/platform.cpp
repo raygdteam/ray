@@ -136,6 +136,8 @@ LRESULT CALLBACK WindowsPlatform::EventDespatcher(HWND hWnd, UINT uMsg, WPARAM w
 		break;
 	case WM_SIZE:
 		ray::engine::engine::schedule_renderer_reload();
+		m_Window->m_WinDesc.res.first = LOWORD(lParam);
+		m_Window->m_WinDesc.res.second = HIWORD(lParam);
 		break;
 	default:
 		return DefWindowProc(hWnd, uMsg, wParam, lParam);

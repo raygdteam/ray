@@ -22,6 +22,9 @@
     <ClCompile Include="classes\uniform\UniformBuffer.cpp">
       <Filter>classes\uniform</Filter>
     </ClCompile>
+    <ClCompile Include="classes\texture\Texture.cpp">
+      <Filter>classes\texture</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.hpp" />
@@ -47,6 +50,9 @@
     <ClInclude Include="classes\uniform\UniformBuffer.hpp">
       <Filter>classes\uniform</Filter>
     </ClInclude>
+    <ClInclude Include="classes\texture\Texture.hpp">
+      <Filter>classes\texture</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="utils">
@@ -66,6 +72,9 @@
     </Filter>
     <Filter Include="classes\uniform">
       <UniqueIdentifier>{44055b24-f0af-4d5b-9f4f-9fd218d3dffc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="classes\texture">
+      <UniqueIdentifier>{f46a1dde-a862-4b62-bbd5-6498a27bd164}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

@@ -148,6 +148,7 @@
   <ItemGroup>
     <ClCompile Include="classes\graphics\GraphicsPipeline.cpp" />
     <ClCompile Include="classes\shaders\ShaderModule.cpp" />
+    <ClCompile Include="classes\texture\Texture.cpp" />
     <ClCompile Include="classes\uniform\UniformBuffer.cpp" />
     <ClCompile Include="classes\vertex\IndexBuffer.cpp" />
     <ClCompile Include="classes\vertex\VertexBuffer.cpp" />
@@ -159,6 +160,7 @@
   <ItemGroup>
     <ClInclude Include="classes\graphics\GraphicsPipeline.hpp" />
     <ClInclude Include="classes\graphics\Pipeline.hpp" />
+    <ClInclude Include="classes\texture\Texture.hpp" />
     <ClInclude Include="classes\uniform\UniformBuffer.hpp" />
     <ClInclude Include="classes\uniform\UniformBufferObject.hpp" />
     <ClInclude Include="classes\vertex\IndexBuffer.hpp" />
