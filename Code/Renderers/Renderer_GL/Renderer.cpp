@@ -5,11 +5,12 @@
 #include "Classes/Shader/Program.hpp"
 
 #include "Classes/Model/Model.hpp"
-#include "Classes/Camera/Camera.hpp"
 
-Camera* camera;
+#include "Classes/Texture/texture.hpp"
+
 Program* program;
-Model* model;
+Texture* texture;
+GLuint VBO, VAO, EBO;
 
 bool Renderer::Init()
 {
@@ -55,8 +56,6 @@ bool Renderer::Init()
 
 	glewInit();
 
-	model = new Model("cube.obj");
-
 	program = new Program();
 	auto vertexShader = new Shader("/resources/shaders/opengl/vs.glsl", GL_VERTEX_SHADER);
 	auto fragmentShader = new Shader("/resources/shaders/opengl/fs.glsl", GL_FRAGMENT_SHADER);
@@ -69,10 +68,40 @@ bool Renderer::Init()
 
 	program->Link();
 
-	camera = new Camera();
+	texture = new Texture("/resources/textures/wall.jpg");
 
-	glEnableVertexAttribArray(program->Attrib("vert"));
-	glVertexAttribPointer(program->Attrib("vert"), 3, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat), NULL);
+	float vertices[] = {
+		 0.5f,  0.5f, 0.0f,   1.0f, 0.0f, 0.0f,   1.0f, 1.0f,
+		 0.5f, -0.5f, 0.0f,   0.0f, 1.0f, 0.0f,   1.0f, 0.0f,
+		-0.5f, -0.5f, 0.0f,   0.0f, 0.0f, 1.0f,   0.0f, 0.0f,
+		-0.5f,  0.5f, 0.0f,   1.0f, 1.0f, 0.0f,   0.0f, 1.0f
+	};
+	unsigned int indices[] = {
+		0, 1, 3,
+		1, 2, 3
+	};
+
+	glGenVertexArrays(1, &VAO);
+	glGenBuffers(1, &VBO);
+	glGenBuffers(1, &EBO);
+
+	glBindVertexArray(VAO);
+
+	glBindBuffer(GL_ARRAY_BUFFER, VBO);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
+
+	// position attribute
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
+	glEnableVertexAttribArray(0);
+	// color attribute
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
+	glEnableVertexAttribArray(1);
+	// texture coord attribute
+	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
+	glEnableVertexAttribArray(2);
 
 	return true;
 }
@@ -101,11 +130,10 @@ void Renderer::BeginFrame()
 
 void Renderer::Draw()
 {
+	texture->Bind();
 	program->Use();
-
-	program->SetUniform("camera", camera->matrix());
-
-	model->Draw();
+	glBindVertexArray(VAO);
+	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 }
 
 void Renderer::EndFrame()
