@@ -29,15 +29,19 @@ void GraphicsPipeline::Finalize(vk::UniqueDevice const& device)
 	}
 
 	/** DESCRIPTOR SET LAYOUT **/
-	vk::DescriptorSetLayoutBinding uboBinding(0, vk::DescriptorType::eUniformBuffer, 1, vk::ShaderStageFlagBits::eVertex);
-	_descriptorSetLayout = device->createDescriptorSetLayoutUnique(vk::DescriptorSetLayoutCreateInfo(vk::DescriptorSetLayoutCreateFlags(), 1, &uboBinding));
+	vk::DescriptorSetLayoutBinding bindings[2];
+	bindings[0] = vk::DescriptorSetLayoutBinding(0, vk::DescriptorType::eUniformBuffer, 1, vk::ShaderStageFlagBits::eVertex);
+	bindings[1] = vk::DescriptorSetLayoutBinding(1, vk::DescriptorType::eCombinedImageSampler, 1, vk::ShaderStageFlagBits::eFragment);
+	_descriptorSetLayout = device->createDescriptorSetLayoutUnique(vk::DescriptorSetLayoutCreateInfo(vk::DescriptorSetLayoutCreateFlags(), 2, &bindings[0]));
 
 	/** PIPELINE LAYOUT **/
 	_layout = device->createPipelineLayoutUnique(vk::PipelineLayoutCreateInfo(vk::PipelineLayoutCreateFlags(), 1, &_descriptorSetLayout.get()));
 
 	/** DESCRIPTOR POOL **/
-	vk::DescriptorPoolSize size(vk::DescriptorType::eUniformBuffer, _swapChainImages);
-	_descriptorPool = _device.createDescriptorPoolUnique(vk::DescriptorPoolCreateInfo(vk::DescriptorPoolCreateFlags(vk::DescriptorPoolCreateFlagBits::eFreeDescriptorSet), _swapChainImages, 1, &size));
+	vk::DescriptorPoolSize poolSizes[2];
+	poolSizes[0] = vk::DescriptorPoolSize(vk::DescriptorType::eUniformBuffer, _swapChainImages);
+	poolSizes[1] = vk::DescriptorPoolSize(vk::DescriptorType::eCombinedImageSampler, _swapChainImages);
+	_descriptorPool = _device.createDescriptorPoolUnique(vk::DescriptorPoolCreateInfo(vk::DescriptorPoolCreateFlags(vk::DescriptorPoolCreateFlagBits::eFreeDescriptorSet), _swapChainImages, 2, &poolSizes[0]));
 
 	/** DESCRIPTOR POOL MEMORY ALLOC **/
 	std::vector<vk::DescriptorSetLayout> layouts(_swapChainImages, _descriptorSetLayout.get());
@@ -48,23 +52,31 @@ void GraphicsPipeline::Finalize(vk::UniqueDevice const& device)
 	_descriptorSets = device->allocateDescriptorSetsUnique(allocInfo);
 
 	/** SETUP DESCRIPTOR SETS **/
+	vk::DescriptorImageInfo imageInfo(_texture->sampler.get(), _texture->textureView.get(), vk::ImageLayout::eShaderReadOnlyOptimal);
 	for (int i = 0; i < _swapChainImages; ++i)
 	{
 		vk::DescriptorBufferInfo bi(_ubos[i]._buffer.get(), 0, sizeof(uniform::UniformBufferObject));
-		vk::WriteDescriptorSet descriptorWrite;
-		descriptorWrite.dstSet = _descriptorSets[i].get();
-		descriptorWrite.dstBinding = 0;
-		descriptorWrite.dstArrayElement = 0;
-		descriptorWrite.descriptorType = vk::DescriptorType::eUniformBuffer;
-		descriptorWrite.descriptorCount = 1;
-		descriptorWrite.pBufferInfo = &bi;
+		vk::WriteDescriptorSet descriptorWrite[2] = {{}, {}};
+		descriptorWrite[0].dstSet = _descriptorSets[i].get();
+		descriptorWrite[0].dstBinding = 0;
+		descriptorWrite[0].dstArrayElement = 0;
+		descriptorWrite[0].descriptorType = vk::DescriptorType::eUniformBuffer;
+		descriptorWrite[0].descriptorCount = 1;
+		descriptorWrite[0].pBufferInfo = &bi;
+		
+		descriptorWrite[1].dstSet = _descriptorSets[i].get();
+		descriptorWrite[1].dstBinding = 1;
+		descriptorWrite[1].dstArrayElement = 0;
+		descriptorWrite[1].descriptorType = vk::DescriptorType::eCombinedImageSampler;
+		descriptorWrite[1].descriptorCount = 1;
+		descriptorWrite[1].pImageInfo = &imageInfo;
 
-		device->updateDescriptorSets(1, &descriptorWrite, 0, nullptr);
+		device->updateDescriptorSets(2, &descriptorWrite[0], 0, nullptr);
 	}
 
 	{
 		vk::PipelineVertexInputStateCreateInfo vtx_data(vk::PipelineVertexInputStateCreateFlags(), 1,
-			&vertex::Vertex::getBindingDescription(), 2,
+			&vertex::Vertex::getBindingDescription(), vertex::Vertex::getAttributeDescription().size(),
 			&vertex::Vertex::getAttributeDescription()[0]);
 		_createInfo.pVertexInputState = &vtx_data;
 
@@ -162,6 +174,11 @@ void GraphicsPipeline::setSwapchainImagesSize(u16 size)
 	_swapChainImages = size;
 }
 
+void GraphicsPipeline::setTexture(std::shared_ptr<texture::Texture> texture)
+{
+	_texture = texture;
+}
+
 void GraphicsPipeline::draw(vk::CommandBuffer cmd, int imageIndex)
 {
 	static auto startTime = std::chrono::high_resolution_clock::now();
@@ -169,7 +186,7 @@ void GraphicsPipeline::draw(vk::CommandBuffer cmd, int imageIndex)
 	float time = std::chrono::duration<float, std::chrono::seconds::period>(currentTime - startTime).count();
 
 	uniform::UniformBufferObject ubo = {};
-	ubo.model = glm::rotate(glm::mat4(1.0f), time * glm::radians(45.0f), glm::vec3(1.0f, 1.0f, 1.0f));
+	ubo.model = glm::rotate(glm::mat4(1.0f), glm::radians(180.0f), glm::vec3(1.0f, 1.0f, 1.0f));
 	ubo.view = glm::lookAt(glm::vec3(2.0f, 2.0f, 2.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f));
 	ubo.proj = glm::perspective(glm::radians(45.0f), (float)resolution->width / (float)resolution->height, 0.1f, 10.0f);
 

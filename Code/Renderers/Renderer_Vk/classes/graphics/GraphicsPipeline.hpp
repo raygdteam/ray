@@ -6,6 +6,19 @@
 #include "classes/vertex/VertexBuffer.hpp"
 #include "classes/vertex/IndexBuffer.hpp"
 #include "classes/uniform/UniformBuffer.hpp"
+#include "classes/texture/Texture.hpp"
+
+namespace ray {
+namespace renderer {
+namespace vulkan {
+namespace classes {
+namespace texture {
+struct Texture;
+}
+}
+}
+}
+}
 
 namespace ray::renderer::vulkan::classes::graphics
 {
@@ -34,6 +47,8 @@ class GraphicsPipeline : public Pipeline
 	std::vector<u32> _indices;
 	std::vector<uniform::UniformBuffer> _ubos;
 
+	std::shared_ptr<texture::Texture> _texture;
+
 	u16 _swapChainImages;
 
 public:
@@ -51,6 +66,7 @@ public:
 	void setCullModeFlags(vk::CullModeFlags flags);
 	void setRenderPass(vk::RenderPass renderPass);
 	void setSwapchainImagesSize(u16 size);
+	void setTexture(std::shared_ptr<texture::Texture> texture);
 
 	void draw(vk::CommandBuffer, int);
 

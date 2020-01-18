@@ -32,6 +32,8 @@ namespace ray::renderer::vulkan
 			0, 1, 2, 2, 3, 0
 		};
 
+		std::shared_ptr<classes::texture::Texture> _texture;
+
 		bool createSwapchain();
 		void createSwapchainResources();
 		bool createCommandBuffers();

@@ -2,6 +2,7 @@
 #include "VulkanRenderer.hpp"
 #include <iostream>
 #include "utils/utils.hpp"
+#include "classes/texture/Texture.hpp"
 
 VkBool32 debugUtilsMessengerCallback(VkDebugUtilsMessageSeverityFlagBitsEXT messageSeverity, VkDebugUtilsMessageTypeFlagsEXT messageTypes,
 	VkDebugUtilsMessengerCallbackDataEXT const* pCallbackData, void* /*pUserData*/)
@@ -133,10 +134,10 @@ namespace ray::renderer::vulkan
 		spdlog::trace("vulkanrenderer: initializing...");
 		glslang::InitializeProcess();
 
-		_vertices.push_back(classes::vertex::Vertex(glm::vec2(-0.5f, -0.5f), glm::vec3(1.0f, 0.0f, 0.0f)));
-		_vertices.push_back(classes::vertex::Vertex(glm::vec2(0.5f, -0.5f), glm::vec3(0.0f, 1.0f, 0.0f)));
-		_vertices.push_back(classes::vertex::Vertex(glm::vec2(0.5f, 0.5f), glm::vec3(0.0f, 0.0f, 1.0f)));
-		_vertices.push_back(classes::vertex::Vertex(glm::vec2(-0.5f, 0.5f), glm::vec3(1.0f, 1.0f, 1.0f)));
+		_vertices.push_back(classes::vertex::Vertex(glm::vec2(-0.5f, -0.5f), glm::vec3(1.0f, 0.0f, 0.0f), glm::vec2(1.0f, 0.0f)));
+		_vertices.push_back(classes::vertex::Vertex(glm::vec2(0.5f, -0.5f), glm::vec3(0.0f, 1.0f, 0.0f), glm::vec2(0.0f, 0.0f)));
+		_vertices.push_back(classes::vertex::Vertex(glm::vec2(0.5f, 0.5f), glm::vec3(0.0f, 0.0f, 1.0f), glm::vec2(0.0f, 1.0f)));
+		_vertices.push_back(classes::vertex::Vertex(glm::vec2(-0.5f, 0.5f), glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(1.0f, 1.0f)));
 
 		std::vector<pcstr> extensions;
 		extensions.push_back(VK_KHR_SURFACE_EXTENSION_NAME);
@@ -191,6 +192,9 @@ namespace ray::renderer::vulkan
 		_vertexShader.Initialize(_device, "/resources/shaders/vulkan/shader.vert", vk::ShaderStageFlagBits::eVertex);
 		_fragmentShader.Initialize(_device, "/resources/shaders/vulkan/shader.frag", vk::ShaderStageFlagBits::eFragment);
 
+		_texture.reset(new classes::texture::Texture);
+		_texture->load("/resources/textures/wall.jpg", _device.get(), _physicalDevice, _commandPool.get());
+
 		_graphicsPipeline.resolution = &_screenResolution;
 		_graphicsPipeline.Initialize(_device);
 		_graphicsPipeline.setPhysicalDevice(_physicalDevice);
@@ -201,7 +205,9 @@ namespace ray::renderer::vulkan
 		_graphicsPipeline.setPrimitiveTopology(vk::PrimitiveTopology::eTriangleList);
 		_graphicsPipeline.setShader(_vertexShader);
 		_graphicsPipeline.setShader(_fragmentShader);
+		_graphicsPipeline.setTexture(_texture);
 		_graphicsPipeline.Finalize(_device);
+
 
 		glslang::FinalizeProcess();
 		
@@ -248,9 +254,9 @@ namespace ray::renderer::vulkan
 
 	void VulkanRenderer::EndFrame()
 	{
-		_commandBuffer->end();
-
 		if (!canRender()) return;
+
+		_commandBuffer->end();
 
 		vk::PipelineStageFlags flags = vk::PipelineStageFlagBits::eColorAttachmentOutput;
 		vk::SubmitInfo submitInfo(1, &_acquireSemaphore.get(), &flags, 1, &_commandBuffer.get(), 1, &_releaseSemaphore.get());
