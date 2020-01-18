@@ -25,9 +25,10 @@ private:
 
 void engine_impl::preinitialize(ray::core::application* app)
 {
-	RAY_ASSERT(app, TEXT("Application is nullpointer!"))
+	RAY_ASSERT(app, TEXT("Application is null!"))
 	ray::core::preinitialize();
 	ray::file_system::query_mount(app->get_resources_path(), "/resources/");
+
 
 	_current_app = app;
 }
@@ -44,11 +45,17 @@ void engine_impl::initialize()
 	_renderer->Init();
 
 	_current_app->on_startup();
+
+
 }
 
 void engine_impl::run()
 {
 	bWindowSizeChanged = false;
+
+	// for delta_time calculation
+	static auto startTime = std::chrono::high_resolution_clock::now();
+
 	while (Platform::WindowIsOpen())
 	{
 		Platform::OnEvent();
@@ -62,10 +69,14 @@ void engine_impl::run()
 		if(!Platform::CanTick())
 			continue;
 
+		// level update
+		auto currentTime = std::chrono::high_resolution_clock::now();
+		float deltaTime = std::chrono::duration<float, std::chrono::milliseconds::period>(currentTime - startTime).count();
+
+		_active_level->Tick(deltaTime);
+
 		_renderer->BeginFrame();
-
 		_renderer->Draw();
-
 		_renderer->EndFrame();
 	}
 }

@@ -173,28 +173,26 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="actor.cpp" />
     <ClCompile Include="engine.cpp" />
     <ClCompile Include="EntryPoint.cpp" />
     <ClCompile Include="IComponent.cpp" />
     <ClCompile Include="imodel_component.cpp" />
     <ClCompile Include="irenderer.cpp" />
     <ClCompile Include="ishader.cpp" />
-    <ClCompile Include="Level.cpp" />
     <ClCompile Include="platform.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="actor.hpp" />
+    <ClInclude Include="component\IComponent.hpp" />
     <ClInclude Include="engine.hpp" />
     <ClInclude Include="event\event_system.hpp" />
     <ClInclude Include="IComponent.hpp" />
     <ClInclude Include="imodel_component.hpp" />
     <ClInclude Include="irenderer.hpp" />
     <ClInclude Include="ishader.hpp" />
-    <ClInclude Include="Level.hpp" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="platform.hpp" />
     <ClInclude Include="resources.hpp" />
+    <ClInclude Include="world\Actor.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Core\Core.vcxproj">
