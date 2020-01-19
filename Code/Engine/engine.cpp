@@ -41,7 +41,7 @@ void engine_impl::initialize()
 	spdlog::info("|        Ilya, Seva, Nikita          |");
 	spdlog::info("+------------------------------------+");
 
-	_renderer = ray::renderer::IRenderer::create_renderer(ray::config::model::renderer.api);
+	_renderer = ray::renderer::IRenderer::create_renderer(ray::renderer::Dx11);
 	_renderer->Init();
 
 	_current_app->on_startup();

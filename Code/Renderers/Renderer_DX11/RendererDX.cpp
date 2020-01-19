@@ -35,7 +35,7 @@ namespace ray::renderer::directx11
 		IDXGIFactory* factory;
 		IDXGIAdapter* adapter;
 		IDXGIOutput* adapterOutput;
-		u32 numModes, i, numerator, denominator;
+		u32 numModes, i, numerator = 60, denominator = 1;
 		size_t stringLength;
 		DXGI_MODE_DESC* displayModeList;
 		DXGI_ADAPTER_DESC adapterDesc;
@@ -97,6 +97,10 @@ namespace ray::renderer::directx11
 
 		// Now go through all the display modes and find the one that matches the screen width and height.
 		// When a match is found store the numerator and denominator of the refresh rate for that monitor.
+
+		u16 Width = Platform::GetWidth();
+		u16 Height = Platform::GetHeight();
+
 		for (i = 0; i < numModes; i++)
 		{
 			if (displayModeList[i].Width == (u32)Platform::GetWidth())
@@ -357,9 +361,9 @@ namespace ray::renderer::directx11
 
 		Vertex vertices[] =
 		{
-			{ DirectX::XMFLOAT3(-1.0f, -1.0f, 0.0f), DirectX::XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f) }, // Bottom left.
+			{ DirectX::XMFLOAT3(-1.0f, -1.0f, 0.0f), DirectX::XMFLOAT4(1.0f, 0.0f, 0.0f, 1.0f) }, // Bottom left.
 			{ DirectX::XMFLOAT3(0.0f, 1.0f, 0.0f), DirectX::XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f) }, // Top middle.
-			{ DirectX::XMFLOAT3(1.f, -1.f, 0.f), DirectX::XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f) } // Bottom right.
+			{ DirectX::XMFLOAT3(1.f, -1.f, 0.f), DirectX::XMFLOAT4(0.0f, 1.0f, 1.0f, 1.0f) } // Bottom right.
 		};
 
 		u32 indices[] =

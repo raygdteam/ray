@@ -27,8 +27,12 @@ namespace ray::renderer::directx11::utilities
 
 	HRESULT CreateDeviceAndSwapChain(DXGI_SWAP_CHAIN_DESC& SwapChainDesc)
 	{
+		u32 Flags = 0;
+#ifdef RAY_DEBUG
+		//Flags |= D3D11_CREATE_DEVICE_DEBUG;
+#endif //RAY_DEBUG
 		D3D_FEATURE_LEVEL FeatureLevel = D3D_FEATURE_LEVEL_11_0;
-		return D3D11CreateDeviceAndSwapChain(NULL, D3D_DRIVER_TYPE_HARDWARE, NULL, 0, &FeatureLevel, 1,
+		return D3D11CreateDeviceAndSwapChain(NULL, D3D_DRIVER_TYPE_HARDWARE, NULL, Flags, &FeatureLevel, 1,
 			D3D11_SDK_VERSION, &SwapChainDesc, &gSwapChain, &gDevice, NULL, &gDeviceContext);
 	}
 

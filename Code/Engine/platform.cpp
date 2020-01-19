@@ -209,8 +209,7 @@ void WindowsPlatform::Init()
 	CPU::init_processor_windows(&m_proc);
 	GetSupportedResolutions();
 
-	//m_Window->Create(TEXT("Ray Engine"), Res.first, Res.second);
-	m_Window->Create(TEXT("Ray Engine"), ray::config::model::window.width, ray::config::model::window.height);
+	m_Window->Create(TEXT("Ray Engine"), (u16)800, (u16)600);
 }
 
 void WindowsPlatform::Destroy()
@@ -431,11 +430,13 @@ bool Platform::HasFeature(CPU::Feature feature)
 
 u16 Platform::GetWidth()
 {
+	//TODO: Fix
 	return s_Instance->GetWindow()->m_WinDesc.res.first;
 }
 
 u16 Platform::GetHeight()
 {
+	//TODO: Fix
 	return s_Instance->GetWindow()->m_WinDesc.res.second;
 }
 bool Platform::CanTick()
