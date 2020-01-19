@@ -136,6 +136,7 @@ EShLanguage translateShaderStage(vk::ShaderStageFlagBits stage)
 
 void ShaderModule::Initialize(vk::UniqueDevice const& device, pcstr path, vk::ShaderStageFlagBits shaderFlags)
 {
+	_shaderType = shaderFlags;
 	// Try to find shader in cache
 	std::string _path = ("/local/cache/vulkan" + std::string(path) + ".built");
 	/*u8* data = file_system::read_file_bin(_path);
@@ -151,7 +152,6 @@ void ShaderModule::Initialize(vk::UniqueDevice const& device, pcstr path, vk::Sh
 	std::vector<u32> res;
 
 	// Compile shader
-	glslang::InitializeProcess();
 	EShLanguage stage = translateShaderStage(shaderFlags);
 
 	const char* shaderStrings[1];
@@ -186,7 +186,6 @@ void ShaderModule::Initialize(vk::UniqueDevice const& device, pcstr path, vk::Sh
 
 	glslang::GlslangToSpv(*program.getIntermediate(stage), res);
 
-	glslang::FinalizeProcess();
 	spdlog::debug("vulkanrenderer: built shader {}", path);
 
 	//file_system::write_file_bin(_path.c_str(), res);

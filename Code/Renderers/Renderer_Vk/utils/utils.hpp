@@ -11,6 +11,13 @@ T clamp(T original, T min, T max)
 	return original;
 }
 
+uint32_t findMemoryType(uint32_t typeFilter, vk::MemoryPropertyFlags properties, vk::PhysicalDevice device);
+
+
+vk::CommandBuffer begin_single_time_cmd_buffer(vk::CommandPool cmdPool, vk::Device device);
+void end_single_time_cmd_buffer(vk::CommandPool cmdPool, vk::CommandBuffer buf, vk::Device device, vk::PhysicalDevice physicalDevice);
+
+
 vk::SurfaceFormatKHR pickSurfaceFormat(std::vector<vk::SurfaceFormatKHR> const& formats);
 vk::UniqueInstance create_instance(std::vector<pcstr> const& extensions, std::vector<pcstr> const& layers);
 vk::UniqueDevice create_device(vk::PhysicalDevice physicalDevice, uint32_t queueFamilyIndex, std::vector<pcstr> const& extensions);

@@ -19,20 +19,20 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Classes\Camera\Camera.cpp" />
-    <ClCompile Include="Classes\Model\Mesh.cpp" />
     <ClCompile Include="Classes\Model\Model.cpp" />
     <ClCompile Include="Classes\Shader\Program.cpp" />
     <ClCompile Include="Classes\Shader\Shader.cpp" />
+    <ClCompile Include="Classes\Texture\Texture.cpp" />
+    <ClCompile Include="Classes\Text\Text.cpp" />
     <ClCompile Include="entry_point.cpp" />
     <ClCompile Include="Renderer.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Classes\Camera\Camera.hpp" />
-    <ClInclude Include="Classes\Model\Mesh.hpp" />
     <ClInclude Include="Classes\Model\Model.hpp" />
     <ClInclude Include="Classes\Shader\Program.hpp" />
     <ClInclude Include="Classes\Shader\Shader.hpp" />
+    <ClInclude Include="Classes\Texture\Texture.hpp" />
+    <ClInclude Include="Classes\Text\Text.hpp" />
     <ClInclude Include="pch.hpp" />
     <ClInclude Include="Renderer.hpp" />
   </ItemGroup>
@@ -122,7 +122,7 @@
       <PrecompiledHeaderFile>pch.hpp</PrecompiledHeaderFile>
     </ClCompile>
     <Lib>
-      <AdditionalDependencies>GLFW\glfw3.lib;GLEW\glew32.lib;SOIL\soil.lib;OpenGL32.lib;Assimp\assimp-vc140-mt.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>freetype\freetype.lib;GLFW\glfw3.lib;GLEW\glew32.lib;SOIL\soil.lib;OpenGL32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">

@@ -12,5 +12,4 @@
 
 #include <spdlog/spdlog.hpp>
 
-#include <fstream>
-#include <sstream>
+#include <stb_image.h>

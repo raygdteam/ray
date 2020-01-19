@@ -31,7 +31,16 @@
     <ClInclude Include="memory_ovrd.hpp">
       <Filter>memory</Filter>
     </ClInclude>
-    <ClInclude Include="object.hpp">
+    <ClInclude Include="threading\threading.hpp">
+      <Filter>threading</Filter>
+    </ClInclude>
+    <ClInclude Include="platform\platform.hpp">
+      <Filter>platform</Filter>
+    </ClInclude>
+    <ClInclude Include="threading\thread.hpp">
+      <Filter>threading</Filter>
+    </ClInclude>
+    <ClInclude Include="object\object.hpp">
       <Filter>object</Filter>
     </ClInclude>
   </ItemGroup>
@@ -94,8 +103,11 @@
     <ClCompile Include="memory_ovld.cpp">
       <Filter>memory</Filter>
     </ClCompile>
-    <ClCompile Include="object.cpp">
-      <Filter>object</Filter>
+    <ClCompile Include="threading\threading.cpp">
+      <Filter>threading</Filter>
+    </ClCompile>
+    <ClCompile Include="threading\thread_win32.cpp">
+      <Filter>threading</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -110,6 +122,12 @@
     </Filter>
     <Filter Include="object">
       <UniqueIdentifier>{892f79af-8f7c-4233-8366-377c28c382d8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="threading">
+      <UniqueIdentifier>{a7d53569-18f7-43be-a78f-62c0fe7b5ce6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="platform">
+      <UniqueIdentifier>{7861070c-efd9-49cf-924f-569cf7cf929d}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

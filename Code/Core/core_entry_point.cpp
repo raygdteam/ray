@@ -21,6 +21,8 @@ namespace ray::core {
 		RAY_ASSERT(!_preinitialized, "Core was already preinitialized")
 		_preinitialized = true;
 
+		spdlog::set_pattern("[%D %T] [%^%l%$]: %v");
+
 		spdlog::info("Preinitializing Ray core version {}.{}.{} (codename: {})", RAY_VERSION_MAJOR, RAY_VERSION_MINOR,
 			RAY_VERSION_PATCH, RAY_VERSION_CODENAME);
 

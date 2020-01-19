@@ -115,6 +115,40 @@ std::pair<uint32_t, uint32_t> findGraphicsAndPresentQueueFamilyIndex(vk::Physica
 	return std::make_pair(-1, -1);
 }
 
+uint32_t findMemoryType(uint32_t typeFilter, vk::MemoryPropertyFlags properties, vk::PhysicalDevice device)
+{
+	vk::PhysicalDeviceMemoryProperties props = device.getMemoryProperties();
+
+	for (u32 i = 0; i < props.memoryTypeCount; ++i)
+	{
+		if (typeFilter & (1 << i) && (props.memoryTypes[i].propertyFlags & properties) == properties)
+			return i;
+	}
+
+	return 0;
+}
+
+vk::CommandBuffer begin_single_time_cmd_buffer(vk::CommandPool cmdPool, vk::Device device)
+{
+	vk::CommandBuffer buffer = device.allocateCommandBuffers(vk::CommandBufferAllocateInfo(cmdPool, vk::CommandBufferLevel::ePrimary, 1))[0];
+	buffer.begin(vk::CommandBufferBeginInfo(vk::CommandBufferUsageFlagBits::eOneTimeSubmit));
+	return buffer;
+}
+
+void end_single_time_cmd_buffer(vk::CommandPool cmdPool, vk::CommandBuffer buf, vk::Device device, vk::PhysicalDevice physicalDevice)
+{
+	buf.end();
+
+	vk::SubmitInfo submitInfo(0, nullptr, nullptr, 1, &buf);
+
+	vk::Queue queue = device.getQueue(findGraphicsQueueFamilyIndex(physicalDevice.getQueueFamilyProperties()), 0);
+	queue.submit(1, &submitInfo, vk::Fence{});
+
+	queue.waitIdle();
+	device.freeCommandBuffers(cmdPool, 1, &buf);
+}
+
+
 vk::SurfaceFormatKHR pickSurfaceFormat(std::vector<vk::SurfaceFormatKHR> const& formats)
 {
 	assert(!formats.empty());
@@ -149,7 +183,7 @@ vk::SurfaceFormatKHR pickSurfaceFormat(std::vector<vk::SurfaceFormatKHR> const& 
 vk::PresentModeKHR pickPresentMode(std::vector<vk::PresentModeKHR> const& presentModes)
 {
 	vk::PresentModeKHR pickedMode = vk::PresentModeKHR::eFifo;
-	/*for (const auto& presentMode : presentModes)
+	for (const auto& presentMode : presentModes)
 	{
 		if (presentMode == vk::PresentModeKHR::eMailbox)
 		{
@@ -161,7 +195,7 @@ vk::PresentModeKHR pickPresentMode(std::vector<vk::PresentModeKHR> const& presen
 		{
 			pickedMode = presentMode;
 		}
-	}*/
+	}
 	return pickedMode;
 }
 

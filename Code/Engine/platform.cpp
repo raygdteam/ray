@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "platform.hpp"
 #include "engine.hpp"
+#include "config/models/window.hpp"
 
 #ifdef RAY_PLATFORM_WIN
 LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
@@ -29,8 +30,6 @@ public:
 	virtual void GetSupportedResolutions() = 0;
 	CPU::processor& GetProcessorInfo() { return m_proc; }
 
-	virtual void SetCallback(EventCallback callback) = 0;
-
 	virtual void OnEvent() = 0;
 	virtual bool WindowIsOpen() = 0;
 
@@ -42,6 +41,8 @@ protected:
 
 	class IWindow
 	{
+	protected:
+		bool _isOpen;
 	public:
 		virtual ~IWindow() = 0;
 		virtual void Create(ray_string Name, u16 Width, u16 Height) = 0;
@@ -60,6 +61,7 @@ protected:
 			ray_string Name;
 			Resolution res;
 		} m_WinDesc;
+
 	};
 
 	virtual IWindow* GetWindow() = 0;
@@ -89,19 +91,9 @@ public:
 	void OnEvent() override;
 	bool WindowIsOpen() override { return m_Window->IsOpen(); }
 
-	void SetCallback(EventCallback callback) { m_Window->m_Callback = callback; }
-
 	bool CanTick()
 	{
-		MSG msg;
-		if (PeekMessage(&msg, m_Window->m_hMainWnd, 0, 0, PM_REMOVE))
-		{
-			TranslateMessage(&msg);
-			DispatchMessage(&msg);
-			return false;
-		}
-		else
-			return true;
+		return m_Window->IsOpen();
 	}
 
 protected:
@@ -125,7 +117,6 @@ protected:
 		HINSTANCE m_hInstance;
 		LPSTR m_lpCmdLine;
 		s32 m_nCmdShow;
-		EventCallback m_Callback;
 
 	};
 
@@ -141,10 +132,13 @@ LRESULT CALLBACK WindowsPlatform::EventDespatcher(HWND hWnd, UINT uMsg, WPARAM w
 	switch (uMsg)
 	{
 	case WM_DESTROY:
+		m_Window->_isOpen = false;
 		PostQuitMessage(NULL);
 		break;
 	case WM_SIZE:
 		ray::engine::engine::schedule_renderer_reload();
+		m_Window->m_WinDesc.res.first = LOWORD(lParam);
+		m_Window->m_WinDesc.res.second = HIWORD(lParam);
 		break;
 	default:
 		return DefWindowProc(hWnd, uMsg, wParam, lParam);
@@ -173,7 +167,6 @@ public:
 	void OnEvent() override;
 	bool WindowIsOpen() override { return m_Window->IsOpen(); }
 
-	void SetCallback(EventCallback callback) { m_Window->m_Callback = callback; }
 
 	~LinuxPlatform() override;
 
@@ -191,8 +184,8 @@ protected:
 
 		bool IsOpen() override;
 
+		bool _isOpen = false;
 	private:
-		EventCallback m_Callback;
 
 	};
 
@@ -216,8 +209,8 @@ void WindowsPlatform::Init()
 	CPU::init_processor_windows(&m_proc);
 	GetSupportedResolutions();
 
-	Resolution Res = m_Resolutions[4];
-	m_Window->Create(TEXT("Ray Engine"), Res.first, Res.second);
+	//m_Window->Create(TEXT("Ray Engine"), Res.first, Res.second);
+	m_Window->Create(TEXT("Ray Engine"), ray::config::model::window.width, ray::config::model::window.height);
 }
 
 void WindowsPlatform::Destroy()
@@ -262,7 +255,7 @@ void WindowsPlatform::Window::Create(ray_string Name, u16 Width, u16 Height)
 
 	TCHAR ClassName[] = TEXT("Ray Engine Class");
 	m_WndClass.cbSize = sizeof(m_WndClass);
-	m_WndClass.style = CS_HREDRAW | CS_VREDRAW | CS_OWNDC;
+	m_WndClass.style = CS_HREDRAW | CS_VREDRAW;// | CS_OWNDC;
 	m_WndClass.lpfnWndProc = WndProc;
 	m_WndClass.lpszMenuName = NULL;
 	m_WndClass.lpszClassName = ClassName;
@@ -281,8 +274,10 @@ void WindowsPlatform::Window::Create(ray_string Name, u16 Width, u16 Height)
 
 	RAY_ASSERT(m_hMainWnd, TEXT("Window in not initializing!"))
 
-		ShowWindow(m_hMainWnd, m_nCmdShow);
+	ShowWindow(m_hMainWnd, m_nCmdShow);
 	UpdateWindow(m_hMainWnd);
+	
+	_isOpen = true;
 }
 
 void WindowsPlatform::Window::Destroy()
@@ -291,13 +286,26 @@ void WindowsPlatform::Window::Destroy()
 
 void WindowsPlatform::Window::OnEvent()
 {
+	/*
+	UpdateWindow(m_hMainWnd);
 	TranslateMessage(&m_MSG);
 	DispatchMessage(&m_MSG);
+	UpdateWindow(m_hMainWnd);*/
 }
 
 bool WindowsPlatform::Window::IsOpen()
 {
-	return GetMessage(&m_MSG, NULL, NULL, NULL);
+	//return GetMessage(&m_MSG, NULL, NULL, NULL);
+	if (PeekMessage(&m_MSG, m_hMainWnd, 0, 0, PM_REMOVE))
+	{
+		TranslateMessage(&m_MSG);
+		DispatchMessage(&m_MSG);
+
+		if (m_MSG.message == WM_CLOSE || m_MSG.message == WM_DESTROY)
+			_isOpen = false;
+	}
+
+	return _isOpen;
 }
 
 void LinuxPlatform::Preinit()
@@ -310,7 +318,7 @@ void LinuxPlatform::Init()
 	CPU::init_processor_linux(&m_proc);
 	GetSupportedResolutions();
 
-	m_Window->Create(TEXT("Ray Engine"), 800, 600);
+	m_Window->Create(TEXT("Ray Engine"), ray::config::model::window.width, ray::config::model::window.height);
 }
 
 void LinuxPlatform::Destroy()
@@ -414,11 +422,6 @@ void Platform::OnEvent()
 bool Platform::WindowIsOpen()
 {
 	return s_Instance->WindowIsOpen();
-}
-
-void Platform::SetCallback(EventCallback callback)
-{
-	s_Instance->SetCallback(callback);
 }
 
 bool Platform::HasFeature(CPU::Feature feature)

@@ -2,6 +2,7 @@
 #include "VulkanRenderer.hpp"
 #include <iostream>
 #include "utils/utils.hpp"
+#include "classes/texture/Texture.hpp"
 
 VkBool32 debugUtilsMessengerCallback(VkDebugUtilsMessageSeverityFlagBitsEXT messageSeverity, VkDebugUtilsMessageTypeFlagsEXT messageTypes,
 	VkDebugUtilsMessengerCallbackDataEXT const* pCallbackData, void* /*pUserData*/)
@@ -48,10 +49,30 @@ namespace ray::renderer::vulkan
 	VulkanRenderer::VulkanRenderer()
 	{
 		_screenResolution = vk::Extent2D(Platform::GetWidth(), Platform::GetHeight());
+
+		/* = {
+			{{0.0f, -0.5f}, {1.0f, 0.0f, 0.0f}},
+			{{0.5f, 0.5f}, {0.0f, 1.0f, 0.0f}},
+			{{-0.5f, 0.5f}, {0.0f, 0.0f, 1.0f}}
+		};*/
 	}
 
 	VulkanRenderer::~VulkanRenderer()
 	{ }
+
+	bool VulkanRenderer::canRender()
+	{
+		try
+		{
+			if (_screenResolution.width + _screenResolution.height == 0) return false;
+			if (_physicalDevice.getSurfaceCapabilitiesKHR(_surface.get()).currentExtent.width == 0) return false;
+			return true;
+		}
+		catch(...)
+		{
+			return false;
+		}
+	}
 
 	bool VulkanRenderer::createSwapchain()
 	{
@@ -63,6 +84,35 @@ namespace ray::renderer::vulkan
 		_swapchainImages = _device->getSwapchainImagesKHR(_swapchain.get());
 
 		return true;
+	}
+
+	void VulkanRenderer::createSwapchainResources()
+	{
+		{
+			_swapchainImageViews.resize(_swapchainImages.size());
+			_framebuffers.resize(_swapchainImages.size());
+			vk::Format colorFormat = utilities::pickSurfaceFormat(_physicalDevice.getSurfaceFormatsKHR(_surface.get())).format;
+			// TODO: это не должно быть так
+			vk::Format depthFormat = vk::Format::eD16Unorm;
+
+			vk::ComponentMapping componentMapping(vk::ComponentSwizzle::eR, vk::ComponentSwizzle::eG, vk::ComponentSwizzle::eB, vk::ComponentSwizzle::eA);
+			vk::ImageSubresourceRange subResourceRange(vk::ImageAspectFlagBits::eColor, 0, 1, 0, 1);
+
+			for (int i = 0; i < _swapchainImages.size(); ++i)
+			{
+				vk::ImageViewCreateInfo info(vk::ImageViewCreateFlags(), _swapchainImages.at(i), vk::ImageViewType::e2D, colorFormat, componentMapping, subResourceRange);
+
+				_swapchainImageViews[i] = _device->createImageViewUnique(info);
+			}
+
+			for (int i = 0; i < _swapchainImages.size(); ++i)
+			{
+				vk::FramebufferCreateInfo cinfo(vk::FramebufferCreateFlags(), _renderPass.get(), 1,
+					&_swapchainImageViews[i].get(), _screenResolution.width, _screenResolution.height, 1);
+				_framebuffers[i] = _device->createFramebufferUnique(cinfo);
+			}
+		}
+
 	}
 
 	bool VulkanRenderer::createCommandBuffers()
@@ -82,6 +132,12 @@ namespace ray::renderer::vulkan
 	bool VulkanRenderer::Init()
 	{
 		spdlog::trace("vulkanrenderer: initializing...");
+		glslang::InitializeProcess();
+
+		_vertices.push_back(classes::vertex::Vertex(glm::vec2(-0.5f, -0.5f), glm::vec3(1.0f, 0.0f, 0.0f), glm::vec2(1.0f, 0.0f)));
+		_vertices.push_back(classes::vertex::Vertex(glm::vec2(0.5f, -0.5f), glm::vec3(0.0f, 1.0f, 0.0f), glm::vec2(0.0f, 0.0f)));
+		_vertices.push_back(classes::vertex::Vertex(glm::vec2(0.5f, 0.5f), glm::vec3(0.0f, 0.0f, 1.0f), glm::vec2(0.0f, 1.0f)));
+		_vertices.push_back(classes::vertex::Vertex(glm::vec2(-0.5f, 0.5f), glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(1.0f, 1.0f)));
 
 		std::vector<pcstr> extensions;
 		extensions.push_back(VK_KHR_SURFACE_EXTENSION_NAME);
@@ -89,7 +145,7 @@ namespace ray::renderer::vulkan
 		extensions.push_back(VK_KHR_WIN32_SURFACE_EXTENSION_NAME);
 #endif
 
-		_instance = utilities::create_instance(extensions, { /*"VK_LAYER_LUNARG_core_validation"*/ });
+		_instance = utilities::create_instance(extensions, { "VK_LAYER_LUNARG_monitor" ,"VK_LAYER_LUNARG_core_validation" });
 		spdlog::trace("vulkanrenderer: created instance at @{}", (void*)&_instance.get());
 
 		/** PHYSICAL DEVICES **/
@@ -131,80 +187,30 @@ namespace ray::renderer::vulkan
 		/** RENDER PASS **/
 		_renderPass = utilities::create_render_pass(_physicalDevice, _surface.get(), _device);
 
-		{
-			_swapchainImageViews.resize(_swapchainImages.size());
-			_framebuffers.resize(_swapchainImages.size());
-			vk::Format colorFormat = utilities::pickSurfaceFormat(_physicalDevice.getSurfaceFormatsKHR(_surface.get())).format;
-			// TODO: это не должно быть так
-			vk::Format depthFormat = vk::Format::eD16Unorm;
-
-			vk::ComponentMapping componentMapping(vk::ComponentSwizzle::eR, vk::ComponentSwizzle::eG, vk::ComponentSwizzle::eB, vk::ComponentSwizzle::eA);
-			vk::ImageSubresourceRange subResourceRange(vk::ImageAspectFlagBits::eColor, 0, 1, 0, 1);
-
-			for (int i = 0; i < _swapchainImages.size(); ++i)
-			{
-				vk::ImageViewCreateInfo info(vk::ImageViewCreateFlags(), _swapchainImages.at(i), vk::ImageViewType::e2D, colorFormat, componentMapping, subResourceRange);
-				
-				_swapchainImageViews[i] = _device->createImageViewUnique(info);
-			}
-
-			for (int i = 0; i < _swapchainImages.size(); ++i)
-			{
-				vk::FramebufferCreateInfo cinfo(vk::FramebufferCreateFlags(), _renderPass.get(), 1,
-					&_swapchainImageViews[i].get(), _screenResolution.width, _screenResolution.height, 1);
-				_framebuffers[i] = _device->createFramebufferUnique(cinfo);
-			}
-		}
+		createSwapchainResources();
 
 		_vertexShader.Initialize(_device, "/resources/shaders/vulkan/shader.vert", vk::ShaderStageFlagBits::eVertex);
 		_fragmentShader.Initialize(_device, "/resources/shaders/vulkan/shader.frag", vk::ShaderStageFlagBits::eFragment);
 
-		_pipelineCache = _device->createPipelineCacheUnique(vk::PipelineCacheCreateInfo());
-		_pipelineLayout = _device->createPipelineLayoutUnique(vk::PipelineLayoutCreateInfo());
+		_texture.reset(new classes::texture::Texture);
+		_texture->load("/resources/textures/wall.jpg", _device.get(), _physicalDevice, _commandPool.get());
 
-		vk::GraphicsPipelineCreateInfo create_info;
-		std::vector<vk::PipelineShaderStageCreateInfo> stage_create_info;
-		stage_create_info.resize(2);
-		stage_create_info[0] = vk::PipelineShaderStageCreateInfo(vk::PipelineShaderStageCreateFlags(), vk::ShaderStageFlagBits::eVertex, _vertexShader.get().get(), "main");
-		stage_create_info[1] = vk::PipelineShaderStageCreateInfo(vk::PipelineShaderStageCreateFlags(), vk::ShaderStageFlagBits::eFragment, _fragmentShader.get().get(), "main");
-
-		create_info.stageCount = stage_create_info.size();
-		create_info.pStages = stage_create_info.data();
-		vk::PipelineVertexInputStateCreateInfo vtx_data;
-		create_info.pVertexInputState = &vtx_data;
-		vk::PipelineInputAssemblyStateCreateInfo imp(vk::PipelineInputAssemblyStateCreateFlags(), vk::PrimitiveTopology::eTriangleList);
-		create_info.pInputAssemblyState = &imp;
-		vk::PipelineViewportStateCreateInfo viewportState;
-		viewportState.scissorCount = 1;
-		viewportState.viewportCount = 1;
-		create_info.pViewportState = &viewportState;
-		vk::PipelineRasterizationStateCreateInfo rasterizationState;
-		rasterizationState.lineWidth = 1.f;
-		create_info.pRasterizationState = &rasterizationState;
-		vk::PipelineMultisampleStateCreateInfo multisampleState;
-		multisampleState.rasterizationSamples = vk::SampleCountFlagBits::e1;
-		create_info.pMultisampleState = &multisampleState;
-		vk::PipelineDepthStencilStateCreateInfo depthStencilState;
-		create_info.pDepthStencilState = &depthStencilState;
-		vk::PipelineColorBlendAttachmentState colorAttachmentState;
-		colorAttachmentState.colorWriteMask = vk::ColorComponentFlagBits::eR | vk::ColorComponentFlagBits::eG | vk::ColorComponentFlagBits::eB | vk::ColorComponentFlagBits::eA;
-		vk::PipelineColorBlendStateCreateInfo colorBlendState;
-		colorBlendState.attachmentCount = 1;
-		colorBlendState.pAttachments = &colorAttachmentState;
-		create_info.pColorBlendState = &colorBlendState;
-		std::vector<vk::DynamicState> dstates = { vk::DynamicState::eViewport, vk::DynamicState::eScissor };
-		vk::PipelineDynamicStateCreateInfo dynamicState;
-		dynamicState.dynamicStateCount = dstates.size();
-		dynamicState.pDynamicStates = dstates.data();
-		create_info.pDynamicState = &dynamicState;
-		create_info.layout = _pipelineLayout.get();
-		create_info.renderPass = _renderPass.get();
-
-		_pipeline = _device->createGraphicsPipelineUnique(_pipelineCache.get(), create_info);
+		_graphicsPipeline.resolution = &_screenResolution;
+		_graphicsPipeline.Initialize(_device);
+		_graphicsPipeline.setPhysicalDevice(_physicalDevice);
+		_graphicsPipeline.setSwapchainImagesSize(_swapchainImages.size());
+		_graphicsPipeline.setVertexInput(_vertices);
+		_graphicsPipeline.setIndexBuffer(_indices);
+		_graphicsPipeline.setRenderPass(_renderPass.get());
+		_graphicsPipeline.setPrimitiveTopology(vk::PrimitiveTopology::eTriangleList);
+		_graphicsPipeline.setShader(_vertexShader);
+		_graphicsPipeline.setShader(_fragmentShader);
+		_graphicsPipeline.setTexture(_texture);
+		_graphicsPipeline.Finalize(_device);
 
 
-
-
+		glslang::FinalizeProcess();
+		
 		return true;
 	}
 
@@ -214,6 +220,8 @@ namespace ray::renderer::vulkan
 
 	void VulkanRenderer::Draw()
 	{
+		if(!canRender()) return;
+
 		vk::ClearColorValue color(std::array<float, 4>{48.f / 255.f, 10.f / 255.f, 36.f / 255.f, 1.f});
 		std::vector<vk::ClearValue> clearValue;
 		clearValue.resize(2);
@@ -228,15 +236,15 @@ namespace ray::renderer::vulkan
 		_commandBuffer->setViewport(0, 1, &viewport);
 		_commandBuffer->setScissor(0, 1, &scissor);
 
-		_commandBuffer->bindPipeline(vk::PipelineBindPoint::eGraphics, _pipeline.get());
-
-		_commandBuffer->draw(3, 1, 0, 0);
+		_graphicsPipeline.draw(_commandBuffer.get(), _imageIndex);
 
 		_commandBuffer->endRenderPass();
 	}
 
 	void VulkanRenderer::BeginFrame()
 	{
+		if (!canRender()) return;
+
 		_device->acquireNextImageKHR(_swapchain.get(), ~0ull, _acquireSemaphore.get(), vk::Fence{}, &_imageIndex);
 
 		_device->resetCommandPool(_commandPool.get(), {});
@@ -246,6 +254,8 @@ namespace ray::renderer::vulkan
 
 	void VulkanRenderer::EndFrame()
 	{
+		if (!canRender()) return;
+
 		_commandBuffer->end();
 
 		vk::PipelineStageFlags flags = vk::PipelineStageFlagBits::eColorAttachmentOutput;
@@ -253,7 +263,15 @@ namespace ray::renderer::vulkan
 		_queue.submit(1, &submitInfo, vk::Fence{});
 
 		vk::PresentInfoKHR presentInfo(1, &_releaseSemaphore.get(), 1, &_swapchain.get(), &_imageIndex);
-		assert(_queue.presentKHR(presentInfo) == vk::Result::eSuccess);
+		try
+		{
+			assert(_queue.presentKHR(presentInfo) == vk::Result::eSuccess);
+		}
+		catch(vk::OutOfDateKHRError)
+		{
+			// This is most likely fine
+		}
+		
 		_device->waitIdle();
 	}
 
@@ -262,6 +280,11 @@ namespace ray::renderer::vulkan
 		_device->waitIdle();
 
 		_screenResolution = _physicalDevice.getSurfaceCapabilitiesKHR(_surface.get()).currentExtent;
+
+		_framebuffers.clear();
+		_swapchainImageViews.clear();
+
 		createSwapchain();
+		createSwapchainResources();
 	}
 }

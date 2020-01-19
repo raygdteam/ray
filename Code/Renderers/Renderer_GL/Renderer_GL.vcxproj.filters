@@ -9,14 +9,14 @@
     <ClCompile Include="Classes\Shader\Shader.cpp">
       <Filter>Classes\Shader</Filter>
     </ClCompile>
-    <ClCompile Include="Classes\Model\Mesh.cpp">
-      <Filter>Classes\Model</Filter>
-    </ClCompile>
     <ClCompile Include="Classes\Model\Model.cpp">
       <Filter>Classes\Model</Filter>
     </ClCompile>
-    <ClCompile Include="Classes\Camera\Camera.cpp">
-      <Filter>Classes\Camera</Filter>
+    <ClCompile Include="Classes\Texture\Texture.cpp">
+      <Filter>Classes\Texture</Filter>
+    </ClCompile>
+    <ClCompile Include="Classes\Text\Text.cpp">
+      <Filter>Classes\Text</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -28,14 +28,14 @@
     <ClInclude Include="Classes\Shader\Shader.hpp">
       <Filter>Classes\Shader</Filter>
     </ClInclude>
-    <ClInclude Include="Classes\Model\Mesh.hpp">
-      <Filter>Classes\Model</Filter>
-    </ClInclude>
     <ClInclude Include="Classes\Model\Model.hpp">
       <Filter>Classes\Model</Filter>
     </ClInclude>
-    <ClInclude Include="Classes\Camera\Camera.hpp">
-      <Filter>Classes\Camera</Filter>
+    <ClInclude Include="Classes\Texture\Texture.hpp">
+      <Filter>Classes\Texture</Filter>
+    </ClInclude>
+    <ClInclude Include="Classes\Text\Text.hpp">
+      <Filter>Classes\Text</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -48,8 +48,11 @@
     <Filter Include="Classes\Model">
       <UniqueIdentifier>{455dcadf-f5ea-446e-97b3-943254dd6e72}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Classes\Camera">
-      <UniqueIdentifier>{195d2557-0b1a-4713-b415-8996b5f4ee52}</UniqueIdentifier>
+    <Filter Include="Classes\Texture">
+      <UniqueIdentifier>{c5aeb264-cea4-43cb-916b-631ce029c419}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Classes\Text">
+      <UniqueIdentifier>{cd099d52-4517-4cae-833d-9c794aa6a72e}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

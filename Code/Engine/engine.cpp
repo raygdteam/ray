@@ -2,9 +2,7 @@
 #include "../Core/core_init.h"
 #include "engine.hpp"
 #include "irenderer.hpp"
-#include "event.hpp"
-#include "window_event.h"
-#include "Level.hpp"
+#include "config/models/renderer.hpp"
 
 class engine_impl
 {
@@ -13,8 +11,7 @@ public:
 	void initialize();
 	void run();
 	void destroy();
-	void on_event(Event& e);
-	bool on_window_close(Event& e);
+	bool on_window_close();
 	ray::Level get_active_level();
 	void schedule_renderer_reload();
 
@@ -28,9 +25,10 @@ private:
 
 void engine_impl::preinitialize(ray::core::application* app)
 {
-	RAY_ASSERT(app, TEXT("Application is nullpointer!"))
+	RAY_ASSERT(app, TEXT("Application is null!"))
 	ray::core::preinitialize();
 	ray::file_system::query_mount(app->get_resources_path(), "/resources/");
+
 
 	_current_app = app;
 }
@@ -43,16 +41,21 @@ void engine_impl::initialize()
 	spdlog::info("|        Ilya, Seva, Nikita          |");
 	spdlog::info("+------------------------------------+");
 
-	Platform::SetCallback(std::bind(&engine_impl::on_event, this, std::placeholders::_1));
-	_renderer = ray::renderer::IRenderer::create_renderer(ray::renderer::eRendererType::Dx11);
+	_renderer = ray::renderer::IRenderer::create_renderer(ray::config::model::renderer.api);
 	_renderer->Init();
 
 	_current_app->on_startup();
+
+
 }
 
 void engine_impl::run()
 {
 	bWindowSizeChanged = false;
+
+	// for delta_time calculation
+	static auto startTime = std::chrono::high_resolution_clock::now();
+
 	while (Platform::WindowIsOpen())
 	{
 		Platform::OnEvent();
@@ -66,11 +69,14 @@ void engine_impl::run()
 		if(!Platform::CanTick())
 			continue;
 
+		// level update
+		auto currentTime = std::chrono::high_resolution_clock::now();
+		float deltaTime = std::chrono::duration<float, std::chrono::milliseconds::period>(currentTime - startTime).count();
+
+		//_active_level->Tick(deltaTime);
+
 		_renderer->BeginFrame();
-
-		// Отрисовка
 		_renderer->Draw();
-
 		_renderer->EndFrame();
 	}
 }
@@ -83,13 +89,7 @@ void engine_impl::destroy()
 	delete _current_app;
 }
 
-void engine_impl::on_event(Event& e)
-{
-	EventDispatcher dispatcher(e);
-	dispatcher.Dispatch<WindowCloseEvent>(std::bind(&engine_impl::on_window_close, this, std::placeholders::_1));
-}
-
-bool engine_impl::on_window_close(Event & e)
+bool engine_impl::on_window_close()
 {
 	bRunning = false;
 	return true;

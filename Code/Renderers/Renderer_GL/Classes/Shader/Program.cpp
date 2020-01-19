@@ -54,40 +54,40 @@ GLuint Program::GetUniform(pcstr name)
 
 void Program::SetUniform(const GLchar* name, const GLint& value)
 {
-    glUniform1i(GetUniform(name), value);
+	glUniform1i(GetUniform(name), value);
 }
 
 void Program::SetUniform(const GLchar* name, const GLuint& value)
 {
-    glUniform1ui(GetUniform(name), value);
+	glUniform1ui(GetUniform(name), value);
 }
 
 void Program::SetUniform(const GLchar* name, const GLfloat& value)
 {
-    glUniform1f(GetUniform(name), value);
+	glUniform1f(GetUniform(name), value);
 }
 
 void Program::SetUniform(const GLchar* name, const glm::vec2& value)
 {
-    glUniform2f(GetUniform(name), value.x, value.y);
+	glUniform2f(GetUniform(name), value.x, value.y);
 }
 
 void Program::SetUniform(const GLchar* name, const glm::vec3& value)
 {
-    glUniform3f(GetUniform(name), value.x, value.y, value.z);
+	glUniform3f(GetUniform(name), value.x, value.y, value.z);
 }
 
 void Program::SetUniform(const GLchar* name, const glm::vec4& value)
 {
-    glUniform4f(GetUniform(name), value.x, value.y, value.z, value.w);
+	glUniform4f(GetUniform(name), value.x, value.y, value.z, value.w);
 }
 
 void Program::SetUniform(const GLchar* name, const glm::mat3& value)
 {
-    glUniformMatrix3fv(GetUniform(name), 1, GL_FALSE, glm::value_ptr(value));
+	glUniformMatrix3fv(GetUniform(name), 1, GL_FALSE, glm::value_ptr(value));
 }
 
 void Program::SetUniform(const GLchar* name, const glm::mat4& value)
 {
-    glUniformMatrix4fv(GetUniform(name), 1, GL_FALSE, glm::value_ptr(value));
+	glUniformMatrix4fv(GetUniform(name), 1, GL_FALSE, glm::value_ptr(value));
 }

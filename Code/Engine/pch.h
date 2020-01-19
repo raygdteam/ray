@@ -8,14 +8,11 @@
 
 namespace CPU = ray::core::hardware;
 
-//Windows Libs
-#ifdef RAY_PLATFORM_WIN
+// serialization
+#include <cereal/cereal.hpp>
 
-
-#include <Windows.h>
-
-
-#endif //RAY_PLATFORM_WIN
+// math
+#include <glm/glm.hpp>
 
 //spdlog
 #include <spdlog/spdlog.hpp>
