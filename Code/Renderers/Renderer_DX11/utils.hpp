@@ -9,6 +9,7 @@ namespace ray::renderer::directx11::utilities
 	void DestroyDirectXGlobalVariables();
 	ID3D11DeviceContext* GetDeviceContext();
 	ID3D11RenderTargetView* GetRenderTargetView();
-	HRESULT InitDirectXGlobalVariables(DXGI_SWAP_CHAIN_DESC&);
-	
+	HRESULT CreateDeviceAndContextDevice();
+	HRESULT CreateSwapChain(DXGI_SWAP_CHAIN_DESC&);
+	HRESULT CreateRenderTargetView();
 }

@@ -23,7 +23,7 @@ namespace ray::renderer::directx11
 		, m_DepthStencilState(nullptr)
 		, m_DepthStencilView(nullptr)
 		, m_RasterState(nullptr)
-		, m_Fullscreen(false)
+		, m_bFullscreen(false)
 	{
 	}
 
@@ -51,7 +51,7 @@ namespace ray::renderer::directx11
 
 
 		// Store the vsync setting.
-		m_VSyncEnabled = true;
+		m_bVSyncEnabled = true;
 
 		// Create a DirectX graphics interface factory.
 		result = CreateDXGIFactory(__uuidof(IDXGIFactory), (void**)&factory);
@@ -97,9 +97,6 @@ namespace ray::renderer::directx11
 
 		// Now go through all the display modes and find the one that matches the screen width and height.
 		// When a match is found store the numerator and denominator of the refresh rate for that monitor.
-
-		u16 Width = Platform::GetWidth();
-		u16 Height = Platform::GetHeight();
 
 		for (i = 0; i < numModes; i++)
 		{
@@ -148,6 +145,20 @@ namespace ray::renderer::directx11
 		factory->Release();
 		factory = 0;
 
+		result = CreateDeviceAndContextDevice();
+		if (FAILED(result))
+		{
+			return false;
+		}
+
+		//TODO: Fix
+		UINT m4xMSAAQuality;
+		GetDevice()->CheckMultisampleQualityLevels(DXGI_FORMAT_R8G8B8A8_UNORM, 4, &m4xMSAAQuality);
+		m_bEnable4xMSAA = /*m4xMSAAQuality > 0*/ false;
+		if (!m_bEnable4xMSAA)
+			spdlog::trace("Your physical device is not supporting MSAA");
+
+
 		// Initialize the swap chain description.
 		ZeroMemory(&swapChainDesc, sizeof(swapChainDesc));
 
@@ -162,7 +173,7 @@ namespace ray::renderer::directx11
 		swapChainDesc.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
 
 		// Set the refresh rate of the back buffer.
-		if (m_VSyncEnabled)
+		if (m_bVSyncEnabled)
 		{
 			swapChainDesc.BufferDesc.RefreshRate.Numerator = numerator;
 			swapChainDesc.BufferDesc.RefreshRate.Denominator = denominator;
@@ -179,12 +190,22 @@ namespace ray::renderer::directx11
 		// Set the handle for the window to render to.
 		swapChainDesc.OutputWindow = Platform::GetHWND();
 
-		// Turn multisampling off.
-		swapChainDesc.SampleDesc.Count = 1;
-		swapChainDesc.SampleDesc.Quality = 0;
+		// Use 4X MSAA?
+		if (m_bEnable4xMSAA)
+		{
+			swapChainDesc.SampleDesc.Count = 4;
+			// m4xMsaaQuality is returned via CheckMultisampleQualityLevels().
+			swapChainDesc.SampleDesc.Quality = m4xMSAAQuality - 1;
+		}
+		// Turn	MSAA off.
+		else
+		{
+			swapChainDesc.SampleDesc.Count = 1;
+			swapChainDesc.SampleDesc.Quality = 0;
+		}
 
 		// Set to full screen or windowed mode.
-		if (m_Fullscreen)
+		if (m_bFullscreen)
 		{
 			swapChainDesc.Windowed = false;
 		}
@@ -203,15 +224,13 @@ namespace ray::renderer::directx11
 		// Don't set the advanced flags.
 		swapChainDesc.Flags = 0;
 
-		// Set the feature level to DirectX 11.
-		featureLevel = D3D_FEATURE_LEVEL_11_0;
-
-		// Create the swap chain, Direct3D device, and Direct3D device context.
-		result = InitDirectXGlobalVariables(swapChainDesc);
+		result = CreateSwapChain(swapChainDesc);
 		if (FAILED(result))
-		{
 			return false;
-		}
+
+		result = CreateRenderTargetView();
+		if (FAILED(result))
+			return false;
 
 		// Initialize the description of the depth buffer.
 		ZeroMemory(&depthBufferDesc, sizeof(depthBufferDesc));
@@ -222,8 +241,19 @@ namespace ray::renderer::directx11
 		depthBufferDesc.MipLevels = 1;
 		depthBufferDesc.ArraySize = 1;
 		depthBufferDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
-		depthBufferDesc.SampleDesc.Count = 1;
-		depthBufferDesc.SampleDesc.Quality = 0;
+		// Use 4X MSAA?
+		if (m_bEnable4xMSAA)
+		{
+			depthBufferDesc.SampleDesc.Count = 4;
+			// m4xMsaaQuality is returned via CheckMultisampleQualityLevels().
+			depthBufferDesc.SampleDesc.Quality = m4xMSAAQuality - 1;
+		}
+		// Turn	MSAA off.
+		else
+		{
+			depthBufferDesc.SampleDesc.Count = 1;
+			depthBufferDesc.SampleDesc.Quality = 0;
+		}
 		depthBufferDesc.Usage = D3D11_USAGE_DEFAULT;
 		depthBufferDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
 		depthBufferDesc.CPUAccessFlags = 0;
@@ -236,47 +266,8 @@ namespace ray::renderer::directx11
 			return false;
 		}
 
-		// Initialize the description of the stencil state.
-		ZeroMemory(&depthStencilDesc, sizeof(depthStencilDesc));
-
-		// Set up the description of the stencil state.
-		depthStencilDesc.DepthEnable = true;
-		depthStencilDesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ALL;
-		depthStencilDesc.DepthFunc = D3D11_COMPARISON_LESS;
-
-		depthStencilDesc.StencilEnable = true;
-		depthStencilDesc.StencilReadMask = 0xFF;
-		depthStencilDesc.StencilWriteMask = 0xFF;
-
-		// Stencil operations if pixel is front-facing.
-		depthStencilDesc.FrontFace.StencilFailOp = D3D11_STENCIL_OP_KEEP;
-		depthStencilDesc.FrontFace.StencilDepthFailOp = D3D11_STENCIL_OP_INCR;
-		depthStencilDesc.FrontFace.StencilPassOp = D3D11_STENCIL_OP_KEEP;
-		depthStencilDesc.FrontFace.StencilFunc = D3D11_COMPARISON_ALWAYS;
-
-		// Stencil operations if pixel is back-facing.
-		depthStencilDesc.BackFace.StencilFailOp = D3D11_STENCIL_OP_KEEP;
-		depthStencilDesc.BackFace.StencilDepthFailOp = D3D11_STENCIL_OP_DECR;
-		depthStencilDesc.BackFace.StencilPassOp = D3D11_STENCIL_OP_KEEP;
-		depthStencilDesc.BackFace.StencilFunc = D3D11_COMPARISON_ALWAYS;
-
-		// Create the depth stencil state.
-		result = GetDevice()->CreateDepthStencilState(&depthStencilDesc, &m_DepthStencilState);
-		if (FAILED(result))
-		{
-			return false;
-		}
-
-		// Initialize the depth stencil view.
-		ZeroMemory(&depthStencilViewDesc, sizeof(depthStencilViewDesc));
-
-		// Set up the depth stencil view description.
-		depthStencilViewDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
-		depthStencilViewDesc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
-		depthStencilViewDesc.Texture2D.MipSlice = 0;
-
 		// Create the depth stencil view.
-		result = GetDevice()->CreateDepthStencilView(m_DepthStencilBuffer, &depthStencilViewDesc, &m_DepthStencilView);
+		result = GetDevice()->CreateDepthStencilView(m_DepthStencilBuffer, 0, &m_DepthStencilView);
 		if (FAILED(result))
 		{
 			return false;
@@ -502,7 +493,7 @@ namespace ray::renderer::directx11
 	void RendererDX::EndFrame()
 	{
 		// Present the back buffer to the screen since rendering is complete.
-		if (m_VSyncEnabled)
+		if (m_bVSyncEnabled)
 		{
 			// Lock to screen refresh rate.
 			GetSwapChain()->Present(1, 0);

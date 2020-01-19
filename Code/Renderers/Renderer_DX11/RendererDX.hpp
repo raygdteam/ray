@@ -42,8 +42,9 @@ namespace ray::renderer::directx11
 		u32 m_VideoCardMemory;
 		char m_VideoCardDescr[128];
 
-		bool m_VSyncEnabled;
-		bool m_Fullscreen;
+		bool m_bVSyncEnabled;
+		bool m_bFullscreen;
+		bool m_bEnable4xMSAA;
 
 		DirectX::XMMATRIX m_ProjectionMatrix;
 		DirectX::XMMATRIX m_OrthoMatrix;
