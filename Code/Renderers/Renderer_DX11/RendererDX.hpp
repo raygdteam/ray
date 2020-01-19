@@ -34,6 +34,11 @@ namespace ray::renderer::directx11
 		ID3D11DepthStencilState* m_DepthStencilState;
 		ID3D11DepthStencilView* m_DepthStencilView;
 		ID3D11RasterizerState* m_RasterState;
+
+		ID3D11Buffer* VertexBuffer;
+		ID3D11Buffer* IndexBuffer;
+		ShaderDX shader;
+
 		u32 m_VideoCardMemory;
 		char m_VideoCardDescr[128];
 
