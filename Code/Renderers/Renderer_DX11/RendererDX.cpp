@@ -345,8 +345,8 @@ namespace ray::renderer::directx11
 		polygonLayout[1].InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
 		polygonLayout[1].InstanceDataStepRate = 0;
 
-		shader.Create(eShaderTypeDX::Vertex, TEXT("E:\\Projects\\Ray\\ray\\Game\\resources\\shaders\\dx\\VertexShader.hlsl"));
-		shader.Create(eShaderTypeDX::Pixel, TEXT("E:\\Projects\\Ray\\ray\\Game\\resources\\shaders\\dx\\PixelShader.hlsl"));
+		shader.Create(eShaderTypeDX::Vertex, TEXT("..\\..\\..\\resources\\shaders\\dx\\VertexShader.hlsl"));
+		shader.Create(eShaderTypeDX::Pixel, TEXT("..\\..\\..\\resources\\shaders\\dx\\PixelShader.hlsl"));
 
 		shader.SetInputElement(polygonLayout, sizeof(polygonLayout) / sizeof(polygonLayout[0]));
 
