@@ -179,6 +179,7 @@
     <ClInclude Include="pch.hpp" />
     <ClInclude Include="platform\platform.hpp" />
     <ClInclude Include="processor.h" />
+    <ClInclude Include="StdMalloc.hpp" />
     <ClInclude Include="threading\thread.hpp" />
     <ClInclude Include="threading\threading.hpp" />
     <ClInclude Include="types.h" />
@@ -239,6 +240,7 @@
     <ClCompile Include="memory_ovld.cpp" />
     <ClCompile Include="pch.cpp" />
     <ClCompile Include="processor.cpp" />
+    <ClCompile Include="StdMalloc.cpp" />
     <ClCompile Include="threading\threading.cpp" />
     <ClCompile Include="threading\thread_win32.cpp" />
   </ItemGroup>

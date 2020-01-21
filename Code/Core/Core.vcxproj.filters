@@ -46,6 +46,9 @@
     <ClInclude Include="IMalloc.hpp">
       <Filter>memory</Filter>
     </ClInclude>
+    <ClInclude Include="StdMalloc.hpp">
+      <Filter>memory</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="core_entry_point.cpp" />
@@ -113,6 +116,9 @@
       <Filter>threading</Filter>
     </ClCompile>
     <ClCompile Include="IMalloc.cpp">
+      <Filter>memory</Filter>
+    </ClCompile>
+    <ClCompile Include="StdMalloc.cpp">
       <Filter>memory</Filter>
     </ClCompile>
   </ItemGroup>
