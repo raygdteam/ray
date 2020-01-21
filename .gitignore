@@ -5,3 +5,6 @@ Game/intermediate/**
 Game/intermediate
 .vs
 *.vcxproj.user
+/build/bin
+/build/intermediate/x64
+/src/games/light/x64/Debug
