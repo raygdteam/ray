@@ -10,7 +10,7 @@ namespace ray::core::memory
 	public:
 		~StdMalloc() override {}
 
-		void* Alloc(size_t Size, size_t Alignment = 0) override;
+		void* Alloc(size_t Size, size_t Alignment = 4) override;
 		void Free(void*);
 		void* Realloc(void*, size_t) override;
 

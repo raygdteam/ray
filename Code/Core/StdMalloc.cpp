@@ -7,6 +7,7 @@ namespace ray::core::memory
 
 	void* StdMalloc::Alloc(size_t Size, size_t Alignment)
 	{
+		RAY_ASSERT((Alignment & (Alignment >> 1)) == 0, "Alignement must be power of 2!");
 #ifdef RAY_COMPILER_MSVC
 		return _aligned_malloc(Size, Alignment);
 #elif defined (RAY_COMPILER_GCC)
