@@ -23,6 +23,15 @@ private:
 	bool bWindowSizeChanged = false;
 };
 
+class actyor : public ray::IActor
+{
+public:
+	actyor()
+	{
+		
+	}
+};
+
 void engine_impl::preinitialize(ray::core::application* app)
 {
 	RAY_ASSERT(app, TEXT("Application is null!"))
@@ -30,6 +39,8 @@ void engine_impl::preinitialize(ray::core::application* app)
 	Platform::Init(0, 0, 0);
 	ray::file_system::query_mount(app->get_resources_path(), "/resources/");
 
+	// TODO: temp solution. fix later
+	this->_active_level.reset(new ray::Level);
 
 	_current_app = app;
 }

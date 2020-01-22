@@ -2,6 +2,7 @@
 
 #include <ray/os/preinclude.hpp>
 #include <spdlog/spdlog.hpp>
+#include <spdlog/sinks/msvc_sink.h>
 #include "core.h"
 
 // Подключаем заголовочные файлы.
@@ -22,6 +23,7 @@ namespace ray::core {
 		_preinitialized = true;
 
 		spdlog::set_pattern("[%D %T] [%^%l%$]: %v");
+		spdlog::set_default_logger(std::make_shared<spdlog::logger>("windows", std::make_shared<spdlog::sinks::msvc_sink_mt>()));
 
 		spdlog::info("Preinitializing Ray core version {}.{}.{} (codename: {})", RAY_VERSION_MAJOR, RAY_VERSION_MINOR,
 			RAY_VERSION_PATCH, RAY_VERSION_CODENAME);

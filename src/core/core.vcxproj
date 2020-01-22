@@ -201,6 +201,7 @@
     <ClInclude Include="fs external lib\physfs_miniz.h" />
     <ClInclude Include="fs external lib\physfs_platforms.h" />
     <ClInclude Include="memory\IMalloc.hpp" />
+    <ClInclude Include="memory\memory_manager.hpp" />
     <ClInclude Include="memory\StdMalloc.hpp" />
     <ClInclude Include="memory_ovrd.hpp" />
     <ClInclude Include="object\object.hpp" />

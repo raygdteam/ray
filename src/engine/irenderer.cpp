@@ -19,23 +19,25 @@ using DefaultRenderer = RendererGL;
 
 namespace ray::renderer::detail
 {
-	namespace vk
-	{
-		bool is_supported();
-		IRenderer* create();
-	}
 
-	namespace dx
-	{
-		bool is_supported();
-		IRenderer* create();
-	}
+namespace vk
+{
+bool is_supported();
+IRenderer* create();
+}
 
-	namespace opengl
-	{
-		bool is_supported();
-		IRenderer* create();
-	}
+namespace dx
+{
+bool is_supported();
+IRenderer* create();
+}
+
+namespace opengl
+{
+bool is_supported();
+IRenderer* create();
+}
+
 }
 
 class NullRenderer : public ray::renderer::IRenderer

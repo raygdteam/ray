@@ -4,17 +4,11 @@
     <ClCompile Include="EntryPoint.cpp" />
     <ClCompile Include="engine.cpp" />
     <ClCompile Include="platform.cpp" />
-    <ClCompile Include="imodel_component.cpp">
-      <Filter>renderer\components</Filter>
-    </ClCompile>
     <ClCompile Include="irenderer.cpp">
       <Filter>renderer</Filter>
     </ClCompile>
     <ClCompile Include="ishader.cpp">
       <Filter>renderer</Filter>
-    </ClCompile>
-    <ClCompile Include="IComponent.cpp">
-      <Filter>renderer\components</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -23,9 +17,6 @@
     </Filter>
     <Filter Include="renderer">
       <UniqueIdentifier>{a96278df-7cdc-4111-967d-f5d4734ec55d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="renderer\components">
-      <UniqueIdentifier>{07c3501f-6a8c-4b27-a1c1-a933e7353b51}</UniqueIdentifier>
     </Filter>
     <Filter Include="resources">
       <UniqueIdentifier>{06d26d1b-f32d-4be1-a35f-c45e6f650dc5}</UniqueIdentifier>
@@ -45,6 +36,9 @@
     <Filter Include="config\models">
       <UniqueIdentifier>{d9336ca6-9d44-430e-bb74-ff3bb23828d2}</UniqueIdentifier>
     </Filter>
+    <Filter Include="modules">
+      <UniqueIdentifier>{8de4e35b-ff0f-4efe-bd2b-562e91bc76c5}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">
@@ -52,17 +46,11 @@
     </ClInclude>
     <ClInclude Include="engine.hpp" />
     <ClInclude Include="platform.hpp" />
-    <ClInclude Include="imodel_component.hpp">
-      <Filter>renderer\components</Filter>
-    </ClInclude>
     <ClInclude Include="irenderer.hpp">
       <Filter>renderer</Filter>
     </ClInclude>
     <ClInclude Include="ishader.hpp">
       <Filter>renderer</Filter>
-    </ClInclude>
-    <ClInclude Include="IComponent.hpp">
-      <Filter>renderer\components</Filter>
     </ClInclude>
     <ClInclude Include="resources.hpp">
       <Filter>resources</Filter>
@@ -84,6 +72,12 @@
     </ClInclude>
     <ClInclude Include="config\models\window.hpp">
       <Filter>config\models</Filter>
+    </ClInclude>
+    <ClInclude Include="module_interface.hpp">
+      <Filter>modules</Filter>
+    </ClInclude>
+    <ClInclude Include="component\plane_component.hpp">
+      <Filter>components</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

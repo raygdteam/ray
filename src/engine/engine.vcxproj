@@ -200,22 +200,20 @@
   <ItemGroup>
     <ClCompile Include="engine.cpp" />
     <ClCompile Include="EntryPoint.cpp" />
-    <ClCompile Include="IComponent.cpp" />
-    <ClCompile Include="imodel_component.cpp" />
     <ClCompile Include="irenderer.cpp" />
     <ClCompile Include="ishader.cpp" />
     <ClCompile Include="platform.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="component\IComponent.hpp" />
+    <ClInclude Include="component\plane_component.hpp" />
     <ClInclude Include="config\models\renderer.hpp" />
     <ClInclude Include="config\models\window.hpp" />
     <ClInclude Include="engine.hpp" />
     <ClInclude Include="event\event_system.hpp" />
-    <ClInclude Include="IComponent.hpp" />
-    <ClInclude Include="imodel_component.hpp" />
     <ClInclude Include="irenderer.hpp" />
     <ClInclude Include="ishader.hpp" />
+    <ClInclude Include="module_interface.hpp" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="platform.hpp" />
     <ClInclude Include="resources.hpp" />
