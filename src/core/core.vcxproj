@@ -200,6 +200,8 @@
     <ClInclude Include="fs external lib\physfs_lzmasdk.h" />
     <ClInclude Include="fs external lib\physfs_miniz.h" />
     <ClInclude Include="fs external lib\physfs_platforms.h" />
+    <ClInclude Include="memory\IMalloc.hpp" />
+    <ClInclude Include="memory\StdMalloc.hpp" />
     <ClInclude Include="memory_ovrd.hpp" />
     <ClInclude Include="object\object.hpp" />
     <ClInclude Include="pch.hpp" />
@@ -261,6 +263,8 @@
     <ClCompile Include="fs external lib\physfs_unicode.c">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="memory\IMalloc.cpp" />
+    <ClCompile Include="memory\StdMalloc.cpp" />
     <ClCompile Include="memory_ovld.cpp" />
     <ClCompile Include="pch.cpp" />
     <ClCompile Include="processor.cpp" />
