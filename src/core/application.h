@@ -23,6 +23,7 @@ struct application_info
 struct __declspec(novtable) application
 {
 	virtual void on_startup() = 0;
+	virtual void register_classes() = 0;
 	virtual pcstr get_resources_path() = 0;
 };
 

@@ -1,3 +1,0 @@
-D:\projects_\rayy\src\tools\radium\obj\Debug\radium.csprojAssemblyReference.cache
-D:\projects_\rayy\src\tools\radium\obj\Debug\radium.csproj.CoreCompileInputs.cache
-E:\Projects\Ray\ray\src\tools\radium\obj\Debug\radium.csprojAssemblyReference.cache

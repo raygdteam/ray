@@ -11,29 +11,8 @@ namespace radium.tools
 	/// <summary>
 	/// Methods for adding context information to exceptions
 	/// </summary>
-	public static class ExceptionUtilss
-	{
-		/// <summary>
-		/// Unique key name for adding context to exceptions thrown inside Epic apps
-		/// </summary>
-		const string ContextEntryName = "EpicGames.Context";
-
-		/// <summary>
-		/// Adds a context message to a list stored on the given exception. Intended to be used in situations where supplying additional context
-		/// for an exception is valuable, but wrapping it would remove information.
-		/// </summary>
-		/// <param name="Ex">The exception that was thrown</param>
-		/// <param name="Message">Message to append to the context list</param>
-		public static void AddContext(Exception Ex, string Message)
-		{
-			List<string> Messages = Ex.Data[ContextEntryName] as List<string>;
-			if (Messages == null)
-			{
-				Messages = new List<string>();
-				Ex.Data[ContextEntryName] = Messages;
-			}
-			Messages.Add(Message);
-		}
+	public static class ExceptionUtils
+    { 
 
 		/// <summary>
 		/// Adds a context message to a list stored on the given exception. Intended to be used in situations where supplying additional context
@@ -47,24 +26,7 @@ namespace radium.tools
 			AddContext(Ex, String.Format(Format, Args));
 		}
 
-		/// <summary>
-		/// Enumerates the context lines from the given exception
-		/// </summary>
-		/// <param name="Ex">The exception to retrieve context from</param>
-		/// <returns>Sequence of context lines</returns>
-		public static IEnumerable<string> GetContext(Exception Ex)
-		{
-			List<string> Messages = Ex.Data[ContextEntryName] as List<string>;
-			if (Messages != null)
-			{
-				foreach (string Message in Messages)
-				{
-					yield return Message;
-				}
-			}
-		}
-
-		/// <summary>
+        /// <summary>
 		/// Formats an exception for display in the log, including additional lines of context that were attached to it.
 		/// </summary>
 		/// <param name="Ex">The exception to format</param>
@@ -76,7 +38,7 @@ namespace radium.tools
 			{
 				Exception InnerException = ((AggregateException)Ex).InnerException;
 				ErrorMessage.Append(InnerException.ToString());
-				foreach (string Line in GetContext(InnerException))
+				foreach (string Line in InnerException.StackTrace.Split('\n'))
 				{
 					ErrorMessage.AppendFormat("\n  {0}", Line);
 				}
@@ -85,7 +47,7 @@ namespace radium.tools
 			{
 				ErrorMessage.Append(Ex.ToString());
 			}
-			foreach (string Line in GetContext(Ex))
+			foreach (string Line in Ex.StackTrace.Split('\n'))
 			{
 				ErrorMessage.AppendFormat("\n{0}", Line);
 			}

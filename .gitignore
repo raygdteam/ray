@@ -8,3 +8,7 @@ Game/intermediate
 /build/bin
 /build/intermediate/x64
 /src/games/light/x64/Debug
+/bin/tools/radium.exe
+/bin/tools/radium.exe.config
+*.pdb
+**/obj/Debug/**
