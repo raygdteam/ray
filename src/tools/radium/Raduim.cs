@@ -393,7 +393,8 @@ namespace UnrealBuildTool
 		/// <param name="ArgumentsArray">Command line arguments</param>
 		/// <returns>Zero on success, non-zero on error</returns>
 		private static int Main(string[] ArgumentsArray)
-		{
+        {
+            throw new Exception("Do NOT run Radium yet. it is NOT ready for use :)");
 			SingleInstanceMutex Mutex = null;
 			try
 			{
