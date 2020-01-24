@@ -52,22 +52,8 @@ namespace UnrealBuildTool
 
 				// Get a list of project files to clean UHT for
 				List<FileReference> ProjectFiles = new List<FileReference>();
-				foreach(TargetDescriptor TargetDesc in TargetDescriptors)
-				{
-					if(TargetDesc.Name != UnrealHeaderToolTarget && !RemoteMac.HandlesTargetPlatform(TargetDesc.Platform))
-					{
-						if(ProjectFiles.Count == 0)
-						{
-							ProjectFiles.Add(null);
-						}
-						if(TargetDesc.ProjectFile != null && !ProjectFiles.Contains(TargetDesc.ProjectFile))
-						{
-							ProjectFiles.Add(TargetDesc.ProjectFile);
-						}
-					}
-				}
 
-				// Add descriptors for cleaning UHT with all these projects
+                // Add descriptors for cleaning UHT with all these projects
 				if(ProjectFiles.Count > 0)
 				{
 					UnrealTargetConfiguration Configuration = BuildConfiguration.bForceDebugUnrealHeaderTool ? UnrealTargetConfiguration.Debug : UnrealTargetConfiguration.Development;
@@ -96,7 +82,7 @@ namespace UnrealBuildTool
 				// Find the base folders that can contain binaries
 				List<DirectoryReference> BaseDirs = new List<DirectoryReference>();
 				BaseDirs.Add(UnrealBuildTool.EngineDirectory);
-				BaseDirs.Add(UnrealBuildTool.EnterpriseDirectory);
+
 				foreach (FileReference Plugin in Plugins.EnumeratePlugins(Target.ProjectFile))
 				{
 					BaseDirs.Add(Plugin.Directory);
@@ -210,18 +196,7 @@ namespace UnrealBuildTool
 				}
 			}
 
-			// Also clean all the remote targets
-			for(int Idx = 0; Idx < TargetDescriptors.Count; Idx++)
-			{
-				TargetDescriptor TargetDescriptor = TargetDescriptors[Idx];
-				if(RemoteMac.HandlesTargetPlatform(TargetDescriptor.Platform))
-				{
-					RemoteMac RemoteMac = new RemoteMac(TargetDescriptor.ProjectFile);
-					RemoteMac.Clean(TargetDescriptor);
-				}
-			}
-
-			return 0;
+            return 0;
 		}
 	}
 }

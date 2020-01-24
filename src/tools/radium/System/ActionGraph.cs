@@ -139,11 +139,7 @@ namespace UnrealBuildTool
 				{
 					Executor = new Distcc();
 				}
-				else if(BuildConfiguration.bAllowSNDBS && SNDBS.IsAvailable())
-				{
-					Executor = new SNDBS();
-				}
-				else if(BuildConfiguration.bAllowParallelExecutor && ParallelExecutor.IsAvailable())
+                else if(BuildConfiguration.bAllowParallelExecutor && ParallelExecutor.IsAvailable())
 				{
 					Executor = new ParallelExecutor();
 				}

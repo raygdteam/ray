@@ -12,3 +12,5 @@ Game/intermediate
 /bin/tools/radium.exe.config
 *.pdb
 **/obj/Debug/**
+/src/Saved/UnrealBuildTool
+/src/Intermediate

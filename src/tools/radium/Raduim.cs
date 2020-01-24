@@ -17,22 +17,22 @@ namespace UnrealBuildTool
 		/// <summary>
 		/// The environment at boot time.
 		/// </summary>
-		static public System.Collections.IDictionary InitialEnvironment;
+		public static System.Collections.IDictionary InitialEnvironment;
 
 		/// <summary>
 		/// Whether we're running with engine installed
 		/// </summary>
-		static private bool? bIsEngineInstalled;
+		private static bool? bIsEngineInstalled;
 
 		/// <summary>
 		/// Whether we're running with enterprise installed
 		/// </summary>
-		static private bool? bIsEnterpriseInstalled;
+		private static bool? bIsEnterpriseInstalled;
 
 		/// <summary>
 		/// Whether we're running with an installed project
 		/// </summary>
-		static private bool? bIsProjectInstalled;
+		private static bool? bIsProjectInstalled;
 		
 		/// <summary>
 		/// If we are running with an installed project, specifies the path to it
@@ -45,69 +45,49 @@ namespace UnrealBuildTool
 		public static readonly FileReference UnrealBuildToolPath = FileReference.FindCorrectCase(new FileReference(Assembly.GetExecutingAssembly().GetOriginalLocation()));
 
 		/// <summary>
-		/// The full name of the Root UE4 directory
+		/// The full name of the Root directory
 		/// </summary>
 		public static readonly DirectoryReference RootDirectory = DirectoryReference.Combine(UnrealBuildToolPath.Directory, "..", "..");
 
 		/// <summary>
-		/// The full name of the Engine directory
+		/// The full name of the ray/src directory
 		/// </summary>
-		public static readonly DirectoryReference EngineDirectory = DirectoryReference.Combine(RootDirectory, "Engine");
+		public static readonly DirectoryReference EngineDirectory = DirectoryReference.Combine(RootDirectory, "src");
 
 		/// <summary>
-		/// The full name of the Engine/Source directory
+		/// The full name of the ray/src/engine directory
 		/// </summary>
-		public static readonly DirectoryReference EngineSourceDirectory = DirectoryReference.Combine(EngineDirectory, "Source");
+        public static readonly DirectoryReference EngineSourceDirectory = DirectoryReference.Combine(EngineDirectory, "engine");
 
 		/// <summary>
 		/// Full path to the Engine/Source/Runtime directory
 		/// </summary>
-		public static readonly DirectoryReference EngineSourceRuntimeDirectory = DirectoryReference.Combine(EngineSourceDirectory, "Runtime");
+		// public static readonly DirectoryReference EngineSourceRuntimeDirectory = DirectoryReference.Combine(EngineSourceDirectory, "Runtime");
 
 		/// <summary>
 		/// Full path to the Engine/Source/Developer directory
 		/// </summary>
-		public static readonly DirectoryReference EngineSourceDeveloperDirectory = DirectoryReference.Combine(EngineSourceDirectory, "Developer");
+		// public static readonly DirectoryReference EngineSourceDeveloperDirectory = DirectoryReference.Combine(EngineSourceDirectory, "Developer");
 
 		/// <summary>
 		/// Full path to the Engine/Source/Editor directory
 		/// </summary>
 		public static readonly DirectoryReference EngineSourceEditorDirectory = DirectoryReference.Combine(EngineSourceDirectory, "Editor");
 
-		/// <summary>
-		/// Full path to the Engine/Source/Programs directory
-		/// </summary>
-		public static readonly DirectoryReference EngineSourceProgramsDirectory = DirectoryReference.Combine(EngineSourceDirectory, "Programs");
+        /// <summary>
+        /// Full path to the ray/src/tools directory
+        /// </summary>
+        public static readonly DirectoryReference EngineSourceProgramsDirectory = DirectoryReference.Combine(EngineDirectory, "tools");
 
-		/// <summary>
-		/// Full path to the Engine/Source/ThirdParty directory
-		/// </summary>
-		public static readonly DirectoryReference EngineSourceThirdPartyDirectory = DirectoryReference.Combine(EngineSourceDirectory, "ThirdParty");
+        /// <summary>
+        /// Full path to the ray/src/thirdparty directory
+        /// </summary>
+        public static readonly DirectoryReference EngineSourceThirdPartyDirectory = DirectoryReference.Combine(EngineDirectory, "thirdparty");
 
 		/// <summary>
 		/// The full name of the Engine's PlatformExtensions directory
 		/// </summary>
-		public static readonly DirectoryReference EnginePlatformExtensionsDirectory = DirectoryReference.Combine(EngineDirectory, "Platforms");
-
-		/// <summary>
-		/// The full name of the Enterprise directory
-		/// </summary>
-		public static readonly DirectoryReference EnterpriseDirectory = DirectoryReference.Combine(RootDirectory, "Enterprise");
-
-		/// <summary>
-		/// The full name of the Enterprise/Source directory
-		/// </summary>
-		public static readonly DirectoryReference EnterpriseSourceDirectory = DirectoryReference.Combine(EnterpriseDirectory, "Source");
-
-		/// <summary>
-		/// The full name of the Enterprise/Plugins directory
-		/// </summary>
-		public static readonly DirectoryReference EnterprisePluginsDirectory = DirectoryReference.Combine(EnterpriseDirectory, "Plugins");
-
-		/// <summary>
-		/// The full name of the Enterprise/Intermediate directory
-		/// </summary>
-		public static readonly DirectoryReference EnterpriseIntermediateDirectory = DirectoryReference.Combine(EnterpriseDirectory, "Intermediate");
+		// public static readonly DirectoryReference EnginePlatformExtensionsDirectory = DirectoryReference.Combine(EngineDirectory, "Platforms");
 
 		/// <summary>
 		/// Returns the root location of platform extensions within the given project
@@ -135,18 +115,7 @@ namespace UnrealBuildTool
 		public static DirectoryReference[] GetAllEngineDirectories(string Suffix="")
 		{
 			List<DirectoryReference> EngineDirectories = new List<DirectoryReference>() { DirectoryReference.Combine(EngineDirectory, Suffix) };
-			if (DirectoryReference.Exists(EnginePlatformExtensionsDirectory))
-			{
-				foreach (DirectoryReference PlatformDirectory in DirectoryReference.EnumerateDirectories(EnginePlatformExtensionsDirectory))
-				{
-					DirectoryReference PlatformEngineDirectory = DirectoryReference.Combine(PlatformDirectory, Suffix);
-					if (DirectoryReference.Exists(PlatformEngineDirectory))
-					{
-						EngineDirectories.Add(PlatformEngineDirectory);
-					}
-				}
-			}
-			return EngineDirectories.ToArray();
+            return EngineDirectories.ToArray();
 		}
 
 		/// <summary>
@@ -194,7 +163,7 @@ namespace UnrealBuildTool
 		/// Returns true if UnrealBuildTool is running using installed Engine components
 		/// </summary>
 		/// <returns>True if running using installed Engine components</returns>
-		static public bool IsEngineInstalled()
+		public static bool IsEngineInstalled()
 		{
 			if (!bIsEngineInstalled.HasValue)
 			{
@@ -204,23 +173,10 @@ namespace UnrealBuildTool
 		}
 
 		/// <summary>
-		/// Returns true if UnrealBuildTool is running using installed Enterprise components
-		/// </summary>
-		/// <returns>True if running using installed Enterprise components</returns>
-		static public bool IsEnterpriseInstalled()
-		{
-			if (!bIsEnterpriseInstalled.HasValue)
-			{
-				bIsEnterpriseInstalled = FileReference.Exists(FileReference.Combine(EnterpriseDirectory, "Build", "InstalledBuild.txt"));
-			}
-			return bIsEnterpriseInstalled.Value;
-		}
-
-		/// <summary>
 		/// Returns true if UnrealBuildTool is running using an installed project (ie. a mod kit)
 		/// </summary>
 		/// <returns>True if running using an installed project</returns>
-		static public bool IsProjectInstalled()
+		public static bool IsProjectInstalled()
 		{
 			if (!bIsProjectInstalled.HasValue)
 			{
@@ -243,7 +199,7 @@ namespace UnrealBuildTool
 		/// Gets the installed project file
 		/// </summary>
 		/// <returns>Location of the installed project file</returns>
-		static public FileReference GetInstalledProjectFile()
+		public static FileReference GetInstalledProjectFile()
 		{
 			if(IsProjectInstalled())
 			{
@@ -260,17 +216,13 @@ namespace UnrealBuildTool
 		/// </summary>
 		/// <param name="File">File to test</param>
 		/// <returns>True if the file is part of the installed distribution, false otherwise</returns>
-		static public bool IsFileInstalled(FileReference File)
+		public static bool IsFileInstalled(FileReference File)
 		{
-			if(IsEngineInstalled() && File.IsUnderDirectory(EngineDirectory))
+			if (IsEngineInstalled() && File.IsUnderDirectory(EngineDirectory))
 			{
 				return true;
 			}
-			if(IsEnterpriseInstalled() && File.IsUnderDirectory(EnterpriseDirectory))
-			{
-				return true;
-			}
-			if(IsProjectInstalled() && File.IsUnderDirectory(InstalledProjectFile.Directory))
+            if (IsProjectInstalled() && File.IsUnderDirectory(InstalledProjectFile.Directory))
 			{
 				return true;
 			}
@@ -281,7 +233,7 @@ namespace UnrealBuildTool
 		/// Gets the absolute path to the UBT assembly.
 		/// </summary>
 		/// <returns>A string containing the path to the UBT assembly.</returns>
-		static public FileReference GetUBTPath()
+		public static FileReference GetUBTPath()
 		{
 			return UnrealBuildToolPath;
 		}
@@ -290,12 +242,12 @@ namespace UnrealBuildTool
 		/// The Unreal remote tool ini directory.  This should be valid if compiling using a remote server
 		/// </summary>
 		/// <returns>The directory path</returns>
-		static public string GetRemoteIniPath()
+		public static string GetRemoteIniPath()
 		{
 			return RemoteIniPath;
 		}
 
-		static public void SetRemoteIniPath(string Path)
+		public static void SetRemoteIniPath(string Path)
 		{
 			RemoteIniPath = Path;
 		}
@@ -394,7 +346,6 @@ namespace UnrealBuildTool
 		/// <returns>Zero on success, non-zero on error</returns>
 		private static int Main(string[] ArgumentsArray)
         {
-            throw new Exception("Do NOT run Radium yet. it is NOT ready for use :)");
 			SingleInstanceMutex Mutex = null;
 			try
 			{

@@ -141,26 +141,7 @@ namespace UnrealBuildTool
 					TargetDescriptors.RemoveAll(x => (x.Name == "ShaderCompileWorker" || x.Name == "LiveCodingConsole") && x.SingleFileToCompile != null);
 				}
 
-				// Handle remote builds
-				for(int Idx = 0; Idx < TargetDescriptors.Count; Idx++)
-				{
-					TargetDescriptor TargetDesc = TargetDescriptors[Idx];
-					if(RemoteMac.HandlesTargetPlatform(TargetDesc.Platform))
-					{
-						FileReference BaseLogFile = Log.OutputFile ?? new FileReference(BaseLogFileName);
-						FileReference RemoteLogFile = FileReference.Combine(BaseLogFile.Directory, BaseLogFile.GetFileNameWithoutExtension() + "_Remote.txt");
-
-						RemoteMac RemoteMac = new RemoteMac(TargetDesc.ProjectFile);
-						if(!RemoteMac.Build(TargetDesc, RemoteLogFile))
-						{
-							return (int)CompilationResult.Unknown;
-						}
-
-						TargetDescriptors.RemoveAt(Idx--);
-					}
-				}
-
-				// Handle local builds
+                // Handle local builds
 				if(TargetDescriptors.Count > 0)
 				{
 					// Get a set of all the project directories

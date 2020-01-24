@@ -77,17 +77,10 @@ namespace UnrealBuildTool
 			if (bIncludeEngine)
 			{
 				Folders.Add(UnrealBuildTool.EngineSourceDirectory);
-			}
-			if(bIncludeEnterprise)
-			{
-				Folders.Add(UnrealBuildTool.EnterpriseSourceDirectory);
-			}
-			if (bIncludePlatformExtensions)
-			{
-				Folders.Add(UnrealBuildTool.EnginePlatformExtensionsDirectory);
+                Folders.Add(UnrealBuildTool.EngineDirectory);
 			}
 
-			// @todo plugin: Disallow modules from including plugin modules as dependency modules? (except when the module is part of that plugin)
+            // @todo plugin: Disallow modules from including plugin modules as dependency modules? (except when the module is part of that plugin)
 
 			// Get all the root folders for plugins
 			List<DirectoryReference> RootFolders = new List<DirectoryReference>();
@@ -95,11 +88,8 @@ namespace UnrealBuildTool
 			{
 				RootFolders.AddRange(UnrealBuildTool.GetAllEngineDirectories());
 			}
-			if(bIncludeEnterprise)
-			{
-				RootFolders.Add(UnrealBuildTool.EnterpriseDirectory);
-			}
-			if (GameFolders != null)
+
+            if (GameFolders != null)
 			{
 				if (bIncludePlatformExtensions)
 				{
@@ -403,30 +393,9 @@ namespace UnrealBuildTool
 		/// <param name="bSkipCompile">Whether to skip compilation for this assembly</param>
 		/// <returns>New rules assembly. Returns null if the enterprise directory is unavailable.</returns>
 		public static RulesAssembly CreateEnterpriseRulesAssembly(bool bUsePrecompiled, bool bSkipCompile)
-		{
-			if (EnterpriseRulesAssembly == null)
-			{
-				RulesAssembly EngineAssembly = CreateEngineRulesAssembly(bUsePrecompiled, bSkipCompile);
-				if (DirectoryReference.Exists(UnrealBuildTool.EnterpriseDirectory))
-				{
-					RulesScope EnterpriseScope = new RulesScope("Enterprise", EngineAssembly.Scope);
-
-					List<DirectoryReference> EnterpriseDirectories = new List<DirectoryReference>() { UnrealBuildTool.EnterpriseDirectory };
-
-					IReadOnlyList<PluginInfo> IncludedPlugins = Plugins.ReadEnterprisePlugins(UnrealBuildTool.EnterpriseDirectory);
-					EnterpriseRulesAssembly = CreateEngineOrEnterpriseRulesAssembly(EnterpriseScope, new List<DirectoryReference>() { UnrealBuildTool.EnterpriseDirectory }, 
-						ProjectFileGenerator.EnterpriseProjectFileNameBase, IncludedPlugins, UnrealBuildTool.IsEnterpriseInstalled() || bUsePrecompiled, bSkipCompile, EngineAssembly);
-				}
-				else
-				{
-					// If we're asked for the enterprise rules assembly but the enterprise directory is missing, fallback on the engine rules assembly
-					Log.TraceWarning("Trying to build an enterprise target but the enterprise directory is missing. Falling back on engine components only.");
-					return EngineAssembly;
-				}
-			}
-
-			return EnterpriseRulesAssembly;
-		}
+        {
+            return CreateEngineRulesAssembly(bUsePrecompiled, bSkipCompile);
+        }
 
 		/// <summary>
 		/// Creates a rules assembly
@@ -453,12 +422,12 @@ namespace UnrealBuildTool
 			{
 				using (Timeline.ScopeEvent("Finding engine modules"))
 				{
-					DirectoryReference SourceDirectory = DirectoryReference.Combine(RootDirectory, "Source");
+					DirectoryReference SourceDirectory = UnrealBuildTool.EngineDirectory;
 
-					AddEngineModuleRulesWithContext(SourceDirectory, "Runtime", DefaultModuleContext, UHTModuleType.EngineRuntime, ModuleFileToContext);
-					AddEngineModuleRulesWithContext(SourceDirectory, "Developer", DefaultModuleContext, UHTModuleType.EngineDeveloper, ModuleFileToContext);
-					AddEngineModuleRulesWithContext(SourceDirectory, "Editor", DefaultModuleContext, UHTModuleType.EngineEditor, ModuleFileToContext);
-					AddEngineModuleRulesWithContext(SourceDirectory, "ThirdParty", DefaultModuleContext, UHTModuleType.EngineThirdParty, ModuleFileToContext);
+					AddEngineModuleRulesWithContext(SourceDirectory, "engine", DefaultModuleContext, UHTModuleType.EngineRuntime, ModuleFileToContext);
+					/*AddEngineModuleRulesWithContext(SourceDirectory, "Developer", DefaultModuleContext, UHTModuleType.EngineDeveloper, ModuleFileToContext);
+					AddEngineModuleRulesWithContext(SourceDirectory, "Editor", DefaultModuleContext, UHTModuleType.EngineEditor, ModuleFileToContext);*/
+					AddEngineModuleRulesWithContext(SourceDirectory, "thirdparty", DefaultModuleContext, UHTModuleType.EngineThirdParty, ModuleFileToContext);
 				}
 
 			}
@@ -477,8 +446,8 @@ namespace UnrealBuildTool
 			Dictionary<FileReference, ModuleRulesContext> ProgramModuleFiles = new Dictionary<FileReference, ModuleRulesContext>();
 			foreach (DirectoryReference RootDirectory in RootDirectories)
 			{
-				DirectoryReference SourceDirectory = DirectoryReference.Combine(RootDirectory, "Source");
-				DirectoryReference ProgramsDirectory = DirectoryReference.Combine(SourceDirectory, "Programs");
+				DirectoryReference SourceDirectory = UnrealBuildTool.EngineDirectory;
+				DirectoryReference ProgramsDirectory = DirectoryReference.Combine(SourceDirectory, "tools");
 
 				// Also create a scope for them, and update the UHT module type
 				ModuleRulesContext ProgramsModuleContext = new ModuleRulesContext(ProgramsScope, RootDirectory);
@@ -656,13 +625,7 @@ namespace UnrealBuildTool
 			else
 			{
 				RulesAssembly = CreateEngineRulesAssembly(bUsePrecompiled, bSkipRulesCompile);
-
-				if (RulesAssembly.GetTargetFileName(TargetName) == null && DirectoryReference.Exists(UnrealBuildTool.EnterpriseDirectory))
-				{
-					// Target isn't part of the engine assembly, try the enterprise assembly
-					RulesAssembly = CreateEnterpriseRulesAssembly(bUsePrecompiled, bSkipRulesCompile);
-				}
-			}
+            }
 			if (ForeignPlugin != null)
 			{
 				RulesAssembly = CreatePluginRulesAssembly(ForeignPlugin, bSkipRulesCompile, RulesAssembly, true);

@@ -33,6 +33,11 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Microsoft.VisualStudio.Setup.Configuration.Interop, Version=1.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+      <HintPath>..\..\..\bin\tools\Microsoft.VisualStudio.Setup.Configuration.Interop.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -178,13 +183,8 @@
     <Compile Include="Executors\Distcc.cs" />
     <Compile Include="Executors\LocalExecutor.cs" />
     <Compile Include="Executors\ParallelExecutor.cs" />
-    <Compile Include="Executors\SNDBS.cs" />
     <Compile Include="Executors\XGE.cs" />
     <Compile Include="Modes\WriteMetadataMode.cs" />
-    <Compile Include="Platform\IOS\IOSPostBuildSyncMode.cs" />
-    <Compile Include="Platform\IOS\MobileProvisionContents.cs" />
-    <Compile Include="Platform\Lumin\LuminPackageManifest.cs" />
-    <Compile Include="Platform\Lumin\UEDeployLumin.cs" />
     <Compile Include="ProjectFiles\CLion\CLionGenerator.cs" />
     <Compile Include="ProjectFiles\CMake\CMakefileGenerator.cs" />
     <Compile Include="ProjectFiles\CodeLite\CodeLiteGenerator.cs" />
@@ -204,9 +204,6 @@
     <Compile Include="ProjectFiles\VisualStudio\VCProject.cs" />
     <Compile Include="ProjectFiles\VisualStudio\VCProjectFileGenerator.cs" />
     <Compile Include="ProjectFiles\VisualStudio\VCSolutionOptions.cs" />
-    <Compile Include="ProjectFiles\Xcode\XcodeFrameworkWrapperProject.cs" />
-    <Compile Include="ProjectFiles\Xcode\XcodeProject.cs" />
-    <Compile Include="ProjectFiles\Xcode\XcodeProjectFileGenerator.cs" />
     <Compile Include="System\Action.cs" />
     <Compile Include="System\ActionExecutor.cs" />
     <Compile Include="Modes\AggregateParsedTimingInfo.cs" />
@@ -268,7 +265,6 @@
     <Compile Include="System\XmlConfigFileAttribute.cs" />
     <Compile Include="System\UnrealPluginLanguage.cs" />
     <Compile Include="ProjectFiles\VisualStudioMac\VisualStudioMacProjectFileGenerator.cs" />
-    <Compile Include="ToolChain\RemoteMac.cs" />
     <Compile Include="Platform\Windows\PVSToolChain.cs" />
     <Compile Include="Configuration\UEBuildDeploy.cs" />
     <Compile Include="Configuration\UEBuildBinary.cs" />

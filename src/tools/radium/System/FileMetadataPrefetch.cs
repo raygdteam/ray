@@ -116,11 +116,11 @@ namespace UnrealBuildTool
 			DirectoryItem EnginePluginsDirectory = DirectoryItem.Combine(EngineDirectory, "Plugins");
 			Enqueue(() => ScanPluginFolder(EnginePluginsDirectory));
 
-			DirectoryItem EngineRuntimeDirectory = DirectoryItem.GetItemByDirectoryReference(UnrealBuildTool.EngineSourceRuntimeDirectory);
-			Enqueue(() => ScanDirectoryTree(EngineRuntimeDirectory));
+			/*DirectoryItem EngineRuntimeDirectory = DirectoryItem.GetItemByDirectoryReference(UnrealBuildTool.EngineSourceRuntimeDirectory);
+			Enqueue(() => ScanDirectoryTree(EngineRuntimeDirectory));*/
 
-			DirectoryItem EngineDeveloperDirectory = DirectoryItem.GetItemByDirectoryReference(UnrealBuildTool.EngineSourceDeveloperDirectory);
-			Enqueue(() => ScanDirectoryTree(EngineDeveloperDirectory));
+			/*DirectoryItem EngineDeveloperDirectory = DirectoryItem.GetItemByDirectoryReference(UnrealBuildTool.EngineSourceDeveloperDirectory);
+			Enqueue(() => ScanDirectoryTree(EngineDeveloperDirectory));*/
 
 			DirectoryItem EngineEditorDirectory = DirectoryItem.GetItemByDirectoryReference(UnrealBuildTool.EngineSourceEditorDirectory);
 			Enqueue(() => ScanDirectoryTree(EngineEditorDirectory));

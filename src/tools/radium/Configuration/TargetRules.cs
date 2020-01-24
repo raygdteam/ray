@@ -2302,14 +2302,7 @@ namespace UnrealBuildTool
 		{
 			get { return Inner.bOmitFramePointers; }
 		}
-
-		[Obsolete("bStripSymbolsOnIOS has been deprecated. Use IOSPlatform.bStripSymbols instead.")]
-		public bool bStripSymbolsOnIOS
-		{
-			get { return IOSPlatform.bStripSymbols; }
-		}
-
-		public bool bUseMallocProfiler
+        public bool bUseMallocProfiler
 		{
 			get { return Inner.bUseMallocProfiler; }
 		}
@@ -2364,13 +2357,7 @@ namespace UnrealBuildTool
 			get { return Inner.bDeployAfterCompile; }
 		}
 
-		[Obsolete("bCreateStubIPA has been deprecated. Use IOSPlatform.bCreateStubIPA instead.")]
-		public bool bCreateStubIPA
-		{
-			get { return IOSPlatform.bCreateStubIPA; }
-		}
-
-		public bool bAllowRemotelyCompiledPCHs
+        public bool bAllowRemotelyCompiledPCHs
 		{
 			get { return Inner.bAllowRemotelyCompiledPCHs; }
 		}
@@ -2520,36 +2507,6 @@ namespace UnrealBuildTool
 			get { return Inner.GeneratedProjectName; }
 		}
 
-		public ReadOnlyAndroidTargetRules AndroidPlatform
-		{
-			get;
-			private set;
-		}
-
-		public ReadOnlyLuminTargetRules LuminPlatform
-		{
-			get;
-			private set;
-		}
-
-		public ReadOnlyLinuxTargetRules LinuxPlatform
-		{
-			get;
-			private set;
-		}
-
-		public ReadOnlyIOSTargetRules IOSPlatform
-		{
-			get;
-			private set;
-		}
-
-		public ReadOnlyMacTargetRules MacPlatform
-		{
-			get;
-			private set;
-		}
-
 		public ReadOnlyPS4TargetRules PS4Platform
 		{
 			get;
@@ -2563,12 +2520,6 @@ namespace UnrealBuildTool
 		}
 
 		public ReadOnlyWindowsTargetRules WindowsPlatform
-		{
-			get;
-			private set;
-		}
-
-		public ReadOnlyHoloLensTargetRules HoloLensPlatform
 		{
 			get;
 			private set;

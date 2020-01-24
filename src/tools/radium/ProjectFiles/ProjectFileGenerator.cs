@@ -363,7 +363,7 @@ namespace UnrealBuildTool
 		/// Name of the master project file -- for example, the base file name for the Visual Studio solution file, or the Xcode project file on Mac.
 		/// </summary>
 		[XmlConfigFile]
-		protected string MasterProjectName = "UE4";
+		protected string MasterProjectName = "Ray";
 
 		/// <summary>
 		/// If true, sets the master project name according to the name of the folder it is in.
@@ -406,37 +406,6 @@ namespace UnrealBuildTool
 			AllowDotNetCoreProjects = Environment.CommandLine.Contains("-dotnetcore");
 			OnlyGameProject = InOnlyGameProject;
 			XmlConfig.ApplyTo(this);
-		}
-
-		/// <summary>
-		/// Adds all .automation.csproj files to the solution.
-		/// </summary>
-		void AddAutomationModules(List<FileReference> UnrealProjectFiles, MasterProjectFolder ProgramsFolder)
-		{
-			MasterProjectFolder Folder = ProgramsFolder.AddSubFolder("Automation");
-			List<DirectoryReference> BuildFolders = new List<DirectoryReference>();
-			foreach (FileReference UnrealProjectFile in UnrealProjectFiles)
-			{
-				DirectoryReference GameBuildFolder = DirectoryReference.Combine(UnrealProjectFile.Directory, "Build");
-				if (DirectoryReference.Exists(GameBuildFolder))
-				{
-					BuildFolders.Add(GameBuildFolder);
-				}
-			}
-
-			// Find all the automation modules .csproj files to add
-			List<FileReference> ModuleFiles = RulesCompiler.FindAllRulesSourceFiles(RulesCompiler.RulesFileType.AutomationModule, null, ForeignPlugins:null, AdditionalSearchPaths: BuildFolders );
-			foreach (FileReference ProjectFile in ModuleFiles)
-			{
-				if (FileReference.Exists(ProjectFile))
-				{
-					VCSharpProjectFile Project = new VCSharpProjectFile(ProjectFile);
-					Project.ShouldBuildForAllSolutionTargets = false;//true;
-					AddExistingProjectFile(Project, bForceDevelopmentConfiguration: true);
-                    AutomationProjectFiles.Add( Project );
-					Folder.ChildProjects.Add( Project );
-				}
-			}
 		}
 
 		/// <summary>
@@ -819,54 +788,19 @@ namespace UnrealBuildTool
 						}
 					}
 
-					if (EnterpriseProject != null)
-					{
-						RootFolder.AddSubFolder(UnrealBuildTool.EnterpriseDirectory.GetDirectoryName()).ChildProjects.Add(EnterpriseProject);
-					}
-
-					foreach( ProjectFile CurModProject in ModProjects )
+                    foreach( ProjectFile CurModProject in ModProjects )
 					{
 						RootFolder.AddSubFolder("Mods").ChildProjects.Add(CurModProject);
 					}
 
 					DirectoryReference TemplatesDirectory = DirectoryReference.Combine(UnrealBuildTool.RootDirectory, "Templates");
 					DirectoryReference SamplesDirectory = DirectoryReference.Combine(UnrealBuildTool.RootDirectory, "Samples");
-					DirectoryReference EnterpriseTemplatesDirectory = DirectoryReference.Combine(UnrealBuildTool.EnterpriseDirectory, "Templates");
-					DirectoryReference EnterpriseSamplesDirectory = DirectoryReference.Combine(UnrealBuildTool.EnterpriseDirectory, "Samples");
 
 					foreach( ProjectFile CurGameProject in GameProjects )
 					{
-						// Templates go under a different solution folder than games
-						FileReference UnrealProjectFile = CurGameProject.ProjectTargets.First().UnrealProjectFilePath;
-						if (UnrealProjectFile.IsUnderDirectory(TemplatesDirectory) || UnrealProjectFile.IsUnderDirectory(EnterpriseTemplatesDirectory))
-						{
-							DirectoryReference TemplateGameDirectory = CurGameProject.BaseDir;
-							if( TemplateGameDirectory.IsUnderDirectory((UnrealBuildTool.EnterpriseDirectory)) )
-							{
-								RootFolder.AddSubFolder(UnrealBuildTool.EnterpriseDirectory.GetDirectoryName() + Path.DirectorySeparatorChar + "Templates").ChildProjects.Add(CurGameProject);
-							}
-							else
-							{
-								RootFolder.AddSubFolder("Templates").ChildProjects.Add(CurGameProject);
-							}
-						}
-						else if (UnrealProjectFile.IsUnderDirectory(SamplesDirectory) || UnrealProjectFile.IsUnderDirectory(EnterpriseSamplesDirectory))
-						{
-							DirectoryReference SampleGameDirectory = CurGameProject.BaseDir;
-							if( SampleGameDirectory.IsUnderDirectory((UnrealBuildTool.EnterpriseDirectory)) )
-                            {
-								RootFolder.AddSubFolder(UnrealBuildTool.EnterpriseDirectory.GetDirectoryName() + Path.DirectorySeparatorChar + "Samples").ChildProjects.Add(CurGameProject);
-							}
-							else
-							{
-								RootFolder.AddSubFolder("Samples").ChildProjects.Add(CurGameProject);
-							}
-						}
-						else
-						{
-							RootFolder.AddSubFolder( "Games" ).ChildProjects.Add( CurGameProject );
-						}
 
+                        RootFolder.AddSubFolder( "Games" ).ChildProjects.Add( CurGameProject );
+                        
 						List<Tuple<ProjectFile, string>> NewProjectFiles = CurGameProject.WriteDebugProjectFiles(SupportedPlatforms, SupportedConfigurations, PlatformProjectGenerators);
 
 						if (NewProjectFiles != null)
@@ -896,14 +830,7 @@ namespace UnrealBuildTool
                         }
                         else
                         {
-							if (CurProgramProject.Key.IsUnderDirectory(UnrealBuildTool.EnterpriseDirectory))
-							{
-								RootFolder.AddSubFolder(UnrealBuildTool.EnterpriseDirectory.GetDirectoryName() + Path.DirectorySeparatorChar + "Programs").ChildProjects.Add(CurProgramProject.Value);
-							}
-							else
-							{
-								RootFolder.AddSubFolder( "Programs" ).ChildProjects.Add( CurProgramProject.Value );
-							}
+                            RootFolder.AddSubFolder( "tools" ).ChildProjects.Add( CurProgramProject.Value );
                         }
 					}
 
@@ -918,16 +845,10 @@ namespace UnrealBuildTool
 			{
 				if( IncludeEnginePrograms )
 				{
-					MasterProjectFolder ProgramsFolder = RootFolder.AddSubFolder( "Programs" );
+					MasterProjectFolder ProgramsFolder = RootFolder.AddSubFolder( "tools" );
 
 					// Add UnrealBuildTool to the master project
 					AddUnrealBuildToolProject( ProgramsFolder );
-
-					// Add AutomationTool to the master project
-					ProgramsFolder.ChildProjects.Add(AddSimpleCSharpProject("AutomationTool", bShouldBuildForAllSolutionTargets: true, bForceDevelopmentConfiguration: true));
-
-					// Add automation.csproj files to the master project
-					AddAutomationModules(AllGameProjects, ProgramsFolder);
 
 					// Discover C# programs which should additionally be included in the solution.
 					DiscoverCSharpProgramProjects(ProgramsFolder);
@@ -1679,7 +1600,7 @@ namespace UnrealBuildTool
 		{
 			VCSharpProjectFile Project = null;
 
-			FileReference ProjectFileName = FileReference.Combine( UnrealBuildTool.EngineSourceDirectory, "Programs", ProjectName, Path.GetFileName( ProjectName ) + ".csproj" );
+			FileReference ProjectFileName = FileReference.Combine( UnrealBuildTool.EngineSourceProgramsDirectory, ProjectName, Path.GetFileName( ProjectName ) + ".csproj" );
 			FileInfo Info = new FileInfo( ProjectFileName.FullName );
 			if( Info.Exists )
 			{
@@ -1754,17 +1675,9 @@ namespace UnrealBuildTool
 					// @todo projectfiles: Fragile assumption here about Programs always being under /Engine/Programs
 
 					DirectoryReference ProgramDirectory;
+                    ProgramDirectory = DirectoryReference.Combine( UnrealBuildTool.EngineSourceProgramsDirectory,ProgramName );
 
-                    if ( FileAndProject.Key.IsUnderDirectory(UnrealBuildTool.EnterpriseDirectory) )
-					{
-						ProgramDirectory = DirectoryReference.Combine( UnrealBuildTool.EnterpriseDirectory, "Programs", ProgramName );
-					}
-					else
-					{
-						ProgramDirectory = DirectoryReference.Combine( UnrealBuildTool.EngineDirectory, "Programs", ProgramName );
-					}
-
-					DirectoryReference ProgramConfigDirectory = DirectoryReference.Combine( ProgramDirectory, "Config" );
+                    DirectoryReference ProgramConfigDirectory = DirectoryReference.Combine( ProgramDirectory, "Config" );
 					if( DirectoryReference.Exists(ProgramConfigDirectory) )
 					{
 						ProgramProjectFile.AddFilesToProject( SourceFileSearch.FindFiles( ProgramConfigDirectory ), ProgramDirectory );
@@ -2005,13 +1918,7 @@ namespace UnrealBuildTool
 					}
 				}
 
-				if( CurModuleFile.IsUnderDirectory(UnrealBuildTool.EnterpriseDirectory) && !bIncludeEnterpriseSource )
-				{
-					// We were asked to exclude enterprise modules from the generated projects
-					WantProjectFileForModule = false;
-				}
-
-				if( WantProjectFileForModule )
+				if (WantProjectFileForModule)
 				{
 					DirectoryReference BaseFolder;
 					ProjectFile ProjectFile = FindProjectForModule(CurModuleFile, AllGames, ProgramProjects, ModProjects, out BaseFolder);
@@ -2144,18 +2051,8 @@ namespace UnrealBuildTool
 					BaseFolder = UnrealBuildTool.EngineDirectory;
 					return FindOrAddProjectHelper(EngineProjectFileNameBase, BaseFolder);
 				}
-				if (Path == UnrealBuildTool.EnginePlatformExtensionsDirectory)
-				{
-					BaseFolder = UnrealBuildTool.RootDirectory;
-					return FindOrAddProjectHelper(EngineProjectFileNameBase, BaseFolder);
-				}
-				if (Path == UnrealBuildTool.EnterpriseDirectory)
-				{
-					BaseFolder = UnrealBuildTool.EnterpriseDirectory;
-					return FindOrAddProjectHelper(EnterpriseProjectFileNameBase, BaseFolder);
-				}
 
-				// no match found, lets search the parent directory
+                // no match found, lets search the parent directory
 				Path = Path.ParentDirectory;
 			}
 
@@ -2188,8 +2085,7 @@ namespace UnrealBuildTool
 			ProgramProjects = new Dictionary<FileReference, ProjectFile>();
 
 			// Get some standard directories
-			DirectoryReference EngineSourceProgramsDirectory = DirectoryReference.Combine(UnrealBuildTool.EngineSourceDirectory, "Programs");
-			DirectoryReference EnterpriseSourceProgramsDirectory = DirectoryReference.Combine(UnrealBuildTool.EnterpriseSourceDirectory, "Programs");
+			DirectoryReference EngineSourceProgramsDirectory = UnrealBuildTool.EngineSourceProgramsDirectory;
 
 			foreach( FileReference TargetFilePath in AllTargetFiles )
 			{
@@ -2197,9 +2093,9 @@ namespace UnrealBuildTool
 
 				// Check to see if this is an Engine target.  That is, the target is located under the "Engine" folder
 				bool IsEngineTarget = false;
-				bool IsEnterpriseTarget = false;
 				bool WantProjectFileForTarget = true;
-				if(UnrealBuildTool.GetAllEngineDirectories().Any(x => TargetFilePath.IsUnderDirectory(x)))
+
+				if (UnrealBuildTool.GetAllEngineDirectories().Any(x => TargetFilePath.IsUnderDirectory(x)))
 				{
 					// This is an engine target
 					IsEngineTarget = true;
@@ -2213,37 +2109,16 @@ namespace UnrealBuildTool
 						WantProjectFileForTarget = bIncludeEngineSource;
 					}
 				}
-				else if (TargetFilePath.IsUnderDirectory(UnrealBuildTool.EnterpriseSourceDirectory))
-				{
-					// This is an enterprise target
-					IsEnterpriseTarget = true;
 
-					if(TargetFilePath.IsUnderDirectory(EnterpriseSourceProgramsDirectory))
-					{
-						WantProjectFileForTarget = bIncludeEnterpriseSource && IncludeEnginePrograms;
-					}
-					else
-					{
-						WantProjectFileForTarget = bIncludeEnterpriseSource;
-					}
-				}
-
-				if (WantProjectFileForTarget)
+                if (WantProjectFileForTarget)
 				{
 					RulesAssembly RulesAssembly;
 
 					FileReference CheckProjectFile = AllGames.FirstOrDefault(x => TargetFilePath.IsUnderDirectory(x.Directory));
 					if(CheckProjectFile == null)
 					{
-						if(TargetFilePath.IsUnderDirectory(UnrealBuildTool.EnterpriseDirectory))
-						{
-							RulesAssembly = RulesCompiler.CreateEnterpriseRulesAssembly(false, false);
-						}
-						else
-						{
-							RulesAssembly = RulesCompiler.CreateEngineRulesAssembly(false, false);
-						}
-					}
+                        RulesAssembly = RulesCompiler.CreateEngineRulesAssembly(false, false);
+                    }
 					else
 					{
 						RulesAssembly = RulesCompiler.CreateProjectRulesAssembly(CheckProjectFile, false, false);
@@ -2266,11 +2141,7 @@ namespace UnrealBuildTool
 					{
 						ProjectFileNameBase = EngineProjectFileNameBase;
 					}
-					else if (IsEnterpriseTarget)
-					{
-						ProjectFileNameBase = EnterpriseProjectFileNameBase;
-					}
-					else
+                    else
 					{
 						// Figure out which game project this target belongs to
 						FileReference ProjectInfo = FindGameContainingFile(AllGames, TargetFilePath);
@@ -2320,11 +2191,7 @@ namespace UnrealBuildTool
 					{
 						BaseFolder = UnrealBuildTool.EngineDirectory;
 					}
-					else if (IsEnterpriseTarget)
-					{
-						BaseFolder = UnrealBuildTool.EnterpriseDirectory;
-					}
-					else
+                    else
 					{
 						BaseFolder = GameFolder;
 					}
@@ -2353,17 +2220,6 @@ namespace UnrealBuildTool
 							EngineProject.IsForeignProject = false;
 							EngineProject.IsGeneratedProject = true;
 							EngineProject.IsStubProject = true;
-						}
-					}
-					else if (IsEnterpriseTarget)
-					{
-						EnterpriseProject = ProjectFile;
-						if (UnrealBuildTool.IsEnterpriseInstalled())
-						{
-							// Allow enterprise projects to be created but not built for Installed Engine builds
-							EnterpriseProject.IsForeignProject = false;
-							EnterpriseProject.IsGeneratedProject = true;
-							EnterpriseProject.IsStubProject = true;
 						}
 					}
 					else
@@ -2488,7 +2344,7 @@ namespace UnrealBuildTool
 		/// Adds engine build infrastructure files to the specified project
 		protected void AddEngineBuildFiles( ProjectFile EngineProject )
 		{
-			DirectoryReference BuildDirectory = DirectoryReference.Combine( UnrealBuildTool.EngineDirectory, "Build" );
+			DirectoryReference BuildDirectory = DirectoryReference.Combine( UnrealBuildTool.RootDirectory, "build" );
 
 			List<string> SubdirectoryNamesToExclude = new List<string>();
 			SubdirectoryNamesToExclude.Add("Receipts");

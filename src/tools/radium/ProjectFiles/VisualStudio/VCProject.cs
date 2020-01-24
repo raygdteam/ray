@@ -670,11 +670,7 @@ namespace UnrealBuildTool
 				{
 					VCIncludeSearchPaths.Append(VCToolChain.GetVCIncludePaths(UnrealTargetPlatform.Win32, GetCompilerForIntellisense(), null) + ";");
 				}
-				else if (InPlatforms.Contains(UnrealTargetPlatform.HoloLens))
-				{
-					VCIncludeSearchPaths.Append(HoloLensToolChain.GetVCIncludePaths(UnrealTargetPlatform.HoloLens, GetCompilerForIntellisense()) + ";");
-				}
-			}
+            }
 
 			StringBuilder VCPreprocessorDefinitions = new StringBuilder();
 			foreach (string CurDef in IntelliSensePreprocessorDefinitions)

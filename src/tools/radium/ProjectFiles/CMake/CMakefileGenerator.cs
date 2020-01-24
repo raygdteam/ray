@@ -296,18 +296,6 @@ namespace UnrealBuildTool
 				bIncludeIOSTargets = true;
 				bIncludeTVOSTargets = true;
 			}
-			else if (BuildHostPlatform.Current.Platform == UnrealTargetPlatform.Linux)
-			{
-				HostArchitecture = "Linux";
-				BuildCommand = "cd \"" + UE4RootPath + "\" && bash \"" + UE4RootPath + "/Engine/Build/BatchFiles/" + HostArchitecture + "/Build.sh\"";
-
-				string CompilerPath = LinuxCommon.WhichClang();
-				if (CompilerPath == null)
-				{
-					CompilerPath = LinuxCommon.WhichGcc();
-				}
-				SetCompiler = "set(CMAKE_CXX_COMPILER " + CompilerPath + ")\n\n";
-			}
 			else
 			{
 				throw new BuildException("ERROR: CMakefileGenerator does not support this platform");

@@ -1,0 +1,100 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="engine.cpp" />
+    <ClCompile Include="platform.cpp" />
+    <ClCompile Include="irenderer.cpp">
+      <Filter>renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="ishader.cpp">
+      <Filter>renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="input\input.cpp">
+      <Filter>input</Filter>
+    </ClCompile>
+    <ClCompile Include="component\camera_component.cpp">
+      <Filter>components</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="pch">
+      <UniqueIdentifier>{0dfc64ff-041f-43f3-a71d-75fb5258f6e3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="renderer">
+      <UniqueIdentifier>{a96278df-7cdc-4111-967d-f5d4734ec55d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="resources">
+      <UniqueIdentifier>{06d26d1b-f32d-4be1-a35f-c45e6f650dc5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="world">
+      <UniqueIdentifier>{db8354a6-693d-453c-b0f1-a77b8f5a8c55}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="event">
+      <UniqueIdentifier>{17362c6a-1a97-4506-902c-6e75a8157fa5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="components">
+      <UniqueIdentifier>{f21ed414-3a0a-4588-9c1e-91be5e3c0d7f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="config">
+      <UniqueIdentifier>{9a4e8693-3e9b-4e67-bd27-898c073113f9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="config\models">
+      <UniqueIdentifier>{d9336ca6-9d44-430e-bb74-ff3bb23828d2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="modules">
+      <UniqueIdentifier>{8de4e35b-ff0f-4efe-bd2b-562e91bc76c5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="input">
+      <UniqueIdentifier>{92217a0e-a973-4785-97ad-dd9b46b3a0f1}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="pch.h">
+      <Filter>pch</Filter>
+    </ClInclude>
+    <ClInclude Include="engine.hpp" />
+    <ClInclude Include="platform.hpp" />
+    <ClInclude Include="irenderer.hpp">
+      <Filter>renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="ishader.hpp">
+      <Filter>renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="resources.hpp">
+      <Filter>resources</Filter>
+    </ClInclude>
+    <ClInclude Include="event\event_system.hpp">
+      <Filter>event</Filter>
+    </ClInclude>
+    <ClInclude Include="world\Actor.hpp">
+      <Filter>world</Filter>
+    </ClInclude>
+    <ClInclude Include="component\IComponent.hpp">
+      <Filter>components</Filter>
+    </ClInclude>
+    <ClInclude Include="world\Level.hpp">
+      <Filter>world</Filter>
+    </ClInclude>
+    <ClInclude Include="config\models\renderer.hpp">
+      <Filter>config\models</Filter>
+    </ClInclude>
+    <ClInclude Include="config\models\window.hpp">
+      <Filter>config\models</Filter>
+    </ClInclude>
+    <ClInclude Include="module_interface.hpp">
+      <Filter>modules</Filter>
+    </ClInclude>
+    <ClInclude Include="component\plane_component.hpp">
+      <Filter>components</Filter>
+    </ClInclude>
+    <ClInclude Include="component\model_component.hpp">
+      <Filter>components</Filter>
+    </ClInclude>
+    <ClInclude Include="component\camera_component.hpp">
+      <Filter>components</Filter>
+    </ClInclude>
+    <ClInclude Include="input\input.hpp">
+      <Filter>input</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

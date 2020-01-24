@@ -236,12 +236,6 @@ namespace UnrealBuildTool
 				yield return PluginFile;
 			}
 
-			DirectoryReference EnterprisePluginsDir = DirectoryReference.Combine(UnrealBuildTool.EnterpriseDirectory, "Plugins");
-			foreach(FileReference PluginFile in EnumeratePlugins(EnterprisePluginsDir))
-			{
-				yield return PluginFile;
-			}
-
 			if(ProjectFile != null)
 			{
 				DirectoryReference ProjectPluginsDir = DirectoryReference.Combine(ProjectFile.Directory, "Plugins");

@@ -19,13 +19,9 @@ namespace UnrealBuildTool
 	{
 		public override string ProjectFileExtension => ".json";
 
-		private readonly DirectoryReference EngineSourceProgramsDirectory =
-			DirectoryReference.Combine(UnrealBuildTool.EngineSourceDirectory, "Programs");
+		private readonly DirectoryReference EngineSourceProgramsDirectory = UnrealBuildTool.EngineSourceProgramsDirectory;
 
-		private readonly DirectoryReference EnterpriseSourceProgramsDirectory =
-			DirectoryReference.Combine(UnrealBuildTool.EnterpriseSourceDirectory, "Programs");
-
-		private readonly CommandLineArguments Arguments;
+        private readonly CommandLineArguments Arguments;
 
 
 		/// <summary>
@@ -161,6 +157,7 @@ namespace UnrealBuildTool
 				bool IsEngineTarget = false;
 				bool IsEnterpriseTarget = false;
 				bool WantProjectFileForTarget = true;
+
 				if (TargetFilePath.IsUnderDirectory(UnrealBuildTool.EngineDirectory))
 				{
 					// This is an engine target
@@ -175,22 +172,8 @@ namespace UnrealBuildTool
 						WantProjectFileForTarget = bIncludeEngineSource;
 					}
 				}
-				else if (TargetFilePath.IsUnderDirectory(UnrealBuildTool.EnterpriseSourceDirectory))
-				{
-					// This is an enterprise target
-					IsEnterpriseTarget = true;
 
-					if (TargetFilePath.IsUnderDirectory(EnterpriseSourceProgramsDirectory))
-					{
-						WantProjectFileForTarget = bIncludeEnterpriseSource && IncludeEnginePrograms;
-					}
-					else
-					{
-						WantProjectFileForTarget = bIncludeEnterpriseSource;
-					}
-				}
-
-				if (WantProjectFileForTarget)
+                if (WantProjectFileForTarget)
 				{
 					RulesAssembly RulesAssembly;
 
@@ -198,15 +181,8 @@ namespace UnrealBuildTool
 						AllGames.FirstOrDefault(x => TargetFilePath.IsUnderDirectory(x.Directory));
 					if (CheckProjectFile == null)
 					{
-						if (TargetFilePath.IsUnderDirectory(UnrealBuildTool.EnterpriseDirectory))
-						{
-							RulesAssembly = RulesCompiler.CreateEnterpriseRulesAssembly(false, false);
-						}
-						else
-						{
-							RulesAssembly = RulesCompiler.CreateEngineRulesAssembly(false, false);
-						}
-					}
+                        RulesAssembly = RulesCompiler.CreateEngineRulesAssembly(false, false);
+                    }
 					else
 					{
 						RulesAssembly = RulesCompiler.CreateProjectRulesAssembly(CheckProjectFile, false, false);
@@ -299,11 +275,7 @@ namespace UnrealBuildTool
 					{
 						BaseFolder = UnrealBuildTool.EngineDirectory;
 					}
-					else if (IsEnterpriseTarget)
-					{
-						BaseFolder = UnrealBuildTool.EnterpriseDirectory;
-					}
-					else
+                    else
 					{
 						BaseFolder = GameFolder;
 					}
@@ -331,17 +303,6 @@ namespace UnrealBuildTool
 							EngineProject.IsForeignProject = false;
 							EngineProject.IsGeneratedProject = true;
 							EngineProject.IsStubProject = true;
-						}
-					}
-					else if (IsEnterpriseTarget)
-					{
-						ProjectFile EnterpriseProject = ProjectFile;
-						if (UnrealBuildTool.IsEnterpriseInstalled())
-						{
-							// Allow enterprise projects to be created but not built for Installed Engine builds
-							EnterpriseProject.IsForeignProject = false;
-							EnterpriseProject.IsGeneratedProject = true;
-							EnterpriseProject.IsStubProject = true;
 						}
 					}
 					else

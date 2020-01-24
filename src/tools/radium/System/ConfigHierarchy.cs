@@ -826,10 +826,8 @@ namespace UnrealBuildTool
 			out bool bHasPlatformTag, out bool bHasProjectTag, out bool bHasExpansionTag)
 		{
 			// cache some platform extension information that can be used inside the loops
-			string PlatformExtensionEngineConfigDir = DirectoryReference.Combine(UnrealBuildTool.EnginePlatformExtensionsDirectory, PlatformExtensionName).FullName;
-			string PlatformExtensionProjectConfigDir = ProjectDir != null ? DirectoryReference.Combine(UnrealBuildTool.ProjectPlatformExtensionsDirectory(ProjectDir), PlatformExtensionName).FullName : null;
-			bool bHasPlatformExtensionEngineConfigDir = Directory.Exists(PlatformExtensionEngineConfigDir);
-			bool bHasPlatformExtensionProjectConfigDir = PlatformExtensionProjectConfigDir != null && Directory.Exists(PlatformExtensionProjectConfigDir);
+            string PlatformExtensionProjectConfigDir = ProjectDir != null ? DirectoryReference.Combine(UnrealBuildTool.ProjectPlatformExtensionsDirectory(ProjectDir), PlatformExtensionName).FullName : null;
+            bool bHasPlatformExtensionProjectConfigDir = PlatformExtensionProjectConfigDir != null && Directory.Exists(PlatformExtensionProjectConfigDir);
 
 			bHasPlatformTag = Layer.Path.Contains("{PLATFORM}");
 			bHasProjectTag = Layer.Path.Contains("{PROJECT}");
@@ -860,15 +858,8 @@ namespace UnrealBuildTool
 			}
 			else
 			{
-				if (bHasPlatformTag && bHasPlatformExtensionEngineConfigDir)
-				{
-					LayerPath = Layer.ExtEnginePath.Replace("{EXTENGINE}", PlatformExtensionEngineConfigDir);
-				}
-				else
-				{
-					LayerPath = Layer.Path.Replace("{ENGINE}", UnrealBuildTool.EngineDirectory.FullName);
-				}
-			}
+                LayerPath = Layer.Path.Replace("{ENGINE}", UnrealBuildTool.EngineDirectory.FullName);
+            }
 			LayerPath = LayerPath.Replace("{TYPE}", BaseIniName);
 			LayerPath = LayerPath.Replace("{USERSETTINGS}", Utils.GetUserSettingDirectory().FullName);
 			LayerPath = LayerPath.Replace("{USER}", GetUserDir());

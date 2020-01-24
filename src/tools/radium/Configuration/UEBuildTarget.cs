@@ -1031,11 +1031,7 @@ namespace UnrealBuildTool
 			{
 				ProjectDirectory = ProjectFile.Directory;
 			}
-			else if (Rules.File.IsUnderDirectory(UnrealBuildTool.EnterpriseDirectory))
-			{
-				ProjectDirectory = UnrealBuildTool.EnterpriseDirectory;
-			}
-			else
+            else
 			{
 				ProjectDirectory = UnrealBuildTool.EngineDirectory;
 			}
@@ -2265,7 +2261,7 @@ namespace UnrealBuildTool
 
 			if(Module.RulesFile != null)
 			{
-				return !Module.RulesFile.IsUnderDirectory(UnrealBuildTool.EngineSourceDeveloperDirectory) && !Module.RulesFile.IsUnderDirectory(UnrealBuildTool.EngineSourceEditorDirectory);
+				return !false && !Module.RulesFile.IsUnderDirectory(UnrealBuildTool.EngineSourceEditorDirectory);
 			}
 
 			return true;
@@ -2437,8 +2433,7 @@ namespace UnrealBuildTool
 			Dictionary<string, string> Variables = new Dictionary<string,string>();
 			Variables.Add("RootDir", UnrealBuildTool.RootDirectory.FullName);
 			Variables.Add("EngineDir", UnrealBuildTool.EngineDirectory.FullName);
-			Variables.Add("EnterpriseDir", UnrealBuildTool.EnterpriseDirectory.FullName);
-			Variables.Add("ProjectDir", ProjectDirectory.FullName);
+            Variables.Add("ProjectDir", ProjectDirectory.FullName);
 			Variables.Add("TargetName", TargetName);
 			Variables.Add("TargetPlatform", Platform.ToString());
 			Variables.Add("TargetConfiguration", Configuration.ToString());
@@ -2648,7 +2643,6 @@ namespace UnrealBuildTool
 				if(Rules.bBuildDeveloperTools)
 				{
 					Directories.AddRange(UnrealBuildTool.GetAllEngineDirectories("Source/Developer"));
-					Directories.Add(DirectoryReference.Combine(UnrealBuildTool.EnterpriseSourceDirectory, "Developer"));
 				}
 
 				// Find all the modules that are not part of the standard set
