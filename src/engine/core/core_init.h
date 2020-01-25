@@ -1,7 +1,8 @@
 #pragma once
 
-namespace ray::core {
+namespace ray::core 
+{
 
-	void preinitialize();
+void initialize();
 
 }

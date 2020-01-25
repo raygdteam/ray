@@ -38,7 +38,10 @@ namespace ray::core::hardware
 		name.i[2] = regs.ecx;
 		name.i[3] = 0;
 
-		return name.s;
+		char normalizedName[16];
+		memcpy(&normalizedName, name.s, 16 * sizeof(char));
+
+		return normalizedName;
 	}
 
 	/*
@@ -150,7 +153,7 @@ namespace ray::core::hardware
 		proc->cpu.cache = get_cache_info();
 		proc->model = get_cpu_model_name();
 		/*std::string model_name = proc->model;*/
-		spdlog::info("core: detected cpu {}", proc->model);
+		// spdlog::info("core: detected cpu {}", proc->model);
 	}
 
 	void init_processor_linux(processor* proc)

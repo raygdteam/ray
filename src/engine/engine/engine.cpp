@@ -29,7 +29,7 @@ private:
 void engine_impl::preinitialize(ray::core::application* app)
 {
 	RAY_ASSERT(app, TEXT("Application is null!"))
-	ray::core::preinitialize();
+	ray::core::initialize();
 	Platform::Init(0, 0, 0);
 	ray::file_system::query_mount(app->get_resources_path(), "/resources/");
 
@@ -54,7 +54,6 @@ void engine_impl::initialize()
 
 	// TODO: temp solution. remove this!
 	_active_level.reset(new ray::Level);
-
 	_active_level->actors.push_back(ray::component::ModelComponentActor("/resources/kitten.obj"));
 	_active_level->actors.push_back(ray::component::CameraComponentActor());
 }

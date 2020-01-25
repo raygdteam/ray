@@ -6,7 +6,7 @@ namespace ray::core::memory
 
 class MemoryManager
 {
-	
+	void Initialize();
 };
 
 }

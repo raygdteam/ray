@@ -2,9 +2,6 @@
 #include <cassert>
 
 #include <ray/type/extensions.hpp>
-#include "processor.h"
-#include "file_system.hpp"
-#include "memory_ovrd.hpp"
 
 #define RAY_VERSION_MAJOR "0"
 #define RAY_VERSION_MINOR "1"
@@ -69,3 +66,6 @@
 #else
 	#define RAY_ASSERT(cond, msg)
 #endif
+
+// Misc defines
+#define DEPRECATED(version, message) [[deprecated(message)]]

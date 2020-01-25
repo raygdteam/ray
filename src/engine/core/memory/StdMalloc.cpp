@@ -8,7 +8,7 @@ namespace ray::core::memory
 
 void* StdMalloc::Alloc(size_t Size, size_t Alignment)
 {
-	RAY_ASSERT((Alignment & (Alignment >> 1) == 0), "Alignment must be power of 2!")
+	RAY_ASSERT((((Alignment) & (Alignment >> 1)) == 0), "Alignment must be power of 2!")
 	Alignment = std::max<u32>({ Size >= 16 ? u32(16) : u32(8) , u32(Alignment) });
 	void* Result = nullptr;
 #ifdef RAY_COMPILER_MSVC
@@ -30,7 +30,7 @@ void StdMalloc::Free(void* MemBlock)
 
 void* StdMalloc::Realloc(void* MemBlock, size_t NewSize, size_t Alignment)
 {
-	RAY_ASSERT((Alignment & (Alignment >> 1) == 0), "Alignment must be power of 2!")
+	RAY_ASSERT((((Alignment) & (Alignment >> 1)) == 0), "Alignment must be power of 2!")
 	void* Result = nullptr;
 	Alignment = std::max<u32>({ NewSize >= 16 ? u32(16) : u32(8) , u32(Alignment) });
 #ifdef RAY_COMPILER_MSVC
