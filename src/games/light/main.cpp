@@ -10,6 +10,8 @@ public:
 		
 	}
 
+	void register_classes() override {}
+
 	pcstr get_resources_path() override
 	{
 		return "../../../build/resources";

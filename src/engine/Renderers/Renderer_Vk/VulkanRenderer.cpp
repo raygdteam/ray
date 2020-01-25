@@ -156,7 +156,7 @@ namespace ray::renderer::vulkan
 		extensions.push_back(VK_KHR_WIN32_SURFACE_EXTENSION_NAME);
 #endif
 
-		_instance = utilities::create_instance(extensions, { "VK_LAYER_LUNARG_monitor" ,"VK_LAYER_LUNARG_core_validation", "VK_LAYER_LUNARG_parameter_validation" });
+		_instance = utilities::create_instance(extensions, { /*"VK_LAYER_LUNARG_monitor" ,"VK_LAYER_LUNARG_core_validation", "VK_LAYER_LUNARG_parameter_validation"*/ });
 		spdlog::trace("vulkanrenderer: created instance at @{}", (void*)&_instance.get());
 
 		/** PHYSICAL DEVICES **/

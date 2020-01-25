@@ -132,12 +132,12 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\engine\engine.vcxproj">
-      <Project>{a74652c3-1676-467e-9f95-be9a541ce260}</Project>
-    </ProjectReference>
+    <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="main.cpp" />
+    <ProjectReference Include="..\..\engine\engine\engine.vcxproj">
+      <Project>{a74652c3-1676-467e-9f95-be9a541ce260}</Project>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

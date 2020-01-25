@@ -1,5 +1,4 @@
 #pragma once
-#include <pch.h>
 #include <cstdlib>
 
 namespace ray::component
