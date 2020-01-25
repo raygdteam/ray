@@ -192,7 +192,7 @@
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="GraphicsPipline.hpp" />
+    <ClInclude Include="GraphicsPipeline.hpp" />
     <ClInclude Include="pch.hpp" />
     <ClInclude Include="RendererDX.hpp" />
     <ClInclude Include="ShaderDX.hpp" />
@@ -200,7 +200,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="entry_point.cpp" />
-    <ClCompile Include="GraphicsPipline.cpp" />
+    <ClCompile Include="GraphicsPipeline.cpp" />
     <ClCompile Include="RendererDX.cpp" />
     <ClCompile Include="ShaderDX.cpp" />
     <ClCompile Include="utils.cpp" />
