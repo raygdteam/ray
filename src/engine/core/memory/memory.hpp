@@ -1,6 +1,5 @@
 #pragma once
-#include "pch.hpp"
-#include "core.hpp"
+#include "core/core.hpp"
 
 namespace ray::core::memory
 {

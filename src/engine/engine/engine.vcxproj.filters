@@ -13,7 +13,6 @@
     <ClCompile Include="component\camera_component.cpp">
       <Filter>components</Filter>
     </ClCompile>
-    <ClCompile Include="engine.cpp_legacy" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="pch">
@@ -45,6 +44,9 @@
     </Filter>
     <Filter Include="input">
       <UniqueIdentifier>{92217a0e-a973-4785-97ad-dd9b46b3a0f1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="__legacy__">
+      <UniqueIdentifier>{9c8496d0-1bad-4ec7-851c-1e630ca6d0e1}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -78,9 +80,6 @@
     <ClInclude Include="config\models\window.hpp">
       <Filter>config\models</Filter>
     </ClInclude>
-    <ClInclude Include="module_interface.hpp">
-      <Filter>modules</Filter>
-    </ClInclude>
     <ClInclude Include="component\plane_component.hpp">
       <Filter>components</Filter>
     </ClInclude>
@@ -93,6 +92,16 @@
     <ClInclude Include="input\input.hpp">
       <Filter>input</Filter>
     </ClInclude>
-    <ClInclude Include="engine.hpp_legacy" />
+    <ClInclude Include="module.hpp">
+      <Filter>modules</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="engine.cpp_legacy">
+      <Filter>__legacy__</Filter>
+    </None>
+    <None Include="engine.hpp_legacy">
+      <Filter>__legacy__</Filter>
+    </None>
   </ItemGroup>
 </Project>

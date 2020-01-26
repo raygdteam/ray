@@ -61,8 +61,10 @@ void String<>::SetText(const char* text) {
 	strncpy(this->data, text, this->size);
 }
 
-size_t String<>::GetLength() const {
-	return strlen(this->data);
+template <typename StringType>
+size_t String<StringType>::GetLength() const
+{
+	return size;
 }
 
 void String<>::SetLength(size_t size) {

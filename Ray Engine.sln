@@ -27,6 +27,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "launcher", "src\engine\laun
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "launcher_editor", "src\engine\launcher\launcher_editor.vcxproj", "{2FFAE47B-098B-4E57-A03D-E0DD36B68899}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "app_framework", "src\engine\app_framework\app_framework.vcxproj", "{F99E30D6-97D5-4A03-853D-C680398EBD04}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -81,6 +83,12 @@ Global
 		{2FFAE47B-098B-4E57-A03D-E0DD36B68899}.Development|x64.ActiveCfg = Development|x64
 		{2FFAE47B-098B-4E57-A03D-E0DD36B68899}.Development|x64.Build.0 = Development|x64
 		{2FFAE47B-098B-4E57-A03D-E0DD36B68899}.Release|x64.ActiveCfg = Release|x64
+		{F99E30D6-97D5-4A03-853D-C680398EBD04}.Debug|x64.ActiveCfg = Debug|x64
+		{F99E30D6-97D5-4A03-853D-C680398EBD04}.Debug|x64.Build.0 = Debug|x64
+		{F99E30D6-97D5-4A03-853D-C680398EBD04}.Development|x64.ActiveCfg = Development|x64
+		{F99E30D6-97D5-4A03-853D-C680398EBD04}.Development|x64.Build.0 = Development|x64
+		{F99E30D6-97D5-4A03-853D-C680398EBD04}.Release|x64.ActiveCfg = Release|x64
+		{F99E30D6-97D5-4A03-853D-C680398EBD04}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -96,6 +104,7 @@ Global
 		{B79DC936-4E39-4C7C-8AE6-EA7A384D7B4B} = {609DEDBC-ED85-4A74-A713-3561FACCBC03}
 		{560A1A22-CF8E-4296-BA2C-24F97F248346} = {02955C53-9B32-4DE7-8A1F-E4DDA14F0000}
 		{2FFAE47B-098B-4E57-A03D-E0DD36B68899} = {02955C53-9B32-4DE7-8A1F-E4DDA14F0000}
+		{F99E30D6-97D5-4A03-853D-C680398EBD04} = {02955C53-9B32-4DE7-8A1F-E4DDA14F0000}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {EC8784FD-AA97-4668-9A99-9047531C866A}
