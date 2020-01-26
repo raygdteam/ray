@@ -1,4 +1,4 @@
-#include "core/core.h"
+#include "core/core.hpp"
 #include <ray/os/include.hpp>
 #include <shellapi.h>
 
@@ -53,19 +53,9 @@ u32 GuardedMain()
 }
 
 
-
-void InvalidParameterHandler(const TCHAR* expression, const TCHAR* function, const TCHAR* file, u32 line, uintptr_t)
+//int WinMain(HINSTANCE, HINSTANCE, LPWSTR, int)
+void RayCRTStartup()
 {
-	// TODO: implement
-}
-
-int WinMain(HINSTANCE, HINSTANCE, LPWSTR, int)
-{
-#ifdef _RAY_DEBUG_
-	// Initialize CRT debugger. Has to be done early.
-	_set_invalid_parameter_handler(InvalidParameterHandler);
-#endif
-
 	u32 returnCode = 0;
 	__try
 	{
@@ -76,5 +66,5 @@ int WinMain(HINSTANCE, HINSTANCE, LPWSTR, int)
 		if (IS_DEBUGGER_PRESENT) __debugbreak();
 	}
 
-	return returnCode;
+	//return returnCode;
 }

@@ -118,18 +118,26 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <SDLCheck>true</SDLCheck>
+      <SDLCheck>
+      </SDLCheck>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpplatest</LanguageStandard>
       <PrecompiledHeader>Create</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.hpp</PrecompiledHeaderFile>
-      <PreprocessorDefinitions>RAY_BUILD_DEBUG;RAY_CORE_X64;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(ProjectDir);$(SolutionDir)src\common;$(SolutionDir)sdk\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>RAY_BUILD_CORE;RAY_BUILD_DEBUG;RAY_CORE_X64;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(ProjectDir);$(SolutionDir)src\engine;$(SolutionDir)src\common;$(SolutionDir)sdk\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <EnablePREfast>true</EnablePREfast>
+      <BufferSecurityCheck>false</BufferSecurityCheck>
+      <BasicRuntimeChecks>Default</BasicRuntimeChecks>
+      <ExceptionHandling>false</ExceptionHandling>
+      <RuntimeTypeInfo>false</RuntimeTypeInfo>
     </ClCompile>
     <Lib>
       <IgnoreAllDefaultLibraries>true</IgnoreAllDefaultLibraries>
     </Lib>
+    <Link>
+      <IgnoreAllDefaultLibraries>true</IgnoreAllDefaultLibraries>
+    </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -176,10 +184,11 @@
       <LanguageStandard>stdcpplatest</LanguageStandard>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.hpp</PrecompiledHeaderFile>
-      <PreprocessorDefinitions>RAY_BUILD_RELEASE;RAY_CORE_X64;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>RAY_BUILD_CORE;RAY_BUILD_RELEASE;RAY_CORE_X64;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>$(ProjectDir);$(SolutionDir)src\common;$(SolutionDir)sdk\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <EnablePREfast>true</EnablePREfast>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <BufferSecurityCheck>false</BufferSecurityCheck>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
@@ -193,22 +202,26 @@
       <ConformanceMode>true</ConformanceMode>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>RAY_BUILD_DEVELOPMENT;RAY_CORE_DEVELOPMENT;RAY_CORE_X64;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <PreprocessorDefinitions>RAY_BUILD_CORE;RAY_BUILD_DEVELOPMENT;RAY_CORE_DEVELOPMENT;RAY_CORE_X64;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <BasicRuntimeChecks>Default</BasicRuntimeChecks>
+      <BufferSecurityCheck>false</BufferSecurityCheck>
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="application.h" />
-    <ClInclude Include="core.h" />
-    <ClInclude Include="core_init.h" />
+    <ClInclude Include="core.hpp" />
     <ClInclude Include="file_system\file_system.hpp" />
-    <ClInclude Include="memory\imalloc.hpp" />
+    <ClInclude Include="memory\allocator.hpp" />
+    <ClInclude Include="memory\memory.hpp" />
     <ClInclude Include="memory\memory_manager.hpp" />
     <ClInclude Include="memory\StdMalloc.hpp" />
     <ClInclude Include="object\object.hpp" />
     <ClInclude Include="pch.hpp" />
-    <ClInclude Include="platform\platform.hpp" />
+    <ClInclude Include="platform\platform_fs.hpp" />
+    <ClInclude Include="platform\platform_memory.hpp" />
     <ClInclude Include="processor.h" />
+    <ClInclude Include="raytl\Iterator.hpp" />
+    <ClInclude Include="raytl\string.hpp" />
     <ClInclude Include="serialization\archive.hpp" />
     <ClInclude Include="threading\thread.hpp" />
     <ClInclude Include="threading\threading.hpp" />
@@ -218,11 +231,17 @@
     <ClCompile Include="application.cpp" />
     <ClCompile Include="core_entry_point.cpp" />
     <ClCompile Include="file_system\file_system.cpp" />
+    <ClCompile Include="memory\memory_manager.cpp" />
     <ClCompile Include="memory\StdMalloc.cpp" />
     <ClCompile Include="pch.cpp" />
     <ClCompile Include="processor.cpp" />
+    <ClCompile Include="raytl\string.cpp" />
     <ClCompile Include="threading\threading.cpp" />
     <ClCompile Include="threading\thread_win32.cpp" />
+    <ClCompile Include="windows\platform_memory.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="memory\memory.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

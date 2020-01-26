@@ -14,3 +14,7 @@ Game/intermediate
 **/obj/Debug/**
 /src/Saved/UnrealBuildTool
 /src/Intermediate
+/build/**
+/build/
+/bin
+/bin/**

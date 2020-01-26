@@ -1,3 +1,3 @@
 #pragma once
 
-#include <cstdlib>
+#include <ray/type/extensions.hpp>

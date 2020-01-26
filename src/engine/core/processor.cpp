@@ -1,7 +1,8 @@
 #include "pch.hpp"
 #include "processor.h"
 #include <memory>
-#include "spdlog/spdlog.hpp"
+#include "memory/memory.hpp"
+// #include "spdlog/spdlog.hpp"
 #ifdef RAY_PLATFORM_WIN
 #include <intrin.h>
 #elif defined(RAY_PLATFORM_LINUX)
@@ -39,7 +40,7 @@ namespace ray::core::hardware
 		name.i[3] = 0;
 
 		char normalizedName[16];
-		memcpy(&normalizedName, name.s, 16 * sizeof(char));
+		memory::Memory::Memcpy(&normalizedName, name.s, 16 * sizeof(char));
 
 		return normalizedName;
 	}
@@ -124,7 +125,7 @@ namespace ray::core::hardware
 	pcstr get_cpu_model_name() //Любезно взято из Unreal Engine 4
 	{
 		// @see for more information http://msdn.microsoft.com/en-us/library/vstudio/hskdteyh(v=vs.100).aspx
-		char* model_name = (char*)malloc(0x40);
+		char* model_name = (char*)memory::Memory::Allocate(0x40);
 		registers regs;
 		const size_t regs_size = sizeof(regs);
 
@@ -138,7 +139,7 @@ namespace ray::core::hardware
 			for (u32 index = 0; index < NumBrandStrings; index++)
 			{
 				__cpuid((s32*)&regs, first_model_string + index);
-				memcpy(model_name + regs_size * index, (s32*)&regs, regs_size);
+				memory::Memory::Memcpy(model_name + regs_size * index, (s32*)&regs, regs_size);
 			}
 		}
 		
@@ -147,8 +148,10 @@ namespace ray::core::hardware
 
 	void init_processor_windows(processor* proc)
 	{
-		proc->vendor = (strcmp(get_vendor_name(), "GenuineIntel") == 0) ? Vendor::INTEL :
-			(strcmp(get_vendor_name(), "AuthenticAMD") == 0) ? Vendor::AMD : Vendor::NONE;
+		/*proc->vendor = ((get_vendor_name(), "GenuineIntel") == 0) ? Vendor::INTEL :
+			(strcmp(get_vendor_name(), "AuthenticAMD") == 0) ? Vendor::AMD : Vendor::NONE;*/
+		// TODO: fix
+		proc->vendor = Vendor::NONE;
 		proc->cpu.features = get_cpu_features();
 		proc->cpu.cache = get_cache_info();
 		proc->model = get_cpu_model_name();
@@ -168,7 +171,7 @@ namespace ray::core::hardware
 
 	void clear_processor_info(processor* proc)
 	{
-		free((void*)proc->model);
+		memory::Memory::Free((void*)proc->model);
 	}
 
 	void prefetch_block(const void * InPtr, s32 NumBytes) //Любезно взято из Unreal Engine 4

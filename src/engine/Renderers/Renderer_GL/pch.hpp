@@ -2,7 +2,7 @@
 
 #include "../../Engine/platform.hpp"
 #include "../../Engine/irenderer.hpp"
-#include "../../Core/core.h"
+#include "../../Core/core.hpp"
 
 #define GLEW_STATIC
 #include <glew/glew.h>

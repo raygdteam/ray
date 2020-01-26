@@ -1,5 +1,5 @@
 #include <pch.hpp>
-#include "core.h"
+#include "core.hpp"
 
 // win32 ray::threading::thread implementation
 #ifdef RAY_PLATFORM_WIN
@@ -13,8 +13,6 @@ namespace ray::threading
 
 unsigned long thread::_thread_entrypoint(void* pthis)
 {
-	auto function = *static_cast<std::function<void()>*>(pthis);
-	function();
 	return 0;
 }
 

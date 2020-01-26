@@ -1,7 +1,7 @@
 #pragma once
 
 //Core
-#include "../Core/core.h"
+#include "../Core/core.hpp"
 
 //engine
 #include "platform.hpp"

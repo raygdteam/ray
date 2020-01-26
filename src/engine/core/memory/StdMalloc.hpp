@@ -1,11 +1,11 @@
 #pragma once
-#include "IMalloc.hpp"
+#include "allocator.hpp"
 
 namespace ray::core::memory
 {
 
 class StdMalloc 
-	: public IMalloc
+	: public IAllocator
 {
 public:
 	~StdMalloc() override {}

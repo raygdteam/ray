@@ -1,6 +1,4 @@
 #pragma once
-#include <cassert>
-
 #include <ray/type/extensions.hpp>
 
 #define RAY_VERSION_MAJOR "0"
@@ -62,10 +60,26 @@
 #endif //__linux__
 
 #ifdef _DEBUG
-	#define RAY_ASSERT(cond, msg) assert(cond && msg);
+	#define RAY_ASSERT(cond, msg) // assert(cond && msg);
 #else
 	#define RAY_ASSERT(cond, msg)
 #endif
 
+#if defined(RAY_BUILD_DEBUG) || defined(RAY_BUILD_DEVELOPMENT)
+#define RAY_DLLEXPORTS __declspec(dllexport)
+#define RAY_DLLIMPORT __declspec(dllimport)
+#else
+#define RAY_DLLEXPORTS
+#define RAY_DLLIMPORT
+#endif
+
+#ifdef RAY_BUILD_CORE
+#define RAY_CORE_API RAY_DLLEXPORTS
+#else
+#define RAY_CORE_API RAY_DLLIMPORT
+#endif
+
 // Misc defines
 #define DEPRECATED(version, message) [[deprecated(message)]]
+
+

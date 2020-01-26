@@ -1,17 +1,12 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClInclude Include="core.h" />
     <ClInclude Include="types.h" />
     <ClInclude Include="application.h" />
     <ClInclude Include="pch.hpp" />
-    <ClInclude Include="core_init.h" />
     <ClInclude Include="processor.h" />
     <ClInclude Include="threading\threading.hpp">
       <Filter>threading</Filter>
-    </ClInclude>
-    <ClInclude Include="platform\platform.hpp">
-      <Filter>platform</Filter>
     </ClInclude>
     <ClInclude Include="threading\thread.hpp">
       <Filter>threading</Filter>
@@ -28,11 +23,27 @@
     <ClInclude Include="file_system\file_system.hpp">
       <Filter>file system</Filter>
     </ClInclude>
-    <ClInclude Include="memory\imalloc.hpp">
-      <Filter>memory</Filter>
-    </ClInclude>
     <ClInclude Include="serialization\archive.hpp">
       <Filter>serialization</Filter>
+    </ClInclude>
+    <ClInclude Include="platform\platform_fs.hpp">
+      <Filter>platform</Filter>
+    </ClInclude>
+    <ClInclude Include="memory\memory.hpp">
+      <Filter>memory</Filter>
+    </ClInclude>
+    <ClInclude Include="memory\allocator.hpp">
+      <Filter>memory</Filter>
+    </ClInclude>
+    <ClInclude Include="platform\platform_memory.hpp">
+      <Filter>platform</Filter>
+    </ClInclude>
+    <ClInclude Include="core.hpp" />
+    <ClInclude Include="raytl\string.hpp">
+      <Filter>raytl</Filter>
+    </ClInclude>
+    <ClInclude Include="raytl\Iterator.hpp">
+      <Filter>raytl</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -51,6 +62,15 @@
     </ClCompile>
     <ClCompile Include="file_system\file_system.cpp">
       <Filter>file system</Filter>
+    </ClCompile>
+    <ClCompile Include="memory\memory_manager.cpp">
+      <Filter>memory</Filter>
+    </ClCompile>
+    <ClCompile Include="windows\platform_memory.cpp">
+      <Filter>windows</Filter>
+    </ClCompile>
+    <ClCompile Include="raytl\string.cpp">
+      <Filter>raytl</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -72,5 +92,16 @@
     <Filter Include="serialization">
       <UniqueIdentifier>{3af49264-18ec-486e-908f-d96948fd1e01}</UniqueIdentifier>
     </Filter>
+    <Filter Include="windows">
+      <UniqueIdentifier>{2aae393c-7a14-4f3c-9bae-9ee579dc53b3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="raytl">
+      <UniqueIdentifier>{633ec601-d699-484f-b4c8-20aeb7d875ef}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="memory\memory.cpp">
+      <Filter>memory</Filter>
+    </None>
   </ItemGroup>
 </Project>

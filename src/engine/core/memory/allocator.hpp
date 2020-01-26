@@ -3,10 +3,10 @@
 namespace ray::core::memory
 {
 	
-class IMalloc
+class IAllocator
 {
 public:
-	virtual ~IMalloc();
+	virtual ~IAllocator();
 
 	/**
 	 * \brief Allocate a block of memory with allocator.
