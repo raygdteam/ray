@@ -10,12 +10,6 @@ const float SCREEN_NEAR = 0.1f;
 namespace ray::renderer::directx11
 {
 
-	struct Vertex
-	{
-		DirectX::XMFLOAT3 Position;
-		DirectX::XMFLOAT4 Color;
-	};
-
 	RendererDX::RendererDX()
 		: m_DriverType(D3D_DRIVER_TYPE_NULL)
 		, m_FeatureLevel(D3D_FEATURE_LEVEL_11_0)
