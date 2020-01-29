@@ -107,4 +107,39 @@ namespace ray::renderer::directx11::utilities
 		return gRenderTargetView;
 	}
 
+	HRESULT CreateVertexBuffer(ID3D11Buffer** VertexBuffer, Vertex* Vertices, size_t BufSize)
+	{
+		//default settings
+		D3D11_BUFFER_DESC VertexBufferDesc;
+		VertexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
+		VertexBufferDesc.ByteWidth = BufSize;
+		VertexBufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+		VertexBufferDesc.CPUAccessFlags = 0;
+		VertexBufferDesc.MiscFlags = 0;
+		VertexBufferDesc.StructureByteStride = 0;
+
+		D3D11_SUBRESOURCE_DATA SubresourceData;
+		SubresourceData.pSysMem = Vertices;
+
+		return gDevice->CreateBuffer(&VertexBufferDesc, &SubresourceData, VertexBuffer);
+	}
+
+	HRESULT CreateIndexBuffer(ID3D11Buffer** IndexBuffer, u32* Indices, size_t BufSize)
+	{
+		//default settings
+		D3D11_BUFFER_DESC VertexBufferDesc;
+		VertexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
+		VertexBufferDesc.ByteWidth = BufSize;
+		VertexBufferDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
+		VertexBufferDesc.CPUAccessFlags = 0;
+		VertexBufferDesc.MiscFlags = 0;
+		VertexBufferDesc.StructureByteStride = 0;
+
+		D3D11_SUBRESOURCE_DATA SubresourceData;
+		SubresourceData.pSysMem = Indices;
+
+		return gDevice->CreateBuffer(&VertexBufferDesc, &SubresourceData, IndexBuffer);
+	}
+
+
 }
