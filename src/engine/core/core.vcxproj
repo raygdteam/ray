@@ -220,6 +220,7 @@
     <ClInclude Include="platform\platform_fs.hpp" />
     <ClInclude Include="platform\platform_memory.hpp" />
     <ClInclude Include="processor.h" />
+    <ClInclude Include="raytl\array.hpp" />
     <ClInclude Include="raytl\Iterator.hpp" />
     <ClInclude Include="raytl\string.hpp" />
     <ClInclude Include="serialization\archive.hpp" />
@@ -235,6 +236,7 @@
     <ClCompile Include="memory\StdMalloc.cpp" />
     <ClCompile Include="pch.cpp" />
     <ClCompile Include="processor.cpp" />
+    <ClCompile Include="raytl\array.cpp" />
     <ClCompile Include="raytl\string.cpp" />
     <ClCompile Include="threading\threading.cpp" />
     <ClCompile Include="threading\thread_win32.cpp" />

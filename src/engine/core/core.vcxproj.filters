@@ -45,6 +45,9 @@
     <ClInclude Include="raytl\Iterator.hpp">
       <Filter>raytl</Filter>
     </ClInclude>
+    <ClInclude Include="raytl\array.hpp">
+      <Filter>raytl</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="core_entry_point.cpp" />
@@ -70,6 +73,10 @@
       <Filter>windows</Filter>
     </ClCompile>
     <ClCompile Include="raytl\string.cpp">
+      <Filter>raytl</Filter>
+    </ClCompile>
+    <ClCompile Include="memory\memory.cpp" />
+    <ClCompile Include="raytl\array.cpp">
       <Filter>raytl</Filter>
     </ClCompile>
   </ItemGroup>
@@ -98,10 +105,5 @@
     <Filter Include="raytl">
       <UniqueIdentifier>{633ec601-d699-484f-b4c8-20aeb7d875ef}</UniqueIdentifier>
     </Filter>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="memory\memory.cpp">
-      <Filter>memory</Filter>
-    </None>
   </ItemGroup>
 </Project>
