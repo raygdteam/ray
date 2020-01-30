@@ -14,7 +14,7 @@ namespace raytl
 		, capacity(DEFAULT_CAPACITY_SIZE)
 		, data(nullptr)
 	{
-		data = new Array<Type>[capacity];
+		data = new Type[capacity];
 	}
 
 	template <typename Type>
@@ -22,10 +22,10 @@ namespace raytl
 	{
 		size = OtherArray.size;
 		capacity = OtherArray.capacity;
-		data = new Array<Type>[capacity];
+		data = new Type[capacity];
 		if(!data)
 		{
-			PlatformMemory::Memcpy(OtherArray.data, data, size);
+			PlatformMemory::Memcpy(OtherArray.data, data, size * sizeof(Type));
 		}
 	}
 
@@ -36,14 +36,14 @@ namespace raytl
 		capacity = DEFAULT_CAPACITY_SIZE;
 		if(size < capacity)
 		{
-			data = new Array<Type>[capacity];
+			data = new Type[capacity];
 			return;
 		}
 
 		while (capacity <= size)
 			capacity <<= 1;
 
-		data = new Array<Type>[capacity];
+		data = new Type[capacity];
 		
 	}
 
@@ -64,8 +64,8 @@ namespace raytl
 		}
 
 		capacity <<= 1;
-		Type* NewData = new Array[capacity];
-		PlatformMemory::Memcpy(data, NewData, size);
+		Type* NewData = new Type[capacity];
+		PlatformMemory::Memcpy(data, NewData, size * sizeof(Type));
 		delete[] data;
 		data = NewData;
 		data[size++] = NewElement;
