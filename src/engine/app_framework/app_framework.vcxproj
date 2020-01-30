@@ -109,10 +109,12 @@
       <ExceptionHandling>false</ExceptionHandling>
       <BufferSecurityCheck>false</BufferSecurityCheck>
       <BasicRuntimeChecks>Default</BasicRuntimeChecks>
+      <PreprocessorDefinitions>RAY_BUILD_APPFRAMEWORK;RAY_BUILD_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
-      <SubSystem>Console</SubSystem>
+      <SubSystem>Windows</SubSystem>
       <IgnoreAllDefaultLibraries>true</IgnoreAllDefaultLibraries>
+      <EntryPointSymbol>_DllMainCRTStartup</EntryPointSymbol>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -180,6 +182,7 @@
     <ClCompile Include="windows\platform_window.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="app_framework.hpp" />
     <ClInclude Include="base\platform_window.hpp" />
   </ItemGroup>
   <ItemGroup>

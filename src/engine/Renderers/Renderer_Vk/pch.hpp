@@ -5,7 +5,6 @@
 
 #include "engine/engine/irenderer.hpp"
 #include "engine/core/core.hpp"
-#include "engine/engine/platform.hpp"
 
 #include <spdlog/spdlog.hpp>
 

@@ -189,6 +189,7 @@
       <EnablePREfast>true</EnablePREfast>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
       <BufferSecurityCheck>false</BufferSecurityCheck>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
@@ -240,6 +241,7 @@
     <ClCompile Include="raytl\string.cpp" />
     <ClCompile Include="threading\threading.cpp" />
     <ClCompile Include="threading\thread_win32.cpp" />
+    <ClCompile Include="windows\platform_fs.cpp" />
     <ClCompile Include="windows\platform_memory.cpp" />
   </ItemGroup>
   <ItemGroup>

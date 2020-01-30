@@ -3,8 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.28729.10
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "engine", "src\engine\engine\engine.vcxproj", "{A74652C3-1676-467E-9F95-BE9A541CE260}"
-EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "core", "src\engine\core\core.vcxproj", "{7FCC5351-334C-4C2C-8742-430179A78F1E}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Renderer_GL", "src\engine\Renderers\Renderer_GL\Renderer_GL.vcxproj", "{EE3EA442-762D-4DDB-BF56-7C4BF7B029D3}"
@@ -36,12 +34,6 @@ Global
 		Release|x64 = Release|x64
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{A74652C3-1676-467E-9F95-BE9A541CE260}.Debug|x64.ActiveCfg = Debug|x64
-		{A74652C3-1676-467E-9F95-BE9A541CE260}.Debug|x64.Build.0 = Debug|x64
-		{A74652C3-1676-467E-9F95-BE9A541CE260}.Development|x64.ActiveCfg = Development|x64
-		{A74652C3-1676-467E-9F95-BE9A541CE260}.Development|x64.Build.0 = Development|x64
-		{A74652C3-1676-467E-9F95-BE9A541CE260}.Release|x64.ActiveCfg = Release|x64
-		{A74652C3-1676-467E-9F95-BE9A541CE260}.Release|x64.Build.0 = Release|x64
 		{7FCC5351-334C-4C2C-8742-430179A78F1E}.Debug|x64.ActiveCfg = Debug|x64
 		{7FCC5351-334C-4C2C-8742-430179A78F1E}.Debug|x64.Build.0 = Debug|x64
 		{7FCC5351-334C-4C2C-8742-430179A78F1E}.Development|x64.ActiveCfg = Development|x64
@@ -94,7 +86,6 @@ Global
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
-		{A74652C3-1676-467E-9F95-BE9A541CE260} = {02955C53-9B32-4DE7-8A1F-E4DDA14F0000}
 		{7FCC5351-334C-4C2C-8742-430179A78F1E} = {02955C53-9B32-4DE7-8A1F-E4DDA14F0000}
 		{EE3EA442-762D-4DDB-BF56-7C4BF7B029D3} = {B2A26E86-5869-49DF-BCBB-DFE0CFB6F406}
 		{B2A26E86-5869-49DF-BCBB-DFE0CFB6F406} = {02955C53-9B32-4DE7-8A1F-E4DDA14F0000}

@@ -1,10 +1,11 @@
 #pragma once
+#include "app_framework/app_framework.hpp"
 
 namespace ray::core
 {
 
 /** Interface for OS window. */
-class IPlatformWindow
+class  IPlatformWindow
 {
 public:
 	virtual ~IPlatformWindow() = default;
@@ -12,7 +13,7 @@ public:
 	/**
 	 *  Create instance of @see IPlatformWindow according to the platform.
 	 */
-	IPlatformWindow* CreateInstance();
+	RAY_APPFRAMEWORK_API IPlatformWindow* CreateInstance();
 
 	/** 
 	 *  Called to initialize required systems. 
