@@ -1,6 +1,7 @@
 #include "pch.hpp"
 #include "string.hpp"
 #include "platform/platform_memory.hpp"
+#include "memory/memory.hpp"
 using namespace ray::core::platform;
 
 namespace raytl
@@ -37,7 +38,7 @@ String<>::String(const String<>& string) {
 	this->data = new char[this->size];
 
 	if (this->data != NULL) {
-		strncpy(this->data, string.data, this->size);
+		ray::core::memory::Memory::Memcpy(string.data, this->data, this->size);
 	}
 }
 
@@ -55,10 +56,10 @@ char* String<>::GetText() {
 void String<>::SetText(const char* text) {
 	delete[] this->data;
 
-	this->size = strlen(text);
+	// this->size = strlen(text);
 	this->data = new char[this->size];
 
-	strncpy(this->data, text, this->size);
+	ray::core::memory::Memory::Memcpy(&text, this->data, this->size);
 }
 
 template <typename StringType>
@@ -108,8 +109,9 @@ char String<>::Get(size_t pos) const {
 	return data[pos];
 }
 
-bool String<>::Compare(const String & string) const {
-	return strcmp(this->data, string.data) == 0;
+bool String<>::Compare(const String & string) const 
+{
+	return false; //  strcmp(this->data, string.data) == 0;
 }
 
 char String<>::operator[](size_t pos) {

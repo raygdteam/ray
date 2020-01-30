@@ -2,11 +2,6 @@
 #include <ray/os/include.hpp>
 #include <shellapi.h>
 
-#if defined(RAY_BUILD_DEBUG) || defined(RAY_BUILD_DEVELOPMENT)
-#define _RAY_DEBUG_
-#include <crtdbg.h>
-#endif
-
 /** Exports for video drivers to request the most powerful GPU available. Mainly for OGL/DX11 because Vulkan allows app to choose the GPU. */
 extern "C" { _declspec(dllexport) u32 NvOptimusEnablement = 0x00000001; }
 extern "C" { _declspec(dllexport) u32 AmdPowerXpressRequestHighPerformance = 0x00000001; }
@@ -47,24 +42,15 @@ u32 GuardedMain()
 	pcwstr commandLine = GetCommandLineW();
 	s32 count;
 	CommandLineToArgvW(commandLine, &count);
-
-
+	RayMain(commandLine, count);
 	return 0;
 }
 
 
 //int WinMain(HINSTANCE, HINSTANCE, LPWSTR, int)
-void RayCRTStartup()
+void WinMainCRTStartup()
 {
 	u32 returnCode = 0;
-	__try
-	{
-		returnCode = GuardedMain();
-	}
-	__except(EXCEPTION_CONTINUE_SEARCH)
-	{
-		if (IS_DEBUGGER_PRESENT) __debugbreak();
-	}
-
-	//return returnCode;
+	returnCode = GuardedMain();
+	ExitProcess(returnCode);
 }
