@@ -3,6 +3,7 @@
 #include "core.hpp"
 #include "platform/platform_memory.hpp"
 #include "memory.hpp"
+#include <memory>
 
 using namespace ray::core::platform;
 
@@ -17,10 +18,11 @@ void* aligned_malloc(size_t size, size_t alignment)
 	if (data != nullptr)
 	{
 		// Слава всем богам если они есть если что тут нет ошибок
-		result = reinterpret_cast<void*>(static_cast<u64>(reinterpret_cast<u8>(data) + sizeof(void*) + sizeof(size_t)) +
+		/*result = reinterpret_cast<void*>(static_cast<u64>(reinterpret_cast<u8>(data) + sizeof(void*) + sizeof(size_t)) +
 			alignment - 1 & ~(alignment - 1));
 		*(void**)((u8*)result - sizeof(void*)) = data;
-		*((size_t*)((u8*)result - sizeof(void*) - sizeof(size_t))) = size;
+		*((size_t*)((u8*)result - sizeof(void*) - sizeof(size_t))) = size;*/
+		result = std::align(alignment, size, data, size);
 	}
 
 	return result;

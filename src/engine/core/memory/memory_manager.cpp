@@ -10,7 +10,9 @@ IAllocator* MemoryManager::_allocator = nullptr;
 
 void MemoryManager::Initialize()
 {
-	_allocator = static_cast<IAllocator*>(platform::PlatformMemory::LowLevelAlloc(sizeof(StdMalloc)));
+	auto allocator = (StdMalloc*)platform::PlatformMemory::LowLevelAlloc(sizeof(StdMalloc));
+	new (allocator) StdMalloc();
+	_allocator = static_cast<IAllocator*>(allocator);
 }
 
 IAllocator* MemoryManager::GetAllocator()

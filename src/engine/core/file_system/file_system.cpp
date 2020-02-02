@@ -1,12 +1,13 @@
 #include "pch.hpp"
 #include "file_system.hpp"
+#include "platform/platform_fs.hpp"
 
 namespace ray
 {
 
 void FileSystem::initialize()
 {
-
+	core::platform::PlatformFS::Initialize();
 }
 
 void FileSystem::mount(pcstr real_path, pcstr virtual_path)

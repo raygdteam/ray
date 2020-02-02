@@ -5,15 +5,15 @@ namespace ray::core
 {
 
 /** Interface for OS window. */
-class  IPlatformWindow
+class IPlatformWindow
 {
 public:
 	virtual ~IPlatformWindow() = default;
 
 	/**
-	 *  Create instance of @see IPlatformWindow according to the platform.
+	 *  Create instance of IPlatformWindow according to the platform.
 	 */
-	RAY_APPFRAMEWORK_API IPlatformWindow* CreateInstance();
+	static RAY_APPFRAMEWORK_API IPlatformWindow* CreateInstance();
 
 	/** 
 	 *  Called to initialize required systems. 
@@ -27,13 +27,18 @@ public:
 	 *  @param name The title of window.
 	 *  @returns True if success, false otherwise.
 	 */
-	virtual bool CreateWindow(char name[64]) = 0;
+	virtual bool CreateWindow(const char* name) = 0;
 
 	/**
 	 *  Sets the window visibility.
 	 *  @param visible The visibility of the window.
 	 */
 	virtual void SetWindowVisibility(bool visible) = 0;
+
+	/**
+	 *  Runs the window update.
+	 */
+	virtual void Update() = 0;
 
 	/**
 	 *  Returns the raw window handle.

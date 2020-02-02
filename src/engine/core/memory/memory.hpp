@@ -25,6 +25,13 @@ public:
 	void* operator new[](size_t size) { return ::ray::core::memory::Memory::Allocate(size); } \
 	void operator delete(void* data) { ::ray::core::memory::Memory::Free(data); } \
 	void operator delete[](void* data) { ::ray::core::memory::Memory::Free(data); } \
-	void operator delete(void* data, size_t size) { ::ray::core::memory::Memory::Free(data); }
+	void operator delete(void* data, size_t size) { ::ray::core::memory::Memory::Free(data); } \
+	void operator delete[](void* data, size_t size) { ::ray::core::memory::Memory::Free(data); } \
+	int __cdecl _purecall() { return 0; }
+	/* ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+	 * Workaround for this linker error:
+	 *   error LNK2001: unresolved external symbol _purecall
+	 * TODO: move this shit out of memory.hpp.
+	 */
 
 }

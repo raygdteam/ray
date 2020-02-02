@@ -1,14 +1,15 @@
 using Sharpmake; 
 
-[module: Sharpmake.Import("sharpmake/**.sharpmake.cs")]
-[module: Sharpmake.Import("engine/**.sharpmake.cs")]
+[module: Sharpmake.Include("sharpmake/*.sharpmake.cs")]
+[module: Sharpmake.Include("/engine/**/*.sharpmake.cs")]
+[module: Sharpmake.Include("engine/core/core.sharpmake.cs")]
 
 namespace Ray
 {
     [Generate]
-    class BasicsSolution : Solution
+    class RaySolution : Solution
     {
-        public BasicsSolution()
+        public RaySolution()
         {
             // The name of the solution.
             Name = "Ray";
@@ -18,7 +19,14 @@ namespace Ray
             AddTargets(new Target(
                 Platform.win64,
                 DevEnv.vs2019,
-                Optimization.Debug | Optimization.Development | Optimization.Release));
+                Optimization.Debug | Optimization.Development,
+                OutputType.Dll));
+
+            AddTargets(new Target(
+                Platform.win64,
+                DevEnv.vs2019,
+                Optimization.Release,
+                OutputType.Lib));
         }
 
         // Configure for all 4 generated targets. Note that the type of the
@@ -30,13 +38,7 @@ namespace Ray
             // Puts the generated solution in the /generated folder too.
             conf.SolutionPath = @"[solution.SharpmakeCsPath]";
 
-            // Adds the project described by BasicsProject into the solution.
-            // Note that this is done in the configuration, so you can generate
-            // solutions that contain different projects based on their target.
-            //
-            // You could, for example, exclude a project that only supports 64-bit
-            // from the 32-bit targets.
-            conf.AddProject<BasicsProject>(target);
+            conf.AddProject<CoreModule>(target);
         }
     }
 }

@@ -1,0 +1,118 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="16.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="..\..\..\core\application.cpp" />
+    <ClCompile Include="..\..\..\core\core_entry_point.cpp" />
+    <ClCompile Include="..\..\..\core\file_system\file_system.cpp">
+      <Filter>file_system</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\core\memory\memory.cpp">
+      <Filter>memory</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\core\memory\memory_manager.cpp">
+      <Filter>memory</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\core\memory\StdMalloc.cpp">
+      <Filter>memory</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\core\pch.cpp" />
+    <ClCompile Include="..\..\..\core\processor.cpp" />
+    <ClCompile Include="..\..\..\core\raytl\array.cpp">
+      <Filter>raytl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\core\raytl\string.cpp">
+      <Filter>raytl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\core\threading\thread_win32.cpp">
+      <Filter>threading</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\core\threading\threading.cpp">
+      <Filter>threading</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\core\windows\platform_fs.cpp">
+      <Filter>windows</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\core\windows\platform_memory.cpp">
+      <Filter>windows</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\..\core\application.h" />
+    <ClInclude Include="..\..\..\core\core.hpp" />
+    <ClInclude Include="..\..\..\core\file_system\file.hpp">
+      <Filter>file_system</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\core\file_system\file_system.hpp">
+      <Filter>file_system</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\core\memory\allocator.hpp">
+      <Filter>memory</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\core\memory\memory.hpp">
+      <Filter>memory</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\core\memory\memory_manager.hpp">
+      <Filter>memory</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\core\memory\StdMalloc.hpp">
+      <Filter>memory</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\core\object.hpp" />
+    <ClInclude Include="..\..\..\core\object\object.hpp">
+      <Filter>object</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\core\pch.hpp" />
+    <ClInclude Include="..\..\..\core\platform\platform_fs.hpp">
+      <Filter>platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\core\platform\platform_memory.hpp">
+      <Filter>platform</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\core\processor.h" />
+    <ClInclude Include="..\..\..\core\raytl\array.hpp">
+      <Filter>raytl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\core\raytl\Iterator.hpp">
+      <Filter>raytl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\core\raytl\string.hpp">
+      <Filter>raytl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\core\serialization\archive.hpp">
+      <Filter>serialization</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\core\threading\thread.hpp">
+      <Filter>threading</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\core\threading\threading.hpp">
+      <Filter>threading</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\core\types.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="file_system">
+      <UniqueIdentifier>{41f305e9-3a69-b35e-9e23-50708104bdea}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="memory">
+      <UniqueIdentifier>{95b469cd-067f-81cd-8d7b-f3d61980e291}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="object">
+      <UniqueIdentifier>{63decfa8-bd31-eb59-2ac9-6f8911c4b666}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="platform">
+      <UniqueIdentifier>{d6e5a634-de4a-ef17-4e51-612c50dd72f5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="raytl">
+      <UniqueIdentifier>{91d5fc2c-1236-de0d-a807-ce4dbe40c00f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="serialization">
+      <UniqueIdentifier>{f9f27ab3-7920-e75e-0d2d-7c8b0d40d56f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="threading">
+      <UniqueIdentifier>{60e880b1-a9a2-eade-961d-1cdba245f0ac}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="windows">
+      <UniqueIdentifier>{ed37410f-0215-04b5-5d60-83aa258b5c42}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

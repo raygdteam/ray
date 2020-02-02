@@ -1,12 +1,12 @@
 #pragma once
-#include "pch.hpp"
-#include "core.hpp"
-#include "serialization/archive.hpp"
+#include "core/pch.hpp"
+#include "core/core.hpp"
+#include "core/serialization/archive.hpp"
 
 namespace ray 
 {
 
-class FileSystem
+class RAY_CORE_API FileSystem
 {
 	FileSystem() = default;
 public:

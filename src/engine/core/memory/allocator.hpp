@@ -6,7 +6,7 @@ namespace ray::core::memory
 class IAllocator
 {
 public:
-	virtual ~IAllocator();
+	virtual ~IAllocator() = default;
 
 	/**
 	 * \brief Allocate a block of memory with allocator.
@@ -35,7 +35,7 @@ public:
 	 * \brief 
 	 * \return 
 	 */
-	virtual inline size_t GetAllocationSize(void*) = 0;
+	virtual size_t GetAllocationSize(void*) = 0;
 };
 
 }
