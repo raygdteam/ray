@@ -1,10 +1,10 @@
 #include "pch.hpp"
 #include "array.hpp"
-#include "platform/platform_memory.hpp"
+#include "core/memory/memory.hpp"
 
 #define DEFAULT_CAPACITY_SIZE 16
 
-using namespace ray::core::platform;
+using namespace ray::core::memory;
 
 namespace raytl
 {
@@ -25,7 +25,7 @@ namespace raytl
 		data = new Type[capacity];
 		if(!data)
 		{
-			PlatformMemory::Memcpy(OtherArray.data, data, size * sizeof(Type));
+			Memory::Memcpy(OtherArray.data, data, size * sizeof(Type));
 		}
 	}
 
@@ -65,7 +65,7 @@ namespace raytl
 
 		capacity <<= 1;
 		Type* NewData = new Type[capacity];
-		PlatformMemory::Memcpy(data, NewData, size * sizeof(Type));
+		Memory::Memcpy(data, NewData, size * sizeof(Type));
 		delete[] data;
 		data = NewData;
 		data[size++] = NewElement;

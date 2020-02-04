@@ -108,6 +108,7 @@
       <BufferSecurityCheck>false</BufferSecurityCheck>
       <LanguageStandard>stdcpplatest</LanguageStandard>
       <BasicRuntimeChecks>Default</BasicRuntimeChecks>
+      <PreprocessorDefinitions>RAY_BUILD_ENGINE;RAY_BUILD_DEBUG;RAY_CORE_X64;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -152,6 +153,7 @@
       <ExceptionHandling>false</ExceptionHandling>
       <BufferSecurityCheck>false</BufferSecurityCheck>
       <LanguageStandard>stdcpplatest</LanguageStandard>
+      <PreprocessorDefinitions>RAY_BUILD_ENGINE;RAY_BUILD_RELEASE;RAY_CORE_X64;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -167,6 +169,7 @@
       <BufferSecurityCheck>false</BufferSecurityCheck>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpplatest</LanguageStandard>
+      <PreprocessorDefinitions>RAY_BUILD_ENGINE;RAY_BUILD_DEVELOPMENT;RAY_CORE_X64;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -178,7 +181,13 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="engine.cpp" />
+    <ClCompile Include="engine\engine.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="engine\engine.hpp" />
+    <ClInclude Include="engine\engine_def.hpp" />
+    <ClInclude Include="resources\resource.hpp" />
+    <ClInclude Include="resources\resource_manager.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -1,20 +1,20 @@
 #pragma once
-#include <ray/type/extensions.hpp>
+#include <engine/engine.hpp>
 
 namespace ray::launcher
 {
 
-class EngineLoop
+class EngineLoop : IEngineLoop
 {
 public:
 	EngineLoop() = default;
 	~EngineLoop() = default;
 
 
-	void PreInitialize(pcwstr commandLine, s32 argc);
-	void Initialize();
+	void PreInitialize(pcwstr commandLine, s32 argc) override;
+	void Initialize() override;
 
-	void Tick();
+	void Tick() override;
 };
 
 }

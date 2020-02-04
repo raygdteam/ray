@@ -1,7 +1,7 @@
 #include <pch.hpp>
 #include "core.hpp"
 
-// win32 ray::threading::thread implementation
+// win32 ray::threading::ithread implementation
 #ifdef RAY_PLATFORM_WIN
 
 #include "thread.hpp"
@@ -11,19 +11,29 @@
 namespace ray::threading
 {
 
-unsigned long thread::_thread_entrypoint(void* pthis)
+unsigned long _thread_entry(void* pThis)
 {
+	// TODO dark: There should be an additional thread initialization here.
+	static_cast<IThread*>(pThis)->Run();
+	
 	return 0;
 }
 
-thread::thread(std::function<void()> delegate) : _delegate(delegate), _handle(nullptr)
+void IThread::Run()
 {
-	_handle = CreateThread(0, 0, &_thread_entrypoint, &_delegate, 0, 0);
+	(void)0;
 }
 
-void thread::join()
+void IThread::Start()
+{
+	//_beginthread(&_thread_entry, 4 * 1024, this);
+	_handle = CreateThread(0, 0, &_thread_entry, this, 0, 0);
+}
+
+IThread::~IThread()
 {
 	WaitForSingleObject(_handle, INFINITY);
+	CloseHandle(_handle);
 }
 }
 

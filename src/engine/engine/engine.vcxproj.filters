@@ -1,11 +1,30 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClCompile Include="engine.cpp" />
-  </ItemGroup>
-  <ItemGroup>
     <Filter Include="resources">
       <UniqueIdentifier>{c4249e91-4e8f-49dd-9d59-7bba5142c350}</UniqueIdentifier>
     </Filter>
+    <Filter Include="engine">
+      <UniqueIdentifier>{9c8b07ac-7cec-431e-877b-a18caa4030f6}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="resources\resource.hpp">
+      <Filter>resources</Filter>
+    </ClInclude>
+    <ClInclude Include="resources\resource_manager.hpp">
+      <Filter>resources</Filter>
+    </ClInclude>
+    <ClInclude Include="engine\engine.hpp">
+      <Filter>engine</Filter>
+    </ClInclude>
+    <ClInclude Include="engine\engine_def.hpp">
+      <Filter>engine</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="engine\engine.cpp">
+      <Filter>engine</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

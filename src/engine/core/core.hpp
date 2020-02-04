@@ -68,9 +68,11 @@
 #if defined(RAY_BUILD_DEBUG) || defined(RAY_BUILD_DEVELOPMENT)
 #define RAY_DLLEXPORTS __declspec(dllexport)
 #define RAY_DLLIMPORT __declspec(dllimport)
+#define RAY_STATIC 0
 #else
 #define RAY_DLLEXPORTS
 #define RAY_DLLIMPORT
+#define RAY_STATIC 1
 #endif
 
 #ifdef RAY_BUILD_CORE
