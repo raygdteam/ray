@@ -14,8 +14,8 @@ void RayEngine::Initialize(IEngineLoop* engineLoop)
 	_engineLoop = engineLoop;
 
 	// Ensures that RayEngine object won't get destroyed by accident.
-	// TODO: ◊“Œ. ›“Œ. «¿. ’–≈Õ‹???????
-	{ static volatile RayEngine* _ = this; }
+	// TODO: –ß–¢–û. –≠–¢–û. –ó–ê. –•–†–ï–ù–¨???????
+	{ static volatile RayEngine _ = *this; }
 
 	
 }
