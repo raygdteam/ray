@@ -17,4 +17,12 @@ void EngineLoop::PreInitialize(pcwstr commandLine, s32 argc)
 
 }
 
+void EngineLoop::Initialize()
+{
+}
+
+void EngineLoop::Tick()
+{
+
+}
 }

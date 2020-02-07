@@ -226,6 +226,9 @@
     <ProjectReference Include="..\core\core.vcxproj">
       <Project>{7fcc5351-334c-4c2c-8742-430179a78f1e}</Project>
     </ProjectReference>
+    <ProjectReference Include="..\engine\engine.vcxproj">
+      <Project>{02f99804-513e-4cb5-b88f-5cd54d47f69c}</Project>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <MASM Include="test.asm" />

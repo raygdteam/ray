@@ -4,15 +4,10 @@
 
 int RayMain(pcwstr cmd, s32 argc)
 {
-	__asm
-	{
-		mov ax, ax
-	}
-
 	ray::launcher::EngineLoop engineLoop;
 	engineLoop.PreInitialize(cmd, argc);
 	engineLoop.Initialize();
-	
+
 	if(ray::IsEngineExitRequested())
 	{
 		// TODO: xxx

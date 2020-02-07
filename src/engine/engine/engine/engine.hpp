@@ -1,7 +1,8 @@
 #pragma once
 #include <ray/type/extensions.hpp>
 #include "core/raytl/array.hpp"
-#include "engine/engine_def.hpp"
+#include "engine/engine/engine_def.hpp"
+#include <vector>
 
 namespace ray
 {
@@ -35,7 +36,7 @@ struct IEngine
 class RAY_ENGINE_API RayEngine : IEngine
 {
 	IEngineLoop* _engineLoop;
-	raytl::Array<pcstr> _rendererInterface;
+	std::vector<pcstr> _rendererInterface;
 public:
 	RayEngine();
 
@@ -47,7 +48,7 @@ public:
 extern RAY_ENGINE_API IEngine* gEngine;
 
 /** Request engine exit - be it normal exit or crash. */
-bool IsEngineExitRequested() noexcept;
-void RequestEngineExit(bool data);
+RAY_ENGINE_API bool IsEngineExitRequested() noexcept;
+RAY_ENGINE_API void RequestEngineExit(bool data);
 
 }

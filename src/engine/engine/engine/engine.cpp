@@ -17,7 +17,6 @@ void RayEngine::Initialize(IEngineLoop* engineLoop)
 	// TODO: ЧТО. ЭТО. ЗА. ХРЕНЬ???????
 	{ static volatile RayEngine _ = *this; }
 
-	
 }
 
 void RayEngine::Tick()

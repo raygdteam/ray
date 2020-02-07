@@ -1,42 +1,44 @@
 #pragma once
+#include "core/core.hpp"
 #include "Iterator.hpp"
 
 namespace raytl
 {
 	
-	template<typename Type>
-	class Array
+template<typename Type>
+class Array
+{
+public:
+	Array();
+	Array(size_t);
+	Array(const Array&);
+	~Array();
+	
+	void Add(Type NewElement);
+	size_t Size() const { return size; }
+	Type* Data() { return data; }
+
+	Type& operator[](size_t Index);
+
+	Iterator<Type> begin()
 	{
-	public:
-		Array();
-		Array(size_t);
-		Array(const Array&);
-		~Array();
-		
-		void Add(Type NewElement);
-		size_t Size() const { return size; }
-		Type* Data() { return data; }
+		Iterator<Type> it(data);
+		return it;
+	}
 
-		Type& operator[](size_t Index);
+	Iterator<Type> end()
+	{
+		Iterator<Type> it(data + size);
+		return it;
+	}
 
-		Iterator<Type> begin()
-		{
-			Iterator<Type> it(data);
-			return it;
-		}
+private:
+	Type* data;
+	size_t size;
+	size_t capacity;
 
-		Iterator<Type> end()
-		{
-			Iterator<Type> it(data + size);
-			return it;
-		}
+};
 
-	private:
-		Type* data;
-		size_t size;
-		size_t capacity;
-
-	};
 	
 }
 

@@ -75,12 +75,14 @@
     <ClCompile Include="raytl\string.cpp">
       <Filter>raytl</Filter>
     </ClCompile>
-    <ClCompile Include="memory\memory.cpp" />
     <ClCompile Include="raytl\array.cpp">
       <Filter>raytl</Filter>
     </ClCompile>
     <ClCompile Include="windows\platform_fs.cpp">
       <Filter>windows</Filter>
+    </ClCompile>
+    <ClCompile Include="memory\memory.cpp">
+      <Filter>memory</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

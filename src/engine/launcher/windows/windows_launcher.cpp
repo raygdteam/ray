@@ -1,4 +1,5 @@
 #include "core/core.hpp"
+#include "core/memory/memory.hpp"
 #include <ray/os/include.hpp>
 #include <shellapi.h>
 
@@ -54,3 +55,5 @@ void WinMainCRTStartup()
 	returnCode = GuardedMain();
 	ExitProcess(returnCode);
 }
+
+MEMORY_OVERRIDE;

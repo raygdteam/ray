@@ -80,5 +80,6 @@ namespace raytl
 	}
 
 
+	template class RAY_CORE_API Array<int>;
 
 }
