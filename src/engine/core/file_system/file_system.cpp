@@ -10,11 +10,6 @@ void FileSystem::initialize()
 	core::platform::PlatformFS::Initialize();
 }
 
-void FileSystem::mount(pcstr real_path, pcstr virtual_path)
-{
-
-}
-
 serialization::IArchive FileSystem::ReadFile(pcstr path)
 {
 	return *(serialization::IArchive*)nullptr;

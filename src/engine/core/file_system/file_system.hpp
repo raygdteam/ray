@@ -13,7 +13,6 @@ public:
 	static FileSystem Get();
 
 	void initialize();
-	void mount(pcstr real_path, pcstr virtual_path);
 	serialization::IArchive ReadFile(pcstr path);
 };
 
