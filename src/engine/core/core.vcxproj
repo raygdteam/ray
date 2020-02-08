@@ -230,6 +230,7 @@
     <ClInclude Include="memory\allocator.hpp" />
     <ClInclude Include="memory\memory.hpp" />
     <ClInclude Include="memory\memory_manager.hpp" />
+    <ClInclude Include="memory\page_allocator.hpp" />
     <ClInclude Include="memory\StdMalloc.hpp" />
     <ClInclude Include="object\object.hpp" />
     <ClInclude Include="pch.hpp" />
@@ -249,6 +250,7 @@
     <ClCompile Include="core_entry_point.cpp" />
     <ClCompile Include="file_system\file_system.cpp" />
     <ClCompile Include="memory\memory_manager.cpp" />
+    <ClCompile Include="memory\page_allocator.cpp" />
     <ClCompile Include="memory\StdMalloc.cpp" />
     <ClCompile Include="pch.cpp" />
     <ClCompile Include="processor.cpp" />
