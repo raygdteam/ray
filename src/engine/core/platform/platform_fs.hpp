@@ -6,16 +6,25 @@ namespace ray::core::platform
 
 enum FileOpenMode
 {
-	eRead,
-	eWrite,
+	eRead = 0x8L,
+	eWrite = 0x4L,
 
 	eReadWrite = eRead | eWrite
+};
+
+struct PlatformFileHandle
+{
+	FileOpenMode AccessMode;
+	void* FileHandle;
+	void* MappingHandle;
+	size_t Size;
+	void* Buffer;
 };
 
 class RAY_CORE_API PlatformFS
 {
 public:
 	static void Initialize();
-	static void* OpenFile(FileOpenMode openMode, pcstr path);
+	static PlatformFileHandle OpenFile(pcwstr path, FileOpenMode mode = eReadWrite);
 };
 }

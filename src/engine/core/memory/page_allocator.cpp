@@ -1,6 +1,6 @@
+#include "pch.hpp"
 #include "page_allocator.hpp"
-#include "../core.hpp"
-#include <ray/type/extensions.hpp>
+#include <ray/os/include.hpp>
 
 namespace ray::core::memory
 {

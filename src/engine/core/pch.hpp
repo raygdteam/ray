@@ -1,3 +1,6 @@
 #pragma once
 
 #include <ray/type/extensions.hpp>
+
+#include <initializer_list>
+#include <functional>

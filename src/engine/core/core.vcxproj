@@ -196,6 +196,7 @@
       <BufferSecurityCheck>false</BufferSecurityCheck>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <ExceptionHandling>false</ExceptionHandling>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
@@ -227,6 +228,7 @@
     <ClInclude Include="application.h" />
     <ClInclude Include="core.hpp" />
     <ClInclude Include="file_system\file_system.hpp" />
+    <ClInclude Include="logging\log.hpp" />
     <ClInclude Include="memory\allocator.hpp" />
     <ClInclude Include="memory\memory.hpp" />
     <ClInclude Include="memory\memory_manager.hpp" />
@@ -249,6 +251,8 @@
     <ClCompile Include="application.cpp" />
     <ClCompile Include="core_entry_point.cpp" />
     <ClCompile Include="file_system\file_system.cpp" />
+    <ClCompile Include="logging\log.cpp" />
+    <ClCompile Include="memory\hacky_memory_override_release.cpp" />
     <ClCompile Include="memory\memory_manager.cpp" />
     <ClCompile Include="memory\page_allocator.cpp" />
     <ClCompile Include="memory\StdMalloc.cpp" />

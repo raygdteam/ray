@@ -43,17 +43,25 @@ u32 GuardedMain()
 	pcwstr commandLine = GetCommandLineW();
 	s32 count;
 	CommandLineToArgvW(commandLine, &count);
+
+	/* For Debug and Development allocate a console. */
+	/* For some unknown reason works only in .exe module.*/
+	AllocConsole();
+	//freopen("CONOUT$", "w", stdout);
+	freopen_s((FILE**)stdout, "CONOUT$", "w", stdout);
+
 	RayMain(commandLine, count);
 	return 0;
 }
 
 
-//int WinMain(HINSTANCE, HINSTANCE, LPWSTR, int)
-void WinMainCRTStartup()
+int __stdcall wWinMain(HINSTANCE, HINSTANCE, LPWSTR, int)
+//void WinMainCRTStartup()
 {
 	u32 returnCode = 0;
 	returnCode = GuardedMain();
-	ExitProcess(returnCode);
+	return returnCode;
+	//ExitProcess(returnCode);
 }
 
 MEMORY_OVERRIDE;

@@ -17,6 +17,7 @@ void MemoryManager::Initialize()
 
 IAllocator* MemoryManager::GetAllocator()
 {
+	if (_allocator == nullptr) Initialize();
 	return _allocator;
 }
 

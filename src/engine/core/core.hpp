@@ -53,7 +53,6 @@
 
 #if defined (RAY_PLATFORM_WIN32) || defined (RAY_PLATFORM_WIN64)
 #define RAY_PLATFORM_WIN
-#include <Windows.h>
 #endif 
 
 #ifdef __linux__

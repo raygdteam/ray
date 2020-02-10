@@ -1,20 +1,21 @@
 #include "engine_loop.hpp"
 #include "core/memory/memory_manager.hpp"
 #include "core/file_system/file_system.hpp"
-
-#if defined(RAY_BUILD_RELEASE) && defined(RAY_BUILDING_EDITOR)
-#error Editor in release - why?
-#endif
-
+#include "core/logging/log.hpp"
+#include "core/platform/platform_fs.hpp"
 
 namespace ray::launcher
 {
 
+logging::ILog log(L"EngineLoop");
+
 void EngineLoop::PreInitialize(pcwstr commandLine, s32 argc)
 {
-	core::memory::MemoryManager::Initialize();
 	FileSystem::Get().initialize();
 
+	log.log(L"Initializing: {}", true);
+
+	core::platform::PlatformFS::OpenFile(L"common/ray/os/include.hpp");
 }
 
 void EngineLoop::Initialize()
