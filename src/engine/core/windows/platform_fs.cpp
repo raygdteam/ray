@@ -2,7 +2,6 @@
 #include "platform/platform_fs.hpp"
 
 #include <regex>
-#include <core/logging/log.hpp>
 #include <ray/os/include.hpp>
 
 namespace ray::core::platform

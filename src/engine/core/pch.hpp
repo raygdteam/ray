@@ -4,3 +4,5 @@
 
 #include <initializer_list>
 #include <functional>
+
+#include <core/logging/log.hpp>

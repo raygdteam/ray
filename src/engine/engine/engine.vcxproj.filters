@@ -21,6 +21,7 @@
     <ClInclude Include="engine\engine_def.hpp">
       <Filter>engine</Filter>
     </ClInclude>
+    <ClInclude Include="pch.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="engine\engine.cpp">

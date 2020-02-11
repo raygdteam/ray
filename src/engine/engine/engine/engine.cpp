@@ -1,3 +1,4 @@
+#include "pch.hpp"
 #include "core/memory/memory.hpp"
 #include "engine.hpp"
 
@@ -13,9 +14,6 @@ void RayEngine::Initialize(IEngineLoop* engineLoop)
 {
 	_engineLoop = engineLoop;
 
-	// Ensures that RayEngine object won't get destroyed by accident.
-	// TODO: ЧТО. ЭТО. ЗА. ХРЕНЬ???????
-	{ static volatile RayEngine _ = *this; }
 
 }
 

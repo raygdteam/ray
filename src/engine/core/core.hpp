@@ -84,4 +84,5 @@
 // Misc defines
 #define DEPRECATED(version, message) [[deprecated(message)]]
 
-
+// Warnings stuff
+#pragma warning(disable: 4251)
