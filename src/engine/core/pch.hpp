@@ -1,4 +1,8 @@
 #pragma once
 
-#include <cstdlib>
-#include "memory_ovrd.hpp"
+#include <ray/type/extensions.hpp>
+
+#include <initializer_list>
+#include <functional>
+
+#include <core/logging/log.hpp>

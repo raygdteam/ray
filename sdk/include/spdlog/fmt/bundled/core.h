@@ -117,7 +117,9 @@
      FMT_MSC_VER && !_HAS_EXCEPTIONS
 #  define FMT_EXCEPTIONS 0
 # else
-#  define FMT_EXCEPTIONS 1
+/* RAY MOD BEGIN: disable exceptions */
+#  define FMT_EXCEPTIONS 0 //1
+/* RAY MOD END: disable exceptions */
 # endif
 #endif
 

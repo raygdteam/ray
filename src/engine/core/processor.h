@@ -1,5 +1,5 @@
 #pragma once
-#include "core.h"
+#include "core.hpp"
 
 namespace ray::core::hardware
 {

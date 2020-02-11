@@ -1,7 +1,7 @@
 #pragma once
 
 #include "../../Engine/platform.hpp"
-#include "../../Core/core.h"
+#include "../../Core/core.hpp"
 
 #include <spdlog/spdlog.hpp>
 

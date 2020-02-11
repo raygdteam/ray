@@ -1,12 +1,17 @@
 #pragma once
-#include "pch.hpp"
+#include "core/core.hpp"
+#include "allocator.hpp"
 
 namespace ray::core::memory
 {
 
-class MemoryManager
+class RAY_CORE_API MemoryManager
 {
-	
+	static IAllocator* _allocator;
+public:
+	static void Initialize();
+	static IAllocator* GetAllocator();
+	static void Shutdown();
 };
 
 }

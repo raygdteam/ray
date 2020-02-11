@@ -4,8 +4,7 @@
 #include <ray/type/extensions.hpp>
 
 #include "engine/engine/irenderer.hpp"
-#include "engine/core/core.h"
-#include "engine/engine/platform.hpp"
+#include "engine/core/core.hpp"
 
 #include <spdlog/spdlog.hpp>
 

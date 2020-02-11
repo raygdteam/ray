@@ -14,3 +14,12 @@ Game/intermediate
 **/obj/Debug/**
 /src/Saved/UnrealBuildTool
 /src/Intermediate
+/build/**
+/build/
+/bin/Debug
+/bin/Development
+/bin/Release
+
+!/bin/tools/Microsoft.Build.Utilities.v4.0.dll
+!/bin/tools/Microsoft.VisualStudio.Setup.Configuration.Interop.dll
+!/bin/tools/Sharpmake.*.dll

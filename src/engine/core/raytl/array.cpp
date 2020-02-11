@@ -1,0 +1,85 @@
+#include "pch.hpp"
+#include "array.hpp"
+#include "core/memory/memory.hpp"
+
+#define DEFAULT_CAPACITY_SIZE 16
+
+using namespace ray::core::memory;
+
+namespace raytl
+{
+	template <typename Type>
+	Array<Type>::Array()
+		: size(0)
+		, capacity(DEFAULT_CAPACITY_SIZE)
+		, data(nullptr)
+	{
+		data = new Type[capacity];
+	}
+
+	template <typename Type>
+	Array<Type>::Array(const Array<Type>& OtherArray)
+	{
+		size = OtherArray.size;
+		capacity = OtherArray.capacity;
+		data = new Type[capacity];
+		if(!data)
+		{
+			Memory::Memcpy(OtherArray.data, data, size * sizeof(Type));
+		}
+	}
+
+	template <typename Type>
+	Array<Type>::Array(size_t NewSize)
+	{
+		size = NewSize;
+		capacity = DEFAULT_CAPACITY_SIZE;
+		if(size < capacity)
+		{
+			data = new Type[capacity];
+			return;
+		}
+
+		while (capacity <= size)
+			capacity <<= 1;
+
+		data = new Type[capacity];
+		
+	}
+
+	template <typename Type>
+	Array<Type>::~Array()
+	{
+		if (!data)
+			delete[] data;
+	}
+
+	template <typename Type>
+	void Array<Type>::Add(Type NewElement)
+	{
+		if(size <= capacity)
+		{
+			data[size++] = NewElement;
+			return;
+		}
+
+		capacity <<= 1;
+		Type* NewData = new Type[capacity];
+		Memory::Memcpy(data, NewData, size * sizeof(Type));
+		delete[] data;
+		data = NewData;
+		data[size++] = NewElement;
+		
+	}
+
+	template <typename Type>
+	Type& Array<Type>::operator[](size_t Index)
+	{
+		RAY_ASSERT(Index < size, "Out of range!")
+		return data[Index];
+	}
+
+
+	template class RAY_CORE_API Array<int>;
+
+}

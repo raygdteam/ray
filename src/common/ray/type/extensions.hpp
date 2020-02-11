@@ -14,11 +14,12 @@ typedef uint32_t	u32;
 typedef uint64_t	u64;
 
 typedef const char* pcstr;
+using pcwstr = const wchar_t*;
 
 #ifdef UNICODE
-using ray_string = std::wstring;
+using string = std::wstring;
 #else
-using ray_string = std::string;
+using string = std::string;
 #endif // UNICODE
 
 
