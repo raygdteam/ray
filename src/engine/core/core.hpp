@@ -1,11 +1,11 @@
 #pragma once
 #include <ray/type/extensions.hpp>
 
-#define RAY_VERSION_MAJOR "0"
-#define RAY_VERSION_MINOR "1"
-#define RAY_VERSION_PATCH "0"
+#define RAY_VERSION_MAJOR L"0"
+#define RAY_VERSION_MINOR L"1"
+#define RAY_VERSION_PATCH L"0"
 
-#define RAY_VERSION_CODENAME "Ray"
+#define RAY_VERSION_CODENAME L"Ray"
 
 #ifdef _DEBUG
 #define RAY_DEBUG

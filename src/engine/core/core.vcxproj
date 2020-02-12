@@ -227,7 +227,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="application.h" />
     <ClInclude Include="core.hpp" />
     <ClInclude Include="file_system\file_system.hpp" />
     <ClInclude Include="logging\log.hpp" />
@@ -247,10 +246,8 @@
     <ClInclude Include="serialization\archive.hpp" />
     <ClInclude Include="threading\thread.hpp" />
     <ClInclude Include="threading\threading.hpp" />
-    <ClInclude Include="types.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="application.cpp" />
     <ClCompile Include="core_entry_point.cpp" />
     <ClCompile Include="file_system\file_system.cpp" />
     <ClCompile Include="logging\log.cpp" />
