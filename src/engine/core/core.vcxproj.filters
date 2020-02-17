@@ -52,6 +52,9 @@
     <ClInclude Include="logging\log.hpp">
       <Filter>logging</Filter>
     </ClInclude>
+    <ClInclude Include="platform\platform_processor.hpp">
+      <Filter>platform</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="core_entry_point.cpp" />
@@ -95,6 +98,9 @@
     </ClCompile>
     <ClCompile Include="logging\log.cpp">
       <Filter>logging</Filter>
+    </ClCompile>
+    <ClCompile Include="windows\platform_processor.cpp">
+      <Filter>windows</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

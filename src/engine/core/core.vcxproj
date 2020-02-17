@@ -239,6 +239,7 @@
     <ClInclude Include="pch.hpp" />
     <ClInclude Include="platform\platform_fs.hpp" />
     <ClInclude Include="platform\platform_memory.hpp" />
+    <ClInclude Include="platform\platform_processor.hpp" />
     <ClInclude Include="processor.h" />
     <ClInclude Include="raytl\array.hpp" />
     <ClInclude Include="raytl\Iterator.hpp" />
@@ -263,6 +264,7 @@
     <ClCompile Include="threading\thread_win32.cpp" />
     <ClCompile Include="windows\platform_fs.cpp" />
     <ClCompile Include="windows\platform_memory.cpp" />
+    <ClCompile Include="windows\platform_processor.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="memory\memory.cpp" />
