@@ -7,6 +7,8 @@
 
 #define RAY_VERSION_CODENAME L"Ray"
 
+#define BIT(value) 1 << value
+
 #ifdef _DEBUG
 #define RAY_DEBUG
 #endif

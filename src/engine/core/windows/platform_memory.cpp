@@ -1,5 +1,4 @@
 #include "pch.hpp"
-#include "core.hpp"
 #include "platform/platform_memory.hpp"
 #include <ray/os/include.hpp>
 

@@ -4,7 +4,7 @@
 
 u32 __stdcall DllMain(void* instance, unsigned long reason, void*)
 {
-	return 0;
+	return 1;
 }
 
 MEMORY_OVERRIDE;
