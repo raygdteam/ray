@@ -14,6 +14,14 @@ public:
 	static void Memset(void* data, u8 value, size_t size);
 
 	// TODO: implement functions for getting OS memory stats etc.
+
+	static u32 GetPageSize();
+	static void* GetMinAppAdress();
+	static void* GetMaxAppAdress();
+	static u16 GetMemoryLoadPercentage();
+	static u64 GetTotalPhysMemory();
+	static u64 GetAvailPhysMemory();
+
 };
 
 }

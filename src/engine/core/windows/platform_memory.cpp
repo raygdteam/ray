@@ -34,4 +34,88 @@ void PlatformMemory::Memset(void* data, u8 value, size_t size)
 		size--;
 	}
 }
+
+u32 PlatformMemory::GetPageSize()
+{
+	static bool sFirst = true;
+	static SYSTEM_INFO sSystemInfo;
+
+	if (sFirst)
+	{
+		GetSystemInfo(&sSystemInfo);
+		sFirst = false;
+	}
+	return static_cast<u32>(sSystemInfo.dwPageSize);
 }
+
+void* PlatformMemory::GetMinAppAdress()
+{
+	static bool sFirst = true;
+	static SYSTEM_INFO sSystemInfo;
+
+	if (sFirst)
+	{
+		GetSystemInfo(&sSystemInfo);
+		sFirst = false;
+	}
+	return static_cast<void*>(sSystemInfo.lpMinimumApplicationAddress);
+}
+
+void* PlatformMemory::GetMaxAppAdress()
+{
+	static bool sFirst = true;
+	static SYSTEM_INFO sSystemInfo;
+
+	if (sFirst)
+	{
+		GetSystemInfo(&sSystemInfo);
+		sFirst = false;
+	}
+	return static_cast<void*>(sSystemInfo.lpMaximumApplicationAddress);
+}
+
+u16 PlatformMemory::GetMemoryLoadPercentage()
+{
+	static MEMORYSTATUSEX sMemStatus;
+	static bool sFirst = true;
+
+	if (sFirst)
+	{
+		sMemStatus.dwLength = sizeof(sMemStatus);
+		GlobalMemoryStatusEx(&sMemStatus);
+	}
+
+	return static_cast<u16>(sMemStatus.dwMemoryLoad);
+}
+
+u64 PlatformMemory::GetTotalPhysMemory()
+{
+	static MEMORYSTATUSEX sMemStatus;
+	static bool sFirst = true;
+
+	if (sFirst)
+	{
+		sMemStatus.dwLength = sizeof(sMemStatus);
+		GlobalMemoryStatusEx(&sMemStatus);
+	}
+
+	return static_cast<u64>(sMemStatus.ullTotalPhys);
+}
+
+u64 PlatformMemory::GetAvailPhysMemory()
+{
+	static MEMORYSTATUSEX sMemStatus;
+	static bool sFirst = true;
+
+	if (sFirst)
+	{
+		sMemStatus.dwLength = sizeof(sMemStatus);
+		GlobalMemoryStatusEx(&sMemStatus);
+	}
+
+	return static_cast<u64>(sMemStatus.ullAvailPhys);
+}
+
+}
+
+
