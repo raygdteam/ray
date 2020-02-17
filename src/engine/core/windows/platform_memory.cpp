@@ -35,85 +35,65 @@ void PlatformMemory::Memset(void* data, u8 value, size_t size)
 	}
 }
 
+namespace windows
+{
+	MEMORYSTATUSEX& GetMemoryStatus()
+	{
+		static MEMORYSTATUSEX sMemStatus;
+		static bool sFirst = true;
+
+		if (sFirst)
+		{
+			sMemStatus.dwLength = sizeof(sMemStatus);
+			GlobalMemoryStatusEx(&sMemStatus);
+		}
+
+		return sMemStatus;
+	}
+
+	SYSTEM_INFO& GetSystemInfo()
+	{
+		static bool sFirst = true;
+		static SYSTEM_INFO sSystemInfo;
+
+		if (sFirst)
+		{
+			GetSystemInfo(&sSystemInfo);
+			sFirst = false;
+		}
+
+		return sSystemInfo;
+	}
+}
+
 u32 PlatformMemory::GetPageSize()
 {
-	static bool sFirst = true;
-	static SYSTEM_INFO sSystemInfo;
-
-	if (sFirst)
-	{
-		GetSystemInfo(&sSystemInfo);
-		sFirst = false;
-	}
-	return static_cast<u32>(sSystemInfo.dwPageSize);
+	return static_cast<u32>(windows::GetSystemInfo().dwPageSize);
 }
 
 void* PlatformMemory::GetMinAppAdress()
 {
-	static bool sFirst = true;
-	static SYSTEM_INFO sSystemInfo;
-
-	if (sFirst)
-	{
-		GetSystemInfo(&sSystemInfo);
-		sFirst = false;
-	}
-	return static_cast<void*>(sSystemInfo.lpMinimumApplicationAddress);
+	return static_cast<void*>(windows::GetSystemInfo().lpMinimumApplicationAddress);
 }
 
 void* PlatformMemory::GetMaxAppAdress()
 {
-	static bool sFirst = true;
-	static SYSTEM_INFO sSystemInfo;
-
-	if (sFirst)
-	{
-		GetSystemInfo(&sSystemInfo);
-		sFirst = false;
-	}
-	return static_cast<void*>(sSystemInfo.lpMaximumApplicationAddress);
+	return static_cast<void*>(windows::GetSystemInfo().lpMaximumApplicationAddress);
 }
 
 u16 PlatformMemory::GetMemoryLoadPercentage()
 {
-	static MEMORYSTATUSEX sMemStatus;
-	static bool sFirst = true;
-
-	if (sFirst)
-	{
-		sMemStatus.dwLength = sizeof(sMemStatus);
-		GlobalMemoryStatusEx(&sMemStatus);
-	}
-
-	return static_cast<u16>(sMemStatus.dwMemoryLoad);
+	return static_cast<u16>(windows::GetMemoryStatus().dwMemoryLoad);
 }
 
 u64 PlatformMemory::GetTotalPhysMemory()
 {
-	static MEMORYSTATUSEX sMemStatus;
-	static bool sFirst = true;
-
-	if (sFirst)
-	{
-		sMemStatus.dwLength = sizeof(sMemStatus);
-		GlobalMemoryStatusEx(&sMemStatus);
-	}
-
-	return static_cast<u64>(sMemStatus.ullTotalPhys);
+	return static_cast<u64>(windows::GetMemoryStatus().ullTotalPhys);
 }
 
 u64 PlatformMemory::GetAvailPhysMemory()
 {
-	static MEMORYSTATUSEX sMemStatus;
-	static bool sFirst = true;
-
-	if (sFirst)
-	{
-		sMemStatus.dwLength = sizeof(sMemStatus);
-		GlobalMemoryStatusEx(&sMemStatus);
-	}
-
-	return static_cast<u64>(sMemStatus.ullAvailPhys);
+	return static_cast<u64>(windows::GetMemoryStatus().ullAvailPhys);
 }
 
 }
