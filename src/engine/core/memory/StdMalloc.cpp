@@ -18,27 +18,30 @@ void* aligned_malloc(size_t size, size_t alignment)
 	if (data != nullptr)
 	{
 		// Слава всем богам если они есть если что тут нет ошибок
-		/*result = reinterpret_cast<void*>(static_cast<u64>(reinterpret_cast<u8>(data) + sizeof(void*) + sizeof(size_t)) +
-			alignment - 1 & ~(alignment - 1));
+		//result = reinterpret_cast<void*>(static_cast<u64>(reinterpret_cast<u8>(data) + sizeof(void*) + sizeof(size_t)) + alignment);
+		result = (void*)((u64)data + sizeof(void*) + sizeof(size_t) + alignment);
 		*(void**)((u8*)result - sizeof(void*)) = data;
-		*((size_t*)((u8*)result - sizeof(void*) - sizeof(size_t))) = size;*/
-		result = std::align(alignment, size, data, size);
+		*((size_t*)((u8*)result - sizeof(void*) - sizeof(size_t))) = size;
+		//result = std::align(alignment, size, data, size);
 	}
 
 	return result;
 }
 
-void* StdMalloc::Alloc(size_t Size, size_t Alignment)
+void* StdMalloc::Alloc(size_t size, size_t alignment)
 {
 	RAY_ASSERT((((Alignment) & (Alignment >> 1)) == 0), "Alignment must be power of 2!")
-	void* Result = nullptr;
-	Result = aligned_malloc(Size, Alignment);
-	return Result;
+	void* result = nullptr;
+	result = aligned_malloc(size, alignment);
+	return result;
 }
 
-void StdMalloc::Free(void* MemBlock)
+void StdMalloc::Free(void* data)
 {
-	PlatformMemory::LowLevelFree(MemBlock);
+	// c++ standard: deleting a null pointer has no effect.
+	if (data == nullptr) return;
+
+	PlatformMemory::LowLevelFree(*(void**)((u64)data - sizeof(void*)));
 }
 
 void* StdMalloc::Realloc(void* MemBlock, size_t NewSize, size_t Alignment)
@@ -65,9 +68,9 @@ void* StdMalloc::Realloc(void* MemBlock, size_t NewSize, size_t Alignment)
 	return Result;
 }
 
-size_t StdMalloc::GetAllocationSize(void* MemBlock)
+size_t StdMalloc::GetAllocationSize(void* data)
 {
-	return *(size_t*)((u8*)MemBlock - sizeof(void*) - sizeof(size_t));
+	return *(size_t*)((u8*)data - sizeof(void*) - sizeof(size_t));
 }
 
 }

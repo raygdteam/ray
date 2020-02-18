@@ -55,6 +55,9 @@
     <ClInclude Include="platform\platform_processor.hpp">
       <Filter>platform</Filter>
     </ClInclude>
+    <ClInclude Include="modules\startup_initializer.hpp">
+      <Filter>modules</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="core_entry_point.cpp" />
@@ -102,6 +105,9 @@
     <ClCompile Include="windows\platform_processor.cpp">
       <Filter>windows</Filter>
     </ClCompile>
+    <ClCompile Include="modules\startup_initializer.cpp">
+      <Filter>modules</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="file system">
@@ -130,6 +136,9 @@
     </Filter>
     <Filter Include="logging">
       <UniqueIdentifier>{4e1698f8-2232-434e-83cf-2bf3d9cc1279}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="modules">
+      <UniqueIdentifier>{bb9722ec-5663-484f-963a-18d8d55db838}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

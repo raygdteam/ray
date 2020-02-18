@@ -29,7 +29,6 @@ public:
 private:
 	static void GetFeatures();
 
-private:
 	static u32 mFeatures;
 
 };

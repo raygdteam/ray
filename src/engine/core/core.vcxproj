@@ -235,6 +235,7 @@
     <ClInclude Include="memory\memory_manager.hpp" />
     <ClInclude Include="memory\page_allocator.hpp" />
     <ClInclude Include="memory\StdMalloc.hpp" />
+    <ClInclude Include="modules\startup_initializer.hpp" />
     <ClInclude Include="object\object.hpp" />
     <ClInclude Include="pch.hpp" />
     <ClInclude Include="platform\platform_fs.hpp" />
@@ -256,6 +257,7 @@
     <ClCompile Include="memory\memory_manager.cpp" />
     <ClCompile Include="memory\page_allocator.cpp" />
     <ClCompile Include="memory\StdMalloc.cpp" />
+    <ClCompile Include="modules\startup_initializer.cpp" />
     <ClCompile Include="pch.cpp" />
     <ClCompile Include="processor.cpp" />
     <ClCompile Include="raytl\array.cpp" />

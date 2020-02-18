@@ -14,6 +14,8 @@ struct registers
 	u32 edx;
 };
 
+u32 PlatformProcessor::mFeatures = 0;
+
 std::string PlatformProcessor::GetModelName()
 {
 	// @see for more information http://msdn.microsoft.com/en-us/library/vstudio/hskdteyh(v=vs.100).aspx
@@ -52,12 +54,12 @@ u16 PlatformProcessor::GetCacheLineSize()
 
 u32 PlatformProcessor::GetCoreCount()
 {
-	
+	return *(u32*)nullptr;
 }
 
 u32 PlatformProcessor::GetThreadCount()
 {
-	
+	return *(u32*)nullptr;
 }
 
 bool PlatformProcessor::HasFeature(Feature f)
