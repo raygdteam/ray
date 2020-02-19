@@ -24,7 +24,7 @@ void ReleaseMutex()
 /** Try to acquire mutex. Returns true if success(this is the only instance), false otherwise. */
 bool MakeMutex()
 {
-	pcwstr mutexName = L"RAY_ENGINE";
+	pcstr mutexName = "RAY_ENGINE";
 
 	gMutex = CreateMutex(0, true, mutexName);
 

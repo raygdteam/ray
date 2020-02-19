@@ -10,7 +10,7 @@
 namespace ray::launcher
 {
 
-logging::ILog log(L"EngineLoop");
+logging::ILog log("EngineLoop");
 
 extern "C" void* Get_Ldr_Addr();
 
@@ -20,21 +20,16 @@ void EngineLoop::PreInitialize(pcwstr commandLine, s32 argc)
 	core::modules::InitializationManager::RunPhase(core::modules::InitializationPhase::eStartupPlugin);
 
 	FileSystem::Get().initialize();
-	log.log(L"Ray {}.{}.{} {}", RAY_VERSION_MAJOR, RAY_VERSION_MINOR, RAY_VERSION_PATCH, RAY_VERSION_CODENAME);
+	log.log("Ray {}.{}.{} {}", RAY_VERSION_MAJOR, RAY_VERSION_MINOR, RAY_VERSION_PATCH, RAY_VERSION_CODENAME);
 	core::modules::InitializationManager::RunPhase(core::modules::InitializationPhase::ePreInitialization);
 }
 
 void EngineLoop::Initialize()
-{}
+{
+	
+}
 
 void EngineLoop::Tick()
 {}
-
-void init()
-{
-	log.log(L"HEWWWWOOO INIT()!!!!!!!!!!!!");
-}
-
-static ray::core::modules::RegisterStartupPhase __v__init__(L"init()", core::modules::ePreInitialization, init);
 
 }

@@ -58,6 +58,9 @@
     <ClInclude Include="modules\startup_initializer.hpp">
       <Filter>modules</Filter>
     </ClInclude>
+    <ClInclude Include="raytl\delegate.hpp">
+      <Filter>raytl</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="core_entry_point.cpp" />
@@ -107,6 +110,9 @@
     </ClCompile>
     <ClCompile Include="modules\startup_initializer.cpp">
       <Filter>modules</Filter>
+    </ClCompile>
+    <ClCompile Include="object\garbage_collector.cpp">
+      <Filter>object</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

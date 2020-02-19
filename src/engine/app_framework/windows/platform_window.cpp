@@ -23,7 +23,7 @@ void PlatformWindow::Initialize()
 	WNDCLASS wc = {};
 
 	wc.hInstance = GetModuleHandleA(nullptr);
-	wc.lpszClassName = L"RAY_ENGINE";
+	wc.lpszClassName = "RAY_ENGINE";
 	wc.lpfnWndProc = DefWindowProc;
 
 	RegisterClass(&wc);

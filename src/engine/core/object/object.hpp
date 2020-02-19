@@ -3,7 +3,12 @@
 namespace ray::core
 {
 
-class Object
+struct IObject
+{
+	
+};
+
+struct IEngineObject : public IObject
 {
 	
 };

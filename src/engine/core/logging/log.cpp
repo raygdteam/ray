@@ -8,7 +8,7 @@ namespace ray::logging
 
 void ILog::_log(string text)
 {
-	std::wcout << _name << ": " << text << std::endl;
+	std::cout << _name << ": " << text << std::endl;
 }
 
 }

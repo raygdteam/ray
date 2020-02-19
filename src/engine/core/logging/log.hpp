@@ -11,7 +11,7 @@ struct RAY_CORE_API ILog
 	{}
 
 	template <typename... Args>
-	void log(const wchar_t* format, const Args& ... args)
+	void log(const char* format, const Args& ... args)
 	{
 		_log(fmt::format(format, args...));
 	}

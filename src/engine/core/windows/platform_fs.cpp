@@ -7,39 +7,41 @@
 namespace ray::core::platform
 {
 
-static logging::ILog log(L"WindowsPlatformFS");
+static logging::ILog log("WindowsPlatformFS");
 
 void PlatformFS::Initialize()
 {
-	wchar_t* path = new wchar_t[500];
+	char* path = new char[500];
 
 	GetCurrentDirectory(500, path);
-	lstrcat(path, L"\\..\\..");
+	lstrcat(path, "\\..\\..");
 
-	SetCurrentDirectoryW(path);
-	log.log(L"set working directory: {}", path);
+	SetCurrentDirectoryA(path);
+
+    GetCurrentDirectory(500, path);
+	log.log("set working directory: {}", path);
 
 	delete[] path;
 }
 
-PlatformFileHandle PlatformFS::OpenFile(pcwstr path, FileOpenMode mode)
+PlatformFileHandle PlatformFS::OpenFile(pcstr path, FileOpenMode mode)
 {
 	/* replace all "/"'s in the path with "\\" for Windows platform. */
 	string fixedPath(path);
-	fixedPath = std::regex_replace(fixedPath, std::wregex(L"/"), L"\\");
+	fixedPath = std::regex_replace(fixedPath, std::regex("/"), "\\");
 	
     HANDLE hFile = CreateFile(fixedPath.c_str(), mode, 0,
         nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, nullptr);
     if (hFile == INVALID_HANDLE_VALUE) 
     {
-        log.log(L"fileMappingCreate - CreateFile failed");
+        log.log("fileMappingCreate - CreateFile failed");
         return {};
     }
 
     DWORD dwFileSize = GetFileSize(hFile, nullptr);
     if (dwFileSize == INVALID_FILE_SIZE) 
     {
-        log.log(L"fileMappingCreate - GetFileSize failed");
+        log.log("fileMappingCreate - GetFileSize failed");
         CloseHandle(hFile);
         return {};
     }
@@ -48,7 +50,7 @@ PlatformFileHandle PlatformFS::OpenFile(pcwstr path, FileOpenMode mode)
         0, 0, nullptr);
     if (hMapping == nullptr) 
     { // yes, NULL, not INVALID_HANDLE_VALUE, see MSDN
-        log.log(L"fileMappingCreate - CreateFileMapping failed");
+        log.log("fileMappingCreate - CreateFileMapping failed");
         CloseHandle(hFile);
         return {};
     }
@@ -57,7 +59,7 @@ PlatformFileHandle PlatformFS::OpenFile(pcwstr path, FileOpenMode mode)
         0, 0, dwFileSize);
     if (dataPtr == nullptr) 
     {
-        log.log(L"fileMappingCreate - MapViewOfFile failed");
+        log.log("fileMappingCreate - MapViewOfFile failed");
     	CloseHandle(hMapping);
         CloseHandle(hFile);
         return {};

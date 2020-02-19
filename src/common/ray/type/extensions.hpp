@@ -16,11 +16,6 @@ typedef uint64_t	u64;
 typedef const char* pcstr;
 using pcwstr = const wchar_t*;
 
-#ifdef UNICODE
-using string = std::wstring;
-#else
 using string = std::string;
-#endif // UNICODE
-
 
 #endif

@@ -7,6 +7,12 @@
     <Filter Include="engine">
       <UniqueIdentifier>{9c8b07ac-7cec-431e-877b-a18caa4030f6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="bundle">
+      <UniqueIdentifier>{2480164e-3256-44a6-aa7a-a906c77744a4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="game_framework">
+      <UniqueIdentifier>{ba9fba2f-c5fc-46e3-bbe3-45fad2028871}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="resources\resource.hpp">
@@ -22,6 +28,9 @@
       <Filter>engine</Filter>
     </ClInclude>
     <ClInclude Include="pch.hpp" />
+    <ClInclude Include="bundle\bundle_headers.hpp">
+      <Filter>bundle</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="engine\engine.cpp">

@@ -25,6 +25,6 @@ class RAY_CORE_API PlatformFS
 {
 public:
 	static void Initialize();
-	static PlatformFileHandle OpenFile(pcwstr path, FileOpenMode mode = eReadWrite);
+	static PlatformFileHandle OpenFile(pcstr path, FileOpenMode mode = eReadWrite);
 };
 }

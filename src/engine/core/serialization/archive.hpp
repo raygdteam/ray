@@ -6,10 +6,10 @@ namespace ray::serialization
 class IArchive
 {
 protected:
-	void Write(void* data, size_t size) {}
+	void Write(void* data, size_t size);
 
 	template<typename T>
-	T Read(size_t size) {}
+	T Read();
 public:
 	virtual ~IArchive() = default;
 

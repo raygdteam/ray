@@ -51,7 +51,7 @@
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v142</PlatformToolset>
-    <CharacterSet>Unicode</CharacterSet>
+    <CharacterSet>MultiByte</CharacterSet>
     <EnableUnitySupport>true</EnableUnitySupport>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
@@ -59,7 +59,7 @@
     <UseDebugLibraries>false</UseDebugLibraries>
     <PlatformToolset>v142</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
-    <CharacterSet>Unicode</CharacterSet>
+    <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Development|Win32'">
     <PlatformToolset>v142</PlatformToolset>
@@ -67,7 +67,7 @@
   <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Development|x64'">
     <PlatformToolset>v142</PlatformToolset>
     <ConfigurationType>DynamicLibrary</ConfigurationType>
-    <CharacterSet>Unicode</CharacterSet>
+    <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
@@ -243,6 +243,7 @@
     <ClInclude Include="platform\platform_processor.hpp" />
     <ClInclude Include="processor.h" />
     <ClInclude Include="raytl\array.hpp" />
+    <ClInclude Include="raytl\delegate.hpp" />
     <ClInclude Include="raytl\Iterator.hpp" />
     <ClInclude Include="raytl\string.hpp" />
     <ClInclude Include="serialization\archive.hpp" />
@@ -258,6 +259,7 @@
     <ClCompile Include="memory\page_allocator.cpp" />
     <ClCompile Include="memory\StdMalloc.cpp" />
     <ClCompile Include="modules\startup_initializer.cpp" />
+    <ClCompile Include="object\garbage_collector.cpp" />
     <ClCompile Include="pch.cpp" />
     <ClCompile Include="processor.cpp" />
     <ClCompile Include="raytl\array.cpp" />
