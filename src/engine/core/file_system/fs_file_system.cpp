@@ -5,7 +5,7 @@
 ////////////////////////////////////////////////////////////////////////////
 
 #include "pch.hpp"
-#include <xray/fs_utils.h>
+#include "fs_utils.h"
 #include "fs_file_system.h"
 #include "fs_macros.h"
 #include "fs_file_system_impl.h"
@@ -21,14 +21,10 @@ namespace fs   {
 // global file_system object
 //-----------------------------------------------------------------------------------
 
-uninitialized_reference<file_system>	g_fat;
+//uninitialized_reference<file_system>	g_fat;
+file_system* g_fat;
 
-void   set_allocator_thread_id (u32 thread_id)
-{
-#if !XRAY_USE_CRT_MEMORY_ALLOCATOR
-	memory::g_fs_allocator.user_thread_id	(thread_id);
-#endif
-}
+
 
 void   set_on_resource_leaked_callback	(on_resource_leaked_callback callback)
 {
@@ -87,7 +83,7 @@ u32   fat_inline_data::total_size_for_extensions_with_limited_size () const
 void   fat_inline_data::push_back (item const & item) 
 { 
 	m_items->push_back					(item); 
-	m_highest_compression_rate			=	math::max(m_highest_compression_rate, item.compression_rate); 
+	m_highest_compression_rate			=	std::max(m_highest_compression_rate, item.compression_rate); 
 }
 
 bool   fat_inline_data::try_fit_for_inlining (pcstr file_name, u32 const file_size, u32 const compressed_size)

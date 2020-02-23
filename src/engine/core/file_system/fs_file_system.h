@@ -7,10 +7,10 @@
 #ifndef FS_FILE_SYSTEM_H_INCLUDED
 #define FS_FILE_SYSTEM_H_INCLUDED
 
-#include <xray/fs_path.h>
-#include <xray/fs_platform_configuration.h>
-#include <xray/resources_resource.h>
-#include <xray/compressor.h>
+#include "fs_path.h"
+#include "fs_platform_configuration.h"
+#include "resources_resource.h""
+#include "compressor.h"
 
 namespace xray {
 
@@ -29,30 +29,33 @@ bool				initialize				();
 void				finalize				();
 void				initialize_watcher		();
 void    			flush_replications		();
-void XRAY_CORE_API	set_allocator_thread_id	(u32 thread_id);
+void RAY_CORE_API	set_allocator_thread_id	(u32 thread_id);
 
-typedef				boost::function< void ( resources::resource_base *	resource ) >
+typedef				std::function< void ( resources::resource_base *	resource ) >
 					on_resource_leaked_callback;
-void XRAY_CORE_API	set_on_resource_leaked_callback	(on_resource_leaked_callback);
+void RAY_CORE_API	set_on_resource_leaked_callback	(on_resource_leaked_callback);
 
 //-----------------------------------------------------------------------------------
 // fat_inline_data
 //-----------------------------------------------------------------------------------
 
-struct XRAY_CORE_API fat_inline_data
+struct RAY_CORE_API fat_inline_data
 {
 public:
 	struct item
 	{
-							item	() : max_size(0),  compression_rate(0), allow_compression_in_db(true) {}
-		fixed_string<32>	extension;
+							item	() : extension ({}), max_size(0), compression_rate(0), allow_compression_in_db(true)
+							{
+							}
+
+		const char	extension[32];
 		u32					max_size;
 		float				compression_rate; // 0 - no compression, 1 - compress all
 		bool				allow_compression_in_db;
 		enum				{ no_limit = u32(-1) };
 	};
 
-	typedef	buffer_vector<item>	container;
+	typedef	std::vector<item>	container;
 
 public:
 	fat_inline_data (container * items) : m_items(items), m_highest_compression_rate(0) {}
@@ -69,14 +72,14 @@ public:
 	
 private:
 	float					m_highest_compression_rate;
-	buffer_vector<item> *	m_items;
+	std::vector<item> *	m_items;
 };
 
 //-----------------------------------------------------------------------------------
 // file_system
 //-----------------------------------------------------------------------------------
 
-class XRAY_CORE_API file_system : public detail::noncopyable {
+class RAY_CORE_API file_system{
 public:
 	// Warning: taking upper bytes for flags
 	enum {	is_folder				=	1 << 15, 
@@ -94,7 +97,7 @@ public:
  	class					iterator;
  	typedef const iterator	const_iterator;
 
-	typedef	fastdelegate::FastDelegate< void (const u32 num_saved, u32 num_whole, pcstr name, u32 flags) >::BaseType			db_callback;
+	typedef	std::function<void(const u32 num_saved, u32 num_whole, pcstr name, u32 flags)>			db_callback;
 	
 	enum				watch_directory_bool	{ watch_directory_false, watch_directory_true };
 
@@ -116,8 +119,8 @@ public:
 											 pcstr 		 				db_file_path,
 											 bool		 				no_duplicates,
 											 u32		 				fat_alignment,
-											 memory::base_allocator *	alloc,
-											 compressor * 				compressor,
+											 //memory::base_allocator *	alloc,
+											 compressor* 				compressor,
 											 float		 				compress_smallest_rate,
 											 db_target_platform_enum	db_format,
 											 fat_inline_data &			inline_data,
@@ -129,11 +132,11 @@ public:
 
 	void				commit_replication	(iterator it);
 
-	void				replicate_path		(pcstr path2replicate, path_string& out_path) const;
-	void				get_disk_path		(const iterator& it, path_string& out_path) const;
+	void				replicate_path		(pcstr path2replicate, string& out_path) const;
+	void				get_disk_path		(const iterator& it, string& out_path) const;
 	bool				equal_db			(iterator it1, iterator it2) const;
 
-	bool				replicate_file		(iterator it, pcbyte data);
+	bool				replicate_file		(iterator it, unsigned char const* data);
 
 	bool				operator ==			(const file_system& f) const;
 
@@ -143,7 +146,7 @@ public:
 	
 	iterator			create_temp_disk_it					(memory::base_allocator* alloc, pcstr disk_path);
 	void				destroy_temp_disk_it				(memory::base_allocator* alloc, iterator it);
-	signalling_bool		get_disk_path_to_store_file			(pcstr logical_path, buffer_string * out_disk_path);
+	bool		get_disk_path_to_store_file			(pcstr logical_path, buffer_string * out_disk_path);
 	bool				mount_disk_node_by_logical_path		(pcstr logical_path, iterator * out_iterator = NULL);
 	bool				mount_disk_node_by_physical_path	(pcstr physical_path, iterator * out_iterator = NULL);
 	bool				unmount_disk_node					(pcstr physical_path);
@@ -165,7 +168,7 @@ private:
 	friend void			initialize_watcher ();
 };
 
-class XRAY_CORE_API	file_system::iterator
+class RAY_CORE_API	file_system::iterator
 {
 public:
 	pcstr				get_name			() const;
@@ -235,7 +238,7 @@ private:
 // file_system global object
 //-----------------------------------------------------------------------------------
 
-extern xray::uninitialized_reference<file_system>	g_fat;
+extern file_system* g_fat;
 
 } // namespace fs
 } // namespace xray
