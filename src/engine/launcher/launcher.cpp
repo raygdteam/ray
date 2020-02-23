@@ -4,6 +4,9 @@
 
 int RayMain(pcwstr cmd, s32 argc)
 {
+	void* m = malloc(1);
+
+
 	ray::launcher::EngineLoop engineLoop;
 	engineLoop.PreInitialize(cmd, argc);
 	engineLoop.Initialize();

@@ -61,6 +61,36 @@
     <ClInclude Include="raytl\delegate.hpp">
       <Filter>raytl</Filter>
     </ClInclude>
+    <ClInclude Include="file_system\fs_file_system.h">
+      <Filter>file system</Filter>
+    </ClInclude>
+    <ClInclude Include="file_system\fs_file_system_impl.h">
+      <Filter>file system</Filter>
+    </ClInclude>
+    <ClInclude Include="file_system\fs_file_system_nodes_impl.h">
+      <Filter>file system</Filter>
+    </ClInclude>
+    <ClInclude Include="file_system\fs_folder_watcher_win.h">
+      <Filter>file system</Filter>
+    </ClInclude>
+    <ClInclude Include="file_system\fs_helper.h">
+      <Filter>file system</Filter>
+    </ClInclude>
+    <ClInclude Include="file_system\fs_helper_inline.h">
+      <Filter>file system</Filter>
+    </ClInclude>
+    <ClInclude Include="file_system\fs_macros.h">
+      <Filter>file system</Filter>
+    </ClInclude>
+    <ClInclude Include="file_system\fs_path_iterator.h">
+      <Filter>file system</Filter>
+    </ClInclude>
+    <ClInclude Include="file_system\fs_path_iterator_inline.h">
+      <Filter>file system</Filter>
+    </ClInclude>
+    <ClInclude Include="file_system\fs_watcher.h">
+      <Filter>file system</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="core_entry_point.cpp" />
@@ -113,6 +143,72 @@
     </ClCompile>
     <ClCompile Include="object\garbage_collector.cpp">
       <Filter>object</Filter>
+    </ClCompile>
+    <ClCompile Include="file_system\fs_file_system.cpp">
+      <Filter>file system</Filter>
+    </ClCompile>
+    <ClCompile Include="file_system\fs_file_system_impl_mount_db.cpp">
+      <Filter>file system</Filter>
+    </ClCompile>
+    <ClCompile Include="file_system\fs_file_system_impl_mount_disk.cpp">
+      <Filter>file system</Filter>
+    </ClCompile>
+    <ClCompile Include="file_system\fs_file_system_impl_mount_disk_win_xbox360.cpp">
+      <Filter>file system</Filter>
+    </ClCompile>
+    <ClCompile Include="file_system\fs_file_system_impl_nodes.cpp">
+      <Filter>file system</Filter>
+    </ClCompile>
+    <ClCompile Include="file_system\fs_file_system_impl_replication.cpp">
+      <Filter>file system</Filter>
+    </ClCompile>
+    <ClCompile Include="file_system\fs_file_system_impl_saving_db.cpp">
+      <Filter>file system</Filter>
+    </ClCompile>
+    <ClCompile Include="file_system\fs_file_system_impl_unmount.cpp">
+      <Filter>file system</Filter>
+    </ClCompile>
+    <ClCompile Include="file_system\fs_file_system_impl_unpacking.cpp">
+      <Filter>file system</Filter>
+    </ClCompile>
+    <ClCompile Include="file_system\fs_file_system_impl_utils.cpp">
+      <Filter>file system</Filter>
+    </ClCompile>
+    <ClCompile Include="file_system\fs_file_system_impl_watcher.cpp">
+      <Filter>file system</Filter>
+    </ClCompile>
+    <ClCompile Include="file_system\fs_file_system_nodes_impl.cpp">
+      <Filter>file system</Filter>
+    </ClCompile>
+    <ClCompile Include="file_system\fs_file_system_win.cpp">
+      <Filter>file system</Filter>
+    </ClCompile>
+    <ClCompile Include="file_system\fs_folder_watcher_win.cpp">
+      <Filter>file system</Filter>
+    </ClCompile>
+    <ClCompile Include="file_system\fs_helper.cpp">
+      <Filter>file system</Filter>
+    </ClCompile>
+    <ClCompile Include="file_system\fs_path.cpp">
+      <Filter>file system</Filter>
+    </ClCompile>
+    <ClCompile Include="file_system\fs_path_win.cpp">
+      <Filter>file system</Filter>
+    </ClCompile>
+    <ClCompile Include="file_system\fs_path_xbox360.cpp">
+      <Filter>file system</Filter>
+    </ClCompile>
+    <ClCompile Include="file_system\fs_utils.cpp">
+      <Filter>file system</Filter>
+    </ClCompile>
+    <ClCompile Include="file_system\fs_utils_win_xbox360.cpp">
+      <Filter>file system</Filter>
+    </ClCompile>
+    <ClCompile Include="file_system\fs_watcher_multi.cpp">
+      <Filter>file system</Filter>
+    </ClCompile>
+    <ClCompile Include="file_system\fs_watcher_win.cpp">
+      <Filter>file system</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

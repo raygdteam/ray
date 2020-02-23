@@ -25,6 +25,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "renderer_null", "src\engine
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "renderer_dx11", "src\engine\renderer_dx11\renderer_dx11.vcxproj", "{99ADDAB5-A8AB-4C69-A1F6-982892616250}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "kernel", "src\engine\kernel\kernel.vcxproj", "{EDB1496F-C825-471D-B80E-2C46C1B59400}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -80,6 +82,12 @@ Global
 		{99ADDAB5-A8AB-4C69-A1F6-982892616250}.Development|x64.Build.0 = Development|x64
 		{99ADDAB5-A8AB-4C69-A1F6-982892616250}.Release|x64.ActiveCfg = Release|x64
 		{99ADDAB5-A8AB-4C69-A1F6-982892616250}.Release|x64.Build.0 = Release|x64
+		{EDB1496F-C825-471D-B80E-2C46C1B59400}.Debug|x64.ActiveCfg = Debug|x64
+		{EDB1496F-C825-471D-B80E-2C46C1B59400}.Debug|x64.Build.0 = Debug|x64
+		{EDB1496F-C825-471D-B80E-2C46C1B59400}.Development|x64.ActiveCfg = Development|x64
+		{EDB1496F-C825-471D-B80E-2C46C1B59400}.Development|x64.Build.0 = Development|x64
+		{EDB1496F-C825-471D-B80E-2C46C1B59400}.Release|x64.ActiveCfg = Release|x64
+		{EDB1496F-C825-471D-B80E-2C46C1B59400}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -94,6 +102,7 @@ Global
 		{2892F6A5-7588-4CA9-A2C9-249D45CDD167} = {02955C53-9B32-4DE7-8A1F-E4DDA14F0000}
 		{5AEA3503-0A4F-423A-8301-A450AB86C885} = {02955C53-9B32-4DE7-8A1F-E4DDA14F0000}
 		{99ADDAB5-A8AB-4C69-A1F6-982892616250} = {02955C53-9B32-4DE7-8A1F-E4DDA14F0000}
+		{EDB1496F-C825-471D-B80E-2C46C1B59400} = {02955C53-9B32-4DE7-8A1F-E4DDA14F0000}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {EC8784FD-AA97-4668-9A99-9047531C866A}

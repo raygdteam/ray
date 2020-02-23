@@ -20,7 +20,7 @@ void EngineLoop::PreInitialize(pcwstr commandLine, s32 argc)
 	core::modules::InitializationManager::RunPhase(core::modules::InitializationPhase::eStartupPlugin);
 
 	FileSystem::Get().initialize();
-	log.log("Ray {}.{}.{} {}", RAY_VERSION_MAJOR, RAY_VERSION_MINOR, RAY_VERSION_PATCH, RAY_VERSION_CODENAME);
+	log.log("Ray v{}.{}.{} {}", RAY_VERSION_MAJOR, RAY_VERSION_MINOR, RAY_VERSION_PATCH, RAY_VERSION_CODENAME);
 	core::modules::InitializationManager::RunPhase(core::modules::InitializationPhase::ePreInitialization);
 }
 
