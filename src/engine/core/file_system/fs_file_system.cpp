@@ -5,6 +5,7 @@
 ////////////////////////////////////////////////////////////////////////////
 
 #include "pch.hpp"
+#include <ray/type/extensions.hpp>
 #include "fs_utils.h"
 #include "fs_file_system.h"
 #include "fs_macros.h"
@@ -12,7 +13,7 @@
 #include "fs_path_iterator.h"
 #include "fs_helper.h"
 #include "fs_watcher.h"
-//#include <direct.h>
+#include <direct.h>
 
 namespace xray {
 namespace fs   {

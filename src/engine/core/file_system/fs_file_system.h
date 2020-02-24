@@ -7,9 +7,10 @@
 #ifndef FS_FILE_SYSTEM_H_INCLUDED
 #define FS_FILE_SYSTEM_H_INCLUDED
 
+#include <ray/type/extensions.hpp>
 #include "fs_path.h"
 #include "fs_platform_configuration.h"
-#include "resources_resource.h""
+#include "resources_resource.h"
 #include "compressor.h"
 
 namespace xray {

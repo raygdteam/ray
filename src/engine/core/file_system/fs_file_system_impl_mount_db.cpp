@@ -1,12 +1,8 @@
-////////////////////////////////////////////////////////////////////////////
-//	Created		: 21.12.2009
-//	Author		: Sergey Chechin
-//	Copyright (C) GSC Game World - 2009
-////////////////////////////////////////////////////////////////////////////
+// Copyright (c) Ray Team. All rights reserved.
 
-#include "pch.h"
+#include "pch.hpp"
 #include "fs_file_system_impl.h"
-#include <xray/fs_utils.h>
+#include "fs_utils.h"
 #include "fs_helper.h"
 
 namespace xray {
@@ -21,17 +17,17 @@ bool    file_system_impl::mount_db (	pcstr	logical_path,
 							  			pcstr	db_path,
 							  			bool	need_replication)
 {
-	threading::mutex_raii		raii		(m_mount_mutex);
-	on_mount								(mount_history::mount_type_db, logical_path, fat_path, file_system::watch_directory_false);
+	// threading::mutex_raii		raii		(m_mount_mutex);
+	on_mount(mount_history::mount_type_db, logical_path, fat_path, file_system::watch_directory_false);
 
-	if ( need_replication )
+	if (need_replication)
 	{
-		ASSERT								( m_replication_dir.length() );
+		//ASSERT								( m_replication_dir.length() );
 
-		fs::path_string						replicated_fat, replicated_db;
-		replicate_path						(fat_path, replicated_fat);
+		string replicated_fat, replicated_db;
+		replicate_path(fat_path, replicated_fat);
 
-		bool db_replicated				=	false;
+		bool db_replicated = false;
 
 		if ( file_exists(replicated_fat.c_str()) )
 		{
@@ -60,7 +56,6 @@ bool   file_system_impl::mount_db_impl (	pcstr	logical_path,
 											bool	open_replicated,
 											bool	need_replication)
 {
-	XRAY_UNREFERENCED_PARAMETER						(replicated_db_path);
 	verify_path_is_portable							(logical_path);
 	verify_path_is_portable							(fat_path);
 	verify_path_is_portable							(db_path);
