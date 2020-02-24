@@ -7,16 +7,16 @@
 #ifndef XRAY_COMPRESSOR_H_INCLUDED
 #define XRAY_COMPRESSOR_H_INCLUDED
 
-#include <xray/memory_buffer.h>
-#include <xray/debug_signalling_bool.h>
+//#include <xray/memory_buffer.h>
+//#include <xray/debug_signalling_bool.h>
 
 namespace xray {
 
 class RAY_CORE_API compressor
 {
 public:
-	virtual xray::signalling_bool	compress	(const_buffer src, mutable_buffer dest, u32& out_size) = 0;
-	virtual xray::signalling_bool	decompress	(const_buffer src, mutable_buffer dest, u32& out_size) = 0;
+	//virtual bool compress(const_buffer src, mutable_buffer dest, u32& out_size) = 0;
+	//virtual bool decompress(const_buffer src, mutable_buffer dest, u32& out_size) = 0;
 
 	virtual ~compressor () {}
 

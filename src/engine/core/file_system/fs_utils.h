@@ -4,7 +4,7 @@
 namespace xray {
 namespace fs {
 
-enum			open_file_enum {	open_file_create		=	1 << 0, 
+enum			open_file_enum : u32 {	open_file_create		=	1 << 0, 
 									open_file_truncate		=	1 << 1,
 									open_file_read			=	1 << 2, 
 									open_file_write			=	1 << 3, 

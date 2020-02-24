@@ -123,7 +123,7 @@ file_system::file_system() : m_impl( FS_NEW(file_system_impl) )
 
 file_system::~file_system()
 {
-	FS_DELETE							(m_impl);
+	delete m_impl;
 }
 
 void   file_system::mount_disk (pcstr fat_dir, pcstr disk_dir, watch_directory_bool const watch_directory)
@@ -156,14 +156,14 @@ bool   file_system::save_db (pcstr							fat_file_path,
 							 pcstr							db_file_path, 
 							 bool							no_duplicates, 
 							 u32							fat_alignment,
-							 memory::base_allocator *		alloc,
+							 //memory::base_allocator *		alloc,
 							 compressor *					compressor,
 							 float							compress_smallest_rate,
 							 db_target_platform_enum		db_format,
 							 fat_inline_data &				inline_data,
 							 db_callback					callback)
 {
-	CURE_ASSERT							(fat_alignment != 0, return false);
+	//CURE_ASSERT							(fat_alignment != 0, return false);
 	struct cleanup
 	{
 		FILE*	db_file;
@@ -186,7 +186,7 @@ bool   file_system::save_db (pcstr							fat_file_path,
 	}
 
 	bool fat_in_db					=	!fat_file_path ||
-										(db_file_path && strings::equal(db_file_path, fat_file_path));
+										(db_file_path && strstr(db_file_path, fat_file_path) == 0);
 		
 	if ( fat_in_db )
 	{
@@ -200,13 +200,13 @@ bool   file_system::save_db (pcstr							fat_file_path,
 
 	if ( !data.fat_file )
 		return							false;
-	
+
 	if ( !m_impl->save_db (	data.fat_file, 
 							data.db_file, 
 							"", 
 							no_duplicates, 
 							fat_alignment,
-							alloc,
+							//alloc,
 							compressor,
 							compress_smallest_rate,
 							db_format, 
@@ -257,7 +257,7 @@ void   file_system::set_replication_dir (pcstr replication_dir)
 
 void   file_system::get_disk_path (const iterator& it, path_string& out_path) const
 {
-	ASSERT								(it.m_cur);
+	RAY_ASSERT								(it.m_cur);
 	if ( it.m_cur )
 		m_impl->get_disk_path			(it.m_cur, out_path);
 	else
@@ -279,14 +279,14 @@ bool   file_system::operator == (const file_system& f) const
 	return								*m_impl == *f.m_impl;
 }
 
-bool   file_system::replicate_file (iterator it, pcbyte data)
+bool   file_system::replicate_file (file_system::iterator it, unsigned char const* data)
 {
 	return	m_impl->replicate_file		(it.m_cur, data);
 }
 
 bool   file_system::equal_db (iterator const it1, iterator const it2) const
 {
-	ASSERT								(it1.m_cur && it2.m_cur);
+	RAY_ASSERT								(it1.m_cur && it2.m_cur);
 	if ( !it1.m_cur || !it2.m_cur )
 	{
 		return							false;
@@ -294,7 +294,7 @@ bool   file_system::equal_db (iterator const it1, iterator const it2) const
 
 	return								m_impl->equal_db(it1.m_cur, it2.m_cur);
 }
-
+/*
 file_system::iterator   file_system::create_temp_disk_it (memory::base_allocator* const	alloc, 
 														  pcstr const					disk_path)
 {
@@ -320,7 +320,7 @@ void   file_system::destroy_temp_disk_it (memory::base_allocator* const	alloc, i
 {
 	if ( it != end() )
 		m_impl->destroy_temp_disk_node	(alloc, it.m_cur->cast_disk_file());
-}
+}*/
 
 bool   file_system::mount_disk_node_by_logical_path (pcstr const logical_path, iterator * const out_iterator)
 {
@@ -329,7 +329,7 @@ bool   file_system::mount_disk_node_by_logical_path (pcstr const logical_path, i
 
 bool   file_system::mount_disk_node_by_physical_path (pcstr const physical_path, iterator * const out_iterator)
 {
-	path_string		logical_path;
+	string		logical_path;
 	if ( !m_impl->convert_physical_to_logical_path (& logical_path, physical_path, false) )
 		return							false;
 
@@ -338,7 +338,7 @@ bool   file_system::mount_disk_node_by_physical_path (pcstr const physical_path,
 
 bool   file_system::unmount_disk_node (pcstr physical_path)
 {
-	path_string		logical_path;
+	string		logical_path;
 	if ( !m_impl->convert_physical_to_logical_path(& logical_path, physical_path, false) )
 		return							false;
 
@@ -348,7 +348,7 @@ bool   file_system::unmount_disk_node (pcstr physical_path)
 
 bool   file_system::update_file_size_in_fat	(pcstr physical_path)
 {
-	path_string		logical_path;
+	string		logical_path;
 	if ( !m_impl->convert_physical_to_logical_path(& logical_path, physical_path, false) )
 		return							false;
 
@@ -357,7 +357,7 @@ bool   file_system::update_file_size_in_fat	(pcstr physical_path)
 
 bool   file_system::rename_disk_node (pcstr old_physical_path, pcstr new_physical_path)
 {
-	path_string		logical_path;
+	string		logical_path;
 	if ( !m_impl->convert_physical_to_logical_path(& logical_path, old_physical_path, false) )
 		return							false;
 
@@ -365,7 +365,7 @@ bool   file_system::rename_disk_node (pcstr old_physical_path, pcstr new_physica
 	return								true;
 }
 
-signalling_bool   file_system::get_disk_path_to_store_file (pcstr const logical_path, buffer_string * const out_disk_path)
+bool   file_system::get_disk_path_to_store_file (pcstr const logical_path, string const out_disk_path)
 {
 	return	m_impl->get_disk_path_to_store_file(logical_path, out_disk_path);
 }
@@ -386,7 +386,7 @@ void   file_system::set_on_resource_leaked_callback (on_resource_leaked_callback
 
 pcstr   file_system::iterator::get_name () const
 {
-	ASSERT								(m_cur);
+	RAY_ASSERT								(m_cur);
 	return								m_cur ? m_cur->m_name : NULL;
 }
 
@@ -398,101 +398,101 @@ void   file_system::iterator::get_full_path (path_string & path) const
 		m_cur->get_full_path			(path);
 }
 
-path_string   file_system::iterator::get_full_path () const
+string file_system::iterator::get_full_path() const
 {
-	path_string		out_result;
+	string		out_result;
 	get_full_path						(out_result);
 	return								out_result;
 }
 
 bool   file_system::iterator::is_folder() const
 {
-	ASSERT								(m_cur);
+	//ASSERT								(m_cur);
 	return								m_cur ? m_cur->is_folder() : false;
 }
 
 bool   file_system::iterator::is_disk() const
 {
-	ASSERT								(m_cur);
+	//ASSERT								(m_cur);
 	return								m_cur ? m_cur->is_disk() : false;
 }
 
 bool   file_system::iterator::is_db() const
 {
-	ASSERT								(m_cur);
+	//ASSERT								(m_cur);
 	return								m_cur ? m_cur->is_db() : false;
 }
 
 bool   file_system::iterator::is_replicated() const
 {
-	ASSERT								(m_cur);
+	//ASSERT								(m_cur);
 	return								m_cur ? m_cur->is_replicated() : false;
 }
 
 bool   file_system::iterator::is_compressed() const
 {
-	ASSERT								(m_cur);
+	//ASSERT								(m_cur);
 	return								m_cur ? m_cur->is_compressed() : false;
 }
 
 bool   file_system::iterator::is_inlined() const
 {
-	ASSERT								(m_cur);
+	//ASSERT								(m_cur);
 	return								m_cur ? m_cur->is_inlined() : false;
 }
 
 int   file_system::iterator::get_flags () const
 {
-	ASSERT								(m_cur);
+	//ASSERT								(m_cur);
 	return								m_cur ? m_cur->get_flags() : NULL;
 }
 
 void   file_system::iterator::set_flags (const u32 flags)
 {
-	ASSERT								(m_cur);
+	//ASSERT								(m_cur);
 	if ( m_cur )
 		m_cur->m_flags				=	(char)flags;
 }
 
 bool   file_system::iterator::get_hash (u32 * out_hash) const
 {
-	ASSERT								(m_cur);
+	//ASSERT								(m_cur);
 	return								m_cur->get_hash(out_hash);
 }
 
 file_size_type   file_system::iterator::get_file_offs () const
 {
-	ASSERT								(m_cur);
+	//ASSERT								(m_cur);
 	return								m_cur && !m_cur->is_folder() ? m_cur->get_file_offs() : NULL;
 }
 
 u32   file_system::iterator::get_raw_file_size () const
 {
-	ASSERT								(m_cur);
+	//ASSERT								(m_cur);
 	return								(m_cur && !m_cur->is_folder()) ? m_cur->get_raw_file_size() : NULL;
 } 
 
 u32   file_system::iterator::get_compressed_file_size () const
 {
-	ASSERT								(m_cur);
+	//ASSERT								(m_cur);
 	return								(m_cur && !m_cur->is_folder()) ? m_cur->get_compressed_file_size() : NULL;
 } 
 
 u32   file_system::iterator::get_file_size () const
 {
-	ASSERT								(m_cur);
+	//ASSERT								(m_cur);
 	return								(m_cur && !m_cur->is_folder()) ? m_cur->get_file_size() : NULL;
 }
 
 u32   file_system::iterator::get_num_children () const
 {
-	ASSERT								(m_cur);
+	//ASSERT								(m_cur);
 	return								m_cur ? m_cur->get_num_children() : 0;
 }
 
 u32   file_system::iterator::get_num_nodes () const
 {
-	ASSERT								(m_cur);
+	//ASSERT								(m_cur);
 	return								m_cur ? m_cur->get_num_nodes() : 0;
 }
 
@@ -544,40 +544,23 @@ file_system::iterator   file_system::iterator::children_end () const
 
 void   file_system::iterator::set_associated (resources::resource_base* const resource)
 {
-	R_ASSERT							(m_cur);
+	//R_ASSERT							(m_cur);
 	if ( !m_cur )
 		return;
 
 	m_cur->set_associated				(resource);
 }
 
-resources::managed_resource_ptr   file_system::iterator::get_associated_managed_resource_ptr () const
-{
-	R_ASSERT							(m_cur);
-	if ( !m_cur )
-		return							NULL;
-
-	return m_cur->get_associated_managed_resource_ptr();
-}
-
-resources::unmanaged_resource_ptr   file_system::iterator::get_associated_unmanaged_resource_ptr () const
-{
-	R_ASSERT							(m_cur);
-	if ( !m_cur )
-		return							NULL;
-
-	return m_cur->get_associated_unmanaged_resource_ptr();
-}
 
 resources::query_result *   file_system::iterator::get_associated_query_result () const
 {
-	R_ASSERT							(m_cur);
+	//R_ASSERT							(m_cur);
 	if ( !m_cur )
 		return							NULL;
 
 	return m_cur->get_associated_query_result();
 }
-
+/*
 bool   file_system::iterator::get_inline_data (const_buffer * out_buffer) const
 {
 	R_ASSERT							(m_cur);
@@ -585,11 +568,11 @@ bool   file_system::iterator::get_inline_data (const_buffer * out_buffer) const
 		return							false;
 
 	return m_cur->get_inline_data(out_buffer);
-}
+}*/
 
 bool   file_system::iterator::is_associated () const
 {
-	ASSERT								(m_cur);
+	//ASSERT								(m_cur);
 	if ( !m_cur )
 		return							NULL;
 
@@ -598,7 +581,7 @@ bool   file_system::iterator::is_associated () const
 
 bool   file_system::iterator::is_associated_with (resources::resource_base * const resource_base) const
 {
-	ASSERT								(m_cur);
+	//ASSERT								(m_cur);
 	if ( !m_cur )
 		return							NULL;
 
@@ -607,7 +590,7 @@ bool   file_system::iterator::is_associated_with (resources::resource_base * con
 
 bool   file_system::iterator::try_clean_associated_if_zero_reference_resource () const
 {
-	ASSERT								(m_cur);
+	//ASSERT								(m_cur);
 	if ( !m_cur )
 		return							true;
 
@@ -636,7 +619,7 @@ void   file_system::iterator::print (pcstr offs) const
 		printf							("\r\n");
 	}
 
-	fixed_string<64> child_offs		=	offs;
+	string child_offs		=	offs;
 	child_offs						+=	"  ";
 
 	iterator	cur_child			=	children_begin();

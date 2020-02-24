@@ -12,6 +12,7 @@
 #include "fs_platform_configuration.h"
 #include "resources_resource.h"
 #include "compressor.h"
+#include "fs_file_system_impl.h"
 
 namespace xray {
 
@@ -147,7 +148,7 @@ public:
 	
 	iterator			create_temp_disk_it					(memory::base_allocator* alloc, pcstr disk_path);
 	void				destroy_temp_disk_it				(memory::base_allocator* alloc, iterator it);
-	bool		get_disk_path_to_store_file			(pcstr logical_path, buffer_string * out_disk_path);
+	bool		get_disk_path_to_store_file			(pcstr const logical_path, string const out_disk_path);
 	bool				mount_disk_node_by_logical_path		(pcstr logical_path, iterator * out_iterator = NULL);
 	bool				mount_disk_node_by_physical_path	(pcstr physical_path, iterator * out_iterator = NULL);
 	bool				unmount_disk_node					(pcstr physical_path);
@@ -173,8 +174,8 @@ class RAY_CORE_API	file_system::iterator
 {
 public:
 	pcstr				get_name			() const;
-	void				get_full_path		(path_string &) const;
-	path_string			get_full_path		() const;
+	void				get_full_path		(string &) const;
+	string			get_full_path		() const;
 	
 	u32					get_num_children	() const;
 	u32					get_num_nodes		() const;
@@ -214,10 +215,10 @@ private:
 	void								set_associated							(resources::resource_base * resource);
 	bool  								is_associated							() const;
 	bool  								is_associated_with						(resources::resource_base * resource) const;
-	resources::managed_resource_ptr		get_associated_managed_resource_ptr		() const;
-	resources::unmanaged_resource_ptr	get_associated_unmanaged_resource_ptr	() const;
+	//resources::managed_resource_ptr		get_associated_managed_resource_ptr		() const;
+	//resources::unmanaged_resource_ptr	get_associated_unmanaged_resource_ptr	() const;
 	resources::query_result *			get_associated_query_result				() const;
-	bool								get_inline_data							(const_buffer * out_buffer) const;
+	//bool								get_inline_data							(const_buffer * out_buffer) const;
 	bool								try_clean_associated_if_zero_reference_resource	() const;
 
 	fat_node<>*			m_cur;
@@ -226,11 +227,11 @@ private:
 	friend class		resources::resources_manager;
 	friend class		resources::managed_resource_allocator;
 	friend class		resources::device_manager;
-	friend class		resources::managed_resource;
-	friend class		resources::managed_intrusive_base;
-	friend class		resources::base_of_intrusive_base;
-	friend class		resources::unmanaged_resource;
-	friend class		resources::unmanaged_intrusive_base;
+	//friend class		resources::managed_resource;
+	//friend class		resources::managed_intrusive_base;
+	//friend class		resources::base_of_intrusive_base;
+	//friend class		resources::unmanaged_resource;
+	//friend class		resources::unmanaged_intrusive_base;
 	friend class		resources::query_result;
 	friend class		resources::resource_allocator;
 };

@@ -7,8 +7,8 @@
 #ifndef FS_FILE_SYSTEM_IMPL_H_INCLUDED
 #define FS_FILE_SYSTEM_IMPL_H_INCLUDED
 
-#include <xray/hash_multiset.h>
-#include <xray/intrusive_double_linked_list.h>
+//#include <xray/hash_multiset.h>
+//#include <xray/intrusive_double_linked_list.h>
 #include "fs_file_system_nodes_impl.h"
 #include "fs_macros.h"
 #include "fs_watcher.h"
@@ -17,7 +17,7 @@ namespace xray {
 namespace fs   {
 
 #	define USER_ALLOCATOR	::xray::memory::g_fs_allocator
-#	include <xray/std_containers.h>
+//#	include <xray/std_containers.h>
 #	undef USER_ALLOCATOR
 
 //-----------------------------------------------------------------------------------
@@ -46,15 +46,14 @@ namespace detail
 
 class file_system_impl
 {
-private:
 	typedef	file_system::db_callback			  db_callback;
 	
 public:
 	struct mount_history
 	{
 		enum mount_type_enum						{ mount_type_db, mount_type_disk };
-		path_string									logical_path;
-		path_string									physical_path;
+		string									logical_path;
+		string									physical_path;
 		mount_history *								next_mount_history;
 		mount_history *								prev_mount_history;
 		mount_type_enum								mount_type;
@@ -70,7 +69,7 @@ public:
 
 		void operator () (mount_history * const history)
 		{
-			fs::path_string history_item_logical_path_with_slash	=	history->logical_path;
+			string history_item_logical_path_with_slash	=	history->logical_path;
 			if ( history_item_logical_path_with_slash.length() )
 				history_item_logical_path_with_slash				+=	'/';
 
@@ -78,23 +77,23 @@ public:
 				 (file_logical_path->find(history_item_logical_path_with_slash.c_str()) == 0 ||
 				  history->logical_path == * file_logical_path) )
 			{
-				R_ASSERT					(!result);
+				RAY_ASSERT					(!result);
 				result					=	history;
 			}
 		}
 
 		mount_history *						result;
-		buffer_string *						file_logical_path;
+		string*						file_logical_path;
 	}; // find_disk_mount_predicate
 
 	struct find_disk_mount_by_physical_path_predicate
 	{
-		find_disk_mount_by_physical_path_predicate			(buffer_string & file_physical_path) : 
+		find_disk_mount_by_physical_path_predicate			(string& file_physical_path) :
 											result(NULL), file_physical_path(& file_physical_path) {;}
 
 		void operator () (mount_history * const history)
 		{
-			fs::path_string history_physical_path_with_slash	=	history->physical_path;
+			string history_physical_path_with_slash	=	history->physical_path;
 			if ( history_physical_path_with_slash.length() )
 				history_physical_path_with_slash				+=	'/';
 
@@ -102,13 +101,13 @@ public:
 				 (file_physical_path->find(history_physical_path_with_slash.c_str()) == 0 ||
 				  * file_physical_path == history->physical_path) )
 			{
-				R_ASSERT					(!result);
+				RAY_ASSERT					(!result);
 				result					=	history;
 			}
 		}
 
 		mount_history *						result;
-		buffer_string *						file_physical_path;
+		string*						file_physical_path;
 	}; // find_disk_mount_predicate
 
 	struct db_unmount_pred
@@ -120,7 +119,7 @@ public:
 				return false;
 
 			db_record * db	=	pimpl->get_db(work_node);
-			ASSERT( db);
+			//ASSERT( db);
 	
 			return db->root_node	==	db_node_root;
 		}
@@ -133,7 +132,7 @@ public:
 	{
 		void operator () (mount_history * mount_history)
 		{
-			FS_DELETE			(mount_history);
+			delete mount_history;
 		}
 	};
 
@@ -177,7 +176,7 @@ public:
 													 pcstr		 						logical_path, 
 													 bool		 						no_duplicates,
 													 u32		 						fat_alignment,
-													 memory::base_allocator*			alloc,
+													 //memory::base_allocator*			alloc,
 													 compressor* 						compressor,
 													 float		 						compress_smallest_rate,
 													 file_system::db_target_platform_enum	db_format,
