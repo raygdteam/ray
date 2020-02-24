@@ -33,10 +33,11 @@ struct IEngine
 /**
  *  The main Ray Engine class.
  */
-class RAY_ENGINE_API RayEngine : IEngine
+class RAY_ENGINE_API RayEngine : public IEngine
 {
 	IEngineLoop* _engineLoop;
 	std::vector<pcstr> _rendererInterface;
+	void* _window;
 public:
 	RayEngine();
 

@@ -12,8 +12,6 @@ namespace ray::launcher
 
 logging::ILog log("EngineLoop");
 
-extern "C" void* Get_Ldr_Addr();
-
 void EngineLoop::PreInitialize(pcwstr commandLine, s32 argc)
 {
 	/* Super early init code. DO NOT MOVE THIS ANYWHERE ELSE! */
@@ -22,14 +20,23 @@ void EngineLoop::PreInitialize(pcwstr commandLine, s32 argc)
 	FileSystem::Get().initialize();
 	log.log("Ray v{}.{}.{} {}", RAY_VERSION_MAJOR, RAY_VERSION_MINOR, RAY_VERSION_PATCH, RAY_VERSION_CODENAME);
 	core::modules::InitializationManager::RunPhase(core::modules::InitializationPhase::ePreInitialization);
+
+	_engine = new RayEngine();
 }
 
 void EngineLoop::Initialize()
 {
-	
+	_engine->Initialize(this);
 }
 
 void EngineLoop::Tick()
-{}
+{
+	_engine->Tick();
+}
+
+EngineLoop::~EngineLoop()
+{
+	delete _engine;
+}
 
 }

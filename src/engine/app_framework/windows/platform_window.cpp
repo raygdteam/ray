@@ -8,11 +8,13 @@
 class PlatformWindow : public ray::core::IPlatformWindow
 {
 	HWND _windowHandle = nullptr;
+	MSG _lastMsg;
 public:
 	void Initialize() override;
 	bool CreateWindow(const char* name) override;
 	void SetWindowVisibility(bool visible) override;
 	void Update() override;
+	bool ShouldClose() override;
 	void* GetWindowHandleRaw() override;
 	void Destroy() override;
 	void Shutdown() override;
@@ -52,6 +54,12 @@ void PlatformWindow::Update()
 		TranslateMessage(&msg);
 		DispatchMessage(&msg);
 	}
+	_lastMsg = msg;
+}
+
+bool PlatformWindow::ShouldClose()
+{
+	return _lastMsg.message == WM_CLOSE || _lastMsg.message == WM_DESTROY;
 }
 
 void* PlatformWindow::GetWindowHandleRaw()

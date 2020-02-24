@@ -15,7 +15,4 @@
   <ItemGroup>
     <ClInclude Include="engine_loop.hpp" />
   </ItemGroup>
-  <ItemGroup>
-    <MASM Include="test.asm" />
-  </ItemGroup>
 </Project>

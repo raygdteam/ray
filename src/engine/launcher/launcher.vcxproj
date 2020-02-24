@@ -232,9 +232,6 @@
       <Project>{02f99804-513e-4cb5-b88f-5cd54d47f69c}</Project>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <MASM Include="test.asm" />
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
     <Import Project="$(VCTargetsPath)\BuildCustomizations\masm.targets" />

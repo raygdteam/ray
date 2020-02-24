@@ -6,9 +6,10 @@ namespace ray::launcher
 
 class EngineLoop : IEngineLoop
 {
+	IEngine* _engine;
 public:
 	EngineLoop() = default;
-	~EngineLoop() = default;
+	~EngineLoop();
 
 
 	void PreInitialize(pcwstr commandLine, s32 argc) override;

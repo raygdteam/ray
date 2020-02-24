@@ -41,6 +41,11 @@ public:
 	virtual void Update() = 0;
 
 	/**
+	 *  Should the window close?
+	 */
+	virtual bool ShouldClose() = 0;
+
+	/**
 	 *  Returns the raw window handle.
 	 *  HWND on Windows, for example.
 	 */

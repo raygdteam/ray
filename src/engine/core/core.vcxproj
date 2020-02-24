@@ -229,16 +229,7 @@
   <ItemGroup>
     <ClInclude Include="core.hpp" />
     <ClInclude Include="file_system\file_system.hpp" />
-    <ClInclude Include="file_system\fs_file_system.h" />
-    <ClInclude Include="file_system\fs_file_system_impl.h" />
-    <ClInclude Include="file_system\fs_file_system_nodes_impl.h" />
-    <ClInclude Include="file_system\fs_folder_watcher_win.h" />
-    <ClInclude Include="file_system\fs_helper.h" />
-    <ClInclude Include="file_system\fs_helper_inline.h" />
-    <ClInclude Include="file_system\fs_macros.h" />
-    <ClInclude Include="file_system\fs_path_iterator.h" />
-    <ClInclude Include="file_system\fs_path_iterator_inline.h" />
-    <ClInclude Include="file_system\fs_watcher.h" />
+    <ClInclude Include="file_system\fs_node.h" />
     <ClInclude Include="logging\log.hpp" />
     <ClInclude Include="memory\allocator.hpp" />
     <ClInclude Include="memory\memory.hpp" />
@@ -257,34 +248,13 @@
     <ClInclude Include="raytl\Iterator.hpp" />
     <ClInclude Include="raytl\string.hpp" />
     <ClInclude Include="serialization\archive.hpp" />
+    <ClInclude Include="threading\lock.hpp" />
     <ClInclude Include="threading\thread.hpp" />
     <ClInclude Include="threading\threading.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="core_entry_point.cpp" />
     <ClCompile Include="file_system\file_system.cpp" />
-    <ClCompile Include="file_system\fs_file_system.cpp" />
-    <ClCompile Include="file_system\fs_file_system_impl_mount_db.cpp" />
-    <ClCompile Include="file_system\fs_file_system_impl_mount_disk.cpp" />
-    <ClCompile Include="file_system\fs_file_system_impl_mount_disk_win_xbox360.cpp" />
-    <ClCompile Include="file_system\fs_file_system_impl_nodes.cpp" />
-    <ClCompile Include="file_system\fs_file_system_impl_replication.cpp" />
-    <ClCompile Include="file_system\fs_file_system_impl_saving_db.cpp" />
-    <ClCompile Include="file_system\fs_file_system_impl_unmount.cpp" />
-    <ClCompile Include="file_system\fs_file_system_impl_unpacking.cpp" />
-    <ClCompile Include="file_system\fs_file_system_impl_utils.cpp" />
-    <ClCompile Include="file_system\fs_file_system_impl_watcher.cpp" />
-    <ClCompile Include="file_system\fs_file_system_nodes_impl.cpp" />
-    <ClCompile Include="file_system\fs_file_system_win.cpp" />
-    <ClCompile Include="file_system\fs_folder_watcher_win.cpp" />
-    <ClCompile Include="file_system\fs_helper.cpp" />
-    <ClCompile Include="file_system\fs_path.cpp" />
-    <ClCompile Include="file_system\fs_path_win.cpp" />
-    <ClCompile Include="file_system\fs_path_xbox360.cpp" />
-    <ClCompile Include="file_system\fs_utils.cpp" />
-    <ClCompile Include="file_system\fs_utils_win_xbox360.cpp" />
-    <ClCompile Include="file_system\fs_watcher_multi.cpp" />
-    <ClCompile Include="file_system\fs_watcher_win.cpp" />
     <ClCompile Include="logging\log.cpp" />
     <ClCompile Include="memory\hacky_memory_override_release.cpp" />
     <ClCompile Include="memory\memory_manager.cpp" />
@@ -296,6 +266,7 @@
     <ClCompile Include="processor.cpp" />
     <ClCompile Include="raytl\array.cpp" />
     <ClCompile Include="raytl\string.cpp" />
+    <ClCompile Include="threading\lock_win32.cpp" />
     <ClCompile Include="threading\threading.cpp" />
     <ClCompile Include="threading\thread_win32.cpp" />
     <ClCompile Include="windows\platform_fs.cpp" />

@@ -8,6 +8,10 @@ namespace ray::resources
 class RAY_ENGINE_API ResourceManager
 {
 	static ResourceManager* __Instance;
+	
+	IResource CreateResource();
+public:
+	void RequestResources();
 };
 
 }

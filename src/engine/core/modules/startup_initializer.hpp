@@ -4,7 +4,7 @@
 namespace ray::core::modules
 {
 
-enum InitializationPhase : u16
+enum class InitializationPhase : u16
 {
 	eStartupPlugin,
 	ePreInitialization,
