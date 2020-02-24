@@ -10,6 +10,7 @@ struct IFile
 {
 	size_t size;
 	void* map;
+
 };
 
 class RAY_CORE_API FileSystem
@@ -19,7 +20,6 @@ public:
 	static FileSystem Get();
 
 	void initialize();
-	void Mount(pcstr real, pcstr virtualPath);
 
 	IFile ReadFile(pcstr path);
 	bool WriteFile(pcstr path, IFile file);

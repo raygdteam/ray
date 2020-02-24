@@ -67,4 +67,21 @@ PlatformFileHandle PlatformFS::OpenFile(pcstr path, FileOpenMode mode)
 
     return { mode, hFile, hMapping, dwFileSize, dataPtr };
 }
+
+void PlatformFS::CloseFile(void* file)
+{
+    CloseHandle(file);
+}
+
+void PlatformFS::WriteFile(pcstr path, size_t size, void* data)
+{
+    HANDLE hFile = CreateFile(path, GENERIC_WRITE, 0,
+        nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, nullptr);
+    if (!hFile)
+        return;
+
+	LPDWORD numWritten = 0;
+
+    ::WriteFile(hFile, data, size, numWritten, nullptr);
+}
 }

@@ -51,9 +51,17 @@ void FileSystem::initialize()
 	core::platform::PlatformFS::Initialize();
 }
 
-serialization::IArchive FileSystem::ReadFile(pcstr path)
+IFile FileSystem::ReadFile(pcstr path)
 {
-	return *(serialization::IArchive*)nullptr;
+	core::platform::PlatformFileHandle file = core::platform::PlatformFS::OpenFile(
+		path, core::platform::FileOpenMode::eRead);
+
+	return { file.Size, file.Buffer };
+}
+
+bool FileSystem::WriteFile(pcstr path, IFile file)
+{
+	core::platform::PlatformFS::WriteFile(path, file.size, file.map);
 }
 
 

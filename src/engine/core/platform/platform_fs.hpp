@@ -26,5 +26,8 @@ class RAY_CORE_API PlatformFS
 public:
 	static void Initialize();
 	static PlatformFileHandle OpenFile(pcstr path, FileOpenMode mode = eReadWrite);
+	static void CloseFile(void* file);
+
+	static void WriteFile(pcstr path, size_t size, void* data);
 };
 }
