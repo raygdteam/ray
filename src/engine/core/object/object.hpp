@@ -1,4 +1,6 @@
 #pragma once
+#include <ray/type/extensions.hpp>
+#include "core/serialization/Serializer.hpp"
 
 namespace ray::core
 {
@@ -8,7 +10,7 @@ namespace ray::core
  */
 struct Object
 {
-    virtual std::string GetClassName() { return ""; }
+    virtual string GetClassName() { return ""; }
 
     virtual void OnSerialize(Serializer* serializer) { }
 

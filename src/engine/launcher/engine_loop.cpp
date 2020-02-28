@@ -6,6 +6,7 @@
 
 #include <ray/os/include.hpp>
 #include <winternl.h>
+#include "core/platform/platform_fs.hpp"
 
 namespace ray::launcher
 {
@@ -17,7 +18,7 @@ void EngineLoop::PreInitialize(pcwstr commandLine, s32 argc)
 	/* Super early init code. DO NOT MOVE THIS ANYWHERE ELSE! */
 	core::modules::InitializationManager::RunPhase(core::modules::InitializationPhase::eStartupPlugin);
 
-	FileSystem::Get().initialize();
+	core::platform::PlatformFS::Initialize();
 	log.log("Ray v{}.{}.{} {}", RAY_VERSION_MAJOR, RAY_VERSION_MINOR, RAY_VERSION_PATCH, RAY_VERSION_CODENAME);
 	core::modules::InitializationManager::RunPhase(core::modules::InitializationPhase::ePreInitialization);
 

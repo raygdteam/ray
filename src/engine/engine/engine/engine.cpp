@@ -23,6 +23,8 @@ void RayEngine::Initialize(IEngineLoop* engineLoop)
 	window->Initialize();
 	window->CreateWindow("RAY_ENGINE");
 
+
+
 	window->SetWindowVisibility(true);
 
 	_window = window;

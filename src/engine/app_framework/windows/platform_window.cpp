@@ -53,8 +53,8 @@ void PlatformWindow::Update()
 	{
 		TranslateMessage(&msg);
 		DispatchMessage(&msg);
+		_lastMsg = msg;
 	}
-	_lastMsg = msg;
 }
 
 bool PlatformWindow::ShouldClose()
