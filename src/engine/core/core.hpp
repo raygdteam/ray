@@ -88,3 +88,76 @@
 
 // Warnings stuff
 #pragma warning(disable: 4251)
+
+
+template<typename E>
+struct enable_bitwise_operators
+{
+    static const bool enable = false;
+};
+
+#define RAY_ENABLE_BITWISE_OPERATORS(enumeration) \
+template<> \
+struct enable_bitwise_operators<enumeration> { \
+    static const bool enable=true; \
+};
+
+template<typename E>
+typename std::enable_if<enable_bitwise_operators<E>::enable, E>::type
+operator|(E lhs, E rhs) {
+    using underlying_type_t = typename std::underlying_type<E>::type;
+    return static_cast<E>(
+        static_cast<underlying_type_t>(lhs) | static_cast<underlying_type_t>(rhs));
+}
+
+template<typename E>
+typename std::enable_if<enable_bitwise_operators<E>::enable, E>::type
+operator&(E lhs, E rhs) {
+    using underlying_type_t = typename std::underlying_type<E>::type;
+    return static_cast<E>(
+        static_cast<underlying_type_t>(lhs)& static_cast<underlying_type_t>(rhs));
+}
+
+template<typename E>
+typename std::enable_if<enable_bitwise_operators<E>::enable, E>::type
+operator^(E lhs, E rhs) {
+    using underlying_type_t = typename std::underlying_type<E>::type;
+    return static_cast<E>(
+        static_cast<underlying_type_t>(lhs) ^ static_cast<underlying_type_t>(rhs));
+}
+
+template<typename E>
+typename std::enable_if<enable_bitwise_operators<E>::enable, E>::type
+operator~(E lhs) {
+    using underlying_type_t = typename std::underlying_type<E>::type;
+    return static_cast<E>(
+        ~static_cast<underlying_type_t>(lhs));
+}
+
+template<typename E>
+typename std::enable_if<enable_bitwise_operators<E>::enable, E&>::type
+operator|=(E& lhs, E rhs) {
+    using underlying_type_t = typename std::underlying_type<E>::type;
+    lhs = static_cast<E>(
+        static_cast<underlying_type_t>(lhs) | static_cast<underlying_type_t>(rhs));
+    return lhs;
+}
+
+template<typename E>
+typename std::enable_if<enable_bitwise_operators<E>::enable, E&>::type
+operator&=(E& lhs, E rhs) {
+    using underlying_type_t = typename std::underlying_type<E>::type;
+    lhs = static_cast<E>(
+        static_cast<underlying_type_t>(lhs)& static_cast<underlying_type_t>(rhs));
+    return lhs;
+}
+
+template<typename E>
+typename std::enable_if<enable_bitwise_operators<E>::enable, E&>::type
+operator^=(E& lhs, E rhs) {
+    using underlying_type_t = typename std::underlying_type<E>::type;
+    lhs = static_cast<E>(
+        static_cast<underlying_type_t>(lhs) ^ static_cast<underlying_type_t>(rhs));
+    return lhs;
+}
+

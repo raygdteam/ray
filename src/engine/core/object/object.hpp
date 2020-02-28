@@ -3,14 +3,18 @@
 namespace ray::core
 {
 
-struct IObject
+/**
+ *  Defines an engine object that can be deserialized, serailized and reflected.
+ */
+struct Object
 {
-	
-};
+    virtual std::string GetClassName() { return ""; }
 
-struct IEngineObject : public IObject
-{
-	
+    virtual void OnSerialize(Serializer* serializer) { }
+
+    virtual void OnDeserialize(Serializer* serializer) { }
+
+    virtual ~Object();
 };
 
 }

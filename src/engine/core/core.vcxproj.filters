@@ -61,11 +61,14 @@
     <ClInclude Include="raytl\delegate.hpp">
       <Filter>raytl</Filter>
     </ClInclude>
-    <ClInclude Include="file_system\fs_node.h">
-      <Filter>file system</Filter>
-    </ClInclude>
     <ClInclude Include="threading\lock.hpp">
       <Filter>threading</Filter>
+    </ClInclude>
+    <ClInclude Include="serialization\stream.hpp">
+      <Filter>serialization</Filter>
+    </ClInclude>
+    <ClInclude Include="serialization\Serializer.hpp">
+      <Filter>serialization</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

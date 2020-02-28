@@ -229,7 +229,6 @@
   <ItemGroup>
     <ClInclude Include="core.hpp" />
     <ClInclude Include="file_system\file_system.hpp" />
-    <ClInclude Include="file_system\fs_node.h" />
     <ClInclude Include="logging\log.hpp" />
     <ClInclude Include="memory\allocator.hpp" />
     <ClInclude Include="memory\memory.hpp" />
@@ -248,6 +247,8 @@
     <ClInclude Include="raytl\Iterator.hpp" />
     <ClInclude Include="raytl\string.hpp" />
     <ClInclude Include="serialization\archive.hpp" />
+    <ClInclude Include="serialization\Serializer.hpp" />
+    <ClInclude Include="serialization\stream.hpp" />
     <ClInclude Include="threading\lock.hpp" />
     <ClInclude Include="threading\thread.hpp" />
     <ClInclude Include="threading\threading.hpp" />
