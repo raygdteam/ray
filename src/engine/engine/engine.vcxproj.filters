@@ -31,6 +31,9 @@
     <ClInclude Include="bundle\bundle_headers.hpp">
       <Filter>bundle</Filter>
     </ClInclude>
+    <ClInclude Include="world\node.hpp">
+      <Filter>game_framework</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="engine\engine.cpp">

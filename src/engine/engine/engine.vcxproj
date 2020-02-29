@@ -200,6 +200,7 @@
     <ClInclude Include="pch.hpp" />
     <ClInclude Include="resources\resource.hpp" />
     <ClInclude Include="resources\resource_manager.hpp" />
+    <ClInclude Include="world\node.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

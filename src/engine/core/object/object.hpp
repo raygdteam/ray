@@ -2,7 +2,7 @@
 #include <ray/type/extensions.hpp>
 #include "core/serialization/Serializer.hpp"
 
-namespace ray::core
+namespace ray
 {
 
 /**
