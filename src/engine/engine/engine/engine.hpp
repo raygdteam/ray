@@ -3,6 +3,7 @@
 #include "core/raytl/array.hpp"
 #include "engine/engine/engine_def.hpp"
 #include <vector>
+#include "renderer_core/renderer.hpp"
 
 namespace ray
 {
@@ -38,6 +39,7 @@ class RAY_ENGINE_API RayEngine : public IEngine
 	IEngineLoop* _engineLoop;
 	std::vector<pcstr> _rendererInterface;
 	void* _window;
+	IRenderer* _renderer;
 public:
 	RayEngine();
 

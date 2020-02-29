@@ -7,6 +7,8 @@
 #include <ray/os/include.hpp>
 #undef CreateWindow
 
+#include "renderer_core/renderer.hpp"
+
 namespace ray
 {
 
@@ -23,7 +25,12 @@ void RayEngine::Initialize(IEngineLoop* engineLoop)
 	window->Initialize();
 	window->CreateWindow("RAY_ENGINE");
 
+	typedef IRenderer* (*GetRendererApi_t)();
+	HMODULE handle = LoadLibrary("renderer_gl");
+	GetRendererApi_t getRendererApi = (GetRendererApi_t)GetProcAddress(handle, "GetRendererApi");
 
+	_renderer = getRendererApi();
+	_renderer->Initialize(window);
 
 	window->SetWindowVisibility(true);
 
@@ -38,7 +45,7 @@ void RayEngine::Tick()
 		ray::RequestEngineExit(true);
 		return;
 	}
-
+	_renderer->Draw();
 }
 
 /************************************/

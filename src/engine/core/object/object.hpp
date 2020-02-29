@@ -16,7 +16,7 @@ struct Object
 
     virtual void OnDeserialize(Serializer* serializer) { }
 
-    virtual ~Object();
+    virtual ~Object() = default;
 };
 
 }
