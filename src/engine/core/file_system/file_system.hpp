@@ -2,7 +2,7 @@
 #include "core/pch.hpp"
 #include "core/core.hpp"
 #include "core/serialization/archive.hpp"
-#include "serialization/stream.hpp"
+#include "core/serialization/stream.hpp"
 
 namespace ray 
 {

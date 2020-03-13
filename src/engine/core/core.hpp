@@ -90,74 +90,22 @@
 #pragma warning(disable: 4251)
 
 
-template<typename E>
-struct enable_bitwise_operators
+inline u32 bsr(u32 v)
 {
-    static const bool enable = false;
-};
-
-#define RAY_ENABLE_BITWISE_OPERATORS(enumeration) \
-template<> \
-struct enable_bitwise_operators<enumeration> { \
-    static const bool enable=true; \
-};
-
-template<typename E>
-typename std::enable_if<enable_bitwise_operators<E>::enable, E>::type
-operator|(E lhs, E rhs) {
-    using underlying_type_t = typename std::underlying_type<E>::type;
-    return static_cast<E>(
-        static_cast<underlying_type_t>(lhs) | static_cast<underlying_type_t>(rhs));
+	unsigned long wtr;
+	_BitScanReverse(&wtr, v);
+	return wtr;
 }
 
-template<typename E>
-typename std::enable_if<enable_bitwise_operators<E>::enable, E>::type
-operator&(E lhs, E rhs) {
-    using underlying_type_t = typename std::underlying_type<E>::type;
-    return static_cast<E>(
-        static_cast<underlying_type_t>(lhs)& static_cast<underlying_type_t>(rhs));
+inline u32 bsr(u64 v)
+{
+	unsigned long wtr;
+	_BitScanReverse64(&wtr, v);
+	return wtr;
 }
 
-template<typename E>
-typename std::enable_if<enable_bitwise_operators<E>::enable, E>::type
-operator^(E lhs, E rhs) {
-    using underlying_type_t = typename std::underlying_type<E>::type;
-    return static_cast<E>(
-        static_cast<underlying_type_t>(lhs) ^ static_cast<underlying_type_t>(rhs));
-}
+inline u32 cas(volatile u32* dst, u32 cmp, u32 exc)
+{
+	return _InterlockedCompareExchange((volatile long*)dst, exc, cmp);
 
-template<typename E>
-typename std::enable_if<enable_bitwise_operators<E>::enable, E>::type
-operator~(E lhs) {
-    using underlying_type_t = typename std::underlying_type<E>::type;
-    return static_cast<E>(
-        ~static_cast<underlying_type_t>(lhs));
 }
-
-template<typename E>
-typename std::enable_if<enable_bitwise_operators<E>::enable, E&>::type
-operator|=(E& lhs, E rhs) {
-    using underlying_type_t = typename std::underlying_type<E>::type;
-    lhs = static_cast<E>(
-        static_cast<underlying_type_t>(lhs) | static_cast<underlying_type_t>(rhs));
-    return lhs;
-}
-
-template<typename E>
-typename std::enable_if<enable_bitwise_operators<E>::enable, E&>::type
-operator&=(E& lhs, E rhs) {
-    using underlying_type_t = typename std::underlying_type<E>::type;
-    lhs = static_cast<E>(
-        static_cast<underlying_type_t>(lhs)& static_cast<underlying_type_t>(rhs));
-    return lhs;
-}
-
-template<typename E>
-typename std::enable_if<enable_bitwise_operators<E>::enable, E&>::type
-operator^=(E& lhs, E rhs) {
-    using underlying_type_t = typename std::underlying_type<E>::type;
-    lhs = static_cast<E>(
-        static_cast<underlying_type_t>(lhs) ^ static_cast<underlying_type_t>(rhs));
-    return lhs;
-}
-

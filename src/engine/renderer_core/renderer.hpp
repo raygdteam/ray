@@ -25,7 +25,7 @@ class RenderCommand_DrawRawVertices
 	Vec2d* Vertices;
 };
 
-struct IRenderer : public core::Object
+struct IRenderer : public Object
 {
 	virtual void Initialize(void* window) = 0;
 	virtual void Draw() = 0;

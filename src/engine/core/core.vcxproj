@@ -237,6 +237,10 @@
     <ClInclude Include="memory\StdMalloc.hpp" />
     <ClInclude Include="modules\startup_initializer.hpp" />
     <ClInclude Include="object\object.hpp" />
+    <ClInclude Include="parallelism\Lock.h" />
+    <ClInclude Include="parallelism\Mutex.h" />
+    <ClInclude Include="parallelism\Semaphore.h" />
+    <ClInclude Include="parallelism\TaskSystem.h" />
     <ClInclude Include="pch.hpp" />
     <ClInclude Include="platform\platform_fs.hpp" />
     <ClInclude Include="platform\platform_memory.hpp" />
@@ -263,6 +267,10 @@
     <ClCompile Include="memory\StdMalloc.cpp" />
     <ClCompile Include="modules\startup_initializer.cpp" />
     <ClCompile Include="object\garbage_collector.cpp" />
+    <ClCompile Include="parallelism\Mutex_win.cpp" />
+    <ClCompile Include="parallelism\Semaphore_win.cpp" />
+    <ClCompile Include="parallelism\TaskSystem.cpp" />
+    <ClCompile Include="parallelism\TaskSystem_win.cpp" />
     <ClCompile Include="pch.cpp" />
     <ClCompile Include="processor.cpp" />
     <ClCompile Include="raytl\array.cpp" />

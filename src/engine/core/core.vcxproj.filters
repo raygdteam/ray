@@ -70,6 +70,18 @@
     <ClInclude Include="serialization\Serializer.hpp">
       <Filter>serialization</Filter>
     </ClInclude>
+    <ClInclude Include="parallelism\Lock.h">
+      <Filter>parallelism</Filter>
+    </ClInclude>
+    <ClInclude Include="parallelism\Mutex.h">
+      <Filter>parallelism</Filter>
+    </ClInclude>
+    <ClInclude Include="parallelism\Semaphore.h">
+      <Filter>parallelism</Filter>
+    </ClInclude>
+    <ClInclude Include="parallelism\TaskSystem.h">
+      <Filter>parallelism</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="core_entry_point.cpp" />
@@ -126,6 +138,18 @@
     <ClCompile Include="threading\lock_win32.cpp">
       <Filter>threading</Filter>
     </ClCompile>
+    <ClCompile Include="parallelism\Mutex_win.cpp">
+      <Filter>parallelism</Filter>
+    </ClCompile>
+    <ClCompile Include="parallelism\Semaphore_win.cpp">
+      <Filter>parallelism</Filter>
+    </ClCompile>
+    <ClCompile Include="parallelism\TaskSystem.cpp">
+      <Filter>parallelism</Filter>
+    </ClCompile>
+    <ClCompile Include="parallelism\TaskSystem_win.cpp">
+      <Filter>parallelism</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="file system">
@@ -157,6 +181,9 @@
     </Filter>
     <Filter Include="modules">
       <UniqueIdentifier>{bb9722ec-5663-484f-963a-18d8d55db838}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="parallelism">
+      <UniqueIdentifier>{ff666a88-fab6-4622-9c6c-bfa953f9ee9d}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>
