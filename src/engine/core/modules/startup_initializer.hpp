@@ -1,5 +1,5 @@
 #pragma once
-#include "core/pch.hpp"
+#include "pch.hpp"
 
 namespace ray::core::modules
 {

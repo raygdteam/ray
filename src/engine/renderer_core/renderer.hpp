@@ -1,9 +1,10 @@
 #pragma once
-#include "core/object/object.hpp"
+#include <core/object/object.hpp>
+#include <app_framework/base/platform_window.hpp>
 
 namespace ray
 {
-
+	
 class Vec2d;
 
 enum RenderCommand_t
@@ -27,7 +28,7 @@ class RenderCommand_DrawRawVertices
 
 struct IRenderer : public Object
 {
-	virtual void Initialize(void* window) = 0;
+	virtual void Initialize(ray::core::IPlatformWindow* window) = 0;
 	virtual void Draw() = 0;
 };
 

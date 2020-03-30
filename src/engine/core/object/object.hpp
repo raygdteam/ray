@@ -1,6 +1,6 @@
 #pragma once
 #include <ray/type/extensions.hpp>
-#include "core/serialization/Serializer.hpp"
+#include <core/serialization/Serializer.hpp>
 
 namespace ray
 {

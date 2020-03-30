@@ -197,7 +197,7 @@ namespace ray
 	quantum::Stream* FileSystem::Open(const string& path, AccessFlags accessFlags)
     {
         char modeStr[] = "rb";
-        if (bool(accessFlags & AccessFlags::eWrite))
+        if (bool(static_cast<u32>(accessFlags) & static_cast<u32>(AccessFlags::eWrite)))
         {
             modeStr[0] = 'w';
         }

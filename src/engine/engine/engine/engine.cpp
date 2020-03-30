@@ -31,7 +31,7 @@ void RayEngine::Initialize(IEngineLoop* engineLoop)
 
 	_renderer = getRendererApi();
 	_renderer->Initialize(window);
-
+	
 	window->SetWindowVisibility(true);
 
 	_window = window;

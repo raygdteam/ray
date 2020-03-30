@@ -3,7 +3,7 @@
 class RendererGL : public ray::IRenderer
 {
 public:
-	void Initialize(void* window) override {}
+	void Initialize(ray::core::IPlatformWindow* window) override {}
 	void Draw() override {}
 };
 
