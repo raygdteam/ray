@@ -150,6 +150,9 @@
     <ClCompile Include="parallelism\TaskSystem_win.cpp">
       <Filter>parallelism</Filter>
     </ClCompile>
+    <ClCompile Include="parallelism\Mutex_linux.cpp">
+      <Filter>parallelism</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="file system">

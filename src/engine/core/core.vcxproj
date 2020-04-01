@@ -267,6 +267,7 @@
     <ClCompile Include="memory\StdMalloc.cpp" />
     <ClCompile Include="modules\startup_initializer.cpp" />
     <ClCompile Include="object\garbage_collector.cpp" />
+    <ClCompile Include="parallelism\Mutex_linux.cpp" />
     <ClCompile Include="parallelism\Mutex_win.cpp" />
     <ClCompile Include="parallelism\Semaphore_win.cpp" />
     <ClCompile Include="parallelism\TaskSystem.cpp" />
