@@ -5,7 +5,7 @@
 
 using namespace ray;
 
-namespace quantum
+namespace ray
 {
 	void* convert_to_fiber()
 	{

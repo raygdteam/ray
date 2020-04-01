@@ -140,4 +140,4 @@ namespace ray
 
 }
 
-RAY_ENABLE_BITWISE_OPERATORS(ray::FileSystem::AccessFlags)
+// RAY_ENABLE_BITWISE_OPERATORS(ray::FileSystem::AccessFlags)

@@ -1,5 +1,5 @@
 #pragma once
-#include "pch.hpp"
+#include "core/pch.hpp"
 
 namespace ray::core::modules
 {
@@ -21,7 +21,7 @@ struct InitializationPhaseBinding;
 
 class RAY_CORE_API InitializationManager
 {
-	// τσ! ολξυξ!
+	// Γ΄Γ³! Γ―Γ«Γ®ΓµΓ®!
 	static std::vector<InitializationPhaseBinding> _bindings;
 public:
 	static void RegisterPhase(string name, InitializationPhase, std::function<void()>);
