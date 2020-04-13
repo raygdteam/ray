@@ -28,7 +28,7 @@ void Memory::Memcpy(void* from, void* to, size_t size)
 void* Memory::Allocate(size_t size)
 {
 	auto allocator = MemoryManager::GetAllocator();
-	return allocator->Alloc(size, 2);
+	return allocator->Alloc(size, 4);
 }
 
 void* Memory::Reallocate(void* original, size_t size, u32 alignment)

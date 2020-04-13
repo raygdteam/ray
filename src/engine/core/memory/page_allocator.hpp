@@ -3,7 +3,7 @@
 
 namespace ray::core::memory
 {
-	const u16 PAGE_SIZE = 64 * 1024;
+	const u16 PAGE_SIZE = static_cast<u16>(64 * 1024);
 
 	class PageAllocator
 	{

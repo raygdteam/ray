@@ -34,65 +34,26 @@ void PlatformMemory::Memset(void* data, u8 value, size_t size)
 	}
 }
 
-namespace windows
+void PlatformMemory::GetMemoryStatus(MemoryStatus& Status)
 {
-	MEMORYSTATUSEX& GetMemoryStatus()
+	static bool sFirst = true;
+	static SYSTEM_INFO sSystemInfo;
+	static MEMORYSTATUSEX sMemoryStatus;
+
+	if (sFirst)
 	{
-		static MEMORYSTATUSEX sMemStatus;
-		static bool sFirst = true;
-
-		if (sFirst)
-		{
-			sMemStatus.dwLength = sizeof(sMemStatus);
-			GlobalMemoryStatusEx(&sMemStatus);
-		}
-
-		return sMemStatus;
+		sMemoryStatus.dwLength = sizeof(MEMORYSTATUSEX);
+		GlobalMemoryStatusEx(&sMemoryStatus);
+		GetSystemInfo(&sSystemInfo);
+		sFirst = false;
 	}
 
-	SYSTEM_INFO& GetSystemInfo()
-	{
-		static bool sFirst = true;
-		static SYSTEM_INFO sSystemInfo;
-
-		if (sFirst)
-		{
-			GetSystemInfo(&sSystemInfo);
-			sFirst = false;
-		}
-
-		return sSystemInfo;
-	}
-}
-
-u32 PlatformMemory::GetPageSize()
-{
-	return static_cast<u32>(windows::GetSystemInfo().dwPageSize);
-}
-
-void* PlatformMemory::GetMinAppAdress()
-{
-	return static_cast<void*>(windows::GetSystemInfo().lpMinimumApplicationAddress);
-}
-
-void* PlatformMemory::GetMaxAppAdress()
-{
-	return static_cast<void*>(windows::GetSystemInfo().lpMaximumApplicationAddress);
-}
-
-u16 PlatformMemory::GetMemoryLoadPercentage()
-{
-	return static_cast<u16>(windows::GetMemoryStatus().dwMemoryLoad);
-}
-
-u64 PlatformMemory::GetTotalPhysMemory()
-{
-	return static_cast<u64>(windows::GetMemoryStatus().ullTotalPhys);
-}
-
-u64 PlatformMemory::GetAvailPhysMemory()
-{
-	return static_cast<u64>(windows::GetMemoryStatus().ullAvailPhys);
+	Status.PageSize = sSystemInfo.dwPageSize;
+	Status.MinAppAdress = sSystemInfo.lpMinimumApplicationAddress;
+	Status.MaxAppAdress = sSystemInfo.lpMaximumApplicationAddress;
+	Status.MemoryLoadPercentage = sMemoryStatus.dwMemoryLoad;
+	Status.TotalPhysMemory = sMemoryStatus.ullTotalPhys;
+	Status.AvailPhysMemory = sMemoryStatus.ullAvailPhys;
 }
 
 }

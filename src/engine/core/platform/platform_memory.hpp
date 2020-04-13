@@ -4,6 +4,16 @@
 namespace ray::core::platform
 {
 
+struct MemoryStatus
+{
+	u32 PageSize;
+	void* MinAppAdress;
+	void* MaxAppAdress;
+	u16 MemoryLoadPercentage;
+	u64 TotalPhysMemory;
+	u64 AvailPhysMemory;
+};
+
 class RAY_CORE_API PlatformMemory
 {
 public:
@@ -15,12 +25,7 @@ public:
 
 	// TODO: implement functions for getting OS memory stats etc.
 
-	static u32 GetPageSize();
-	static void* GetMinAppAdress();
-	static void* GetMaxAppAdress();
-	static u16 GetMemoryLoadPercentage();
-	static u64 GetTotalPhysMemory();
-	static u64 GetAvailPhysMemory();
+	void GetMemoryStatus(MemoryStatus&);
 
 };
 
