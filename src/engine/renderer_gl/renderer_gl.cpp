@@ -5,6 +5,7 @@ class RendererGL : public ray::IRenderer
 public:
 	void Initialize(ray::core::IPlatformWindow* window) override {}
 	void Draw() override {}
+	void Shutdown() override {}
 };
 
 

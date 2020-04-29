@@ -30,6 +30,7 @@ struct IRenderer : public Object
 {
 	virtual void Initialize(ray::core::IPlatformWindow* window) = 0;
 	virtual void Draw() = 0;
+	virtual void Shutdown() = 0;
 };
 
 

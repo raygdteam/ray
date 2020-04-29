@@ -3,12 +3,18 @@
 #include <d3dcommon.h>
 #include <d3d11.h>
 
+#include <app_framework/base/platform_window.hpp>
+
+using namespace ray;
+using namespace ray::core;
+
 class RendererD3D11 : public ray::IRenderer
 {
 public: 
 	RendererD3D11();
 	void Initialize(ray::core::IPlatformWindow*) override;
 	void Draw() override;
+	void Shutdown() override;
 
 private:
 	ID3D11Device* mDevice;
@@ -92,9 +98,153 @@ void RendererD3D11::Initialize(ray::core::IPlatformWindow* window)
 	BackBuffer->Release();
 	BackBuffer = nullptr;
 	
+	// Initialize the description of the depth buffer.
+	ZeroMemory(&DepthStencilBufDesc, sizeof(DepthStencilBufDesc));
+	RECT rect;
+	int Width = 0;
+	int Height = 0;
+	if (GetWindowRect(dynamic_cast<HWND>(static_cast<HWND>(window->GetWindowHandleRaw())), &rect))
+	{
+		Width = rect.right - rect.left;
+		Height = rect.bottom - rect.top;
+	}
+
+	// Set up the description of the depth buffer.
+	DepthStencilBufDesc.Width = Width;
+	DepthStencilBufDesc.Height = Height;
+	DepthStencilBufDesc.MipLevels = 1;
+	DepthStencilBufDesc.ArraySize = 1;
+	DepthStencilBufDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
+	DepthStencilBufDesc.SampleDesc.Count = 1;
+	DepthStencilBufDesc.SampleDesc.Quality = 0;
+	DepthStencilBufDesc.Usage = D3D11_USAGE_DEFAULT;
+	DepthStencilBufDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
+	DepthStencilBufDesc.CPUAccessFlags = 0;
+	DepthStencilBufDesc.MiscFlags = 0;
+
+	// Create the texture for the depth buffer using the filled out description.
+	Result = mDevice->CreateTexture2D(&DepthStencilBufDesc, NULL, &mDepthStencilBuffer);
+	if (FAILED(Result))
+	{
+		return;
+	}
+
+	// Initialize the description of the stencil state.
+	ZeroMemory(&DepthStencilDesc, sizeof(DepthStencilDesc));
+
+	// Set up the description of the stencil state.
+	DepthStencilDesc.DepthEnable = true;
+	DepthStencilDesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ALL;
+	DepthStencilDesc.DepthFunc = D3D11_COMPARISON_LESS;
+
+	DepthStencilDesc.StencilEnable = true;
+	DepthStencilDesc.StencilReadMask = 0xFF;
+	DepthStencilDesc.StencilWriteMask = 0xFF;
+
+	// Stencil operations if pixel is front-facing.
+	DepthStencilDesc.FrontFace.StencilFailOp = D3D11_STENCIL_OP_KEEP;
+	DepthStencilDesc.FrontFace.StencilDepthFailOp = D3D11_STENCIL_OP_INCR;
+	DepthStencilDesc.FrontFace.StencilPassOp = D3D11_STENCIL_OP_KEEP;
+	DepthStencilDesc.FrontFace.StencilFunc = D3D11_COMPARISON_ALWAYS;
+
+	// Stencil operations if pixel is back-facing.
+	DepthStencilDesc.BackFace.StencilFailOp = D3D11_STENCIL_OP_KEEP;
+	DepthStencilDesc.BackFace.StencilDepthFailOp = D3D11_STENCIL_OP_DECR;
+	DepthStencilDesc.BackFace.StencilPassOp = D3D11_STENCIL_OP_KEEP;
+	DepthStencilDesc.BackFace.StencilFunc = D3D11_COMPARISON_ALWAYS;
+
+	// Create the depth stencil state.
+	Result = mDevice->CreateDepthStencilState(&DepthStencilDesc, &mDepthStencilState);
+	if (FAILED(Result))
+	{
+		return;
+	}
+
+	// Set the depth stencil state.
+	mDeviceContext->OMSetDepthStencilState(mDepthStencilState, 1);
+
+	// Initailze the depth stencil view.
+	ZeroMemory(&DepthStencilViewDesc, sizeof(DepthStencilViewDesc));
+
+	// Set up the depth stencil view description.
+	DepthStencilViewDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
+	DepthStencilViewDesc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
+	DepthStencilViewDesc.Texture2D.MipSlice = 0;
+
+	// Create the depth stencil view.
+	Result = mDevice->CreateDepthStencilView(mDepthStencilBuffer, &DepthStencilViewDesc, &mDepthStencilView);
+	if (FAILED(Result))
+	{
+		return;
+	}
+
+	// Bind the render target view and depth stencil buffer to the output render pipeline.
+	mDeviceContext->OMSetRenderTargets(1, &mRenderTargetView, mDepthStencilView);
+
+	// Setup the viewport for rendering.
+	Viewport.Width = static_cast<float>(Width);
+	Viewport.Height = static_cast<float>(Height);
+	Viewport.MinDepth = 0.0f;
+	Viewport.MaxDepth = 1.0f;
+	Viewport.TopLeftX = 0.0f;
+	Viewport.TopLeftY = 0.0f;
+
+	// Create the viewport.
+	mDeviceContext->RSSetViewports(1, &Viewport);
 }
 
 void RendererD3D11::Draw()
 {
 
+}
+
+void RendererD3D11::Shutdown()
+{
+	// Before shutting down set to windowed mode or when you release the swap chain it will throw an exception.
+	if (mSwapChain)
+	{
+		mSwapChain->SetFullscreenState(false, NULL);
+	}
+
+	if (mDepthStencilView)
+	{
+		mDepthStencilView->Release();
+		mDepthStencilView = 0;
+	}
+
+	if (mDepthStencilState)
+	{
+		mDepthStencilState->Release();
+		mDepthStencilState = 0;
+	}
+
+	if (mDepthStencilBuffer)
+	{
+		mDepthStencilBuffer->Release();
+		mDepthStencilBuffer = 0;
+	}
+
+	if (mRenderTargetView)
+	{
+		mRenderTargetView->Release();
+		mRenderTargetView = 0;
+	}
+
+	if (mDeviceContext)
+	{
+		mDeviceContext->Release();
+		mDeviceContext = 0;
+	}
+
+	if (mDevice)
+	{
+		mDevice->Release();
+		mDevice = 0;
+	}
+
+	if (mSwapChain)
+	{
+		mSwapChain->Release();
+		mSwapChain = 0;
+	}
 }
