@@ -79,6 +79,9 @@
     <ClInclude Include="parallelism\TaskSystem.h">
       <Filter>parallelism</Filter>
     </ClInclude>
+    <ClInclude Include="memory\StdMalloc.hpp">
+      <Filter>memory</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="core_entry_point.cpp" />
@@ -146,6 +149,10 @@
     </ClCompile>
     <ClCompile Include="parallelism\Mutex_linux.cpp">
       <Filter>parallelism</Filter>
+    </ClCompile>
+    <ClCompile Include="unity-build.cpp" />
+    <ClCompile Include="memory\StdMalloc.cpp">
+      <Filter>memory</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

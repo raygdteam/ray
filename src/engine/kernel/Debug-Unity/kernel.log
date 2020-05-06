@@ -1,0 +1,4 @@
+﻿  kernel_init.c
+     Создается библиотека D:\Проекты\ray-master\Debug-Unity\kernel.lib и объект D:\Проекты\ray-master\Debug-Unity\kernel.exp
+MSVCRTD.lib(exe_main.obj) : error LNK2019: ссылка на неразрешенный внешний символ _main в функции "int __cdecl invoke_main(void)" (?invoke_main@@YAHXZ)
+D:\Проекты\ray-master\Debug-Unity\kernel.exe : fatal error LNK1120: неразрешенных внешних элементов: 1
