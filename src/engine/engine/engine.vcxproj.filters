@@ -39,5 +39,6 @@
     <ClCompile Include="engine\engine.cpp">
       <Filter>engine</Filter>
     </ClCompile>
+    <ClCompile Include="unity_build.cpp" />
   </ItemGroup>
 </Project>
