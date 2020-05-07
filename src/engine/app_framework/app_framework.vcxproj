@@ -181,13 +181,8 @@
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="app_framework.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-    </ClCompile>
-    <ClCompile Include="unity_build.cpp" />
-    <ClCompile Include="windows\platform_window.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-    </ClCompile>
+    <ClCompile Include="app_framework.cpp" />
+    <ClCompile Include="windows\platform_window.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="app_framework.hpp" />

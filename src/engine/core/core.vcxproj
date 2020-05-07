@@ -234,10 +234,6 @@
     <ClInclude Include="memory\memory.hpp" />
     <ClInclude Include="memory\memory_manager.hpp" />
     <ClInclude Include="memory\page_allocator.hpp" />
-    <ClInclude Include="memory\StdMalloc.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-      </ExcludedFromBuild>
-    </ClInclude>
     <ClInclude Include="modules\startup_initializer.hpp" />
     <ClInclude Include="object\object.hpp" />
     <ClInclude Include="parallelism\Lock.h" />
@@ -261,84 +257,32 @@
     <ClInclude Include="threading\threading.hpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="core_entry_point.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-    </ClCompile>
-    <ClCompile Include="file_system\file_system.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-    </ClCompile>
-    <ClCompile Include="logging\log.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-    </ClCompile>
-    <ClCompile Include="memory\hacky_memory_override_release.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-    </ClCompile>
-    <ClCompile Include="memory\memory_manager.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-    </ClCompile>
-    <ClCompile Include="memory\page_allocator.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-    </ClCompile>
-    <ClCompile Include="memory\StdMalloc.hpp" />
-    <ClCompile Include="modules\startup_initializer.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-    </ClCompile>
-    <ClCompile Include="object\garbage_collector.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-    </ClCompile>
-    <ClCompile Include="parallelism\Mutex_linux.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-    </ClCompile>
-    <ClCompile Include="parallelism\Mutex_win.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-    </ClCompile>
-    <ClCompile Include="parallelism\Semaphore_win.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-    </ClCompile>
-    <ClCompile Include="parallelism\TaskSystem.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-    </ClCompile>
-    <ClCompile Include="parallelism\TaskSystem_win.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-      </ExcludedFromBuild>
-    </ClCompile>
-    <ClCompile Include="pch.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-    </ClCompile>
-    <ClCompile Include="processor.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-    </ClCompile>
-    <ClCompile Include="raytl\array.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-    </ClCompile>
-    <ClCompile Include="raytl\string.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-    </ClCompile>
-    <ClCompile Include="threading\lock_win32.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-    </ClCompile>
-    <ClCompile Include="threading\threading.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-    </ClCompile>
-    <ClCompile Include="threading\thread_win32.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-    </ClCompile>
-    <ClCompile Include="unity_build.cpp" />
-    <ClCompile Include="windows\platform_fs.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-      </ExcludedFromBuild>
-    </ClCompile>
-    <ClCompile Include="windows\platform_memory.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-    </ClCompile>
-    <ClCompile Include="windows\platform_processor.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-    </ClCompile>
+    <ClCompile Include="core_entry_point.cpp" />
+    <ClCompile Include="file_system\file_system.cpp" />
+    <ClCompile Include="logging\log.cpp" />
+    <ClCompile Include="memory\hacky_memory_override_release.cpp" />
+    <ClCompile Include="memory\memory_manager.cpp" />
+    <ClCompile Include="memory\page_allocator.cpp" />
+    <ClCompile Include="modules\startup_initializer.cpp" />
+    <ClCompile Include="object\garbage_collector.cpp" />
+    <ClCompile Include="parallelism\Mutex_linux.cpp" />
+    <ClCompile Include="parallelism\Mutex_win.cpp" />
+    <ClCompile Include="parallelism\Semaphore_win.cpp" />
+    <ClCompile Include="parallelism\TaskSystem.cpp" />
+    <ClCompile Include="parallelism\TaskSystem_win.cpp" />
+    <ClCompile Include="pch.cpp" />
+    <ClCompile Include="processor.cpp" />
+    <ClCompile Include="raytl\array.cpp" />
+    <ClCompile Include="raytl\string.cpp" />
+    <ClCompile Include="threading\lock_win32.cpp" />
+    <ClCompile Include="threading\threading.cpp" />
+    <ClCompile Include="threading\thread_win32.cpp" />
+    <ClCompile Include="windows\platform_fs.cpp" />
+    <ClCompile Include="windows\platform_memory.cpp" />
+    <ClCompile Include="windows\platform_processor.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="memory\memory.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
-    </ClCompile>
+    <ClCompile Include="memory\memory.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\kernel\kernel.vcxproj">

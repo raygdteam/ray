@@ -13,7 +13,6 @@
     <ClCompile Include="windows\platform_window.cpp">
       <Filter>windows</Filter>
     </ClCompile>
-    <ClCompile Include="unity_build.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="base\platform_window.hpp">

@@ -214,16 +214,9 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="engine_loop.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-    </ClCompile>
-    <ClCompile Include="launcher.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-    </ClCompile>
-    <ClCompile Include="unity_build.cpp" />
-    <ClCompile Include="windows\windows_launcher.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-    </ClCompile>
+    <ClCompile Include="engine_loop.cpp" />
+    <ClCompile Include="launcher.cpp" />
+    <ClCompile Include="windows\windows_launcher.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="engine_loop.hpp" />

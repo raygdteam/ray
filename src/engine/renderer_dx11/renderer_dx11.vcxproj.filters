@@ -2,6 +2,5 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <ClCompile Include="renderer_dx11.cpp" />
-    <ClCompile Include="unity_build.cpp" />
   </ItemGroup>
 </Project>

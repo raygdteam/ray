@@ -5,6 +5,5 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="renderer.cpp" />
-    <ClCompile Include="unity_build.cpp" />
   </ItemGroup>
 </Project>

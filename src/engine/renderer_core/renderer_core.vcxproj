@@ -175,10 +175,7 @@
     <ClInclude Include="renderer.hpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="renderer.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-    </ClCompile>
-    <ClCompile Include="unity_build.cpp" />
+    <ClCompile Include="renderer.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
