@@ -1,6 +1,6 @@
 #include "pch.hpp"
 #include "memory_manager.hpp"
-#include "StdMalloc.hpp"
+#include "std_alloc.hpp"
 #include "platform/platform_memory.hpp"
 
 namespace ray::core::memory
@@ -10,8 +10,8 @@ IAllocator* MemoryManager::_allocator = nullptr;
 
 void MemoryManager::Initialize()
 {
-	auto allocator = (StdMalloc*)platform::PlatformMemory::LowLevelAlloc(sizeof(StdMalloc));
-	new (allocator) StdMalloc();
+	auto allocator = (StdAlloc*)platform::PlatformMemory::LowLevelAlloc(sizeof(StdAlloc));
+	new (allocator) StdAlloc();
 	_allocator = static_cast<IAllocator*>(allocator);
 }
 
