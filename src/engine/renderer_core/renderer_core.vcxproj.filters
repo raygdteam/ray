@@ -2,8 +2,37 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <ClInclude Include="renderer.hpp" />
+    <ClInclude Include="resources\buffer.hpp">
+      <Filter>resources</Filter>
+    </ClInclude>
+    <ClInclude Include="resources\resource_manager.hpp">
+      <Filter>resources</Filter>
+    </ClInclude>
+    <ClInclude Include="resources\resources.hpp">
+      <Filter>resources</Filter>
+    </ClInclude>
+    <ClInclude Include="resources\textures.hpp">
+      <Filter>resources</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="renderer.cpp" />
+    <ClCompile Include="resources\buffer.cpp">
+      <Filter>resources</Filter>
+    </ClCompile>
+    <ClCompile Include="resources\resource_manager.cpp">
+      <Filter>resources</Filter>
+    </ClCompile>
+    <ClCompile Include="resources\resources.cpp">
+      <Filter>resources</Filter>
+    </ClCompile>
+    <ClCompile Include="resources\textures.cpp">
+      <Filter>resources</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="resources">
+      <UniqueIdentifier>{25a1620c-8fb9-484a-b18e-1847c6e7879a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
 </Project>

@@ -173,9 +173,17 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="renderer.hpp" />
+    <ClInclude Include="resources\buffer.hpp" />
+    <ClInclude Include="resources\resources.hpp" />
+    <ClInclude Include="resources\resource_manager.hpp" />
+    <ClInclude Include="resources\textures.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="renderer.cpp" />
+    <ClCompile Include="resources\buffer.cpp" />
+    <ClCompile Include="resources\resources.cpp" />
+    <ClCompile Include="resources\resource_manager.cpp" />
+    <ClCompile Include="resources\textures.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
