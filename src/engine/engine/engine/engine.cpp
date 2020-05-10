@@ -3,6 +3,10 @@
 #include "engine.hpp"
 #include <app_framework/base/platform_window.hpp>
 
+#include "core/file_system/file_system.hpp"
+
+using namespace ray::core;
+
 // плохо!
 #include <ray/os/include.hpp>
 #undef CreateWindow
@@ -35,6 +39,8 @@ void RayEngine::Initialize(IEngineLoop* engineLoop)
 	window->SetWindowVisibility(true);
 
 	_window = window;
+
+	string test = FileSystem::ReadAll("D:\\Projects\\Ray\\bin\\Debug\\test.txt");
 }
 
 void RayEngine::Tick()

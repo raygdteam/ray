@@ -23,7 +23,8 @@ public:
 void PlatformWindow::Initialize()
 {
 	WNDCLASS wc = {};
-
+	
+	wc.style = CS_HREDRAW | CS_VREDRAW | CS_OWNDC;
 	wc.hInstance = GetModuleHandleA(nullptr);
 	wc.lpszClassName = "RAY_ENGINE";
 	wc.lpfnWndProc = DefWindowProc;
@@ -33,7 +34,7 @@ void PlatformWindow::Initialize()
 
 bool PlatformWindow::CreateWindow(const char* name)
 {
-	_windowHandle = CreateWindowA("RAY_ENGINE", name, WS_OVERLAPPEDWINDOW, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT,
+	_windowHandle = CreateWindowA("RAY_ENGINE", name, WS_OVERLAPPEDWINDOW | WS_VISIBLE, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT,
 								CW_USEDEFAULT, nullptr, nullptr, GetModuleHandleA(0), 0);
 
 	UpdateWindow(_windowHandle);

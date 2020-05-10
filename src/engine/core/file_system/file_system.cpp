@@ -5,6 +5,7 @@
 #include <sys/stat.h>
 #include <regex>
 #include <map>
+#include <cctype>
 #ifdef RAY_PLATFORM_WIN
 #include <windows.h>
 #include <tchar.h>
@@ -228,9 +229,9 @@ namespace ray
 
     bool FileSystem::IsAbsolutePath(const string& filePath)
     {
-        char first = filePath.at(0);
+        char first = static_cast<char>(::toupper(static_cast<s32>(filePath.at(0))));
         char second = filePath.at(1);
-        return (second == ':' && ((first >= 'a' && first <= 'z') || (first >= 'A' && first <= 'Z')));
+        return (second == ':' && (first >= 'A' && first <= 'Z'));
     }
 
     string FileSystem::GetDirectoryPath(const string& path)
