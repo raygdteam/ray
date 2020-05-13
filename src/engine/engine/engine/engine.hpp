@@ -42,6 +42,7 @@ class RAY_ENGINE_API RayEngine : public IEngine
 	IRenderer* _renderer;
 public:
 	RayEngine();
+	~RayEngine();
 
 	void Initialize(IEngineLoop* engineLoop) override;
 	void Tick() override;

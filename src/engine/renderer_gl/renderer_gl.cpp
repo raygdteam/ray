@@ -25,6 +25,7 @@ private:
 
 void RendererGL::Initialize(IPlatformWindow* window)
 {
+#ifdef OPENGL
 	_window = window;
 	
 	PIXELFORMATDESCRIPTOR pfd;
@@ -69,6 +70,7 @@ void RendererGL::Initialize(IPlatformWindow* window)
 
 	//you need to include necessary libraries
 	glClearColor(0.0f, 1.0f, 0.0f, 1.0f); // ÷вет вьюпорта OpenGL
+#endif
 }
 
 void RendererGL::Draw()
@@ -76,6 +78,7 @@ void RendererGL::Draw()
 
 void RendererGL::Shutdown()
 {
+#ifdef OPENGL
 	if (g_hRC != nullptr)
 	{
 		wglMakeCurrent(nullptr, nullptr);
@@ -88,6 +91,7 @@ void RendererGL::Shutdown()
 		ReleaseDC(static_cast<HWND>(_window->GetWindowHandleRaw()), g_hDC);
 		g_hDC = nullptr;
 	}
+#endif
 }
 
 extern "C" __declspec(dllexport) ray::IRenderer*  GetRendererApi()

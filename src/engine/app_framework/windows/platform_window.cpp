@@ -3,7 +3,11 @@
 #define VC_EXTRALEAN
 #include <ray/os/include.hpp>
 #include <functional>
+
 #undef CreateWindow
+
+LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
+bool gIsClosed = false;
 
 class PlatformWindow : public ray::core::IPlatformWindow
 {
@@ -27,7 +31,7 @@ void PlatformWindow::Initialize()
 	wc.style = CS_HREDRAW | CS_VREDRAW | CS_OWNDC;
 	wc.hInstance = GetModuleHandleA(nullptr);
 	wc.lpszClassName = "RAY_ENGINE";
-	wc.lpfnWndProc = DefWindowProc;
+	wc.lpfnWndProc = WndProc;
 
 	RegisterClass(&wc);
 }
@@ -54,6 +58,8 @@ void PlatformWindow::Update()
 	{
 		TranslateMessage(&msg);
 		DispatchMessage(&msg);
+		if (gIsClosed)
+			msg.message = WM_CLOSE;
 		_lastMsg = msg;
 	}
 }
@@ -70,7 +76,8 @@ void* PlatformWindow::GetWindowHandleRaw()
 
 void PlatformWindow::Destroy()
 {
-	DestroyWindow(_windowHandle);
+	//DestroyWindow(_windowHandle);
+	FreeConsole();
 }
 
 void PlatformWindow::Shutdown()
@@ -81,3 +88,19 @@ ray::core::IPlatformWindow* ray::core::IPlatformWindow::CreateInstance()
 	return new PlatformWindow();
 }
 
+LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
+{
+	switch (msg)
+	{
+	case WM_CLOSE:
+		DestroyWindow(hwnd);
+		gIsClosed = true;
+		break;
+	/*case WM_DESTROY:
+		PostQuitMessage(0);
+		break;*/
+	default:
+		return DefWindowProc(hwnd, msg, wParam, lParam);
+	}
+	return 0;
+}

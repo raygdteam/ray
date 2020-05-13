@@ -54,6 +54,13 @@ void RayEngine::Tick()
 	_renderer->Draw();
 }
 
+RayEngine::~RayEngine()
+{
+	static_cast<core::IPlatformWindow*>(_window)->Destroy();
+	static_cast<core::IPlatformWindow*>(_window)->Shutdown();
+	_renderer->Shutdown();
+}
+
 /************************************/
 bool gEngineExitRequested = false;
 
