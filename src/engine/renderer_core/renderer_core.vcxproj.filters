@@ -11,6 +11,13 @@
     <ClInclude Include="resources\textures.hpp">
       <Filter>resources</Filter>
     </ClInclude>
+    <ClInclude Include="device.hpp" />
+    <ClInclude Include="command_queue.hpp" />
+    <ClInclude Include="command_list.hpp" />
+    <ClInclude Include="descriptor_heap.hpp" />
+    <ClInclude Include="fence.hpp" />
+    <ClInclude Include="command_allocator.hpp" />
+    <ClInclude Include="swap_chain.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="renderer.cpp" />

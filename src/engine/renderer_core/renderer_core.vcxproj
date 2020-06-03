@@ -172,10 +172,17 @@
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="command_allocator.hpp" />
+    <ClInclude Include="command_list.hpp" />
+    <ClInclude Include="command_queue.hpp" />
+    <ClInclude Include="descriptor_heap.hpp" />
+    <ClInclude Include="device.hpp" />
+    <ClInclude Include="fence.hpp" />
     <ClInclude Include="renderer.hpp" />
     <ClInclude Include="resources\buffer.hpp" />
     <ClInclude Include="resources\resources.hpp" />
     <ClInclude Include="resources\textures.hpp" />
+    <ClInclude Include="swap_chain.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="renderer.cpp" />
