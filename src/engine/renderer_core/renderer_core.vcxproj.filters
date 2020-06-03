@@ -5,9 +5,6 @@
     <ClInclude Include="resources\buffer.hpp">
       <Filter>resources</Filter>
     </ClInclude>
-    <ClInclude Include="resources\resource_manager.hpp">
-      <Filter>resources</Filter>
-    </ClInclude>
     <ClInclude Include="resources\resources.hpp">
       <Filter>resources</Filter>
     </ClInclude>
@@ -18,9 +15,6 @@
   <ItemGroup>
     <ClCompile Include="renderer.cpp" />
     <ClCompile Include="resources\buffer.cpp">
-      <Filter>resources</Filter>
-    </ClCompile>
-    <ClCompile Include="resources\resource_manager.cpp">
       <Filter>resources</Filter>
     </ClCompile>
     <ClCompile Include="resources\resources.cpp">
