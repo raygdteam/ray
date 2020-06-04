@@ -1,6 +1,6 @@
 #include "textures.hpp"
 
-namespace ray::renderer::resources
+namespace ray::renderer_core_api::resources
 {
 	//TODO
 }

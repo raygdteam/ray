@@ -13,6 +13,9 @@ class PlatformWindow : public ray::core::IPlatformWindow
 {
 	HWND _windowHandle = nullptr;
 	MSG _lastMsg;
+	u16 _width;
+	u16 _height;
+
 public:
 	void Initialize() override;
 	bool CreateWindow(const char* name) override;
@@ -20,6 +23,8 @@ public:
 	void Update() override;
 	bool ShouldClose() override;
 	void* GetWindowHandleRaw() override;
+	u16 GetWidth() override;
+	u16 GetHeight() override;
 	void Destroy() override;
 	void Shutdown() override;
 };
@@ -38,8 +43,10 @@ void PlatformWindow::Initialize()
 
 bool PlatformWindow::CreateWindow(const char* name)
 {
-	_windowHandle = CreateWindowA("RAY_ENGINE", name, WS_OVERLAPPEDWINDOW | WS_VISIBLE, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT,
-								CW_USEDEFAULT, nullptr, nullptr, GetModuleHandleA(0), 0);
+	_width = 1280;
+	_height = 720;
+	_windowHandle = CreateWindowA("RAY_ENGINE", name, WS_OVERLAPPEDWINDOW | WS_VISIBLE, CW_USEDEFAULT, CW_USEDEFAULT, _width,
+								_height, nullptr, nullptr, GetModuleHandleA(0), 0);
 
 	UpdateWindow(_windowHandle);
 
@@ -72,6 +79,16 @@ bool PlatformWindow::ShouldClose()
 void* PlatformWindow::GetWindowHandleRaw()
 {
 	return _windowHandle;
+}
+
+u16 PlatformWindow::GetWidth()
+{
+	return _width;
+}
+
+u16 PlatformWindow::GetHeight()
+{
+	return _height;
 }
 
 void PlatformWindow::Destroy()

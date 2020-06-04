@@ -52,6 +52,16 @@ public:
 	virtual void* GetWindowHandleRaw() = 0;
 
 	/**
+	*	Returns the window width
+	*/
+	virtual u16 GetWidth() = 0;
+
+	/**
+	*	Returns the window height
+	*/
+	virtual u16 GetHeight() = 0;
+
+	/**
 	 *  Destroy the window.
 	 */
 	virtual void Destroy() = 0;

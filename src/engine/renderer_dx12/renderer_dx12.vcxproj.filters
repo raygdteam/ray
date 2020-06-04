@@ -11,5 +11,6 @@
     <ClCompile Include="descriptor_heap.cpp" />
     <ClCompile Include="swap_chain.cpp" />
     <ClCompile Include="fence.cpp" />
+    <ClCompile Include="resources.cpp" />
   </ItemGroup>
 </Project>

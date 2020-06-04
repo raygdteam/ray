@@ -1,6 +1,6 @@
 #pragma once
 
-namespace ray::renderer::resources
+namespace ray::renderer_core_api::resources
 {
 
 enum class Usage
@@ -20,7 +20,7 @@ enum class Flags
 	constant_buffer
 };
 	
-class IResource
+class IResource : public IRRCBase
 {
 	//TODO
 };

@@ -191,6 +191,7 @@
     <ClCompile Include="descriptor_heap.cpp" />
     <ClCompile Include="device.cpp" />
     <ClCompile Include="fence.cpp" />
+    <ClCompile Include="resources.cpp" />
     <ClCompile Include="swap_chain.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

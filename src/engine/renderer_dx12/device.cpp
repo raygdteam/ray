@@ -1,5 +1,7 @@
 #include <renderer_core/device.hpp>
 
+#include <ray/type/extensions.hpp>
+
 #include <d3d12.h>
 #include <dxgi.h>
 #include <dxgi1_4.h>
@@ -18,6 +20,8 @@ namespace ray::renderer::d3d12
 
         bool Initialize() override;
         bool CreateCommandQueue(CommandQueueDesc& desc, ICommandQueue* cmdQueue) override;
+        bool CreateDescriptorHeap(DescriptorHeapDesc& desc, IDescriptorHeap* descriptorHeap) override;
+        s32 GetDescriptorHandleIncrementSize(DescriptorHeapType type) override;
 
     private:
 
@@ -70,7 +74,7 @@ namespace ray::renderer::d3d12
         ID3D12Device* device;
         hResult = D3D12CreateDevice(adapter, D3D_FEATURE_LEVEL_11_0, _uuidof(ID3D12Device), reinterpret_cast<void**>(&device));
         if (FAILED(hResult))
-            return;
+            return false;
 
         SetInstance(device);
     }
@@ -89,6 +93,76 @@ namespace ray::renderer::d3d12
         return true;
     }
 
+    bool D3D12Device::CreateDescriptorHeap(DescriptorHeapDesc& desc, IDescriptorHeap* descriptorHeap)
+    {
+        HRESULT hResult;
+
+        ID3D12DescriptorHeap* d3d12DescriptorHeap;
+        D3D12_DESCRIPTOR_HEAP_DESC dhDesc;
+        dhDesc.NumDescriptors = desc._num_descriptors;
+
+        switch (desc._type)
+        {
+        case DescriptorHeapType::descriptor_heap_type_rtv:
+            dhDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_RTV;
+        break;
+
+        case DescriptorHeapType::descriptor_heap_type_dsv:
+            dhDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_DSV;
+        break;
+
+        case DescriptorHeapType::descriptor_heap_type_sampler:
+            dhDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_SAMPLER;
+        break;
+
+        case DescriptorHeapType::descriptor_heap_type_uav_srv_cbv:
+            dhDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
+        break;
+
+        default:
+            return false;
+        break;
+        }
+
+        if (desc._shader_visible)
+            dhDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
+        else 
+            dhDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_NONE;
+
+        hResult = static_cast<ID3D12Device*>(GetInstance())->CreateDescriptorHeap(&dhDesc, IID_PPV_ARGS(&d3d12DescriptorHeap));
+        if (FAILED(hResult))
+            return false;
+
+        descriptorHeap->SetInstance(d3d12DescriptorHeap);
+        return true;
+
+    }
+
+    s32 D3D12Device::GetDescriptorHandleIncrementSize(DescriptorHeapType type)
+    {
+        switch (type)
+        {
+        case DescriptorHeapType::descriptor_heap_type_rtv:
+            static_cast<ID3D12Device*>(GetInstance())->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
+            break;
+
+        case DescriptorHeapType::descriptor_heap_type_dsv:
+            static_cast<ID3D12Device*>(GetInstance())->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_DSV);
+            break;
+
+        case DescriptorHeapType::descriptor_heap_type_sampler:
+            static_cast<ID3D12Device*>(GetInstance())->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_SAMPLER);
+            break;
+
+        case DescriptorHeapType::descriptor_heap_type_uav_srv_cbv:
+            static_cast<ID3D12Device*>(GetInstance())->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
+            break;
+
+        default:
+            return 0;
+            break;
+        }
+    }
 }
 
 IDevice* GetRendererDevice()
