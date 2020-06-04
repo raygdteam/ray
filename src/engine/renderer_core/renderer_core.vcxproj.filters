@@ -18,6 +18,7 @@
     <ClInclude Include="fence.hpp" />
     <ClInclude Include="command_allocator.hpp" />
     <ClInclude Include="swap_chain.hpp" />
+    <ClInclude Include="ray_renderer_core_base.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="renderer.cpp" />

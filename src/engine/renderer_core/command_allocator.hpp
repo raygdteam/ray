@@ -7,12 +7,10 @@
 
 namespace ray::renderer_core_api
 {
-class ICommandAllocator
+class ICommandAllocator : public IRRCBase
 {
 public:
 
-private:
-	void* _instance;
 
 };
 }

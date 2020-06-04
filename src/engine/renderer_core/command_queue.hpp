@@ -7,13 +7,16 @@
 
 namespace ray::renderer_core_api
 {
-class ICommandQueue
+
+struct CommandQueueDesc
+{
+	//TODO:
+};
+
+class ICommandQueue : public IRRCBase
 {
 public:
 
-
-private:
-	void* _instance;
 
 };
 }

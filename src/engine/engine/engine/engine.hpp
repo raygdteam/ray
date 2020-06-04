@@ -5,6 +5,8 @@
 #include <vector>
 #include "renderer_core/renderer.hpp"
 
+using namespace ray::renderer_core_api;
+
 namespace ray
 {
 
@@ -36,16 +38,19 @@ struct IEngine
  */
 class RAY_ENGINE_API RayEngine : public IEngine
 {
+private:
 	IEngineLoop* _engineLoop;
 	std::vector<pcstr> _rendererInterface;
 	void* _window;
 	IRenderer* _renderer;
+
 public:
 	RayEngine();
 	~RayEngine();
 
 	void Initialize(IEngineLoop* engineLoop) override;
 	void Tick() override;
+
 };
 
 // TODO: Phew! Global variable!

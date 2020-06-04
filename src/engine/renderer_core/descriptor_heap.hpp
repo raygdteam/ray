@@ -11,8 +11,6 @@ class IDescriptorHeap
 {
 public:
 
-private:
-	void* _instance;
 
 };
 }

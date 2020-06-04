@@ -7,13 +7,10 @@
 
 namespace ray::renderer_core_api
 {
-class ICommandList
+class ICommandList : public IRRCBase
 {
 public:
 
-
-private:
-	void* _instance;
 
 };
 }

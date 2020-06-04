@@ -3,4 +3,13 @@
   <ItemGroup>
     <ClInclude Include="d3dx12.h" />
   </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="device.cpp" />
+    <ClCompile Include="command_queue.cpp" />
+    <ClCompile Include="command_allocator.cpp" />
+    <ClCompile Include="command_list.cpp" />
+    <ClCompile Include="descriptor_heap.cpp" />
+    <ClCompile Include="swap_chain.cpp" />
+    <ClCompile Include="fence.cpp" />
+  </ItemGroup>
 </Project>

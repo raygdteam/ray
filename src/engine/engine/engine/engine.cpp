@@ -39,8 +39,6 @@ void RayEngine::Initialize(IEngineLoop* engineLoop)
 	window->SetWindowVisibility(true);
 
 	_window = window;
-
-	string test = FileSystem::ReadAll("D:\\Projects\\Ray\\bin\\Debug\\test.txt");
 }
 
 void RayEngine::Tick()
