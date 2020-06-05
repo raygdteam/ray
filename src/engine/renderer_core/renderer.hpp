@@ -2,21 +2,20 @@
 #include <core/object/object.hpp>
 #include <app_framework/base/platform_window.hpp>
 
-#include "device.hpp"
-#include "swap_chain.hpp"
+#include "ray_renderer_core_class_helper.hpp"
 #include "resources/resources.hpp"
 
 
 namespace ray::renderer_core_api
 {
 	
-struct IRenderer : public Object
+struct IRenderer final : public Object 
 {
-	virtual void Initialize(ray::core::IPlatformWindow* window);
-	//virtual void Draw();
-	virtual void Shutdown();
+	void Initialize(ray::core::IPlatformWindow* window);
+	void Shutdown();
 
 private:
+	IRRCClassHelper* _class_helper;
 	IDevice* _device;
 	ICommandAllocator* _command_allocator;
 	ICommandList* _command_list;
@@ -30,13 +29,6 @@ private:
 
 };
 
-using GetRendererDevice_t = IDevice* (*)();
-using GetRendererCommandList_t = ICommandList* (*)();
-using GetRendererCommandAllocator_t = ICommandAllocator* (*)();
-using GetRendererCommandQueue_t = ICommandQueue* (*)();
-using GetRendererDescriptorHeap_t = IDescriptorHeap* (*)();
-using GetRendererFence_t = IFence* (*)();
-using GetRendererSwapChain_t = ISwapChain* (*)();
-using GetRendererResource_t = resources::IResource* (*)();
+using GetRRCClassHelper_t = IRRCClassHelper* (*)();
 
 }

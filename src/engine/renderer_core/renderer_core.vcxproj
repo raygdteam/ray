@@ -179,6 +179,7 @@
     <ClInclude Include="device.hpp" />
     <ClInclude Include="fence.hpp" />
     <ClInclude Include="ray_renderer_core_base.hpp" />
+    <ClInclude Include="ray_renderer_core_class_helper.hpp" />
     <ClInclude Include="renderer.hpp" />
     <ClInclude Include="resources\buffer.hpp" />
     <ClInclude Include="resources\resources.hpp" />

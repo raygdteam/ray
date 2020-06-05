@@ -12,5 +12,6 @@
     <ClCompile Include="swap_chain.cpp" />
     <ClCompile Include="fence.cpp" />
     <ClCompile Include="resources.cpp" />
+    <ClCompile Include="ray_renderer_core_class_helper.cpp" />
   </ItemGroup>
 </Project>
