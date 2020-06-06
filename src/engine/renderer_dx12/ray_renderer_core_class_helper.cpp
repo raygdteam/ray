@@ -1,4 +1,12 @@
 #include <renderer_core/ray_renderer_core_class_helper.hpp>
+#include "device.hpp"
+#include "swap_chain.hpp"
+#include "resources.hpp"
+#include "command_allocator.hpp"
+#include "command_list.hpp"
+#include "command_queue.hpp"
+#include "descriptor_heap.hpp"
+#include "fence.hpp"
 
 using namespace ray::renderer_core_api;
 
@@ -17,9 +25,9 @@ namespace ray::renderer::d3d12
 			return new D3D12SwapChain;
 		}
 
-		resources::IResource* CreateResource() override 
+		IResource* CreateResource() override 
 		{
-			return new D3D12Resource;
+			return new resources::D3D12Resource;
 		}
 
 		ICommandAllocator* CreateCommandAllocator() override 
@@ -45,6 +53,16 @@ namespace ray::renderer::d3d12
 		IFence* CreateFence() override 
 		{
 			return new D3D12Fence;
+		}
+
+		ICPUDescriptor* CreateCPUDescriptor() override
+		{
+			return new D3D12CPUDescriptor;
+		}
+
+		IGPUDescriptor* CreateGPUDescriptor() override
+		{
+			return new D3D12GPUDescriptor;
 		}
 
 	};

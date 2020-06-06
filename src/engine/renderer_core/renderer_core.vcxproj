@@ -178,6 +178,7 @@
     <ClInclude Include="descriptor_heap.hpp" />
     <ClInclude Include="device.hpp" />
     <ClInclude Include="fence.hpp" />
+    <ClInclude Include="pipeline_state.hpp" />
     <ClInclude Include="ray_renderer_core_base.hpp" />
     <ClInclude Include="ray_renderer_core_class_helper.hpp" />
     <ClInclude Include="renderer.hpp" />

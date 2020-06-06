@@ -2,6 +2,16 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <ClInclude Include="d3dx12.h" />
+    <ClInclude Include="command_allocator.hpp" />
+    <ClInclude Include="command_list.hpp" />
+    <ClInclude Include="command_queue.hpp" />
+    <ClInclude Include="descriptor_heap.hpp" />
+    <ClInclude Include="device.hpp" />
+    <ClInclude Include="fence.hpp" />
+    <ClInclude Include="swap_chain.hpp" />
+    <ClInclude Include="resources.hpp">
+      <Filter>resources</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="device.cpp" />
@@ -11,7 +21,14 @@
     <ClCompile Include="descriptor_heap.cpp" />
     <ClCompile Include="swap_chain.cpp" />
     <ClCompile Include="fence.cpp" />
-    <ClCompile Include="resources.cpp" />
     <ClCompile Include="ray_renderer_core_class_helper.cpp" />
+    <ClCompile Include="resources.cpp">
+      <Filter>resources</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="resources">
+      <UniqueIdentifier>{1303e552-9808-49c8-bdce-d278c622594b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
 </Project>

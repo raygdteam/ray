@@ -20,6 +20,7 @@
     <ClInclude Include="swap_chain.hpp" />
     <ClInclude Include="ray_renderer_core_base.hpp" />
     <ClInclude Include="ray_renderer_core_class_helper.hpp" />
+    <ClInclude Include="pipeline_state.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="renderer.cpp" />

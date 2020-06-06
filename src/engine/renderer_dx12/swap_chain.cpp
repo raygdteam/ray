@@ -1,22 +1,7 @@
-#include <renderer_core/swap_chain.hpp>
-
-#include <d3d12.h>
-#include <dxgi.h>
-#include <dxgi1_4.h>
-#include <combaseapi.h>
-
-using namespace ray::renderer_core_api;
+#include "swap_chain.hpp"
 
 namespace ray::renderer::d3d12
 {
-	class D3D12SwapChain : public ISwapChain
-	{
-	public:
-		D3D12SwapChain() {}
-
-		bool Initialize(SwapChainDesc& desc, u32& frameIndex) override;
-        bool GetBuffer(u32 index, resources::IResource* resource) override;
-	};
 
 	bool D3D12SwapChain::Initialize(SwapChainDesc& desc, u32& frameIndex)
 	{
@@ -65,7 +50,7 @@ namespace ray::renderer::d3d12
         return true;
 	}
 
-    bool D3D12SwapChain::GetBuffer(u32 index, resources::IResource* resource)
+    bool D3D12SwapChain::GetBuffer(u32 index, IResource* resource)
     {
         HRESULT hResult;
         ID3D12Resource* d3d12Resource;

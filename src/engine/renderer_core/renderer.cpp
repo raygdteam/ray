@@ -15,13 +15,17 @@ namespace ray::renderer_core_api
 
 		_device = _class_helper->CreateDevice();
 		_command_list = _class_helper->CreateCommandList();
-		_command_allocator = _class_helper->CreateCommandAllocator();
 		_command_queue = _class_helper->CreateCommandQueue();
 		_fence = _class_helper->CreateFence();
 		_descriptor_heap = _class_helper->CreateDescriptorHeap();
 		_swap_chain = _class_helper->CreateSwapChain();
+		_rtv_descriptor = _class_helper->CreateCPUDescriptor();
+
 		for (u32 i = 0; i < FRAME_BUFFER_COUNT; i++)
+		{
 			_render_targets[i] = _class_helper->CreateResource();
+			_command_allocator[i] = _class_helper->CreateCommandAllocator();
+		}
 
 		if (!_device->Initialize())
 			return;
@@ -47,14 +51,26 @@ namespace ray::renderer_core_api
 		rtvHeapDesc._type = DescriptorHeapType::descriptor_heap_type_rtv;
 		_device->CreateDescriptorHeap(rtvHeapDesc, _descriptor_heap);
 
-		_rtv_descriptor_size = _device->GetDescriptorHandleIncrementSize(DescriptorHeapType::descriptor_heap_type_rtv);
+		_rtv_descriptor->Initialize(_descriptor_heap);
+		_rtv_descriptor->SetDescriptorSize(_device->GetDescriptorHandleIncrementSize(DescriptorHeapType::descriptor_heap_type_rtv));
 
 		for (u32 i = 0; i < FRAME_BUFFER_COUNT; i++)
 		{
 			if(!_swap_chain->GetBuffer(i, _render_targets[i]))
 				return;
 
+			RenderTargetViewDesc rtvDesc = {};
+			_device->CreateRenderTargetView(_render_targets[i], rtvDesc, _rtv_descriptor);
 
+			if (!_rtv_descriptor->Offset(1))
+				return;
+		
+			if (!_device->CreateCommandAllocator(_command_allocator[i], CommandListType::direct))
+				return;
 		}
+
+		if (!_device->CreateCommandList(_command_list, _command_allocator[0], nullptr, CommandListType::direct))
+			return;
+
 	}
 }

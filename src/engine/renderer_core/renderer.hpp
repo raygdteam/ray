@@ -17,15 +17,15 @@ struct IRenderer final : public Object
 private:
 	IRRCClassHelper* _class_helper;
 	IDevice* _device;
-	ICommandAllocator* _command_allocator;
 	ICommandList* _command_list;
 	IDescriptorHeap* _descriptor_heap;
 	IFence* _fence;
 	ISwapChain* _swap_chain;
 	ICommandQueue* _command_queue;
 	static const u32 FRAME_BUFFER_COUNT = 3;
-	s32 _rtv_descriptor_size;
+	ICPUDescriptor* _rtv_descriptor;
 	resources::IResource* _render_targets[FRAME_BUFFER_COUNT];
+	ICommandAllocator* _command_allocator[FRAME_BUFFER_COUNT];
 
 };
 

@@ -1,11 +1,5 @@
-#include <renderer_core/device.hpp>
-
-#include <ray/type/extensions.hpp>
-
-#include <d3d12.h>
-#include <dxgi.h>
-#include <dxgi1_4.h>
-#include <combaseapi.h>
+#include "device.hpp"
+#include "d3dx12.h"
 
 //Direct3D 12 Device implementation
 
@@ -13,20 +7,6 @@ using namespace ray::renderer_core_api;
 
 namespace ray::renderer::d3d12
 {
-    class D3D12Device : public IDevice
-    {
-    public:
-        D3D12Device() {}
-
-        bool Initialize() override;
-        bool CreateCommandQueue(CommandQueueDesc& desc, ICommandQueue* cmdQueue) override;
-        bool CreateDescriptorHeap(DescriptorHeapDesc& desc, IDescriptorHeap* descriptorHeap) override;
-        s32 GetDescriptorHandleIncrementSize(DescriptorHeapType type) override;
-
-    private:
-
-
-    };
 
     bool D3D12Device::Initialize()
     {
@@ -138,6 +118,84 @@ namespace ray::renderer::d3d12
 
     }
 
+    void D3D12Device::CreateRenderTargetView(IResource* resource, RenderTargetViewDesc& desc, ICPUDescriptor* descriptor)
+    {
+        auto tempDevice = static_cast<ID3D12Device*>(GetInstance());
+        auto tempResource = static_cast<ID3D12Resource*>(resource->GetInstance());
+        auto tempDescriptor = static_cast<CD3DX12_CPU_DESCRIPTOR_HANDLE*>(descriptor->GetInstance());
+        tempDevice->CreateRenderTargetView(tempResource, nullptr, *tempDescriptor);
+    }
+
+    bool D3D12Device::CreateCommandAllocator(ICommandAllocator* commandAllocator, CommandListType listType)
+    {
+        D3D12_COMMAND_LIST_TYPE type;
+        switch (listType)
+        {
+        case ray::renderer_core_api::CommandListType::direct:
+            type = D3D12_COMMAND_LIST_TYPE_DIRECT;
+            break;
+        case ray::renderer_core_api::CommandListType::bundle:
+            type = D3D12_COMMAND_LIST_TYPE_BUNDLE;
+            break;
+        case ray::renderer_core_api::CommandListType::compute:
+            type = D3D12_COMMAND_LIST_TYPE_COMPUTE;
+            break;
+        case ray::renderer_core_api::CommandListType::copy:
+            type = D3D12_COMMAND_LIST_TYPE_COPY;
+            break;
+        default:
+            return false;
+            break;
+        }
+
+        ID3D12CommandAllocator* allocator;
+        auto temp = static_cast<ID3D12Device*>(GetInstance());
+        auto hResult = temp->CreateCommandAllocator(type, IID_PPV_ARGS(&allocator));
+        if (FAILED(hResult))
+            return false;
+
+        commandAllocator->SetInstance(allocator);
+        return true;
+    }
+
+    bool D3D12Device::CreateCommandList(ICommandList* commandList, ICommandAllocator* commandAllocator, IPipelineState* pipelineState, CommandListType listType)
+    {
+        D3D12_COMMAND_LIST_TYPE type;
+        switch (listType)
+        {
+        case ray::renderer_core_api::CommandListType::direct:
+            type = D3D12_COMMAND_LIST_TYPE_DIRECT;
+            break;
+        case ray::renderer_core_api::CommandListType::bundle:
+            type = D3D12_COMMAND_LIST_TYPE_BUNDLE;
+            break;
+        case ray::renderer_core_api::CommandListType::compute:
+            type = D3D12_COMMAND_LIST_TYPE_COMPUTE;
+            break;
+        case ray::renderer_core_api::CommandListType::copy:
+            type = D3D12_COMMAND_LIST_TYPE_COPY;
+            break;
+        default:
+            return false;
+            break;
+        }
+
+        auto tempDevice = static_cast<ID3D12Device*>(GetInstance());
+        auto tempAllocator = static_cast<ID3D12CommandAllocator*>(commandAllocator->GetInstance());
+
+        ID3D12PipelineState* tempState = nullptr;
+
+        if (pipelineState)
+            tempState = static_cast<ID3D12PipelineState*>(pipelineState->GetInstance());
+
+        ID3D12CommandList* list;
+        auto hResult = tempDevice->CreateCommandList(0, type, tempAllocator, tempState, IID_PPV_ARGS(&list));
+        if (FAILED(hResult))
+            return false;
+        SetInstance(list);
+        return true;
+    }
+
     s32 D3D12Device::GetDescriptorHandleIncrementSize(DescriptorHeapType type)
     {
         switch (type)
@@ -163,9 +221,4 @@ namespace ray::renderer::d3d12
             break;
         }
     }
-}
-
-IDevice* GetRendererDevice()
-{
-    return new ray::renderer::d3d12::D3D12Device;
 }

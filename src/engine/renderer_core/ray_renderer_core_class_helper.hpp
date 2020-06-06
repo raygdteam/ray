@@ -17,6 +17,8 @@ namespace ray::renderer_core_api
 		virtual IDevice* CreateDevice() = 0;
 		virtual ISwapChain* CreateSwapChain() = 0;
 		virtual resources::IResource* CreateResource() = 0;
+		virtual ICPUDescriptor* CreateCPUDescriptor() = 0;
+		virtual IGPUDescriptor* CreateGPUDescriptor() = 0;
 
 	};
 }

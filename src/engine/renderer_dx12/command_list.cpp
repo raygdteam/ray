@@ -1,18 +1,6 @@
-#include <renderer_core/command_list.hpp>
-
-using namespace ray::renderer_core_api;
+#include "command_list.hpp"
 
 namespace ray::renderer::d3d12
 {
-	class D3D12CommandList : public ICommandList
-	{
-	public:
-		D3D12CommandList() {}
 
-	};
-}
-
-ICommandList* GetRendererCommandList()
-{
-	return new ray::renderer::d3d12::D3D12CommandList;
 }

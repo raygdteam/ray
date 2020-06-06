@@ -1,4 +1,6 @@
 #pragma once
+#include "ray_renderer_core_base.hpp"
+#include <ray/type/extensions.hpp>
 
 /*
 **	Vulkan:			VkDescriptorPool
@@ -28,4 +30,30 @@ public:
 
 
 };
+
+class IDescriptor : public IRRCBase
+{
+public:
+	IDescriptor() : _size(0) {}
+	virtual bool Initialize(IDescriptorHeap*) = 0;
+	virtual bool Offset(u32);
+
+	size_t GetDescriptorSize() { return _size; }
+	void SetDescriptorSize(size_t size) { _size = size; }
+
+private:
+	size_t _size;
+
+};
+
+class ICPUDescriptor : public IDescriptor
+{
+
+};
+
+class IGPUDescriptor : public IDescriptor
+{
+
+};
+
 }

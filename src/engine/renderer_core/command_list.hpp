@@ -7,10 +7,18 @@
 
 namespace ray::renderer_core_api
 {
+enum class CommandListType
+{
+	direct,
+	bundle,
+	compute,
+	copy
+};
+
 class ICommandList : public IRRCBase
 {
 public:
-
+	virtual void Close() = 0;
 
 };
 }

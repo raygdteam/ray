@@ -1,17 +1,24 @@
-#include <renderer_core/descriptor_heap.hpp>
-
-using namespace ray::renderer_core_api;
+#include "descriptor_heap.hpp"
+#include "d3dx12.h"
 
 namespace ray::renderer::d3d12
 {
-	class D3D12DescriptorHeap : public IDescriptorHeap
+	bool D3D12CPUDescriptor::Initialize(IDescriptorHeap* descriptorHeap)
 	{
-	public:
-		D3D12DescriptorHeap() {}
-	};
-}
+		auto temp = static_cast<ID3D12DescriptorHeap*>(descriptorHeap->GetInstance());
+		CD3DX12_CPU_DESCRIPTOR_HANDLE descriptorHandle(temp->GetCPUDescriptorHandleForHeapStart());
+		SetInstance(&descriptorHandle);
 
-IDescriptorHeap* GetRendererDescriptorHeap()
-{
-	return new ray::renderer::d3d12::D3D12DescriptorHeap;
+		return true; 
+	}
+
+	bool D3D12CPUDescriptor::Offset(u32 step)
+	{
+		if (GetDescriptorSize() == 0)
+			return false;
+		auto temp = static_cast<CD3DX12_CPU_DESCRIPTOR_HANDLE*>(GetInstance());
+		temp->Offset(1, GetDescriptorSize());
+	
+		return true;
+	}
 }

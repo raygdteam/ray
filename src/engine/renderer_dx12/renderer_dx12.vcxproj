@@ -182,7 +182,15 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="command_allocator.hpp" />
+    <ClInclude Include="command_list.hpp" />
+    <ClInclude Include="command_queue.hpp" />
     <ClInclude Include="d3dx12.h" />
+    <ClInclude Include="descriptor_heap.hpp" />
+    <ClInclude Include="device.hpp" />
+    <ClInclude Include="fence.hpp" />
+    <ClInclude Include="resources.hpp" />
+    <ClInclude Include="swap_chain.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="command_allocator.cpp" />

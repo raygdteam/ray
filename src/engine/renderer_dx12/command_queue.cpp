@@ -1,18 +1,6 @@
-#include <renderer_core/command_queue.hpp>
-
-using namespace ray::renderer_core_api;
+#include "command_queue.hpp"
 
 namespace ray::renderer::d3d12
 {
-	class D3D12CommandQueue : public ICommandQueue
-	{
-	public:
-		D3D12CommandQueue() {}
 
-	};
-}
-
-ICommandQueue* GetRendererCommandQueue()
-{
-	return new ray::renderer::d3d12::D3D12CommandQueue;
 }
