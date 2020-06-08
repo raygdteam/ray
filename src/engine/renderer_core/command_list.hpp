@@ -1,4 +1,7 @@
 #pragma once
+#include "ray_renderer_core_base.hpp"
+#include "command_allocator.hpp"
+#include "pipeline_state.hpp"
 
 /*
 **	Vulkan:			VkCommandBuffer
@@ -18,6 +21,7 @@ enum class CommandListType
 class ICommandList : public IRRCBase
 {
 public:
+	virtual bool Reset(ICommandAllocator*, IPipelineState*) = 0;
 	virtual void Close() = 0;
 
 };

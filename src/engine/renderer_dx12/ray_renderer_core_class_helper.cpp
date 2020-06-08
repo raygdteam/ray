@@ -65,6 +65,11 @@ namespace ray::renderer::d3d12
 			return new D3D12GPUDescriptor;
 		}
 
+		IFenceEvent* CreateFenceEvent()
+		{
+			return new D3D12FenceEvent;
+		}
+
 	};
 }
 

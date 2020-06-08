@@ -9,23 +9,32 @@
 namespace ray::renderer_core_api
 {
 	
-struct IRenderer final : public Object 
-{
-	void Initialize(ray::core::IPlatformWindow* window);
-	void Shutdown();
+	struct IRenderer final : public Object
+	{
+		void Initialize(ray::core::IPlatformWindow* window);
+		bool UpdatePipeline(); //temporary
+		void WaitForPreviousFrame(); //temporary
+		void Shutdown();
+
+		void SetRunning(bool running) { _running = running; }
+		bool IsRunning() { return _running; }
 
 private:
+	bool _running;
 	IRRCClassHelper* _class_helper;
 	IDevice* _device;
 	ICommandList* _command_list;
 	IDescriptorHeap* _descriptor_heap;
-	IFence* _fence;
 	ISwapChain* _swap_chain;
 	ICommandQueue* _command_queue;
 	static const u32 FRAME_BUFFER_COUNT = 3;
 	ICPUDescriptor* _rtv_descriptor;
+	IFenceEvent* _fence_event;
+	u32 _frame_index;
 	resources::IResource* _render_targets[FRAME_BUFFER_COUNT];
-	ICommandAllocator* _command_allocator[FRAME_BUFFER_COUNT];
+	ICommandAllocator* _command_allocators[FRAME_BUFFER_COUNT];
+	IFence* _fences[FRAME_BUFFER_COUNT];
+	u64 _fence_values[FRAME_BUFFER_COUNT];
 
 };
 

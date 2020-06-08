@@ -10,4 +10,10 @@ namespace ray::renderer::d3d12
 	public:
 		D3D12Fence() {}
 	};
+
+	class D3D12FenceEvent : public IFenceEvent
+	{
+	public:
+		D3D12FenceEvent() {}
+	};
 }

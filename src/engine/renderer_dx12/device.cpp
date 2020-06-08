@@ -85,28 +85,28 @@ namespace ray::renderer::d3d12
         {
         case DescriptorHeapType::descriptor_heap_type_rtv:
             dhDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_RTV;
-        break;
+            break;
 
         case DescriptorHeapType::descriptor_heap_type_dsv:
             dhDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_DSV;
-        break;
+            break;
 
         case DescriptorHeapType::descriptor_heap_type_sampler:
             dhDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_SAMPLER;
-        break;
+            break;
 
         case DescriptorHeapType::descriptor_heap_type_uav_srv_cbv:
             dhDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
-        break;
+            break;
 
         default:
             return false;
-        break;
+            break;
         }
 
         if (desc._shader_visible)
             dhDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
-        else 
+        else
             dhDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_NONE;
 
         hResult = static_cast<ID3D12Device*>(GetInstance())->CreateDescriptorHeap(&dhDesc, IID_PPV_ARGS(&d3d12DescriptorHeap));
@@ -192,7 +192,29 @@ namespace ray::renderer::d3d12
         auto hResult = tempDevice->CreateCommandList(0, type, tempAllocator, tempState, IID_PPV_ARGS(&list));
         if (FAILED(hResult))
             return false;
-        SetInstance(list);
+        commandList->SetInstance(list);
+        return true;
+    }
+
+    bool D3D12Device::CreateFence(IFence* outFence, u64 fenceValue)
+    {
+        ID3D12Fence* fence;
+        auto temp = static_cast<ID3D12Device*>(GetInstance());
+        auto hResult = temp->CreateFence(fenceValue, D3D12_FENCE_FLAG_NONE, IID_PPV_ARGS(&fence));
+        if (FAILED(hResult))
+            return false;
+        outFence->SetInstance(fence);
+
+        return true;
+    }
+
+    bool D3D12Device::CreateFenceEvent(IFenceEvent* outFenceEvent, pcstr name, bool bManualReset, bool bInitialState)
+    {
+        HANDLE fenceEvent = CreateEvent(nullptr, bManualReset, bInitialState, name);
+        if (!fenceEvent)
+            return false;
+
+        outFenceEvent->SetInstance(fenceEvent);
         return true;
     }
 

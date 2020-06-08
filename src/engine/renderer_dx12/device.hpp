@@ -27,6 +27,8 @@ namespace ray::renderer::d3d12
         void CreateRenderTargetView(IResource* resource, RenderTargetViewDesc& rtvDesc, ICPUDescriptor* descriptor) override;
         bool CreateCommandAllocator(ICommandAllocator* commandAllocator, CommandListType listType) override;
         bool CreateCommandList(ICommandList* commandList, ICommandAllocator* commandAllocator, IPipelineState* pipelineState, CommandListType listType) override;
+        bool CreateFence(IFence* outFence, u64 fenceValue) override;
+        bool CreateFenceEvent(IFenceEvent* outFenceEvent, pcstr name, bool bManualReset, bool bInitialState) override;
         s32 GetDescriptorHandleIncrementSize(DescriptorHeapType type) override;
 
     private:

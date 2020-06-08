@@ -10,5 +10,7 @@ namespace ray::renderer::d3d12
 	public:
 		D3D12CommandList() {}
 
+		bool Reset(ICommandAllocator* commnandAllocator, IPipelineState* pipelineState) override;
+		void Close() override;
 	};
 }

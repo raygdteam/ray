@@ -16,15 +16,16 @@ namespace ray::renderer_core_api
 		_device = _class_helper->CreateDevice();
 		_command_list = _class_helper->CreateCommandList();
 		_command_queue = _class_helper->CreateCommandQueue();
-		_fence = _class_helper->CreateFence();
 		_descriptor_heap = _class_helper->CreateDescriptorHeap();
 		_swap_chain = _class_helper->CreateSwapChain();
 		_rtv_descriptor = _class_helper->CreateCPUDescriptor();
+		_fence_event = _class_helper->CreateFenceEvent();
 
 		for (u32 i = 0; i < FRAME_BUFFER_COUNT; i++)
 		{
 			_render_targets[i] = _class_helper->CreateResource();
-			_command_allocator[i] = _class_helper->CreateCommandAllocator();
+			_command_allocators[i] = _class_helper->CreateCommandAllocator();
+			_fences[i] = _class_helper->CreateFence();
 		}
 
 		if (!_device->Initialize())
@@ -41,8 +42,7 @@ namespace ray::renderer_core_api
 		swapChainDesc._command_queue = _command_queue;
 		swapChainDesc._fullscreen = false;
 		swapChainDesc._output_window = static_cast<HWND>(window->GetWindowHandleRaw());
-		u32 frameIndex;
-		if (!_swap_chain->Initialize(swapChainDesc, frameIndex))
+		if (!_swap_chain->Initialize(swapChainDesc, _frame_index))
 			return;
 
 		DescriptorHeapDesc rtvHeapDesc;
@@ -65,12 +65,28 @@ namespace ray::renderer_core_api
 			if (!_rtv_descriptor->Offset(1))
 				return;
 		
-			if (!_device->CreateCommandAllocator(_command_allocator[i], CommandListType::direct))
+			if (!_device->CreateCommandAllocator(_command_allocators[i], CommandListType::direct))
+				return;
+
+			_fence_values[i] = 0;
+
+			if (!_device->CreateFence(_fences[i], 0))
 				return;
 		}
 
-		if (!_device->CreateCommandList(_command_list, _command_allocator[0], nullptr, CommandListType::direct))
+		if (!_device->CreateCommandList(_command_list, _command_allocators[0], nullptr, CommandListType::direct))
 			return;
+
+		_command_list->Close();
+
+		if (!_device->CreateFenceEvent(_fence_event, nullptr, false, false))
+			return;
+
+	}
+
+	bool IRenderer::UpdatePipeline()
+	{
+		
 
 	}
 }

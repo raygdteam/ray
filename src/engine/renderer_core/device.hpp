@@ -27,6 +27,8 @@ public:
 	virtual void CreateRenderTargetView(resources::IResource*, RenderTargetViewDesc&, ICPUDescriptor*) = 0;
 	virtual bool CreateCommandAllocator(ICommandAllocator*, CommandListType) = 0;
 	virtual bool CreateCommandList(ICommandList*, ICommandAllocator*, IPipelineState*, CommandListType) = 0;
+	virtual bool CreateFence(IFence*, u64) = 0;
+	virtual bool CreateFenceEvent(IFenceEvent*, pcstr, bool, bool) = 0;
 	virtual s32 GetDescriptorHandleIncrementSize(DescriptorHeapType) = 0;
 
 };

@@ -19,6 +19,7 @@ namespace ray::renderer_core_api
 		virtual resources::IResource* CreateResource() = 0;
 		virtual ICPUDescriptor* CreateCPUDescriptor() = 0;
 		virtual IGPUDescriptor* CreateGPUDescriptor() = 0;
+		virtual IFenceEvent* CreateFenceEvent() = 0;
 
 	};
 }

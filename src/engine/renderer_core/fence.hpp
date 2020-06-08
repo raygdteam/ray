@@ -13,4 +13,10 @@ public:
 
 
 };
+
+class IFenceEvent : public IRRCBase
+{
+public:
+
+};
 }
