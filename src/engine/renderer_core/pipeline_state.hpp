@@ -10,6 +10,6 @@ namespace ray::renderer_core_api
 	class IPipelineState : public IRRCBase
 	{
 	public:
-
+	 	virtual ~IPipelineState() = 0;
 	};
 }

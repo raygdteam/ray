@@ -12,6 +12,7 @@
     <ClInclude Include="resources.hpp">
       <Filter>resources</Filter>
     </ClInclude>
+    <ClInclude Include="pipeline_state.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="device.cpp" />
@@ -25,6 +26,7 @@
     <ClCompile Include="resources.cpp">
       <Filter>resources</Filter>
     </ClCompile>
+    <ClCompile Include="pipeline_state.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="resources">

@@ -60,9 +60,29 @@ namespace ray::renderer::d3d12
 
         resource->SetInstance(d3d12Resource);
     }
-}
 
-ISwapChain* GetRendererSwapChain()
-{
-	return new ray::renderer::d3d12::D3D12SwapChain;
+    u32 D3D12SwapChain::GetCurrentBackBufferIndex()
+    {
+        return static_cast<IDXGISwapChain3*>(GetInstance())->GetCurrentBackBufferIndex();
+    }
+
+    bool D3D12SwapChain::Present(u32 syncInterval, u32 flags)
+    {
+        auto temp = static_cast<IDXGISwapChain3*>(GetInstance());
+        auto hResult = temp->Present(syncInterval, flags);
+
+        return (hResult == S_OK) ? true : false;
+    }
+
+    D3D12SwapChain::~D3D12SwapChain()
+    {
+        auto temp = static_cast<IDXGISwapChain3*>(GetInstance());
+        BOOL fs = static_cast<BOOL>(false);
+
+        if (temp->GetFullscreenState(&fs, nullptr))
+            temp->SetFullscreenState(false, nullptr);
+
+        if (temp)
+            temp->Release();
+    }
 }

@@ -11,4 +11,10 @@ namespace ray::renderer::d3d12
 
 		return true;
 	}
+
+	D3D12CommandAllocator::~D3D12CommandAllocator()
+	{
+		if (GetInstance())
+			static_cast<ID3D12CommandAllocator*>(GetInstance())->Release();
+	}
 }

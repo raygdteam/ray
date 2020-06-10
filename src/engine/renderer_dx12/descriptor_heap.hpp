@@ -9,6 +9,7 @@ namespace ray::renderer::d3d12
 	{
 	public:
 		D3D12DescriptorHeap() {}
+		~D3D12DescriptorHeap();
 	};
 
 	class D3D12CPUDescriptor : public ICPUDescriptor

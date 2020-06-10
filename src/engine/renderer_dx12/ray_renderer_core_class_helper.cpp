@@ -70,6 +70,11 @@ namespace ray::renderer::d3d12
 			return new D3D12FenceEvent;
 		}
 
+		IResourceBarrier* CreateResourceBarrier() override
+		{
+			return new resources::D3D12ResourceBarrier;
+		}
+
 	};
 }
 

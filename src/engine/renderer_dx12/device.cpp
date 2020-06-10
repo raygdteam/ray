@@ -243,4 +243,11 @@ namespace ray::renderer::d3d12
             break;
         }
     }
+
+    D3D12Device::~D3D12Device()
+    {
+        if (GetInstance())
+            static_cast<ID3D12Device*>(GetInstance())->Release();
+    }
+
 }

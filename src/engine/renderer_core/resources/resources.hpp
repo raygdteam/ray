@@ -1,4 +1,5 @@
 #pragma once
+#include "../ray_renderer_core_base.hpp"
 
 namespace ray::renderer_core_api::resources
 {
@@ -19,9 +20,24 @@ enum class Flags
 	index_buffer,
 	constant_buffer
 };
-	
-class IResource : public IRRCBase
+
+enum class ResourceState
 {
+	present,
+	render_target
+};
+	
+class IResource : public ray::renderer_core_api::IRRCBase
+{
+public:
+	virtual ~IResource() = 0;
 	//TODO
 };
+
+class IResourceBarrier : public ray::renderer_core_api::IRRCBase
+{
+public:
+	virtual void Transition(IResource*, ResourceState, ResourceState) = 0;
+};
+
 }

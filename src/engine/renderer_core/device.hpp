@@ -21,6 +21,8 @@ namespace ray::renderer_core_api
 class IDevice : public IRRCBase
 {
 public:
+	virtual ~IDevice() = 0;
+
 	virtual bool Initialize() = 0;
 	virtual bool CreateCommandQueue(CommandQueueDesc&, ICommandQueue*) = 0;
 	virtual bool CreateDescriptorHeap(DescriptorHeapDesc&, IDescriptorHeap*) = 0;
@@ -32,5 +34,8 @@ public:
 	virtual s32 GetDescriptorHandleIncrementSize(DescriptorHeapType) = 0;
 
 };
+
+IDevice::~IDevice() {}
+
 }
 

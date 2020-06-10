@@ -29,8 +29,12 @@ struct SwapChainDesc
 class ISwapChain : public IRRCBase
 {
 public:
+	virtual ~ISwapChain() = 0;
+
 	virtual bool Initialize(SwapChainDesc&, u32&) = 0;
 	virtual bool GetBuffer(u32, resources::IResource*) = 0;
+	virtual u32 GetCurrentBackBufferIndex() = 0;
+	virtual bool Present(u32, u32) = 0;
 
 };
 }

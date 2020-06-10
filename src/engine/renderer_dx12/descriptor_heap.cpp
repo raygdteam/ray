@@ -21,4 +21,10 @@ namespace ray::renderer::d3d12
 	
 		return true;
 	}
+
+	D3D12DescriptorHeap::~D3D12DescriptorHeap()
+	{
+		if (GetInstance())
+			static_cast<ID3D12DescriptorHeap*>(GetInstance())->Release();
+	}
 }

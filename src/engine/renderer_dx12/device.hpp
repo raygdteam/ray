@@ -20,6 +20,7 @@ namespace ray::renderer::d3d12
     {
     public:
         D3D12Device() {}
+        ~D3D12Device();
 
         bool Initialize() override;
         bool CreateCommandQueue(CommandQueueDesc& desc, ICommandQueue* cmdQueue) override;

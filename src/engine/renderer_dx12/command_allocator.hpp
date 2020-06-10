@@ -10,6 +10,7 @@ namespace ray::renderer::d3d12
 	{
 	public:
 		D3D12CommandAllocator() {}
+		~D3D12CommandAllocator();
 
 		bool Reset() override;
 	};

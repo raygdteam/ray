@@ -1,4 +1,6 @@
 #pragma once
+#include "command_list.hpp"
+#include "fence.hpp"
 
 /*
 **	Vulkan:			VkQueue
@@ -16,7 +18,13 @@ struct CommandQueueDesc
 class ICommandQueue : public IRRCBase
 {
 public:
-
+	virtual void SetCommandLists(ICommandList**, size_t) = 0;
+	virtual void ExecuteCommandLists() = 0;
+	virtual bool Signal(IFence*, u32) = 0;
+	virtual ~ICommandQueue() = 0;
 
 };
+
+ICommandQueue::~ICommandQueue() {}
+
 }

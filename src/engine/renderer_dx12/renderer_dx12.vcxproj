@@ -189,6 +189,7 @@
     <ClInclude Include="descriptor_heap.hpp" />
     <ClInclude Include="device.hpp" />
     <ClInclude Include="fence.hpp" />
+    <ClInclude Include="pipeline_state.hpp" />
     <ClInclude Include="resources.hpp" />
     <ClInclude Include="swap_chain.hpp" />
   </ItemGroup>
@@ -199,6 +200,7 @@
     <ClCompile Include="descriptor_heap.cpp" />
     <ClCompile Include="device.cpp" />
     <ClCompile Include="fence.cpp" />
+    <ClCompile Include="pipeline_state.cpp" />
     <ClCompile Include="ray_renderer_core_class_helper.cpp" />
     <ClCompile Include="resources.cpp" />
     <ClCompile Include="swap_chain.cpp" />

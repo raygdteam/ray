@@ -1,7 +1,10 @@
 #pragma once
 #include "ray_renderer_core_base.hpp"
 #include "command_allocator.hpp"
+#include "descriptor_heap.hpp"
 #include "pipeline_state.hpp"
+#include "resources/resources.hpp"
+#include <ray/type/extensions.hpp>
 
 /*
 **	Vulkan:			VkCommandBuffer
@@ -21,8 +24,16 @@ enum class CommandListType
 class ICommandList : public IRRCBase
 {
 public:
+	virtual ~ICommandList() = 0;
+
+	virtual void ResourceBarrier(resources::IResourceBarrier*, u32) = 0;
+	virtual void OMSetRenderTargetView(u32, ICPUDescriptor*, ICPUDescriptor*, bool) = 0;
+	virtual void ClearRenderTarget(ICPUDescriptor*, float*) = 0;
 	virtual bool Reset(ICommandAllocator*, IPipelineState*) = 0;
-	virtual void Close() = 0;
+	virtual bool Close() = 0;
 
 };
+
+ICommandList::~ICommandList() {}
+
 }

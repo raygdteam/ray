@@ -1,4 +1,6 @@
 #pragma once
+#include "ray_renderer_core_base.hpp"
+#include <ray/type/extensions.hpp>
 
 /*
 **	Vulkan:			VkFence
@@ -7,16 +9,24 @@
 
 namespace ray::renderer_core_api
 {
-class IFence : public IRRCBase
-{
-public:
-
-
-};
 
 class IFenceEvent : public IRRCBase
 {
 public:
+	virtual ~IFenceEvent() = 0;
 
+	virtual u32 WaitFor() = 0;
+	virtual u32 WaitFor(u32) = 0;
 };
+
+class IFence : public IRRCBase
+{
+public:
+	virtual ~IFence() = 0;
+
+	virtual bool SetEventOnCompletion(IFenceEvent*, u64) = 0;
+	virtual u64 GetCompletedValue() = 0;
+};
+
+
 }

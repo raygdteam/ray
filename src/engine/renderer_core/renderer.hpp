@@ -12,7 +12,8 @@ namespace ray::renderer_core_api
 	struct IRenderer final : public Object
 	{
 		void Initialize(ray::core::IPlatformWindow* window);
-		bool UpdatePipeline(); //temporary
+		void Draw(); //temporary
+		void UpdatePipeline(); //temporary
 		void WaitForPreviousFrame(); //temporary
 		void Shutdown();
 
@@ -21,6 +22,7 @@ namespace ray::renderer_core_api
 
 private:
 	bool _running;
+	resources::IResourceBarrier* _resource_barrier;
 	IRRCClassHelper* _class_helper;
 	IDevice* _device;
 	ICommandList* _command_list;
@@ -28,7 +30,6 @@ private:
 	ISwapChain* _swap_chain;
 	ICommandQueue* _command_queue;
 	static const u32 FRAME_BUFFER_COUNT = 3;
-	ICPUDescriptor* _rtv_descriptor;
 	IFenceEvent* _fence_event;
 	u32 _frame_index;
 	resources::IResource* _render_targets[FRAME_BUFFER_COUNT];

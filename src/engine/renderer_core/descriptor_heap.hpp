@@ -27,9 +27,11 @@ struct DescriptorHeapDesc
 class IDescriptorHeap : public IRRCBase
 {
 public:
-
+	virtual ~IDescriptorHeap();
 
 };
+
+IDescriptorHeap::~IDescriptorHeap() {}
 
 class IDescriptor : public IRRCBase
 {
