@@ -2,5 +2,4 @@
 
 namespace ray::renderer_core_api::resources
 {
-	//TODO
 }

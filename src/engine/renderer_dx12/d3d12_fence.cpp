@@ -1,5 +1,5 @@
-#include "fence.hpp"
-#include <d3d12.h>
+#include "pch.hpp"
+#include "d3d12_fence.hpp"
 
 namespace ray::renderer::d3d12
 {
@@ -20,13 +20,13 @@ namespace ray::renderer::d3d12
 
 	u32 D3D12FenceEvent::WaitFor()
 	{
-		WaitFor(INFINITE);
+		return WaitFor(INFINITE);
 	}
 
 	u32 D3D12FenceEvent::WaitFor(u32 ms)
 	{
 		auto temp = static_cast<HANDLE>(GetInstance());
-		WaitForSingleObject(temp, ms);
+		return WaitForSingleObject(temp, ms);
 	}
 
 	D3D12Fence::~D3D12Fence()

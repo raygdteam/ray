@@ -1,5 +1,5 @@
-#include "device.hpp"
-#include "d3dx12.h"
+#include "pch.hpp"
+#include "d3d12_device.hpp"
 
 //Direct3D 12 Device implementation
 

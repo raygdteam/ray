@@ -1,4 +1,5 @@
-#include "swap_chain.hpp"
+#include "pch.hpp"
+#include "d3d12_swap_chain.hpp"
 
 namespace ray::renderer::d3d12
 {
@@ -79,7 +80,8 @@ namespace ray::renderer::d3d12
         auto temp = static_cast<IDXGISwapChain3*>(GetInstance());
         BOOL fs = static_cast<BOOL>(false);
 
-        if (temp->GetFullscreenState(&fs, nullptr))
+        temp->GetFullscreenState(&fs, nullptr);
+        if (fs == TRUE)
             temp->SetFullscreenState(false, nullptr);
 
         if (temp)

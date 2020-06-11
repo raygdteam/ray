@@ -1,6 +1,5 @@
-#include "resources.hpp"
-#include "d3dx12.h"
-#include <d3d12.h>
+#include "pch.hpp"
+#include "d3d12_resources.hpp"
 
 namespace ray::renderer::d3d12::resources
 {

@@ -1,13 +1,4 @@
 #pragma once
-#include <renderer_core/swap_chain.hpp>
-
-#include <d3d12.h>
-#include <dxgi.h>
-#include <dxgi1_4.h>
-#include <combaseapi.h>
-
-using namespace ray::renderer_core_api;
-using namespace ray::renderer_core_api::resources;
 
 namespace ray::renderer::d3d12
 {

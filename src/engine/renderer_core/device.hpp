@@ -21,7 +21,7 @@ namespace ray::renderer_core_api
 class IDevice : public IRRCBase
 {
 public:
-	virtual ~IDevice() = 0;
+	virtual ~IDevice() {}
 
 	virtual bool Initialize() = 0;
 	virtual bool CreateCommandQueue(CommandQueueDesc&, ICommandQueue*) = 0;
@@ -35,7 +35,7 @@ public:
 
 };
 
-IDevice::~IDevice() {}
+
 
 }
 

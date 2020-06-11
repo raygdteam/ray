@@ -1,12 +1,13 @@
+#include "pch.hpp"
 #include <renderer_core/ray_renderer_core_class_helper.hpp>
-#include "device.hpp"
-#include "swap_chain.hpp"
-#include "resources.hpp"
-#include "command_allocator.hpp"
-#include "command_list.hpp"
-#include "command_queue.hpp"
-#include "descriptor_heap.hpp"
-#include "fence.hpp"
+#include "d3d12_device.hpp"
+#include "d3d12_swap_chain.hpp"
+#include "d3d12_resources.hpp"
+#include "d3d12_command_allocator.hpp"
+#include "d3d12_command_list.hpp"
+#include "d3d12_command_queue.hpp"
+#include "d3d12_descriptor_heap.hpp"
+#include "d3d12_fence.hpp"
 
 using namespace ray::renderer_core_api;
 

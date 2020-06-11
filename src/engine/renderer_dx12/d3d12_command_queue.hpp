@@ -1,7 +1,4 @@
 #pragma once
-#include <renderer_core/command_queue.hpp>
-
-using namespace ray::renderer_core_api;
 
 namespace ray::renderer::d3d12
 {
@@ -16,7 +13,7 @@ namespace ray::renderer::d3d12
 		bool Signal(IFence* fence, u32 fenceValue) override;
 
 	private:
-		ID3D12GraphicsCommandList** _d3d12_lists;
+		ID3D12CommandList** _d3d12_lists;
 		size_t _size;
 	};
 }

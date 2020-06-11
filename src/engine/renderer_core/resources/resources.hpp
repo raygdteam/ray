@@ -30,9 +30,10 @@ enum class ResourceState
 class IResource : public ray::renderer_core_api::IRRCBase
 {
 public:
-	virtual ~IResource() = 0;
+	virtual ~IResource() {}
 	//TODO
 };
+
 
 class IResourceBarrier : public ray::renderer_core_api::IRRCBase
 {

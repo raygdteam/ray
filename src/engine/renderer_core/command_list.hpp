@@ -24,7 +24,7 @@ enum class CommandListType
 class ICommandList : public IRRCBase
 {
 public:
-	virtual ~ICommandList() = 0;
+	virtual ~ICommandList() {}
 
 	virtual void ResourceBarrier(resources::IResourceBarrier*, u32) = 0;
 	virtual void OMSetRenderTargetView(u32, ICPUDescriptor*, ICPUDescriptor*, bool) = 0;
@@ -34,6 +34,5 @@ public:
 
 };
 
-ICommandList::~ICommandList() {}
 
 }

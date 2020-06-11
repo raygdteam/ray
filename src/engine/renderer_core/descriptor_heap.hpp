@@ -27,18 +27,17 @@ struct DescriptorHeapDesc
 class IDescriptorHeap : public IRRCBase
 {
 public:
-	virtual ~IDescriptorHeap();
+	virtual ~IDescriptorHeap() {}
 
 };
 
-IDescriptorHeap::~IDescriptorHeap() {}
 
 class IDescriptor : public IRRCBase
 {
 public:
 	IDescriptor() : _size(0) {}
 	virtual bool Initialize(IDescriptorHeap*) = 0;
-	virtual bool Offset(u32);
+	virtual bool Offset(u32) = 0;
 
 	size_t GetDescriptorSize() { return _size; }
 	void SetDescriptorSize(size_t size) { _size = size; }

@@ -1,6 +1,5 @@
-#include "command_list.hpp"
-#include "d3dx12.h"
-#include <d3d12.h>
+#include "pch.hpp"
+#include "d3d12_command_list.hpp"
 
 namespace ray::renderer::d3d12
 {

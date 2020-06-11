@@ -1,5 +1,5 @@
-#include "descriptor_heap.hpp"
-#include "d3dx12.h"
+#include "pch.hpp"
+#include "d3d12_descriptor_heap.hpp"
 
 namespace ray::renderer::d3d12
 {

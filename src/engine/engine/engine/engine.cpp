@@ -11,8 +11,6 @@ using namespace ray::core;
 #include <ray/os/include.hpp>
 #undef CreateWindow
 
-#include "renderer_core/renderer.hpp"
-
 namespace ray
 {
 

@@ -1,18 +1,6 @@
 #pragma once
-#include <renderer_core/device.hpp>
-#include <renderer_core/resources/resources.hpp>
-
-#include <ray/type/extensions.hpp>
-
-#include <d3d12.h>
-#include <dxgi.h>
-#include <dxgi1_4.h>
-#include <combaseapi.h>
 
 //Direct3D 12 Device implementation
-
-using namespace ray::renderer_core_api;
-using namespace ray::renderer_core_api::resources;
 
 namespace ray::renderer::d3d12
 {

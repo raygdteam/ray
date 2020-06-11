@@ -1,6 +1,5 @@
-#include "pipeline_state.hpp"
-#include <d3d12.h>
-
+#include "pch.hpp"
+#include "d3d12_pipeline_state.hpp"
 
 namespace ray::renderer::d3d12
 {

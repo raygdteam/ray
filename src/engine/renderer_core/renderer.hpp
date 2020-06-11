@@ -3,7 +3,6 @@
 #include <app_framework/base/platform_window.hpp>
 
 #include "ray_renderer_core_class_helper.hpp"
-#include "resources/resources.hpp"
 
 
 namespace ray::renderer_core_api

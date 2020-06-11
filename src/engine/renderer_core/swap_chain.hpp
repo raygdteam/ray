@@ -2,8 +2,6 @@
 #include "ray_renderer_core_base.hpp"
 
 #include <ray/type/extensions.hpp>
-#include "command_queue.hpp"
-#include "resources/resources.hpp"
 
 /*
 **	Vulkan:			VkSwapchain
@@ -29,7 +27,7 @@ struct SwapChainDesc
 class ISwapChain : public IRRCBase
 {
 public:
-	virtual ~ISwapChain() = 0;
+	virtual ~ISwapChain() {}
 
 	virtual bool Initialize(SwapChainDesc&, u32&) = 0;
 	virtual bool GetBuffer(u32, resources::IResource*) = 0;
@@ -37,4 +35,6 @@ public:
 	virtual bool Present(u32, u32) = 0;
 
 };
+
+
 }

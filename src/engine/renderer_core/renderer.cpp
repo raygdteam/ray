@@ -51,7 +51,7 @@ namespace ray::renderer_core_api
 		rtvHeapDesc._type = DescriptorHeapType::descriptor_heap_type_rtv;
 		_device->CreateDescriptorHeap(rtvHeapDesc, _descriptor_heap);
 
-		ICPUDescriptor* rtvDescriptor;
+		ICPUDescriptor* rtvDescriptor = _class_helper->CreateCPUDescriptor();
 		rtvDescriptor->Initialize(_descriptor_heap);
 		rtvDescriptor->SetDescriptorSize(_device->GetDescriptorHandleIncrementSize(DescriptorHeapType::descriptor_heap_type_rtv));
 

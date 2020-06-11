@@ -18,13 +18,13 @@ struct CommandQueueDesc
 class ICommandQueue : public IRRCBase
 {
 public:
+	virtual ~ICommandQueue() {}
+
 	virtual void SetCommandLists(ICommandList**, size_t) = 0;
 	virtual void ExecuteCommandLists() = 0;
 	virtual bool Signal(IFence*, u32) = 0;
-	virtual ~ICommandQueue() = 0;
 
 };
 
-ICommandQueue::~ICommandQueue() {}
 
 }

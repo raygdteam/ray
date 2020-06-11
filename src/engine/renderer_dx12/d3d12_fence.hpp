@@ -1,7 +1,4 @@
 #pragma once
-#include <renderer_core/fence.hpp>
-
-using namespace ray::renderer_core_api;
 
 namespace ray::renderer::d3d12
 {

@@ -2,31 +2,32 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <ClInclude Include="d3dx12.h" />
-    <ClInclude Include="command_allocator.hpp" />
-    <ClInclude Include="command_list.hpp" />
-    <ClInclude Include="command_queue.hpp" />
-    <ClInclude Include="descriptor_heap.hpp" />
-    <ClInclude Include="device.hpp" />
-    <ClInclude Include="fence.hpp" />
-    <ClInclude Include="swap_chain.hpp" />
-    <ClInclude Include="resources.hpp">
+    <ClInclude Include="pch.hpp" />
+    <ClInclude Include="d3d12_resources.hpp">
       <Filter>resources</Filter>
     </ClInclude>
-    <ClInclude Include="pipeline_state.hpp" />
+    <ClInclude Include="d3d12_command_allocator.hpp" />
+    <ClInclude Include="d3d12_command_list.hpp" />
+    <ClInclude Include="d3d12_command_queue.hpp" />
+    <ClInclude Include="d3d12_descriptor_heap.hpp" />
+    <ClInclude Include="d3d12_device.hpp" />
+    <ClInclude Include="d3d12_fence.hpp" />
+    <ClInclude Include="d3d12_pipeline_state.hpp" />
+    <ClInclude Include="d3d12_swap_chain.hpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="device.cpp" />
-    <ClCompile Include="command_queue.cpp" />
-    <ClCompile Include="command_allocator.cpp" />
-    <ClCompile Include="command_list.cpp" />
-    <ClCompile Include="descriptor_heap.cpp" />
-    <ClCompile Include="swap_chain.cpp" />
-    <ClCompile Include="fence.cpp" />
     <ClCompile Include="ray_renderer_core_class_helper.cpp" />
-    <ClCompile Include="resources.cpp">
+    <ClCompile Include="d3d12_command_allocator.cpp" />
+    <ClCompile Include="d3d12_resources.cpp">
       <Filter>resources</Filter>
     </ClCompile>
-    <ClCompile Include="pipeline_state.cpp" />
+    <ClCompile Include="d3d12_command_list.cpp" />
+    <ClCompile Include="d3d12_command_queue.cpp" />
+    <ClCompile Include="d3d12_descriptor_heap.cpp" />
+    <ClCompile Include="d3d12_device.cpp" />
+    <ClCompile Include="d3d12_fence.cpp" />
+    <ClCompile Include="d3d12_pipeline_state.cpp" />
+    <ClCompile Include="d3d12_swap_chain.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="resources">

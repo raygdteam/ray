@@ -1,8 +1,4 @@
 #pragma once
-#include <renderer_core/command_list.hpp>
-
-using namespace ray::renderer_core_api;
-using namespace ray::renderer_core_api::resources;
 
 namespace ray::renderer::d3d12
 {
