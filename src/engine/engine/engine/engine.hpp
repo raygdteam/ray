@@ -3,7 +3,7 @@
 #include "core/raytl/array.hpp"
 #include "engine/engine/engine_def.hpp"
 #include <vector>
-#include "renderer_core/renderer.hpp"
+#include <renderer_core/renderer.hpp>
 
 using namespace ray::renderer_core_api;
 

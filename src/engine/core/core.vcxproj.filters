@@ -46,9 +46,6 @@
     <ClInclude Include="memory\page_allocator.hpp">
       <Filter>memory</Filter>
     </ClInclude>
-    <ClInclude Include="logging\log.hpp">
-      <Filter>logging</Filter>
-    </ClInclude>
     <ClInclude Include="platform\platform_processor.hpp">
       <Filter>platform</Filter>
     </ClInclude>
@@ -120,9 +117,6 @@
     <ClCompile Include="memory\hacky_memory_override_release.cpp">
       <Filter>memory</Filter>
     </ClCompile>
-    <ClCompile Include="logging\log.cpp">
-      <Filter>logging</Filter>
-    </ClCompile>
     <ClCompile Include="windows\platform_processor.cpp">
       <Filter>windows</Filter>
     </ClCompile>
@@ -178,9 +172,6 @@
     </Filter>
     <Filter Include="raytl">
       <UniqueIdentifier>{633ec601-d699-484f-b4c8-20aeb7d875ef}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="logging">
-      <UniqueIdentifier>{4e1698f8-2232-434e-83cf-2bf3d9cc1279}</UniqueIdentifier>
     </Filter>
     <Filter Include="modules">
       <UniqueIdentifier>{bb9722ec-5663-484f-963a-18d8d55db838}</UniqueIdentifier>

@@ -5,5 +5,3 @@
 #include <initializer_list>
 #include <functional>
 #include <vector>
-
-#include <core/logging/log.hpp>

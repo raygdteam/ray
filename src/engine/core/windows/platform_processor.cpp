@@ -3,6 +3,10 @@
 #include "memory/memory.hpp"
 #include <ray/os/include.hpp>
 
+#ifdef RAY_PLATFORM_WIN
+#include <intrin.h>
+#endif
+
 namespace ray::core::platform
 {
 

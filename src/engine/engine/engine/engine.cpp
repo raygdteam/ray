@@ -27,11 +27,7 @@ void RayEngine::Initialize(IEngineLoop* engineLoop)
 	window->Initialize();
 	window->CreateWindow("RAY_ENGINE");
 
-	typedef IRenderer* (*GetRendererApi_t)();
-	HMODULE handle = LoadLibrary("renderer_gl");
-	GetRendererApi_t getRendererApi = (GetRendererApi_t)GetProcAddress(handle, "GetRendererApi");
-
-	_renderer = getRendererApi();
+	_renderer = new IRenderer;
 	_renderer->Initialize(window);
 	
 	window->SetWindowVisibility(true);
@@ -55,6 +51,8 @@ RayEngine::~RayEngine()
 	static_cast<core::IPlatformWindow*>(_window)->Destroy();
 	static_cast<core::IPlatformWindow*>(_window)->Shutdown();
 	_renderer->Shutdown();
+
+	delete _renderer;
 }
 
 /************************************/
