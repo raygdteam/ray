@@ -189,6 +189,9 @@
     <ProjectReference Include="..\core\core.vcxproj">
       <Project>{7fcc5351-334c-4c2c-8742-430179a78f1e}</Project>
     </ProjectReference>
+    <ProjectReference Include="..\renderer_core\renderer_core.vcxproj">
+      <Project>{2892f6a5-7588-4ca9-a2c9-249d45cdd167}</Project>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="engine\engine.cpp" />

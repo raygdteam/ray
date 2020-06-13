@@ -4,11 +4,15 @@
 
 #include "ray_renderer_core_class_helper.hpp"
 
+#ifdef RAY_BUILD_RENDERER_CORE
+#define RAY_RENDERERCORE_API __declspec(dllexport)
+#else
+#define RAY_RENDERERCORE_API RAY_DLLIMPORT
+#endif
 
 namespace ray::renderer_core_api
 {
-	
-	struct IRenderer final : public Object
+	struct RAY_RENDERERCORE_API IRenderer final// : public Object
 	{
 		void Initialize(ray::core::IPlatformWindow* window);
 		void Draw(); //temporary

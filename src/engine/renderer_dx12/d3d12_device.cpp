@@ -78,7 +78,7 @@ namespace ray::renderer::d3d12
         HRESULT hResult;
 
         ID3D12DescriptorHeap* d3d12DescriptorHeap;
-        D3D12_DESCRIPTOR_HEAP_DESC dhDesc;
+        D3D12_DESCRIPTOR_HEAP_DESC dhDesc = {};
         dhDesc.NumDescriptors = desc._num_descriptors;
 
         switch (desc._type)

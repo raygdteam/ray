@@ -1,6 +1,6 @@
 #include "renderer.hpp"
 
-//сделайте уже интерфейс для работы с модулями
+//Г±Г¤ГҐГ«Г Г©ГІГҐ ГіГ¦ГҐ ГЁГ­ГІГҐГ°ГґГҐГ©Г± Г¤Г«Гї Г°Г ГЎГ®ГІГ» Г± Г¬Г®Г¤ГіГ«ГїГ¬ГЁ
 #include <ray/os/include.hpp>
 
 namespace ray::renderer_core_api
@@ -51,7 +51,7 @@ namespace ray::renderer_core_api
 		rtvHeapDesc._type = DescriptorHeapType::descriptor_heap_type_rtv;
 		_device->CreateDescriptorHeap(rtvHeapDesc, _descriptor_heap);
 
-		ICPUDescriptor* rtvDescriptor = _class_helper->CreateCPUDescriptor();
+			ICPUDescriptor* rtvDescriptor = _class_helper->CreateCPUDescriptor();
 		rtvDescriptor->Initialize(_descriptor_heap);
 		rtvDescriptor->SetDescriptorSize(_device->GetDescriptorHandleIncrementSize(DescriptorHeapType::descriptor_heap_type_rtv));
 
