@@ -1,6 +1,5 @@
 #pragma once
 #include <ray/type/extensions.hpp>
-#include <core/serialization/Serializer.hpp>
 
 namespace ray
 {
@@ -12,9 +11,9 @@ struct Object
 {
     virtual string GetClassName() { return ""; }
 
-    virtual void OnSerialize(Serializer* serializer) { }
+    virtual void OnSerialize() { }
 
-    virtual void OnDeserialize(Serializer* serializer) { }
+    virtual void OnDeserialize() { }
 
     virtual ~Object() = default;
 };
