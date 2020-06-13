@@ -16,8 +16,9 @@ namespace ray::renderer::d3d12
 	{
 		if (GetDescriptorSize() == 0)
 			return false;
+		u32 size = GetDescriptorSize();
 		auto temp = static_cast<CD3DX12_CPU_DESCRIPTOR_HANDLE*>(GetInstance());
-		temp->Offset(1, GetDescriptorSize());
+		temp->Offset(step, GetDescriptorSize());
 	
 		return true;
 	}

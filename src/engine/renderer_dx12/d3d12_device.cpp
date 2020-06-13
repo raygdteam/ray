@@ -123,7 +123,8 @@ namespace ray::renderer::d3d12
         auto tempDevice = static_cast<ID3D12Device*>(GetInstance());
         auto tempResource = static_cast<ID3D12Resource*>(resource->GetInstance());
         auto tempDescriptor = static_cast<CD3DX12_CPU_DESCRIPTOR_HANDLE*>(descriptor->GetInstance());
-        tempDevice->CreateRenderTargetView(tempResource, nullptr, *tempDescriptor);
+        D3D12_RENDER_TARGET_VIEW_DESC rtvDesc = {};
+        tempDevice->CreateRenderTargetView(tempResource, &rtvDesc, *tempDescriptor);
     }
 
     bool D3D12Device::CreateCommandAllocator(ICommandAllocator* commandAllocator, CommandListType listType)
@@ -151,6 +152,7 @@ namespace ray::renderer::d3d12
         ID3D12CommandAllocator* allocator;
         auto temp = static_cast<ID3D12Device*>(GetInstance());
         auto hResult = temp->CreateCommandAllocator(type, IID_PPV_ARGS(&allocator));
+        
         if (FAILED(hResult))
             return false;
 
@@ -223,20 +225,16 @@ namespace ray::renderer::d3d12
         switch (type)
         {
         case DescriptorHeapType::descriptor_heap_type_rtv:
-            static_cast<ID3D12Device*>(GetInstance())->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
-            break;
+            return static_cast<ID3D12Device*>(GetInstance())->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
 
         case DescriptorHeapType::descriptor_heap_type_dsv:
-            static_cast<ID3D12Device*>(GetInstance())->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_DSV);
-            break;
+            return static_cast<ID3D12Device*>(GetInstance())->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_DSV);
 
         case DescriptorHeapType::descriptor_heap_type_sampler:
-            static_cast<ID3D12Device*>(GetInstance())->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_SAMPLER);
-            break;
+            return static_cast<ID3D12Device*>(GetInstance())->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_SAMPLER);
 
         case DescriptorHeapType::descriptor_heap_type_uav_srv_cbv:
-            static_cast<ID3D12Device*>(GetInstance())->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
-            break;
+            return static_cast<ID3D12Device*>(GetInstance())->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
 
         default:
             return 0;

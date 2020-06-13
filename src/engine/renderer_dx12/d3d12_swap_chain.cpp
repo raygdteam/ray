@@ -48,18 +48,21 @@ namespace ray::renderer::d3d12
         swapChain = static_cast<IDXGISwapChain3*>(tempSwapChain);
         frameIndex = swapChain->GetCurrentBackBufferIndex();
 
+        SetInstance(swapChain);
+
         return true;
 	}
 
     bool D3D12SwapChain::GetBuffer(u32 index, IResource* resource)
     {
-        HRESULT hResult;
         ID3D12Resource* d3d12Resource;
-        hResult = static_cast<IDXGISwapChain3*>(GetInstance())->GetBuffer(index, IID_PPV_ARGS(&d3d12Resource));
+        auto temp = static_cast<IDXGISwapChain3*>(GetInstance());
+        auto hResult = temp->GetBuffer(index, IID_PPV_ARGS(&d3d12Resource));
         if (FAILED(hResult))
             return false;
 
         resource->SetInstance(d3d12Resource);
+        return true;
     }
 
     u32 D3D12SwapChain::GetCurrentBackBufferIndex()
