@@ -32,7 +32,7 @@ void IThread::Start()
 
 IThread::~IThread()
 {
-	WaitForSingleObject(_handle, INFINITY);
+	WaitForSingleObject(_handle, INFINITE);
 	CloseHandle(_handle);
 }
 }

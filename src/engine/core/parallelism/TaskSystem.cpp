@@ -125,7 +125,8 @@ void thread_func(void* arg)
 				// and the other threads may be asleep, wake them
 				semaphore.put();
 			}
-			slot.state = (slot.func == nullptr ? Empty : Ready);
+			if (slot.func == nullptr) slot.state = Empty;
+			else slot.state = Ready;
 		}
 
 		// May sleep if unsollicited and not main thread

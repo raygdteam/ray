@@ -2,6 +2,6 @@
 
 #include <ray/type/extensions.hpp>
 
-#include <initializer_list>
+/*#include <initializer_list>
 #include <functional>
-#include <vector>
+#include <vector>*/

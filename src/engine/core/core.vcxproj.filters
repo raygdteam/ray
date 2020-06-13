@@ -15,12 +15,6 @@
     <ClInclude Include="memory\memory_manager.hpp">
       <Filter>memory</Filter>
     </ClInclude>
-    <ClInclude Include="file_system\file_system.hpp">
-      <Filter>file system</Filter>
-    </ClInclude>
-    <ClInclude Include="serialization\archive.hpp">
-      <Filter>serialization</Filter>
-    </ClInclude>
     <ClInclude Include="platform\platform_fs.hpp">
       <Filter>platform</Filter>
     </ClInclude>
@@ -49,20 +43,11 @@
     <ClInclude Include="platform\platform_processor.hpp">
       <Filter>platform</Filter>
     </ClInclude>
-    <ClInclude Include="modules\startup_initializer.hpp">
-      <Filter>modules</Filter>
-    </ClInclude>
     <ClInclude Include="raytl\delegate.hpp">
       <Filter>raytl</Filter>
     </ClInclude>
     <ClInclude Include="threading\lock.hpp">
       <Filter>threading</Filter>
-    </ClInclude>
-    <ClInclude Include="serialization\stream.hpp">
-      <Filter>serialization</Filter>
-    </ClInclude>
-    <ClInclude Include="serialization\Serializer.hpp">
-      <Filter>serialization</Filter>
     </ClInclude>
     <ClInclude Include="parallelism\Lock.h">
       <Filter>parallelism</Filter>
@@ -89,9 +74,6 @@
     </ClCompile>
     <ClCompile Include="threading\thread_win32.cpp">
       <Filter>threading</Filter>
-    </ClCompile>
-    <ClCompile Include="file_system\file_system.cpp">
-      <Filter>file system</Filter>
     </ClCompile>
     <ClCompile Include="memory\memory_manager.cpp">
       <Filter>memory</Filter>
@@ -120,9 +102,6 @@
     <ClCompile Include="windows\platform_processor.cpp">
       <Filter>windows</Filter>
     </ClCompile>
-    <ClCompile Include="modules\startup_initializer.cpp">
-      <Filter>modules</Filter>
-    </ClCompile>
     <ClCompile Include="object\garbage_collector.cpp">
       <Filter>object</Filter>
     </ClCompile>
@@ -149,9 +128,6 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <Filter Include="file system">
-      <UniqueIdentifier>{ec0a1bf6-d240-4fdd-9d21-f2fc9126c4a9}</UniqueIdentifier>
-    </Filter>
     <Filter Include="memory">
       <UniqueIdentifier>{696373df-1981-4f47-98d2-74eb62d764f5}</UniqueIdentifier>
     </Filter>
@@ -164,17 +140,11 @@
     <Filter Include="platform">
       <UniqueIdentifier>{7861070c-efd9-49cf-924f-569cf7cf929d}</UniqueIdentifier>
     </Filter>
-    <Filter Include="serialization">
-      <UniqueIdentifier>{3af49264-18ec-486e-908f-d96948fd1e01}</UniqueIdentifier>
-    </Filter>
     <Filter Include="windows">
       <UniqueIdentifier>{2aae393c-7a14-4f3c-9bae-9ee579dc53b3}</UniqueIdentifier>
     </Filter>
     <Filter Include="raytl">
       <UniqueIdentifier>{633ec601-d699-484f-b4c8-20aeb7d875ef}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="modules">
-      <UniqueIdentifier>{bb9722ec-5663-484f-963a-18d8d55db838}</UniqueIdentifier>
     </Filter>
     <Filter Include="parallelism">
       <UniqueIdentifier>{ff666a88-fab6-4622-9c6c-bfa953f9ee9d}</UniqueIdentifier>
