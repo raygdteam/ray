@@ -38,6 +38,7 @@ public:
 class IResourceBarrier : public ray::renderer_core_api::IRRCBase
 {
 public:
+	virtual ~IResourceBarrier() {}
 	virtual void Transition(IResource*, ResourceState, ResourceState) = 0;
 };
 

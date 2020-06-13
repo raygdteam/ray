@@ -31,14 +31,24 @@ namespace ray::renderer::d3d12::resources
 			break;
 		}
 		auto tempResource = static_cast<ID3D12Resource*>(inResource->GetInstance());
-		auto resourceBarrier = CD3DX12_RESOURCE_BARRIER::Transition(tempResource, before, after);
-		SetInstance(&resourceBarrier);
+		auto resourceBarrier = new CD3DX12_RESOURCE_BARRIER(CD3DX12_RESOURCE_BARRIER::Transition(tempResource, before, after));
+		SetInstance(resourceBarrier);
+	}
+
+	D3D12ResourceBarrier::~D3D12ResourceBarrier()
+	{
+		if (GetInstance())
+		{
+			auto instance = static_cast<CD3DX12_RESOURCE_BARRIER*>(GetInstance());
+			delete instance;
+		}
 	}
 
 	D3D12Resource::~D3D12Resource()
 	{
 		if (GetInstance())
-			static_cast<ID3D12Resource*>(GetInstance());
+			static_cast<ID3D12Resource*>(GetInstance())->Release();
+		
 	}
 
 }

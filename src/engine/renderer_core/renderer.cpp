@@ -2,6 +2,7 @@
 
 //ñäåëàéòå óæå èíòåðôåéñ äëÿ ðàáîòû ñ ìîäóëÿìè
 #include <ray/os/include.hpp>
+#include <d3d12.h>
 
 namespace ray::renderer_core_api
 {
@@ -124,6 +125,9 @@ namespace ray::renderer_core_api
 		ICommandList* lists[] = { _command_list };
 		_command_queue->SetCommandLists(lists, 1);
 		_command_queue->ExecuteCommandLists();
+
+		auto hai = (ID3D12Device*)_device->GetInstance();
+		auto r = hai->GetDeviceRemovedReason();
 
 		result = _command_queue->Signal(_fences[_frame_index], _fence_values[_frame_index]);
 		SetRunning(result);

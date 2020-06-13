@@ -32,7 +32,6 @@ public:
 	virtual bool CreateFence(IFence*, u64) = 0;
 	virtual bool CreateFenceEvent(IFenceEvent*, pcstr, bool, bool) = 0;
 	virtual s32 GetDescriptorHandleIncrementSize(DescriptorHeapType) = 0;
-
 };
 
 
