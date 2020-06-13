@@ -123,8 +123,11 @@ namespace ray::renderer::d3d12
         auto tempDevice = static_cast<ID3D12Device*>(GetInstance());
         auto tempResource = static_cast<ID3D12Resource*>(resource->GetInstance());
         auto tempDescriptor = static_cast<CD3DX12_CPU_DESCRIPTOR_HANDLE*>(descriptor->GetInstance());
-        D3D12_RENDER_TARGET_VIEW_DESC rtvDesc = {};
-        tempDevice->CreateRenderTargetView(tempResource, &rtvDesc, *tempDescriptor);
+        D3D12_RENDER_TARGET_VIEW_DESC rtvDesc;
+        rtvDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+        rtvDesc.ViewDimension = D3D12_RTV_DIMENSION_TEXTURE2D;
+        tempDevice->CreateRenderTargetView(tempResource, nullptr, *(tempDescriptor));
+        auto hResult = tempDevice->GetDeviceRemovedReason();
     }
 
     bool D3D12Device::CreateCommandAllocator(ICommandAllocator* commandAllocator, CommandListType listType)

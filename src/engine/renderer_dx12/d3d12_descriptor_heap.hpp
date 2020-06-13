@@ -13,6 +13,8 @@ namespace ray::renderer::d3d12
 	{
 	public:
 		D3D12CPUDescriptor() {}
+		~D3D12CPUDescriptor();
+
 		bool Initialize(IDescriptorHeap* descriptorHeap) override;
 		bool Offset(u32 step) override;
 	};

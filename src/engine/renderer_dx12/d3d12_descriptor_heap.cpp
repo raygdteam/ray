@@ -6,8 +6,8 @@ namespace ray::renderer::d3d12
 	bool D3D12CPUDescriptor::Initialize(IDescriptorHeap* descriptorHeap)
 	{
 		auto temp = static_cast<ID3D12DescriptorHeap*>(descriptorHeap->GetInstance());
-		CD3DX12_CPU_DESCRIPTOR_HANDLE descriptorHandle(temp->GetCPUDescriptorHandleForHeapStart());
-		SetInstance(&descriptorHandle);
+		CD3DX12_CPU_DESCRIPTOR_HANDLE* descriptorHandle = new CD3DX12_CPU_DESCRIPTOR_HANDLE(temp->GetCPUDescriptorHandleForHeapStart());
+		SetInstance(descriptorHandle);
 
 		return true; 
 	}
@@ -21,6 +21,12 @@ namespace ray::renderer::d3d12
 		temp->Offset(step, GetDescriptorSize());
 	
 		return true;
+	}
+
+	D3D12CPUDescriptor::~D3D12CPUDescriptor()
+	{
+		if (GetInstance())
+			delete GetInstance();
 	}
 
 	D3D12DescriptorHeap::~D3D12DescriptorHeap()

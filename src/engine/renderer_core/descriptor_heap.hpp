@@ -49,7 +49,8 @@ private:
 
 class ICPUDescriptor : public IDescriptor
 {
-
+public:
+	virtual ~ICPUDescriptor() {}
 };
 
 class IGPUDescriptor : public IDescriptor
