@@ -3,11 +3,10 @@
 #include "engine.hpp"
 #include <app_framework/base/platform_window.hpp>
 
-#include "core/file_system/file_system.hpp"
 
 using namespace ray::core;
 
-// плохо!
+// ГЇГ«Г®ГµГ®!
 #include <ray/os/include.hpp>
 #undef CreateWindow
 

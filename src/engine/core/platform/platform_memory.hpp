@@ -9,7 +9,7 @@ struct MemoryStatus
 	u32 PageSize;
 	void* MinAppAdress;
 	void* MaxAppAdress;
-	u16 MemoryLoadPercentage;
+	u32 MemoryLoadPercentage;
 	u64 TotalPhysMemory;
 	u64 AvailPhysMemory;
 };

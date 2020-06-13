@@ -119,7 +119,6 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <SDLCheck>false</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpplatest</LanguageStandard>
       <PrecompiledHeader>Create</PrecompiledHeader>
@@ -129,13 +128,14 @@
       <EnablePREfast>true</EnablePREfast>
       <BufferSecurityCheck>false</BufferSecurityCheck>
       <BasicRuntimeChecks>Default</BasicRuntimeChecks>
-      <ExceptionHandling>false</ExceptionHandling>
+      <ExceptionHandling>Sync</ExceptionHandling>
       <RuntimeTypeInfo>false</RuntimeTypeInfo>
-      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <MultiProcessorCompilation>false</MultiProcessorCompilation>
       <MinFilesInUnityFile>1</MinFilesInUnityFile>
       <MaxFilesInUnityFile>10</MaxFilesInUnityFile>
       <MinUnityFiles>2</MinUnityFiles>
       <CustomUnityFile>false</CustomUnityFile>
+      <DiagnosticsFormat>Caret</DiagnosticsFormat>
     </ClCompile>
     <Lib>
       <IgnoreAllDefaultLibraries>true</IgnoreAllDefaultLibraries>
@@ -228,13 +228,11 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="core.hpp" />
-    <ClInclude Include="file_system\file_system.hpp" />
     <ClInclude Include="memory\allocator.hpp" />
     <ClInclude Include="memory\memory.hpp" />
     <ClInclude Include="memory\memory_manager.hpp" />
     <ClInclude Include="memory\page_allocator.hpp" />
     <ClInclude Include="memory\std_alloc.hpp" />
-    <ClInclude Include="modules\startup_initializer.hpp" />
     <ClInclude Include="object\object.hpp" />
     <ClInclude Include="parallelism\Lock.h" />
     <ClInclude Include="parallelism\Mutex.h" />
@@ -249,21 +247,16 @@
     <ClInclude Include="raytl\delegate.hpp" />
     <ClInclude Include="raytl\Iterator.hpp" />
     <ClInclude Include="raytl\string.hpp" />
-    <ClInclude Include="serialization\archive.hpp" />
-    <ClInclude Include="serialization\Serializer.hpp" />
-    <ClInclude Include="serialization\stream.hpp" />
     <ClInclude Include="threading\lock.hpp" />
     <ClInclude Include="threading\thread.hpp" />
     <ClInclude Include="threading\threading.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="core_entry_point.cpp" />
-    <ClCompile Include="file_system\file_system.cpp" />
     <ClCompile Include="memory\hacky_memory_override_release.cpp" />
     <ClCompile Include="memory\memory_manager.cpp" />
     <ClCompile Include="memory\page_allocator.cpp" />
     <ClCompile Include="memory\std_alloc.cpp" />
-    <ClCompile Include="modules\startup_initializer.cpp" />
     <ClCompile Include="object\garbage_collector.cpp" />
     <ClCompile Include="parallelism\Mutex_linux.cpp" />
     <ClCompile Include="parallelism\Mutex_win.cpp" />

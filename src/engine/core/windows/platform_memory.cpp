@@ -51,7 +51,7 @@ void PlatformMemory::GetMemoryStatus(MemoryStatus& Status)
 	Status.PageSize = sSystemInfo.dwPageSize;
 	Status.MinAppAdress = sSystemInfo.lpMinimumApplicationAddress;
 	Status.MaxAppAdress = sSystemInfo.lpMaximumApplicationAddress;
-	Status.MemoryLoadPercentage = sMemoryStatus.dwMemoryLoad;
+	Status.MemoryLoadPercentage = u32(sMemoryStatus.dwMemoryLoad);
 	Status.TotalPhysMemory = sMemoryStatus.ullTotalPhys;
 	Status.AvailPhysMemory = sMemoryStatus.ullAvailPhys;
 }

@@ -75,6 +75,6 @@ void PlatformFS::WriteFile(pcstr path, size_t size, void* data)
 
 	LPDWORD numWritten = 0;
 
-    ::WriteFile(hFile, data, size, numWritten, nullptr);
+    ::WriteFile(hFile, data, DWORD(size), numWritten, nullptr);
 }
 }
