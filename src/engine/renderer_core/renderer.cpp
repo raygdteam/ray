@@ -84,6 +84,7 @@ namespace ray::renderer_core_api
 		if (!_device->CreateFenceEvent(_fence_event, nullptr, false, false))
 			return;
 
+		delete rtvDescriptor;
 	}
 
 	void IRenderer::UpdatePipeline()
@@ -115,6 +116,8 @@ namespace ray::renderer_core_api
 
 	 	result = _command_list->Close();
 		SetRunning(result);
+
+		delete rtvHandle;
 	}
 
 	void IRenderer::Draw()

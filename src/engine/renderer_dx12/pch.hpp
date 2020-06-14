@@ -22,3 +22,5 @@ using namespace ray::renderer_core_api::resources;
 #include <dxgi1_4.h>
 
 #include "d3dx12.h"
+
+#define CastInstanceTo(Type, owner) static_cast<Type*>(owner->GetInstance())
