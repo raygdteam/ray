@@ -9,6 +9,8 @@ namespace ray::renderer::d3d12
 			return;
 
 		_size = size;
+		if (_d3d12_lists)
+			delete _d3d12_lists;
 		_d3d12_lists = new ID3D12CommandList*[size];
 
 		for (size_t i = 0; i < size; i++)
