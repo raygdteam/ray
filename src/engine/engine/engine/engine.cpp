@@ -27,7 +27,7 @@ void RayEngine::Initialize(IEngineLoop* engineLoop)
 	window->CreateWindow("RAY_ENGINE");
 
 	_renderer = new IRenderer;
-	//_renderer->Initialize(window);
+	_renderer->Initialize(window);
 	
 	window->SetWindowVisibility(true);
 
@@ -42,7 +42,7 @@ void RayEngine::Tick()
 		ray::RequestEngineExit(true);
 		return;
 	}
-	//_renderer->Draw();
+	_renderer->Draw();
 }
 
 RayEngine::~RayEngine()

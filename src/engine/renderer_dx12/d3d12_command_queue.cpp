@@ -1,7 +1,7 @@
 #include "pch.hpp"
 #include "d3d12_command_queue.hpp"
 
-namespace ray::renderer::d3d12
+namespace ray::renderer::d3d12  
 {
 	void D3D12CommandQueue::SetCommandLists(ICommandList** commandLists, size_t size)
 	{
@@ -10,8 +10,9 @@ namespace ray::renderer::d3d12
 
 		_size = size;
 		if (_d3d12_lists)
-			delete _d3d12_lists;
-		_d3d12_lists = new ID3D12CommandList*[size];
+			delete[] _d3d12_lists;
+
+		_d3d12_lists = new ID3D12CommandList*[size];  
 
 		for (size_t i = 0; i < size; i++)
 		{
