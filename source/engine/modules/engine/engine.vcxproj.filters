@@ -1,0 +1,22 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClInclude Include="pch.hpp" />
+    <ClInclude Include="engine\engine.hpp">
+      <Filter>engine</Filter>
+    </ClInclude>
+    <ClInclude Include="engine\engine_def.hpp">
+      <Filter>engine</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="engine">
+      <UniqueIdentifier>{e27168b1-9c42-48fd-97c5-e5dd4e7305bc}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="engine\engine.cpp">
+      <Filter>engine</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

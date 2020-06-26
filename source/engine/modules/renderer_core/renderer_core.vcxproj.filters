@@ -1,0 +1,42 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClInclude Include="command_allocator.hpp" />
+    <ClInclude Include="command_list.hpp" />
+    <ClInclude Include="command_queue.hpp" />
+    <ClInclude Include="descriptor_heap.hpp" />
+    <ClInclude Include="device.hpp" />
+    <ClInclude Include="fence.hpp" />
+    <ClInclude Include="pipeline_state.hpp" />
+    <ClInclude Include="ray_renderer_core_base.hpp" />
+    <ClInclude Include="ray_renderer_core_class_helper.hpp" />
+    <ClInclude Include="renderer.hpp" />
+    <ClInclude Include="swap_chain.hpp" />
+    <ClInclude Include="resources\buffer.hpp">
+      <Filter>resources</Filter>
+    </ClInclude>
+    <ClInclude Include="resources\resources.hpp">
+      <Filter>resources</Filter>
+    </ClInclude>
+    <ClInclude Include="resources\textures.hpp">
+      <Filter>resources</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="renderer.cpp" />
+    <ClCompile Include="resources\buffer.cpp">
+      <Filter>resources</Filter>
+    </ClCompile>
+    <ClCompile Include="resources\resources.cpp">
+      <Filter>resources</Filter>
+    </ClCompile>
+    <ClCompile Include="resources\textures.cpp">
+      <Filter>resources</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="resources">
+      <UniqueIdentifier>{bdaef45a-1ec2-4972-97c6-c570ecdd0460}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

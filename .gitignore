@@ -23,3 +23,4 @@ Game/intermediate
 !/bin/tools/Microsoft.Build.Utilities.v4.0.dll
 !/bin/tools/Microsoft.VisualStudio.Setup.Configuration.Interop.dll
 !/bin/tools/Sharpmake.*.dll
+/.build
