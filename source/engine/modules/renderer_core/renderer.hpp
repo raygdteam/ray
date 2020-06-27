@@ -14,6 +14,8 @@ namespace ray::renderer_core_api
 {
 	struct RAY_RENDERERCORE_API IRenderer final// : public Object
 	{
+		friend class RendererCommands;
+
 		void Initialize(ray::core::IPlatformWindow* window);
 		void Draw(); //temporary
 		void Shutdown();

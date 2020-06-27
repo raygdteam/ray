@@ -135,6 +135,7 @@
     <ClInclude Include="ray_renderer_core_base.hpp" />
     <ClInclude Include="ray_renderer_core_class_helper.hpp" />
     <ClInclude Include="renderer.hpp" />
+    <ClInclude Include="renderer_commands.hpp" />
     <ClInclude Include="resources\buffer.hpp" />
     <ClInclude Include="resources\resources.hpp" />
     <ClInclude Include="resources\textures.hpp" />
@@ -142,6 +143,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="renderer.cpp" />
+    <ClCompile Include="renderer_commands.cpp" />
     <ClCompile Include="resources\buffer.cpp" />
     <ClCompile Include="resources\resources.cpp" />
     <ClCompile Include="resources\textures.cpp" />

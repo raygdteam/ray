@@ -21,6 +21,7 @@
     <ClInclude Include="resources\textures.hpp">
       <Filter>resources</Filter>
     </ClInclude>
+    <ClInclude Include="renderer_commands.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="renderer.cpp" />
@@ -33,6 +34,7 @@
     <ClCompile Include="resources\textures.cpp">
       <Filter>resources</Filter>
     </ClCompile>
+    <ClCompile Include="renderer_commands.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="resources">
