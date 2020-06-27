@@ -1,0 +1,31 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="alloc.c" />
+    <ClCompile Include="alloc-aligned.c" />
+    <ClCompile Include="alloc-override.c" />
+    <ClCompile Include="alloc-override-osx.c" />
+    <ClCompile Include="alloc-posix.c" />
+    <ClCompile Include="arena.c" />
+    <ClCompile Include="bitmap.inc.c" />
+    <ClCompile Include="heap.c" />
+    <ClCompile Include="init.c" />
+    <ClCompile Include="options.c" />
+    <ClCompile Include="os.c" />
+    <ClCompile Include="page.c" />
+    <ClCompile Include="page-queue.c" />
+    <ClCompile Include="random.c" />
+    <ClCompile Include="region.c" />
+    <ClCompile Include="segment.c" />
+    <ClCompile Include="static.c" />
+    <ClCompile Include="stats.c" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="mimalloc.h" />
+    <ClInclude Include="mimalloc-atomic.h" />
+    <ClInclude Include="mimalloc-internal.h" />
+    <ClInclude Include="mimalloc-new-delete.h" />
+    <ClInclude Include="mimalloc-override.h" />
+    <ClInclude Include="mimalloc-types.h" />
+  </ItemGroup>
+</Project>

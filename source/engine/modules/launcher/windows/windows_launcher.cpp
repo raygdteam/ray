@@ -37,8 +37,13 @@ bool MakeMutex()
 	return true;
 }
 
+extern "C" RAY_DLLIMPORT void dummy();
+
 u32 GuardedMain()
 {
+	/* Ensure kernel.dll is loaded */
+	dummy();
+
 	/* For Debug and Development allocate a console. */
 	/* For some unknown reason works only in .exe module.*/
 	AllocConsole();

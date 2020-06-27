@@ -2,5 +2,7 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <ClCompile Include="kernel_init.c" />
+    <ClCompile Include="kernel_memory.c" />
+    <ClCompile Include="kernel_hook.c" />
   </ItemGroup>
 </Project>
