@@ -9,3 +9,4 @@ u32 __stdcall DllMain(void* instance, unsigned long reason, void*)
 	return 1;
 }
 
+extern "C" RAY_DLLEXPORTS void _() {}

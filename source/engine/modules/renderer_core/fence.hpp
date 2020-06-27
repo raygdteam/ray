@@ -1,6 +1,6 @@
 #pragma once
 #include "ray_renderer_core_base.hpp"
-#include <ray/type/extensions.hpp>
+#include <core/core.hpp>
 
 /*
 **	Vulkan:			VkFence

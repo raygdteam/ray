@@ -1,7 +1,7 @@
 #include "renderer.hpp"
 
 //ñäåëàéòå óæå èíòåðôåéñ äëÿ ðàáîòû ñ ìîäóëÿìè
-#include <ray/os/include.hpp>
+#include <Windows.h>
 #include <d3d12.h>
 
 namespace ray::renderer_core_api
@@ -9,7 +9,7 @@ namespace ray::renderer_core_api
 
 	void IRenderer::Initialize(ray::core::IPlatformWindow* window)
 	{
-		HMODULE hModule = LoadLibrary("renderer_dx12");
+		HMODULE hModule = LoadLibraryA("renderer_dx12");
 		GetRRCClassHelper_t getClassHelper = reinterpret_cast<GetRRCClassHelper_t>(GetProcAddress(hModule, "GetRRCClassHelper"));
 
 		_class_helper = getClassHelper();

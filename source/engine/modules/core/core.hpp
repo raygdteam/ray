@@ -67,7 +67,7 @@
 	#define RAY_ASSERT(cond, msg)
 #endif
 
-#if defined(RAY_BUILD_DEBUG) || defined(RAY_BUILD_DEVELOPMENT)
+#if defined(RAY_DEBUG) || defined(RAY_DEVELOPMENT)
 #define RAY_DLLEXPORTS __declspec(dllexport)
 #define RAY_DLLIMPORT __declspec(dllimport)
 #define RAY_STATIC 0

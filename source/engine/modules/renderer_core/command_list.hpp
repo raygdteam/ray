@@ -4,7 +4,7 @@
 #include "descriptor_heap.hpp"
 #include "pipeline_state.hpp"
 #include "resources/resources.hpp"
-#include <ray/type/extensions.hpp>
+#include <core/core.hpp>
 
 /*
 **	Vulkan:			VkCommandBuffer
