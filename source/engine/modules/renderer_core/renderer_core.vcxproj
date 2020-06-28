@@ -131,6 +131,7 @@
     <ClInclude Include="descriptor_heap.hpp" />
     <ClInclude Include="device.hpp" />
     <ClInclude Include="fence.hpp" />
+    <ClInclude Include="math\vectors.hpp" />
     <ClInclude Include="pipeline_state.hpp" />
     <ClInclude Include="ray_renderer_core_base.hpp" />
     <ClInclude Include="ray_renderer_core_class_helper.hpp" />
@@ -142,6 +143,7 @@
     <ClInclude Include="swap_chain.hpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="math\vectors.cpp" />
     <ClCompile Include="renderer.cpp" />
     <ClCompile Include="renderer_commands.cpp" />
     <ClCompile Include="resources\buffer.cpp" />

@@ -22,6 +22,9 @@
       <Filter>resources</Filter>
     </ClInclude>
     <ClInclude Include="renderer_commands.hpp" />
+    <ClInclude Include="math\vectors.hpp">
+      <Filter>math</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="renderer.cpp" />
@@ -35,10 +38,16 @@
       <Filter>resources</Filter>
     </ClCompile>
     <ClCompile Include="renderer_commands.cpp" />
+    <ClCompile Include="math\vectors.cpp">
+      <Filter>math</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="resources">
       <UniqueIdentifier>{bdaef45a-1ec2-4972-97c6-c570ecdd0460}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="math">
+      <UniqueIdentifier>{7aa455b6-93de-4476-bca8-b11c3281084a}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>
