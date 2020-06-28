@@ -25,6 +25,9 @@
     <ClInclude Include="math\vectors.hpp">
       <Filter>math</Filter>
     </ClInclude>
+    <ClInclude Include="rect.hpp" />
+    <ClInclude Include="viewport.hpp" />
+    <ClInclude Include="root_signature.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="renderer.cpp" />

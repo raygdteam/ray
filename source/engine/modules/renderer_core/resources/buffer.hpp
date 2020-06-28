@@ -19,6 +19,11 @@ class Buffer : public IResource
 private:
 	void* _buffer;
 };
+
+class VertexBufferView
+{
+
+};
 	
 }
 

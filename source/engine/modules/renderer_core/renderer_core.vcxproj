@@ -135,12 +135,15 @@
     <ClInclude Include="pipeline_state.hpp" />
     <ClInclude Include="ray_renderer_core_base.hpp" />
     <ClInclude Include="ray_renderer_core_class_helper.hpp" />
+    <ClInclude Include="rect.hpp" />
     <ClInclude Include="renderer.hpp" />
     <ClInclude Include="renderer_commands.hpp" />
     <ClInclude Include="resources\buffer.hpp" />
     <ClInclude Include="resources\resources.hpp" />
     <ClInclude Include="resources\textures.hpp" />
+    <ClInclude Include="root_signature.hpp" />
     <ClInclude Include="swap_chain.hpp" />
+    <ClInclude Include="viewport.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="math\vectors.cpp" />

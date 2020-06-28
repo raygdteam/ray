@@ -7,8 +7,22 @@ namespace ray::renderer_core_api
 {
 	struct Vertex
 	{
+		Vertex() {}
+		Vertex(const math::Vector3& pos) : _position(pos) {}
+		Vertex(const Vertex& other) {}
+		Vertex(Vertex&& other) {}
+
 		math::Vector3 _position;
-		math::Vector4 _color;
+	};
+
+	struct ColorVertex : Vertex
+	{
+		ColorVertex() {}
+		ColorVertex(const math::Vector3& pos, const math::Vector3& color) : Vertex(pos), _color(color) {}
+		ColorVertex(const ColorVertex& other) {}
+		ColorVertex(ColorVertex&& other) {}
+
+		math::Vector3 _color;
 	};
 
 	enum class PrimitiveTopology
