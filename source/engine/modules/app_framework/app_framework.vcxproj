@@ -97,6 +97,8 @@
       <AdditionalIncludeDirectories>$(SolutionDir)\source\engine\modules;$(SolutionDir)\source\engine\thirdparty;$(SolutionDir)\source\engine\modules\engine</AdditionalIncludeDirectories>
       <BufferSecurityCheck>true</BufferSecurityCheck>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <TreatWarningAsError>true</TreatWarningAsError>
+      <DiagnosticsFormat>Caret</DiagnosticsFormat>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -144,6 +146,8 @@
       <AdditionalIncludeDirectories>$(SolutionDir)\source\engine\modules;$(SolutionDir)\source\engine\thirdparty;$(SolutionDir)\source\engine\modules\engine</AdditionalIncludeDirectories>
       <BufferSecurityCheck>true</BufferSecurityCheck>
       <BasicRuntimeChecks>Default</BasicRuntimeChecks>
+      <TreatWarningAsError>true</TreatWarningAsError>
+      <DiagnosticsFormat>Caret</DiagnosticsFormat>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>

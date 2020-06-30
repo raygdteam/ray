@@ -88,6 +88,7 @@
 
 // Warnings stuff
 #pragma warning(disable: 4251)
+#pragma warning(disable: 4275) // C4275: non dll-interface struct 'A' used as base for dll-interface class 'B'
 
 
 // Types

@@ -132,7 +132,7 @@ namespace ray::renderer_core_api
 		auto hai = (ID3D12Device*)_device->GetInstance();
 		auto r = hai->GetDeviceRemovedReason();
 
-		result = _command_queue->Signal(_fences[_frame_index], _fence_values[_frame_index]);
+		result = _command_queue->Signal(_fences[_frame_index], _fence_values[u64(_frame_index)]);
 		SetRunning(result);
 
 		result = _swap_chain->Present(0, 0);
@@ -143,7 +143,7 @@ namespace ray::renderer_core_api
 	{
 		bool result;
 		_frame_index = _swap_chain->GetCurrentBackBufferIndex();
-		if (_fences[_frame_index]->GetCompletedValue() < _fence_values[_frame_index])
+		if (_fences[_frame_index]->GetCompletedValue() < _fence_values[u64(_frame_index)])
 		{
 			result = _fences[_frame_index]->SetEventOnCompletion(_fence_event, _fence_values[_frame_index]);
 			SetRunning(result);
