@@ -5,7 +5,7 @@ namespace ray::renderer_core_api
 {
 	bool RendererCommands::Initialize(IRenderer* renderer)
 	{
-
+		return true;
 	}
 
 	void RendererCommands::Draw(Vertex* vertices, PrimitiveTopology topology)

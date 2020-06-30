@@ -2,14 +2,13 @@
 
 //ñäåëàéòå óæå èíòåðôåéñ äëÿ ðàáîòû ñ ìîäóëÿìè
 #include <Windows.h>
-#include <d3d12.h>
 
 namespace ray::renderer_core_api
 {
 
 	void IRenderer::Initialize(ray::core::IPlatformWindow* window)
 	{
-		HMODULE hModule = LoadLibraryA("renderer_dx12");
+		HMODULE hModule = LoadLibraryA("libray-renderer_dx12");
 		GetRRCClassHelper_t getClassHelper = reinterpret_cast<GetRRCClassHelper_t>(GetProcAddress(hModule, "GetRRCClassHelper"));
 
 		_class_helper = getClassHelper();
@@ -129,10 +128,7 @@ namespace ray::renderer_core_api
 		_command_queue->SetCommandLists(lists, 1);
 		_command_queue->ExecuteCommandLists();
 
-		auto hai = (ID3D12Device*)_device->GetInstance();
-		auto r = hai->GetDeviceRemovedReason();
-
-		result = _command_queue->Signal(_fences[_frame_index], _fence_values[u64(_frame_index)]);
+		result = _command_queue->Signal(_fences[_frame_index], static_cast<u32>(_fence_values[_frame_index]));
 		SetRunning(result);
 
 		result = _swap_chain->Present(0, 0);
@@ -155,7 +151,7 @@ namespace ray::renderer_core_api
 
 	void IRenderer::Shutdown()
 	{
-		for (size_t i = 0; i < FRAME_BUFFER_COUNT; i++)
+		for (u32 i = 0; i < FRAME_BUFFER_COUNT; i++)
 		{
 			_frame_index = i;
 			WaitForPreviousFrame();
