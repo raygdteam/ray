@@ -5,6 +5,9 @@
     <ClInclude Include="log\log.hpp">
       <Filter>log</Filter>
     </ClInclude>
+    <ClInclude Include="memory\new_delete_override.hpp">
+      <Filter>memory</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="core_entry_point.cpp" />
@@ -15,6 +18,9 @@
   <ItemGroup>
     <Filter Include="log">
       <UniqueIdentifier>{1e537b0d-46a6-4cb6-8081-7f9f5f5cfc7c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="memory">
+      <UniqueIdentifier>{d4e4e43a-4ad3-44ad-81ea-3a7fef35f2f3}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

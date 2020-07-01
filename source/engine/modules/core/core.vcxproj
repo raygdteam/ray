@@ -17,12 +17,16 @@
   <ItemGroup>
     <ClInclude Include="core.hpp" />
     <ClInclude Include="log\log.hpp" />
+    <ClInclude Include="memory\new_delete_override.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="core_entry_point.cpp" />
     <ClCompile Include="log\log.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\thirdparty\mimalloc\mimalloc.vcxproj">
+      <Project>{615c925d-85a3-4099-85bc-6bbb744c128e}</Project>
+    </ProjectReference>
     <ProjectReference Include="..\kernel\kernel.vcxproj">
       <Project>{481e9d9e-4af6-4693-96ab-660b91dd8b57}</Project>
     </ProjectReference>

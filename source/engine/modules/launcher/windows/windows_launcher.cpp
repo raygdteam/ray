@@ -2,6 +2,8 @@
 #include <Windows.h>
 #include <shellapi.h>
 #include <stdio.h>
+#include <core/memory/new_delete_override.hpp>
+
 
 /** Exports for video drivers to request the most powerful GPU available. Mainly for OGL/DX11 because Vulkan allows app to choose the GPU. */
 extern "C" { _declspec(dllexport) u32 NvOptimusEnablement = 0x00000001; }
@@ -28,9 +30,9 @@ bool MakeMutex()
 
 	gMutex = CreateMutexA(0, true, mutexName);
 
-	if(!gMutex && GetLastError() == ERROR_ALREADY_EXISTS)
+	if (!gMutex && GetLastError() == ERROR_ALREADY_EXISTS)
 	{
-		// This is second instance. Exit.
+		/* This is second instance. Exit. */
 		return false;
 	}
 

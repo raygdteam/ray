@@ -135,6 +135,7 @@
     <ClCompile Include="d3d12_pipeline_state.cpp" />
     <ClCompile Include="d3d12_resources.cpp" />
     <ClCompile Include="d3d12_swap_chain.cpp" />
+    <ClCompile Include="module_renderer_dx12.cpp" />
     <ClCompile Include="ray_renderer_core_class_helper.cpp" />
   </ItemGroup>
   <ItemGroup>

@@ -137,8 +137,12 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="engine\engine.cpp" />
+    <ClCompile Include="module_engine.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\thirdparty\mimalloc\mimalloc.vcxproj">
+      <Project>{615c925d-85a3-4099-85bc-6bbb744c128e}</Project>
+    </ProjectReference>
     <ProjectReference Include="..\app_framework\app_framework.vcxproj">
       <Project>{1f9d6dcb-4d59-4a90-b5c4-95411eda662f}</Project>
     </ProjectReference>

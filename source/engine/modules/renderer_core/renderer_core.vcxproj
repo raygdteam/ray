@@ -153,11 +153,17 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="math\vectors.cpp" />
+    <ClCompile Include="module_renderer_core.cpp" />
     <ClCompile Include="renderer.cpp" />
     <ClCompile Include="renderer_commands.cpp" />
     <ClCompile Include="resources\buffer.cpp" />
     <ClCompile Include="resources\resources.cpp" />
     <ClCompile Include="resources\textures.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\thirdparty\mimalloc\mimalloc.vcxproj">
+      <Project>{615c925d-85a3-4099-85bc-6bbb744c128e}</Project>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
