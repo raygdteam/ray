@@ -1,5 +1,14 @@
 #include <Windows.h>
 
+void _memcpy(void* to, void* from, size_t size)
+{
+    char* csrc = (char*)to;
+    char* cdest = (char*)from;
+
+    // Copy contents of src[] to dest[] 
+    for (int i = 0; i < size; i++)
+        cdest[i] = csrc[i];
+}
 
 void krnlInstallHook(void* old, void* new)
 {
@@ -12,7 +21,7 @@ void krnlInstallHook(void* old, void* new)
 
     DWORD oldprot;
     VirtualProtect(old, 1, PAGE_EXECUTE_READWRITE, &oldprot);
-    memcpy(old, patch, sizeof(patch));
+    _memcpy(old, patch, sizeof(patch));
     VirtualProtect(old, 1, oldprot, &oldprot);
 
     FlushInstructionCache(GetCurrentProcess(), old, 10);

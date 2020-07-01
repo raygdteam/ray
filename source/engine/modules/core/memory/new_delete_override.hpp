@@ -1,7 +1,7 @@
 #include "mimalloc/mimalloc.h"
 
-void operator delete(void* p) noexcept { free(p); };
-void operator delete[](void* p) noexcept { free(p); };
+void operator delete(void* p) noexcept { mi_free(p); };
+void operator delete[](void* p) noexcept { mi_free(p); };
 
 void* operator new(std::size_t n) noexcept(false) { return mi_new(n); }
 void* operator new[](std::size_t n) noexcept(false) { return mi_new(n); }

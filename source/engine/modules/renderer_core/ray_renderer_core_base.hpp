@@ -9,7 +9,7 @@ public:
 	void* GetInstance() { return _instance; }
 
 protected:
-	void* _instance;
+	void* _instance = nullptr;
 
 };
 }
