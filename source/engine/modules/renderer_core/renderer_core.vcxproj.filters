@@ -44,6 +44,7 @@
     <ClCompile Include="math\vectors.cpp">
       <Filter>math</Filter>
     </ClCompile>
+    <ClCompile Include="module_renderer_core.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="resources">

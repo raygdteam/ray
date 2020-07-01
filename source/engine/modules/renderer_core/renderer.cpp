@@ -154,7 +154,7 @@ namespace ray::renderer_core_api
 		for (u32 i = 0; i < FRAME_BUFFER_COUNT; i++)
 		{
 			_frame_index = i;
-			WaitForPreviousFrame();
+			// WaitForPreviousFrame();
 		}
 
 		delete _command_queue;

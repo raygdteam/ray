@@ -83,6 +83,14 @@
 #define RAY_CORE_API RAY_DLLIMPORT
 #endif
 
+/* 
+	On windows, remove the dependecy on api-ms-win-crt-*.dll libraries,
+	as well as support OS < 10 
+*/
+#ifdef RAY_PLATFORM_WIN
+#pragma comment(lib, "mincore_downlevel.lib")
+#endif
+
 // Misc defines
 #define DEPRECATED(version, message) [[deprecated(message)]]
 

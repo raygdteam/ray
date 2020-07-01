@@ -1,4 +1,5 @@
 #include "core.hpp"
+#include <core/memory/new_delete_override.hpp>
 
 extern "C" RAY_DLLIMPORT void dummy();
 

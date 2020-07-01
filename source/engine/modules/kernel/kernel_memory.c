@@ -1,6 +1,10 @@
 #include <Windows.h>
 #include <crtdbg.h>
+
+#ifndef NDEBUG
 #define MI_SHARED_LIB
+#endif
+
 #include "../../thirdparty/mimalloc/mimalloc.h"
 
 void krnlInstallHook(void* old, void* new);

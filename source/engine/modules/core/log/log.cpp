@@ -3,6 +3,7 @@
 #include <Windows.h>
 #include <core/core.hpp>
 #include "log.hpp"
+#include <cstdio>
 
 using pstr = char*;
 using pcstr = const char*;
@@ -43,6 +44,10 @@ void Logger::Log(pcstr msg)
 	strcat(str, "\n");
 
 	OutputDebugStringA(str);
+
+#if defined(RAY_DEBUG) || defined(RAY_DEVELOPMENT)
+	printf(str);
+#endif
 }
 
 

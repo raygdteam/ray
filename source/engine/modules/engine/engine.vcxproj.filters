@@ -18,5 +18,6 @@
     <ClCompile Include="engine\engine.cpp">
       <Filter>engine</Filter>
     </ClCompile>
+    <ClCompile Include="module_engine.cpp" />
   </ItemGroup>
 </Project>

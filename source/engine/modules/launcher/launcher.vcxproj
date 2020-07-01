@@ -133,6 +133,9 @@
     <ClInclude Include="engine_loop.hpp" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\thirdparty\mimalloc\mimalloc.vcxproj">
+      <Project>{615c925d-85a3-4099-85bc-6bbb744c128e}</Project>
+    </ProjectReference>
     <ProjectReference Include="..\core\core.vcxproj">
       <Project>{134c88c3-3c53-4b8b-8884-95f2a2283cea}</Project>
     </ProjectReference>
