@@ -16,9 +16,11 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="core.hpp" />
+    <ClInclude Include="log\log.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="core_entry_point.cpp" />
+    <ClCompile Include="log\log.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\kernel\kernel.vcxproj">

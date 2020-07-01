@@ -12,5 +12,5 @@ void krnlInitMemory()
 	krnlInstallHook(&free, &mi_free);
 
 	krnlInstallHook(&_aligned_malloc, &mi_malloc_aligned);
-	// krnlInstallHook(&_free_dbg, &free)
+	krnlInstallHook(&_aligned_free, &mi_free_aligned);
 }
