@@ -13,16 +13,8 @@ namespace ray::renderer_core_api
 		Vertex(Vertex&& other) {}
 
 		math::Vector3 _position;
-	};
 
-	struct ColorVertex : Vertex
-	{
-		ColorVertex() {}
-		ColorVertex(const math::Vector3& pos, const math::Vector3& color) : Vertex(pos), _color(color) {}
-		ColorVertex(const ColorVertex& other) {}
-		ColorVertex(ColorVertex&& other) {}
-
-		math::Vector3 _color;
+		static size_t GetSize() { return sizeof(Vertex); }
 	};
 
 	enum class PrimitiveTopology
