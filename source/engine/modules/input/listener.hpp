@@ -1,18 +1,12 @@
 #pragma once
 
-#pragma once
-
 namespace ray::input
 {
 	class listener
 	{
 	public:
-		listener()
-		{
-		}
-		~listener()
-		{
-		}
+		listener() {}
+		~listener() = default;
 
 		// keyboard pure virtual callback functions 
 		virtual void on_key_down(int) = 0;
