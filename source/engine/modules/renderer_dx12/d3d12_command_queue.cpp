@@ -38,13 +38,7 @@ namespace ray::renderer::d3d12
 
 	D3D12CommandQueue::~D3D12CommandQueue()
 	{
-		if (_d3d12_lists)
-		{
-			for (size_t i = 0; i < _size; i++)
-				_d3d12_lists[i]->Release();
-
-			delete[] _d3d12_lists;
-		}
+		delete _d3d12_lists;
 
 		if(GetInstance())
 			static_cast<ID3D12CommandQueue*>(GetInstance())->Release();

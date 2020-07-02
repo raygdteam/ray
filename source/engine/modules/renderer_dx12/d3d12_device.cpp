@@ -109,7 +109,7 @@ namespace ray::renderer::d3d12
         else
             dhDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_NONE;
 
-        hResult = static_cast<ID3D12Device*>(GetInstance())->CreateDescriptorHeap(&dhDesc, IID_PPV_ARGS(&d3d12DescriptorHeap));
+        hResult = CastInstanceTo(ID3D12Device, this)->CreateDescriptorHeap(&dhDesc, IID_PPV_ARGS(&d3d12DescriptorHeap));
         if (FAILED(hResult))
             return false;
 
@@ -120,9 +120,9 @@ namespace ray::renderer::d3d12
 
     void D3D12Device::CreateRenderTargetView(IResource* resource, RenderTargetViewDesc& desc, ICPUDescriptor* descriptor)
     {
-        auto tempDevice = static_cast<ID3D12Device*>(GetInstance());
-        auto tempResource = static_cast<ID3D12Resource*>(resource->GetInstance());
-        auto tempDescriptor = static_cast<CD3DX12_CPU_DESCRIPTOR_HANDLE*>(descriptor->GetInstance());
+        auto tempDevice = CastInstanceTo(ID3D12Device, this);
+        auto tempResource = CastInstanceTo(ID3D12Resource, resource);
+        auto tempDescriptor = CastInstanceTo(CD3DX12_CPU_DESCRIPTOR_HANDLE, descriptor);
         D3D12_RENDER_TARGET_VIEW_DESC rtvDesc;
         rtvDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
         rtvDesc.ViewDimension = D3D12_RTV_DIMENSION_TEXTURE2D;
@@ -153,7 +153,7 @@ namespace ray::renderer::d3d12
         }
 
         ID3D12CommandAllocator* allocator;
-        auto temp = static_cast<ID3D12Device*>(GetInstance());
+        auto temp = CastInstanceTo(ID3D12Device, this);
         auto hResult = temp->CreateCommandAllocator(type, IID_PPV_ARGS(&allocator));
         
         if (FAILED(hResult))
@@ -185,8 +185,8 @@ namespace ray::renderer::d3d12
             break;
         }
 
-        auto tempDevice = static_cast<ID3D12Device*>(GetInstance());
-        auto tempAllocator = static_cast<ID3D12CommandAllocator*>(commandAllocator->GetInstance());
+        auto tempDevice = CastInstanceTo(ID3D12Device, this);
+        auto tempAllocator = CastInstanceTo(ID3D12CommandAllocator, commandAllocator);
 
         ID3D12PipelineState* tempState = nullptr;
 
@@ -204,7 +204,7 @@ namespace ray::renderer::d3d12
     bool D3D12Device::CreateFence(IFence* outFence, u64 fenceValue)
     {
         ID3D12Fence* fence;
-        auto temp = static_cast<ID3D12Device*>(GetInstance());
+        auto temp = CastInstanceTo(ID3D12Device, this);
         auto hResult = temp->CreateFence(fenceValue, D3D12_FENCE_FLAG_NONE, IID_PPV_ARGS(&fence));
         if (FAILED(hResult))
             return false;
@@ -228,16 +228,16 @@ namespace ray::renderer::d3d12
         switch (type)
         {
         case DescriptorHeapType::descriptor_heap_type_rtv:
-            return static_cast<ID3D12Device*>(GetInstance())->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
+            return CastInstanceTo(ID3D12Device, this)->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
 
         case DescriptorHeapType::descriptor_heap_type_dsv:
-            return static_cast<ID3D12Device*>(GetInstance())->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_DSV);
+            return CastInstanceTo(ID3D12Device, this)->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_DSV);
 
         case DescriptorHeapType::descriptor_heap_type_sampler:
-            return static_cast<ID3D12Device*>(GetInstance())->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_SAMPLER);
+            return CastInstanceTo(ID3D12Device, this)->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_SAMPLER);
 
         case DescriptorHeapType::descriptor_heap_type_uav_srv_cbv:
-            return static_cast<ID3D12Device*>(GetInstance())->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
+            return CastInstanceTo(ID3D12Device, this)->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
 
         default:
             return 0;
@@ -245,10 +245,24 @@ namespace ray::renderer::d3d12
         }
     }
 
+    bool D3D12Device::CreateRootSignature(RootSignatureDesc& desc, IRootSignature* inRootSignature)
+    {
+        CD3DX12_ROOT_SIGNATURE_DESC rootDesc;
+        rootDesc.Init(desc._num_params, nullptr, desc._num_static_samplers, nullptr, D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT);
+        ID3DBlob* signature;
+        auto hResult = D3D12SerializeRootSignature(&rootDesc, D3D_ROOT_SIGNATURE_VERSION_1, &signature, nullptr);
+        if (FAILED(hResult))
+            return false;
+
+        ID3D12RootSignature* rootSignature;
+        hResult = CastInstanceTo(ID3D12Device, this)->CreateRootSignature(0, signature->GetBufferPointer(), signature->GetBufferSize(), IID_PPV_ARGS(&rootSignature));
+        return hResult == S_OK;
+    }
+
     D3D12Device::~D3D12Device()
     {
         if (GetInstance())
-            static_cast<ID3D12Device*>(GetInstance())->Release();
+            CastInstanceTo(ID3D12Device, this)->Release();
     }
 
 }

@@ -157,8 +157,8 @@ namespace ray::renderer_core_api
 			// WaitForPreviousFrame();
 		}
 
-		delete _command_queue;
 		delete _command_list;
+		delete _command_queue;
 		delete _descriptor_heap;
 		delete _device;
 		for (size_t i = 0; i < FRAME_BUFFER_COUNT; i++)

@@ -29,10 +29,13 @@ namespace ray::renderer_core_api
 	class RendererCommands
 	{
 	public:
-		static bool Initialize(IRenderer* renderer);
+		bool Initialize(IRenderer* renderer, PrimitiveTopology topology = PrimitiveTopology::undefined);
 
-		static void Draw(Vertex* vertices, PrimitiveTopology topology = PrimitiveTopology::undefined);
-		static void DrawIndexed(Vertex* vertices, u32* indices);
+		void Draw(Vertex* vertices);
+		void DrawIndexed(Vertex* vertices, u32* indices);
+
+	private:
+		IDevice* _device;
 
 	};
 }

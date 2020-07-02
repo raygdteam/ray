@@ -39,7 +39,9 @@ void RayEngine::Tick()
 	input::update();
 
 	static_cast<core::IPlatformWindow*>(_window)->Update();
-	if (static_cast<core::IPlatformWindow*>(_window)->ShouldClose())
+	//for debugging
+	bool bShouldClose = static_cast<core::IPlatformWindow*>(_window)->ShouldClose();
+	if (bShouldClose)
 	{
 		ray::RequestEngineExit(true);
 		return;

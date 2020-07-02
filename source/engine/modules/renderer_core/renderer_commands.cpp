@@ -3,12 +3,15 @@
 
 namespace ray::renderer_core_api
 {
-	bool RendererCommands::Initialize(IRenderer* renderer)
+	bool RendererCommands::Initialize(IRenderer* renderer, PrimitiveTopology topology)
 	{
+		_device = renderer->_device;
+
+
 		return true;
 	}
 
-	void RendererCommands::Draw(Vertex* vertices, PrimitiveTopology topology)
+	void RendererCommands::Draw(Vertex* vertices)
 	{
 
 	}

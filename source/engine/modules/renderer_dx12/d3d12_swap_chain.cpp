@@ -75,7 +75,10 @@ namespace ray::renderer::d3d12
         auto temp = static_cast<IDXGISwapChain3*>(GetInstance());
         auto hResult = temp->Present(syncInterval, flags);
 
-        return (hResult == S_OK) ? true : false;
+        if (hResult == DXGI_ERROR_DEVICE_REMOVED || hResult == DXGI_ERROR_DEVICE_RESET)
+            return false;
+
+        return hResult == S_OK;
     }
 
     D3D12SwapChain::~D3D12SwapChain()

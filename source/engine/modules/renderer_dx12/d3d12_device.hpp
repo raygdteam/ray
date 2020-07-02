@@ -18,6 +18,7 @@ namespace ray::renderer::d3d12
         bool CreateCommandList(ICommandList* commandList, ICommandAllocator* commandAllocator, IPipelineState* pipelineState, CommandListType listType) override;
         bool CreateFence(IFence* outFence, u64 fenceValue) override;
         bool CreateFenceEvent(IFenceEvent* outFenceEvent, pcstr name, bool bManualReset, bool bInitialState) override;
+        bool CreateRootSignature(RootSignatureDesc& desc, IRootSignature* inRootSignature) override;
         s32 GetDescriptorHandleIncrementSize(DescriptorHeapType type) override;
 
     private:

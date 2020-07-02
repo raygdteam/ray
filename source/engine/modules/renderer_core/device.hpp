@@ -7,6 +7,7 @@
 #include "descriptor_heap.hpp"
 #include "fence.hpp"
 #include "pipeline_state.hpp"
+#include "root_signature.hpp"
 
 /*
 **	Vulkan:			VkDevice
@@ -31,6 +32,7 @@ public:
 	virtual bool CreateCommandList(ICommandList*, ICommandAllocator*, IPipelineState*, CommandListType) = 0;
 	virtual bool CreateFence(IFence*, u64) = 0;
 	virtual bool CreateFenceEvent(IFenceEvent*, pcstr, bool, bool) = 0;
+	virtual bool CreateRootSignature(RootSignatureDesc&, IRootSignature*) = 0;
 	virtual s32 GetDescriptorHandleIncrementSize(DescriptorHeapType) = 0;
 };
 

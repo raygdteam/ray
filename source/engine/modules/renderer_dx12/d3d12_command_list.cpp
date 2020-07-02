@@ -13,7 +13,7 @@ namespace ray::renderer::d3d12
 
 		auto hResult = tempList->Reset(tempAllocator, tempState);
 
-		return (hResult == S_OK) ? true : false;
+		return hResult == S_OK;
 	}
 
 	void D3D12CommandList::ResourceBarrier(resources::IResourceBarrier* inResourceBarrier, u32 numBarriers)
@@ -45,12 +45,13 @@ namespace ray::renderer::d3d12
 	{
 		auto temp = static_cast<ID3D12GraphicsCommandList*>(GetInstance());
 		auto hResult = temp->Close();
-
-		return (hResult == S_OK) ? true : false;
+		
+		return hResult == S_OK;
 	}
 
 	D3D12CommandList::~D3D12CommandList()
 	{
+		auto d = GetInstance();
 		if(GetInstance())
 			static_cast<ID3D12CommandList*>(GetInstance())->Release();
 	}
