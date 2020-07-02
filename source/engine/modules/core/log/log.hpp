@@ -1,13 +1,9 @@
+#include <core/core.hpp>
+
 using pstr = char*;
 using pcstr = const char*;
 
-#if _DEBUG
-#define DLLEXPORT __declspec(dllexport)
-#else
-#define DLLEXPORT __declspec(dllimport)
-#endif
-
-class DLLEXPORT Logger
+class RAY_CORE_API Logger
 {
 	pstr _name;
 public:
