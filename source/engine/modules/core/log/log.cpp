@@ -49,15 +49,3 @@ void Logger::Log(pcstr msg)
 	printf(str);
 #endif
 }
-
-
-extern "C" void __declspec(dllexport) hai()
-{
-	gTimestamp = GetTickCount64();
-
-	Logger a("core");
-	a.Log("AAAAAAAAAAAAAAA");
-
-	Logger b("renderer_dx12");
-	b.Log("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
-}

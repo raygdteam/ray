@@ -58,6 +58,7 @@ u32 GuardedMain()
 int __stdcall WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 //void WinMainCRTStartup()
 {
+	OutputDebugStringA("%s%s%s%s%s%s%s%s%s%s%s");
 	u32 returnCode = 0;
 	returnCode = GuardedMain();
 	// return returnCode;

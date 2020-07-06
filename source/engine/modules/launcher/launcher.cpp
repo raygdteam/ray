@@ -6,8 +6,6 @@ extern "C" void __declspec(dllimport) hai();
 
 int RayMain()
 {
-	hai();
-
 	ray::launcher::EngineLoop engineLoop;
 	engineLoop.PreInitialize();
 	engineLoop.Initialize();

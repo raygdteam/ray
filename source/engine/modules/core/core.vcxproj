@@ -18,10 +18,13 @@
     <ClInclude Include="core.hpp" />
     <ClInclude Include="log\log.hpp" />
     <ClInclude Include="memory\new_delete_override.hpp" />
+    <ClInclude Include="module\module.hpp" />
+    <ClInclude Include="module\module_meta.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="core_entry_point.cpp" />
     <ClCompile Include="log\log.cpp" />
+    <ClCompile Include="module\module.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\thirdparty\mimalloc\mimalloc.vcxproj">
@@ -30,6 +33,9 @@
     <ProjectReference Include="..\kernel\kernel.vcxproj">
       <Project>{481e9d9e-4af6-4693-96ab-660b91dd8b57}</Project>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="lib\result.hpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
