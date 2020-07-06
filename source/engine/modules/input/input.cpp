@@ -24,7 +24,7 @@ namespace ray::input
 			first_time = !first_time;
 		}
 
-		if (current_mouse_position.x != old_mouse_position.x|| current_mouse_position.y != old_mouse_position.y)
+		if (current_mouse_position.x != old_mouse_position.x || current_mouse_position.y != old_mouse_position.y)
 		{
 			std::unordered_set<ray::input::listener*>::iterator it = set_listeners.begin();
 

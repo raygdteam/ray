@@ -20,6 +20,5 @@ int RayMain()
 	while (!ray::IsEngineExitRequested())
 		engineLoop.Tick();
 
-
 	return 0;
 }
