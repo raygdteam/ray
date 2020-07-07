@@ -8,8 +8,11 @@
 #include "d3d12_command_queue.hpp"
 #include "d3d12_descriptor_heap.hpp"
 #include "d3d12_fence.hpp"
-
-using namespace ray::renderer_core_api;
+#include "d3d12_root_signature.hpp"
+#include "d3d12_vertex_shader.hpp"
+#include "d3d12_pixel_shader.hpp"
+#include "d3d12_vertex_buffer.hpp"
+#include "d3d12_index_buffer.hpp"
 
 namespace ray::renderer::d3d12
 {
@@ -74,6 +77,31 @@ namespace ray::renderer::d3d12
 		IResourceBarrier* CreateResourceBarrier() override
 		{
 			return new resources::D3D12ResourceBarrier;
+		}
+
+		IRootSignature* CreateRootSignature() override
+		{
+			return new D3D12RootSignature;
+		}
+
+		IVertexShader* CreateVertexShader() override
+		{
+			return new D3D12VertexShader;
+		}
+
+		IPixelShader* CreatePixelShader() override
+		{
+			return new D3D12PixelShader;
+		}
+
+		IVertexBuffer* CreateVertexBuffer() override
+		{
+			return new resources::D3D12VertexBuffer;
+		}
+
+		IIndexBuffer* CreateIndexBuffer() override
+		{
+			return new resources::D3D12IndexBuffer;
 		}
 
 	};

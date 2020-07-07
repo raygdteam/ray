@@ -41,6 +41,20 @@ namespace ray::renderer::d3d12
 		tempList->ClearRenderTargetView(*tempHandle, rgba, 0, nullptr);
 	}
 
+	u64 D3D12CommandList::UpdateSubresource(IResource* dest, IResource* src, u64 offset, u64 indexSubresource, u64 subresourceCount)
+	{
+		auto tempList = static_cast<ID3D12GraphicsCommandList*>(GetInstance());
+		auto tempDest = static_cast<ID3D12Resource*>(dest->GetInstance());
+		auto tempSrc = static_cast<ID3D12Resource*>(src->GetInstance());
+
+		D3D12_SUBRESOURCE_DATA data;
+		data.pData = src->GetData();
+		data.RowPitch = src->GetSize();
+		data.SlicePitch = src->GetSize();
+		
+		return static_cast<u64>(UpdateSubresources(tempList, tempDest, tempSrc, offset, indexSubresource, subresourceCount, &data));
+	}
+
 	bool D3D12CommandList::Close()
 	{
 		auto temp = static_cast<ID3D12GraphicsCommandList*>(GetInstance());

@@ -1,7 +1,7 @@
 #pragma once
-#include "renderer.hpp"
 #include "math/vectors.hpp"
-#include <core/core.hpp>
+#include "renderer.hpp"
+#include <vector>
 
 namespace ray::renderer_core_api
 {
@@ -17,26 +17,32 @@ namespace ray::renderer_core_api
 		static size_t GetSize() { return sizeof(Vertex); }
 	};
 
-	enum class PrimitiveTopology
-	{
-		undefined, //can't draw anything
-		point, 
-		line, 
-		triangle,
-		patch //for tesselation
-	};
-
 	class RendererCommands
 	{
 	public:
-		bool Initialize(IRenderer* renderer, PrimitiveTopology topology = PrimitiveTopology::undefined);
+		bool Initialize(IRenderer* renderer, PrimitiveTopology topology = PrimitiveTopology::eUndefined);
 
-		void Draw(Vertex* vertices);
-		void DrawIndexed(Vertex* vertices, u32* indices);
+		static void BeginScene();
+		static void EndScene();
+
+		static void Execute();
+
+		void Draw(Vertex* vertices, size_t vertexCount);
+		void DrawIndexed(Vertex* vertices, size_t vertexCount, u32* indices, size_t indexCount);
 
 	private:
 		IDevice* _device;
-
+		IRRCClassHelper* _class_helper;
+		IRootSignature* _root_signature;
+		IPipelineState* _pipeline_state;
+		IVertexShader* _vertex_shader;
+		IPixelShader* _pixel_shader;
+		resources::IVertexBuffer* _vertex_buffer;
+		resources::IIndexBuffer* _index_buffer;
+		resources::IResourceBarrier* _resource_barrier;
+		ICommandList* _command_list;
+		static std::vector<ICommandList*> _lists;
+		static ICommandQueue* _command_queue;
 	};
 }
 

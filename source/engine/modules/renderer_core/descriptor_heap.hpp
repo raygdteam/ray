@@ -11,10 +11,10 @@ namespace ray::renderer_core_api
 {
 enum class DescriptorHeapType
 {
-	descriptor_heap_type_rtv,
-	descriptor_heap_type_uav_srv_cbv,
-	descriptor_heap_type_sampler,
-	descriptor_heap_type_dsv
+	eRTV,
+	eUAV_SRV_CBV,
+	eSampler,
+	eDSV
 };
 
 struct DescriptorHeapDesc

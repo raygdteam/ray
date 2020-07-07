@@ -6,7 +6,6 @@
 #include "command_list.hpp"
 #include "descriptor_heap.hpp"
 #include "fence.hpp"
-#include "pipeline_state.hpp"
 #include "root_signature.hpp"
 
 /*
@@ -33,6 +32,8 @@ public:
 	virtual bool CreateFence(IFence*, u64) = 0;
 	virtual bool CreateFenceEvent(IFenceEvent*, pcstr, bool, bool) = 0;
 	virtual bool CreateRootSignature(RootSignatureDesc&, IRootSignature*) = 0;
+	virtual bool CreatePipelineState(PipelineStateDesc&, IPipelineState*) = 0;
+	virtual bool CreateCommittedResource(resources::ResourceDesc&, resources::ResourceUsage, resources::IResource*) = 0;
 	virtual s32 GetDescriptorHandleIncrementSize(DescriptorHeapType) = 0;
 };
 

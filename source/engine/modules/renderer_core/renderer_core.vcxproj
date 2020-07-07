@@ -139,16 +139,19 @@
     <ClInclude Include="fence.hpp" />
     <ClInclude Include="math\vectors.hpp" />
     <ClInclude Include="pipeline_state.hpp" />
+    <ClInclude Include="pixel_shader.hpp" />
     <ClInclude Include="ray_renderer_core_base.hpp" />
     <ClInclude Include="ray_renderer_core_class_helper.hpp" />
-    <ClInclude Include="rect.hpp" />
     <ClInclude Include="renderer.hpp" />
     <ClInclude Include="renderer_commands.hpp" />
-    <ClInclude Include="resources\buffer.hpp" />
+    <ClInclude Include="resources\index_buffer.hpp" />
     <ClInclude Include="resources\resources.hpp" />
     <ClInclude Include="resources\textures.hpp" />
+    <ClInclude Include="resources\vertex_buffer.hpp" />
     <ClInclude Include="root_signature.hpp" />
+    <ClInclude Include="shader.hpp" />
     <ClInclude Include="swap_chain.hpp" />
+    <ClInclude Include="vertex_shader.hpp" />
     <ClInclude Include="viewport.hpp" />
   </ItemGroup>
   <ItemGroup>
@@ -156,9 +159,6 @@
     <ClCompile Include="module_renderer_core.cpp" />
     <ClCompile Include="renderer.cpp" />
     <ClCompile Include="renderer_commands.cpp" />
-    <ClCompile Include="resources\buffer.cpp" />
-    <ClCompile Include="resources\resources.cpp" />
-    <ClCompile Include="resources\textures.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\thirdparty\mimalloc\mimalloc.vcxproj">

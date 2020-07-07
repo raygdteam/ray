@@ -8,10 +8,10 @@ namespace ray::renderer::d3d12::resources
 		D3D12_RESOURCE_STATES before, after;
 		switch (beforeState)
 		{
-		case ray::renderer_core_api::resources::ResourceState::present:
+		case ray::renderer_core_api::resources::ResourceState::ePresent:
 			before = D3D12_RESOURCE_STATE_PRESENT;
 			break;
-		case ray::renderer_core_api::resources::ResourceState::render_target:
+		case ray::renderer_core_api::resources::ResourceState::eRenderTarget:
 			before = D3D12_RESOURCE_STATE_RENDER_TARGET;
 			break;
 		default:
@@ -20,17 +20,17 @@ namespace ray::renderer::d3d12::resources
 		}
 		switch (afterState)
 		{
-		case ray::renderer_core_api::resources::ResourceState::present:
+		case ray::renderer_core_api::resources::ResourceState::ePresent:
 			after = D3D12_RESOURCE_STATE_PRESENT;
 			break;
-		case ray::renderer_core_api::resources::ResourceState::render_target:
+		case ray::renderer_core_api::resources::ResourceState::eRenderTarget:
 			after = D3D12_RESOURCE_STATE_RENDER_TARGET;
 			break;
 		default:
 			return;
 			break;
 		}
-		auto tempResource = CastInstanceTo(ID3D12Resource, inResource);
+		auto tempResource = static_cast<ID3D12Resource*>(inResource->GetInstance());
 		if (GetInstance())
 			delete GetInstance();
 			   
@@ -42,7 +42,7 @@ namespace ray::renderer::d3d12::resources
 	{
 		if (GetInstance())
 		{
-			auto instance = CastInstanceTo(CD3DX12_RESOURCE_BARRIER, this);
+			auto instance = static_cast<CD3DX12_RESOURCE_BARRIER*>(GetInstance());
 			delete instance;
 		}
 	}

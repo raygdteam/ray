@@ -3,6 +3,10 @@
 #include "device.hpp"
 #include "swap_chain.hpp"
 #include "resources/resources.hpp"
+#include "resources/index_buffer.hpp"
+#include "resources/vertex_buffer.hpp"
+#include "vertex_shader.hpp"
+#include "pixel_shader.hpp"
 
 namespace ray::renderer_core_api
 {
@@ -21,6 +25,11 @@ namespace ray::renderer_core_api
 		virtual IGPUDescriptor* CreateGPUDescriptor() = 0;
 		virtual IFenceEvent* CreateFenceEvent() = 0;
 		virtual resources::IResourceBarrier* CreateResourceBarrier() = 0;
+		virtual IRootSignature* CreateRootSignature() = 0;
+		virtual IVertexShader* CreateVertexShader() = 0;
+		virtual IPixelShader* CreatePixelShader() = 0;
+		virtual resources::IVertexBuffer* CreateVertexBuffer() = 0;
+		virtual resources::IIndexBuffer* CreateIndexBuffer() = 0;
 
 	};
 }

@@ -12,9 +12,6 @@
     <ClInclude Include="ray_renderer_core_class_helper.hpp" />
     <ClInclude Include="renderer.hpp" />
     <ClInclude Include="swap_chain.hpp" />
-    <ClInclude Include="resources\buffer.hpp">
-      <Filter>resources</Filter>
-    </ClInclude>
     <ClInclude Include="resources\resources.hpp">
       <Filter>resources</Filter>
     </ClInclude>
@@ -25,21 +22,26 @@
     <ClInclude Include="math\vectors.hpp">
       <Filter>math</Filter>
     </ClInclude>
-    <ClInclude Include="rect.hpp" />
     <ClInclude Include="viewport.hpp" />
     <ClInclude Include="root_signature.hpp" />
+    <ClInclude Include="shader.hpp">
+      <Filter>pipeline</Filter>
+    </ClInclude>
+    <ClInclude Include="vertex_shader.hpp">
+      <Filter>pipeline</Filter>
+    </ClInclude>
+    <ClInclude Include="pixel_shader.hpp">
+      <Filter>pipeline</Filter>
+    </ClInclude>
+    <ClInclude Include="resources\index_buffer.hpp">
+      <Filter>resources</Filter>
+    </ClInclude>
+    <ClInclude Include="resources\vertex_buffer.hpp">
+      <Filter>resources</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="renderer.cpp" />
-    <ClCompile Include="resources\buffer.cpp">
-      <Filter>resources</Filter>
-    </ClCompile>
-    <ClCompile Include="resources\resources.cpp">
-      <Filter>resources</Filter>
-    </ClCompile>
-    <ClCompile Include="resources\textures.cpp">
-      <Filter>resources</Filter>
-    </ClCompile>
     <ClCompile Include="renderer_commands.cpp" />
     <ClCompile Include="math\vectors.cpp">
       <Filter>math</Filter>
@@ -52,6 +54,9 @@
     </Filter>
     <Filter Include="math">
       <UniqueIdentifier>{7aa455b6-93de-4476-bca8-b11c3281084a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="pipeline">
+      <UniqueIdentifier>{5650675c-a7f8-402e-ba12-5a0d27ebeb85}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

@@ -7,6 +7,15 @@ using namespace ray::renderer_core_api;
 
 namespace ray::renderer::d3d12
 {
+    void D3D12Device::SetName(pcstr debugName)
+    {
+        IRRCBase::SetName(debugName);
+
+        wchar_t wPath[256];
+        size_t result;
+        mbstowcs_s(&result, wPath, debugName, 256);
+        static_cast<ID3D12Device*>(GetInstance())->SetName(wPath);
+    }
 
     bool D3D12Device::Initialize()
     {
@@ -57,6 +66,8 @@ namespace ray::renderer::d3d12
             return false;
 
         SetInstance(device);
+
+        return true;
     }
 
     bool D3D12Device::CreateCommandQueue(CommandQueueDesc& desc, ICommandQueue* cmdQueue)
@@ -80,36 +91,14 @@ namespace ray::renderer::d3d12
         ID3D12DescriptorHeap* d3d12DescriptorHeap;
         D3D12_DESCRIPTOR_HEAP_DESC dhDesc = {};
         dhDesc.NumDescriptors = desc._num_descriptors;
-
-        switch (desc._type)
-        {
-        case DescriptorHeapType::descriptor_heap_type_rtv:
-            dhDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_RTV;
-            break;
-
-        case DescriptorHeapType::descriptor_heap_type_dsv:
-            dhDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_DSV;
-            break;
-
-        case DescriptorHeapType::descriptor_heap_type_sampler:
-            dhDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_SAMPLER;
-            break;
-
-        case DescriptorHeapType::descriptor_heap_type_uav_srv_cbv:
-            dhDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
-            break;
-
-        default:
-            return false;
-            break;
-        }
+        dhDesc.Type = utils::ConvertDescriptorHeapTypeToD3D12(desc._type);
 
         if (desc._shader_visible)
             dhDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
         else
             dhDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_NONE;
 
-        hResult = CastInstanceTo(ID3D12Device, this)->CreateDescriptorHeap(&dhDesc, IID_PPV_ARGS(&d3d12DescriptorHeap));
+        hResult = static_cast<ID3D12Device*>(GetInstance())->CreateDescriptorHeap(&dhDesc, IID_PPV_ARGS(&d3d12DescriptorHeap));
         if (FAILED(hResult))
             return false;
 
@@ -120,9 +109,9 @@ namespace ray::renderer::d3d12
 
     void D3D12Device::CreateRenderTargetView(IResource* resource, RenderTargetViewDesc& desc, ICPUDescriptor* descriptor)
     {
-        auto tempDevice = CastInstanceTo(ID3D12Device, this);
-        auto tempResource = CastInstanceTo(ID3D12Resource, resource);
-        auto tempDescriptor = CastInstanceTo(CD3DX12_CPU_DESCRIPTOR_HANDLE, descriptor);
+        auto tempDevice = static_cast<ID3D12Device*>(GetInstance());
+        auto tempResource = static_cast<ID3D12Resource*>(resource->GetInstance());
+        auto tempDescriptor = static_cast<CD3DX12_CPU_DESCRIPTOR_HANDLE*>(descriptor->GetInstance());
         D3D12_RENDER_TARGET_VIEW_DESC rtvDesc;
         rtvDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
         rtvDesc.ViewDimension = D3D12_RTV_DIMENSION_TEXTURE2D;
@@ -132,28 +121,10 @@ namespace ray::renderer::d3d12
 
     bool D3D12Device::CreateCommandAllocator(ICommandAllocator* commandAllocator, CommandListType listType)
     {
-        D3D12_COMMAND_LIST_TYPE type;
-        switch (listType)
-        {
-        case ray::renderer_core_api::CommandListType::direct:
-            type = D3D12_COMMAND_LIST_TYPE_DIRECT;
-            break;
-        case ray::renderer_core_api::CommandListType::bundle:
-            type = D3D12_COMMAND_LIST_TYPE_BUNDLE;
-            break;
-        case ray::renderer_core_api::CommandListType::compute:
-            type = D3D12_COMMAND_LIST_TYPE_COMPUTE;
-            break;
-        case ray::renderer_core_api::CommandListType::copy:
-            type = D3D12_COMMAND_LIST_TYPE_COPY;
-            break;
-        default:
-            return false;
-            break;
-        }
-
+        D3D12_COMMAND_LIST_TYPE type = utils::ConvertCommandListTypeToD3D12(listType);
+        
         ID3D12CommandAllocator* allocator;
-        auto temp = CastInstanceTo(ID3D12Device, this);
+        auto temp = static_cast<ID3D12Device*>(GetInstance());
         auto hResult = temp->CreateCommandAllocator(type, IID_PPV_ARGS(&allocator));
         
         if (FAILED(hResult))
@@ -165,28 +136,10 @@ namespace ray::renderer::d3d12
 
     bool D3D12Device::CreateCommandList(ICommandList* commandList, ICommandAllocator* commandAllocator, IPipelineState* pipelineState, CommandListType listType)
     {
-        D3D12_COMMAND_LIST_TYPE type;
-        switch (listType)
-        {
-        case ray::renderer_core_api::CommandListType::direct:
-            type = D3D12_COMMAND_LIST_TYPE_DIRECT;
-            break;
-        case ray::renderer_core_api::CommandListType::bundle:
-            type = D3D12_COMMAND_LIST_TYPE_BUNDLE;
-            break;
-        case ray::renderer_core_api::CommandListType::compute:
-            type = D3D12_COMMAND_LIST_TYPE_COMPUTE;
-            break;
-        case ray::renderer_core_api::CommandListType::copy:
-            type = D3D12_COMMAND_LIST_TYPE_COPY;
-            break;
-        default:
-            return false;
-            break;
-        }
+        D3D12_COMMAND_LIST_TYPE type = utils::ConvertCommandListTypeToD3D12(listType);
 
-        auto tempDevice = CastInstanceTo(ID3D12Device, this);
-        auto tempAllocator = CastInstanceTo(ID3D12CommandAllocator, commandAllocator);
+        auto tempDevice = static_cast<ID3D12Device*>(GetInstance());
+        auto tempAllocator = static_cast<ID3D12CommandAllocator*>(commandAllocator->GetInstance());
 
         ID3D12PipelineState* tempState = nullptr;
 
@@ -204,7 +157,7 @@ namespace ray::renderer::d3d12
     bool D3D12Device::CreateFence(IFence* outFence, u64 fenceValue)
     {
         ID3D12Fence* fence;
-        auto temp = CastInstanceTo(ID3D12Device, this);
+        auto temp = static_cast<ID3D12Device*>(GetInstance());
         auto hResult = temp->CreateFence(fenceValue, D3D12_FENCE_FLAG_NONE, IID_PPV_ARGS(&fence));
         if (FAILED(hResult))
             return false;
@@ -225,24 +178,7 @@ namespace ray::renderer::d3d12
 
     s32 D3D12Device::GetDescriptorHandleIncrementSize(DescriptorHeapType type)
     {
-        switch (type)
-        {
-        case DescriptorHeapType::descriptor_heap_type_rtv:
-            return CastInstanceTo(ID3D12Device, this)->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
-
-        case DescriptorHeapType::descriptor_heap_type_dsv:
-            return CastInstanceTo(ID3D12Device, this)->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_DSV);
-
-        case DescriptorHeapType::descriptor_heap_type_sampler:
-            return CastInstanceTo(ID3D12Device, this)->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_SAMPLER);
-
-        case DescriptorHeapType::descriptor_heap_type_uav_srv_cbv:
-            return CastInstanceTo(ID3D12Device, this)->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
-
-        default:
-            return 0;
-            break;
-        }
+        return static_cast<ID3D12Device*>(GetInstance())->GetDescriptorHandleIncrementSize(utils::ConvertDescriptorHeapTypeToD3D12(type));
     }
 
     bool D3D12Device::CreateRootSignature(RootSignatureDesc& desc, IRootSignature* inRootSignature)
@@ -255,14 +191,110 @@ namespace ray::renderer::d3d12
             return false;
 
         ID3D12RootSignature* rootSignature;
-        hResult = CastInstanceTo(ID3D12Device, this)->CreateRootSignature(0, signature->GetBufferPointer(), signature->GetBufferSize(), IID_PPV_ARGS(&rootSignature));
+        hResult = static_cast<ID3D12Device*>(GetInstance())->CreateRootSignature(0, signature->GetBufferPointer(), signature->GetBufferSize(), IID_PPV_ARGS(&rootSignature));
+        return hResult == S_OK;
+    }
+
+    bool D3D12Device::CreatePipelineState(PipelineStateDesc& inDesc, IPipelineState* inPipelineState)
+    {
+        D3D12_INPUT_ELEMENT_DESC* inputLayout = new D3D12_INPUT_ELEMENT_DESC[inDesc._input_layout_size];
+        UINT offset = 0;
+        for (size_t i = 0; i < inDesc._input_layout_size; i++)
+        {
+            if (i == 0)
+                offset = 0;
+            else
+                offset += utils::GetShaderTypeSize(inDesc._input_layout[i - 1]._type);
+
+            inputLayout[i] = { inDesc._input_layout[i]._semantic_name, 0, 
+                                utils::ConvertShaderTypeToDXGI(inDesc._input_layout[i]._type), 0, 
+                                offset,   
+                                D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 };
+
+        }
+
+        // fill out an input layout description structure
+        D3D12_INPUT_LAYOUT_DESC inputLayoutDesc = {};
+
+        // we can get the number of elements in an array by "sizeof(array) / sizeof(arrayElementType)"
+        inputLayoutDesc.NumElements = sizeof(inputLayout) / sizeof(D3D12_INPUT_ELEMENT_DESC);
+        inputLayoutDesc.pInputElementDescs = inputLayout;
+
+        DXGI_SAMPLE_DESC sampleDesc = {};
+        sampleDesc.Count = 1;
+
+        D3D12_GRAPHICS_PIPELINE_STATE_DESC psoDesc = {}; // a structure to define a pso
+        psoDesc.InputLayout = inputLayoutDesc; // the structure describing our input layout
+        psoDesc.pRootSignature = static_cast<ID3D12RootSignature*>(inDesc._root_signature->GetInstance()); // the root signature that describes the input data this pso needs
+        psoDesc.VS = *(static_cast<D3D12_SHADER_BYTECODE*>(inDesc._vs->GetBytecode())); // structure describing where to find the vertex shader bytecode and how large it is
+        psoDesc.PS = *(static_cast<D3D12_SHADER_BYTECODE*>(inDesc._ps->GetBytecode())); // same as VS but for pixel shader
+        psoDesc.PrimitiveTopologyType = utils::ConvertPrimitiveTopologyTypeToD3D12(inDesc._topology); // type of topology we are drawing
+        psoDesc.RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM; // format of the render target
+        psoDesc.SampleDesc = sampleDesc; // must be the same sample description as the swapchain and depth/stencil buffer
+        psoDesc.SampleMask = 0xffffffff; // sample mask has to do with multi-sampling. 0xffffffff means point sampling is done
+        psoDesc.RasterizerState = CD3DX12_RASTERIZER_DESC(D3D12_DEFAULT); // a default rasterizer state.
+        psoDesc.BlendState = CD3DX12_BLEND_DESC(D3D12_DEFAULT); // a default blent state.
+        psoDesc.NumRenderTargets = inDesc._num_render_targets; // we are only binding one render target
+
+        ID3D12PipelineState* pipelineStateObject;
+
+        // create the pso
+        auto hResult = static_cast<ID3D12Device*>(GetInstance())->CreateGraphicsPipelineState(&psoDesc, IID_PPV_ARGS(&pipelineStateObject));
+        if (FAILED(hResult))
+        {
+            return false;
+        }
+
+        inPipelineState->SetInstance(pipelineStateObject);
+
+        return true;
+    }
+
+    bool D3D12Device::CreateCommittedResource(ResourceDesc& inDesc, ResourceUsage usage, IResource* outResource)
+    {
+        auto tempDevice = static_cast<ID3D12Device*>(GetInstance());
+        auto tempResource = static_cast<ID3D12Resource*>(outResource->GetInstance());
+        CD3DX12_RESOURCE_DESC desc;
+
+        switch (inDesc._resource_type)
+        {
+        case ray::renderer_core_api::resources::ResourceType::eBuffer:
+            desc = CD3DX12_RESOURCE_DESC::Buffer(inDesc._width);
+            break;
+        case ray::renderer_core_api::resources::ResourceType::eTexture1D:
+            desc = CD3DX12_RESOURCE_DESC::Tex1D(utils::ConvertShaderTypeToDXGI(inDesc._shader_type), inDesc._width);
+            break;
+        case ray::renderer_core_api::resources::ResourceType::eTexture2D:
+            desc = desc = CD3DX12_RESOURCE_DESC::Tex2D(utils::ConvertShaderTypeToDXGI(inDesc._shader_type), inDesc._width, inDesc._height);
+            break;
+        case ray::renderer_core_api::resources::ResourceType::eTexture3D:
+            break;
+        default:
+            break;
+        }
+
+        D3D12_RESOURCE_STATES state;
+        if (usage == ResourceUsage::eDefault)
+            state = D3D12_RESOURCE_STATE_COPY_DEST;
+        else if (usage == ResourceUsage::eUpload)
+            state = D3D12_RESOURCE_STATE_GENERIC_READ;
+
+        auto hResult = tempDevice->CreateCommittedResource(
+            &CD3DX12_HEAP_PROPERTIES(utils::ConvertResourceUsageToHeapType(usage)), // a default heap
+            D3D12_HEAP_FLAG_NONE, // no flags
+            &desc, 
+            state, 
+            nullptr, // optimized clear value must be null for this type of resource. used for render targets and depth/stencil buffers
+            IID_PPV_ARGS(&tempResource));
+
+
         return hResult == S_OK;
     }
 
     D3D12Device::~D3D12Device()
     {
         if (GetInstance())
-            CastInstanceTo(ID3D12Device, this)->Release();
+            static_cast<ID3D12Device*>(GetInstance())->Release();
     }
 
 }

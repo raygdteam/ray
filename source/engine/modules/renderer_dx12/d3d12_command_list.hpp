@@ -12,6 +12,7 @@ namespace ray::renderer::d3d12
 		void ResourceBarrier(IResourceBarrier* inResourceBarrier, u32 numBarriers) override;
 		void OMSetRenderTargetView(u32 numRTs, ICPUDescriptor* inRtvHandle, ICPUDescriptor* inDsHandle, bool bRTsSingleHandleToDescriptorRange) override;
 		void ClearRenderTarget(ICPUDescriptor* inRtHandle, float* rgba) override;
+		u64 UpdateSubresource(IResource* desc, IResource* src, u64 offset, u64 indexSubresource, u64 subresourcesCount) override;
 		bool Close() override;
 	};
 }

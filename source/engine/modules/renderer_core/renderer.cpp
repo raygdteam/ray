@@ -48,12 +48,12 @@ namespace ray::renderer_core_api
 		DescriptorHeapDesc rtvHeapDesc;
 		rtvHeapDesc._num_descriptors = FRAME_BUFFER_COUNT;
 		rtvHeapDesc._shader_visible = false;
-		rtvHeapDesc._type = DescriptorHeapType::descriptor_heap_type_rtv;
+		rtvHeapDesc._type = DescriptorHeapType::eRTV;
 		_device->CreateDescriptorHeap(rtvHeapDesc, _descriptor_heap);
 
 		ICPUDescriptor* rtvDescriptor = _class_helper->CreateCPUDescriptor();
 		rtvDescriptor->Initialize(_descriptor_heap);
-		rtvDescriptor->SetDescriptorSize(_device->GetDescriptorHandleIncrementSize(DescriptorHeapType::descriptor_heap_type_rtv));
+		rtvDescriptor->SetDescriptorSize(_device->GetDescriptorHandleIncrementSize(DescriptorHeapType::eRTV));
 
 		for (u32 i = 0; i < FRAME_BUFFER_COUNT; i++)
 		{
@@ -66,7 +66,7 @@ namespace ray::renderer_core_api
 			if (!rtvDescriptor->Offset(1))
 				return;
 		
-			if (!_device->CreateCommandAllocator(_command_allocators[i], CommandListType::direct))
+			if (!_device->CreateCommandAllocator(_command_allocators[i], CommandListType::eDirect))
 				return;
 
 			_fence_values[i] = 0;
@@ -75,7 +75,7 @@ namespace ray::renderer_core_api
 				return;
 		}
 
-		if (!_device->CreateCommandList(_command_list, _command_allocators[0], nullptr, CommandListType::direct))
+		if (!_device->CreateCommandList(_command_list, _command_allocators[0], nullptr, CommandListType::eDirect))
 			return;
 
 		_command_list->Close();
@@ -93,7 +93,7 @@ namespace ray::renderer_core_api
 
 		ICPUDescriptor* rtvHandle = _class_helper->CreateCPUDescriptor();
 		rtvHandle->Initialize(_descriptor_heap);
-		rtvHandle->SetDescriptorSize(_device->GetDescriptorHandleIncrementSize(DescriptorHeapType::descriptor_heap_type_rtv));
+		rtvHandle->SetDescriptorSize(_device->GetDescriptorHandleIncrementSize(DescriptorHeapType::eRTV));
 		rtvHandle->Offset(_frame_index);
 
 		result = _command_allocators[_frame_index]->Reset();
@@ -102,7 +102,7 @@ namespace ray::renderer_core_api
 		result = _command_list->Reset(_command_allocators[_frame_index], nullptr);
 		SetRunning(result);
 
-		_resource_barrier->Transition(_render_targets[_frame_index], resources::ResourceState::present, resources::ResourceState::render_target);
+		_resource_barrier->Transition(_render_targets[_frame_index], resources::ResourceState::ePresent, resources::ResourceState::eRenderTarget);
 		_command_list->ResourceBarrier(_resource_barrier, 1);
 
 		_command_list->OMSetRenderTargetView(1, rtvHandle, nullptr, false);
@@ -110,7 +110,7 @@ namespace ray::renderer_core_api
 		float clearColor[] = { 1.f, 0.f, 0.f, 1.f };
 		_command_list->ClearRenderTarget(rtvHandle, clearColor);
 
-		_resource_barrier->Transition(_render_targets[_frame_index], resources::ResourceState::render_target, resources::ResourceState::present);
+		_resource_barrier->Transition(_render_targets[_frame_index], resources::ResourceState::eRenderTarget, resources::ResourceState::ePresent);
 		_command_list->ResourceBarrier(_resource_barrier, 1);
 
 	 	result = _command_list->Close();
