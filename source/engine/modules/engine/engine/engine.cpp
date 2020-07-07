@@ -2,6 +2,8 @@
 #include "engine.hpp"
 #include <app_framework/base/platform_window.hpp>
 
+#include "state/state.hpp"
+
 
 using namespace ray::core;
 
@@ -21,8 +23,12 @@ void RayEngine::Initialize(IEngineLoop* engineLoop)
 	window->Initialize();
 	window->CreateWindow("RAY_ENGINE");
 
+	// Load renderer module
+	auto res = RayState()->ModuleManager->LoadModule("renderer_dx12");
+	if (!res.IsSuccess()) __debugbreak();
+
 	_renderer = new IRenderer;
-	_renderer->Initialize(window);
+	_renderer->Initialize(window, res.Data);
 	
 	window->SetWindowVisibility(true);
 

@@ -2,7 +2,7 @@
 #include <Windows.h>
 #include <shellapi.h>
 #include <stdio.h>
-#include <core/memory/new_delete_override.hpp>
+// #include <core/memory/new_delete_override.hpp>
 
 
 /** Exports for video drivers to request the most powerful GPU available. Mainly for OGL/DX11 because Vulkan allows app to choose the GPU. */

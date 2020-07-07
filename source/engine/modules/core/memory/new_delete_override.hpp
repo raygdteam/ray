@@ -1,3 +1,8 @@
+#pragma once
+
+#if defined(_RELEASE) && !defined(RAY_BUILD_CORE)
+#else
+
 #include "mimalloc/mimalloc.h"
 
 void operator delete(void* p) noexcept { mi_free(p); };
@@ -24,4 +29,6 @@ void* operator new(std::size_t n, std::align_val_t al)   noexcept(false) { retur
 void* operator new[](std::size_t n, std::align_val_t al) noexcept(false) { return mi_new_aligned(n, static_cast<size_t>(al)); }
 void* operator new  (std::size_t n, std::align_val_t al, const std::nothrow_t&) noexcept { return mi_new_aligned_nothrow(n, static_cast<size_t>(al)); }
 void* operator new[](std::size_t n, std::align_val_t al, const std::nothrow_t&) noexcept { return mi_new_aligned_nothrow(n, static_cast<size_t>(al)); }
+#endif
+
 #endif

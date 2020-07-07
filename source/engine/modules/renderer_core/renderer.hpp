@@ -16,7 +16,7 @@ namespace ray::renderer_core_api
 	{
 		friend class RendererCommands;
 
-		void Initialize(ray::core::IPlatformWindow* window);
+		void Initialize(ray::core::IPlatformWindow* window, IModule* rendererModule);
 		void Draw(); //temporary
 		void Shutdown();
 

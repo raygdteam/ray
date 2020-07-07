@@ -8,10 +8,9 @@
 namespace ray::renderer_core_api
 {
 
-	void IRenderer::Initialize(ray::core::IPlatformWindow* window)
+	void IRenderer::Initialize(ray::core::IPlatformWindow* window, IModule* rendererModule)
 	{
-		auto res = RayState()->ModuleManager->LoadModule("renderer_dx12");
-		_class_helper = reinterpret_cast<IRRCClassHelper*>(res.Data->QueryModuleInterface());
+		_class_helper = static_cast<IRRCClassHelper*>(rendererModule->QueryModuleInterface());
 
 		_device = _class_helper->CreateDevice();
 		_command_list = _class_helper->CreateCommandList();
@@ -170,6 +169,6 @@ namespace ray::renderer_core_api
 		delete _fence_event;
 		delete _resource_barrier;
 		delete _swap_chain;
-		delete _class_helper;
+		// delete _class_helper;
 	}
 }
