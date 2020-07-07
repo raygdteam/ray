@@ -24,6 +24,11 @@ Logger::Logger(pcstr name)
 	if (gTimestamp == 0) gTimestamp = GetTickCount64();
 }
 
+Logger::~Logger()
+{
+	free(_name);
+}
+
 void Logger::Log(pcstr msg)
 {
 	char str[512] = {};
