@@ -108,7 +108,7 @@ namespace ray::renderer_core_api
 		_command_queue->SetCommandLists(&_command_list, 1);
 		_command_queue->ExecuteCommandLists();
 
-		_vertex_buffer->SetStride(Vertex::GetSize());
+		_vertex_buffer->SetStride(u32(Vertex::GetSize()));
 	}
 
 	void RendererCommands::DrawIndexed(Vertex* vertices, size_t vertexCount, u32* indices, size_t indexCount)

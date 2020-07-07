@@ -15,7 +15,7 @@
 #include <renderer_core/resources/textures.hpp>
 #include <renderer_core/vertex_shader.hpp>
 #include <renderer_core/pixel_shader.hpp>
-#include <renderer_core/rect.hpp>
+// #include <renderer_core/rect.hpp>
 #include <renderer_core/root_signature.hpp>
 #include <renderer_core/viewport.hpp>
 

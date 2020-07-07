@@ -1,4 +1,3 @@
-#define _CRT_SECURE_NO_WARNINGS
 #include <assert.h>
 #include <Windows.h>
 #include <core/core.hpp>
@@ -19,7 +18,7 @@ Logger::Logger(pcstr name)
 	// Log name can be max. 16 chars
 	if (strlen(name) > 16) assert(false);
 
-	strcpy(_name, name);
+	strcpy_s(_name, strlen(name), name);
 
 	if (gTimestamp == 0) gTimestamp = GetTickCount64();
 }
@@ -32,23 +31,23 @@ Logger::~Logger()
 void Logger::Log(pcstr msg)
 {
 	char str[512] = {};
-	strcat(str, "{");
-	strcat(str, _name);
+	strcat_s(str, "{");
+	strcat_s(str, _name);
 
 	for (size_t i = strlen(_name); i <= 17; i++)
-		strcat(str, " ");
+		strcat_s(str, " ");
 
 	char time[64] = {};
-	_itoa(int(GetTickCount64() - gTimestamp), time, 10);
+	_itoa_s(int(GetTickCount64() - gTimestamp), time, 10);
 
-	strcat(str, time);
+	strcat_s(str, time);
 
 	for (size_t i = strlen(time); i <= 10; i++)
-		strcat(str, " ");
+		strcat_s(str, " ");
 
-	strcat(str, "}   ");
-	strcat(str, msg);
-	strcat(str, "\n");
+	strcat_s(str, "}   ");
+	strcat_s(str, msg);
+	strcat_s(str, "\n");
 
 	OutputDebugStringA(str);
 

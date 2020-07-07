@@ -1,3 +1,4 @@
+#include "pch.hpp"
 #include <core/core.hpp>
 #include <core/memory/new_delete_override.hpp>
 #include <core/module/module.hpp>
