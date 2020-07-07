@@ -107,8 +107,8 @@ namespace ray::renderer::d3d12
 	};
 }
 
-extern "C" __declspec(dllexport)
+/*extern "C" __declspec(dllexport)
 IRRCClassHelper* GetRRCClassHelper()
 {
 	return new ray::renderer::d3d12::D3D12RRCClassHelper;
-}
+}*/

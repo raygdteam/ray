@@ -3,14 +3,15 @@
 #include <engine/engine/engine_def.hpp>
 
 #include <core/module/module.hpp>
+#include <core/object/object_db.hpp>
 
 #include <engine/engine/engine.hpp>
 
 struct IRayState
 {
 	/* core */
-	
 	ModuleManager* ModuleManager;
+	ObjectDb* ObjectDb;
 
 	/* engine */
 	ray::IEngine* Engine;

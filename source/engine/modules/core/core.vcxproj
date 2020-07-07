@@ -21,12 +21,15 @@
     <ClInclude Include="memory\new_delete_override.hpp" />
     <ClInclude Include="module\module.hpp" />
     <ClInclude Include="module\module_meta.hpp" />
+    <ClInclude Include="object\object.hpp" />
+    <ClInclude Include="object\object_db.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="core_entry_point.cpp" />
     <ClCompile Include="lib\thread.cpp" />
     <ClCompile Include="log\log.cpp" />
     <ClCompile Include="module\module.cpp" />
+    <ClCompile Include="object\object_db.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\thirdparty\mimalloc\mimalloc.vcxproj">

@@ -3,15 +3,15 @@
 //ñäåëàéòå óæå èíòåðôåéñ äëÿ ðàáîòû ñ ìîäóëÿìè
 #include <Windows.h>
 
+#include <engine/state/state.hpp>
+
 namespace ray::renderer_core_api
 {
 
 	void IRenderer::Initialize(ray::core::IPlatformWindow* window)
 	{
-		HMODULE hModule = LoadLibraryA("libray-renderer_dx12");
-		GetRRCClassHelper_t getClassHelper = reinterpret_cast<GetRRCClassHelper_t>(GetProcAddress(hModule, "GetRRCClassHelper"));
-
-		_class_helper = getClassHelper();
+		auto res = RayState()->ModuleManager->LoadModule("renderer_dx12");
+		_class_helper = reinterpret_cast<IRRCClassHelper*>(res.Data->QueryModuleInterface());
 
 		_device = _class_helper->CreateDevice();
 		_command_list = _class_helper->CreateCommandList();

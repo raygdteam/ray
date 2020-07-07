@@ -14,6 +14,9 @@
     <ClInclude Include="state\state.hpp">
       <Filter>state</Filter>
     </ClInclude>
+    <ClInclude Include="world\world.hpp">
+      <Filter>world</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="engine">
@@ -24,6 +27,9 @@
     </Filter>
     <Filter Include="state">
       <UniqueIdentifier>{04de3668-c600-4f1d-856f-80d6a510882a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="world">
+      <UniqueIdentifier>{2a35b505-1c90-4de7-9705-98d20c9672d1}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

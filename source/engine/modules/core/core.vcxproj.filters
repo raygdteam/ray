@@ -17,6 +17,12 @@
     <ClInclude Include="lib\thread.hpp">
       <Filter>lib</Filter>
     </ClInclude>
+    <ClInclude Include="object\object.hpp">
+      <Filter>object</Filter>
+    </ClInclude>
+    <ClInclude Include="object\object_db.hpp">
+      <Filter>object</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="core_entry_point.cpp" />
@@ -28,6 +34,9 @@
     </ClCompile>
     <ClCompile Include="lib\thread.cpp">
       <Filter>lib</Filter>
+    </ClCompile>
+    <ClCompile Include="object\object_db.cpp">
+      <Filter>object</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -42,6 +51,9 @@
     </Filter>
     <Filter Include="lib">
       <UniqueIdentifier>{8042c20f-e8ea-4910-9c18-8e0c9a020aec}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="object">
+      <UniqueIdentifier>{38f7b246-aad7-4f88-b312-9428bd6b8c4a}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

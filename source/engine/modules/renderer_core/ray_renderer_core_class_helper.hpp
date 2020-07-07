@@ -1,5 +1,6 @@
 #pragma once
 
+#include <core/module/module_meta.hpp>
 #include "device.hpp"
 #include "swap_chain.hpp"
 #include "resources/resources.hpp"
@@ -10,7 +11,7 @@
 
 namespace ray::renderer_core_api
 {
-	class IRRCClassHelper
+	class IRRCClassHelper : public IModuleInterface
 	{
 	public:
 		virtual ICommandAllocator* CreateCommandAllocator() = 0;
