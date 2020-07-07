@@ -8,7 +8,7 @@
 using pstr = char*;
 using pcstr = const char*;
 
-static u64 gTimestamp;
+static u64 gTimestamp = 0;
 
 
 Logger::Logger(pcstr name)
@@ -20,6 +20,8 @@ Logger::Logger(pcstr name)
 	if (strlen(name) > 16) assert(false);
 
 	strcpy(_name, name);
+
+	if (gTimestamp == 0) gTimestamp = GetTickCount64();
 }
 
 void Logger::Log(pcstr msg)

@@ -3,9 +3,6 @@
 #include <vector>
 #include <renderer_core/renderer.hpp>
 
-#include <input/listener.hpp>
-#include <core/log/log.hpp>
-
 using namespace ray::renderer_core_api;
 
 namespace ray
@@ -37,13 +34,12 @@ struct IEngine
 /**
  *  The main Ray Engine class.
  */
-class RAY_ENGINE_API RayEngine : public IEngine, public input::listener
+class RAY_ENGINE_API RayEngine : public IEngine
 {
 	IEngineLoop* _engineLoop;
 	std::vector<pcstr> _rendererInterface;
 	void* _window;
 	IRenderer* _renderer;
-	Logger* _logger;
 
 public:
 	RayEngine();
@@ -51,23 +47,6 @@ public:
 
 	void Initialize(IEngineLoop* engineLoop) override;
 	void Tick() override;
-
-
-	// Унаследовано через listener
-	virtual void on_key_down(int) override;
-
-	virtual void on_key_up(int) override;
-
-	virtual void on_mouse_move(int, int) override;
-
-	virtual void on_left_mouse_down(int, int) override;
-
-	virtual void on_left_mouse_up(int, int) override;
-
-	virtual void on_right_mouse_down(int, int) override;
-
-	virtual void on_right_mouse_up(int, int) override;
-
 };
 
 // TODO: Phew! Global variable!
