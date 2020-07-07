@@ -12,9 +12,9 @@ namespace ray::input
 {
 
 void RAY_INPUT_API Initialize();
-void RAY_INPUT_API update();
+void RAY_INPUT_API Update();
 
-void RAY_INPUT_API add_listener(ray::input::listener*);
-void RAY_INPUT_API add_remove(ray::input::listener*);
+void RAY_INPUT_API AddListener(ray::input::Listener*);
+void RAY_INPUT_API AddRemove(ray::input::Listener*);
 	
 }

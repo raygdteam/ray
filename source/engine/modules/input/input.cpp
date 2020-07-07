@@ -6,20 +6,20 @@
 namespace ray::input
 {
 	
-std::unordered_set<ray::input::listener*> set_listeners;
-POINT old_mouse_position = {};
+std::unordered_set<ray::input::Listener*> gSetListeners;
+POINT gOldMousePosition = {};
 
-bool keys_state[256] = {};
-bool old_keys_state[256] = {};
+bool gKeysState[256] = {};
+bool gOldKeysState[256] = {};
 
 void Initialize()
 {
 	for (u16 i = 'A'; i < 'Z'; ++i)
 	{
-		keys_state[i] = old_keys_state[i] = GetKeyState(i) & 0x8000;
+		gKeysState[i] = gOldKeysState[i] = GetKeyState(i) & 0x8000;
 	}
 
-	GetCursorPos(&old_mouse_position);
+	GetCursorPos(&gOldMousePosition);
 }
 
 void FireEvent_Keyboard(u16 key, bool state);
@@ -29,12 +29,12 @@ void update()
 	/* 1. Update keyboard state. */
 	for (u16 i = 'A'; i < 'Z'; ++i)
 	{
-		keys_state[i] = GetKeyState(i) & 0x8000;
+		gKeysState[i] = GetKeyState(i) & 0x8000;
 
-		if (keys_state[i] != old_keys_state[i])
+		if (gKeysState[i] != gOldKeysState[i])
 		{
-			FireEvent_Keyboard(i, keys_state[i]);
-			old_keys_state[i] = keys_state[i];
+			FireEvent_Keyboard(i, gKeysState[i]);
+			gOldKeysState[i] = gKeysState[i];
 		}
 	}
 
@@ -43,19 +43,19 @@ void update()
 
 void FireEvent_Keyboard(u16 key, bool state)
 {
-	for (auto& listener : set_listeners)
-		if (state) listener->on_key_down(key);
-		else listener->on_key_up(key);
+	for (auto& listener : gSetListeners)
+		if (state) listener->OnKeyDown(key);
+		else listener->OnKeyUp(key);
 }
 
-void add_listener(ray::input::listener* listener)
+void AddListener(ray::input::Listener* listener)
 {
-	set_listeners.insert(listener);
+	gSetListeners.insert(listener);
 }
 
-void remove_listener(ray::input::listener* listener)
+void RemoveListeners(ray::input::Listener* listener)
 {
-	set_listeners.erase(listener);
+	gSetListeners.erase(listener);
 }
 	
 }

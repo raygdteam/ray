@@ -2,23 +2,23 @@
 
 namespace ray::input
 {
-	class listener
+	class Listener
 	{
 	public:
-		listener() {}
-		~listener() = default;
+		Listener() {}
+		~Listener() = default;
 
 		// keyboard pure virtual callback functions 
-		virtual void on_key_down(int) = 0;
-		virtual void on_key_up(int) = 0;
+		virtual void OnKeyDown(int) = 0;
+		virtual void OnKeyUp(int) = 0;
 
 		// mouse pure virtual callback functions
-		virtual void on_mouse_move(int, int) = 0;
+		virtual void OnMouseMove(int, int) = 0;
 
-		virtual void on_left_mouse_down(int, int) = 0;
-		virtual void on_left_mouse_up(int, int) = 0;
+		virtual void OnLeftMouseDown(int, int) = 0;
+		virtual void OlLeftMouseUp(int, int) = 0;
 
-		virtual void on_right_mouse_down(int, int) = 0;
-		virtual void on_right_mouse_up(int, int) = 0;
+		virtual void OnRightMouseDown(int, int) = 0;
+		virtual void OnRightMouseUp(int, int) = 0;
 	};
 }
