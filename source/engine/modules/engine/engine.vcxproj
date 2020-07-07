@@ -138,10 +138,12 @@
     <ClInclude Include="engine\engine.hpp" />
     <ClInclude Include="engine\engine_def.hpp" />
     <ClInclude Include="pch.hpp" />
+    <ClInclude Include="state\state.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="engine\engine.cpp" />
     <ClCompile Include="module_engine.cpp" />
+    <ClCompile Include="state\state.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\thirdparty\mimalloc\mimalloc.vcxproj">

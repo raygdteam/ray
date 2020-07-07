@@ -15,5 +15,3 @@ class RAY_CORE_API ModuleManager
 public:
 	Result<IModule*, ModuleLoadError> LoadModule(pcstr name);
 };
-
-extern RAY_CORE_API ModuleManager* gModuleManager;

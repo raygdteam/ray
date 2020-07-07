@@ -10,7 +10,7 @@ int RayMain()
 	engineLoop.PreInitialize();
 	engineLoop.Initialize();
 
-	if(ray::IsEngineExitRequested())
+	if (ray::IsEngineExitRequested())
 	{
 		// TODO: xxx
 	}

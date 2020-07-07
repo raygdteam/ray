@@ -88,5 +88,3 @@ Result<IModule*, ModuleLoadError> ModuleManager::LoadModule(pcstr name)
 	return { module, eSuccess };
 }
 
-// TODO(dark): rewrite it to some kind of GlobalState
-RAY_CORE_API ModuleManager* gModuleManager = new ModuleManager();

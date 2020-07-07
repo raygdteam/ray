@@ -32,6 +32,7 @@ void RayEngine::Initialize(IEngineLoop* engineLoop)
 void RayEngine::Tick()
 {
 	static_cast<core::IPlatformWindow*>(_window)->Update();
+	
 	//for debugging
 	bool bShouldClose = static_cast<core::IPlatformWindow*>(_window)->ShouldClose();
 	if (bShouldClose)
@@ -39,7 +40,7 @@ void RayEngine::Tick()
 		ray::RequestEngineExit(true);
 		return;
 	}
-	 _renderer->Draw();
+	_renderer->Draw();
 }
 
 RayEngine::~RayEngine()

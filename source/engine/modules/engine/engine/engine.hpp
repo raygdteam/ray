@@ -1,6 +1,5 @@
 #pragma once
 #include "engine/engine/engine_def.hpp"
-#include <vector>
 #include <renderer_core/renderer.hpp>
 
 using namespace ray::renderer_core_api;
@@ -37,9 +36,8 @@ struct IEngine
 class RAY_ENGINE_API RayEngine : public IEngine
 {
 	IEngineLoop* _engineLoop;
-	std::vector<pcstr> _rendererInterface;
-	void* _window;
-	IRenderer* _renderer;
+	void* _window = nullptr;
+	IRenderer* _renderer = nullptr;
 
 public:
 	RayEngine();
@@ -48,9 +46,6 @@ public:
 	void Initialize(IEngineLoop* engineLoop) override;
 	void Tick() override;
 };
-
-// TODO: Phew! Global variable!
-extern RAY_ENGINE_API IEngine* gEngine;
 
 /** Request engine exit - be it normal exit or crash. */
 RAY_ENGINE_API bool IsEngineExitRequested() noexcept;
