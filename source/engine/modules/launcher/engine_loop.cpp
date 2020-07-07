@@ -1,15 +1,21 @@
 #include "engine_loop.hpp"
-#include "../core/core.hpp"
+#include <core/core.hpp>
+#include <engine/state/state.hpp>
 
 
 namespace ray::launcher
 {
-
+	
 void EngineLoop::PreInitialize()
 {
-	// core::platform::PlatformFS::Initialize();
+	/* 1. Initialize RayState and vital core components. */
+	/* First call to RayState() will allocate the memory. */
+	IRayState* state = RayState();
+	state->ModuleManager = new ModuleManager();
 
+	/* 2. Create the Engine class. */
 	_engine = new RayEngine();
+	state->Engine = _engine;
 }
 
 void EngineLoop::Initialize()
@@ -26,5 +32,5 @@ EngineLoop::~EngineLoop()
 {
 	delete _engine;
 }
-
+	
 }

@@ -1,11 +1,7 @@
 #pragma once
 #include "engine/engine/engine_def.hpp"
-#include <vector>
 #include <renderer_core/renderer.hpp>
 #include <renderer_core/renderer_commands.hpp>
-
-#include <input/listener.hpp>
-#include <core/log/log.hpp>
 
 using namespace ray::renderer_core_api;
 
@@ -38,13 +34,11 @@ struct IEngine
 /**
  *  The main Ray Engine class.
  */
-class RAY_ENGINE_API RayEngine : public IEngine, public input::listener
+class RAY_ENGINE_API RayEngine : public IEngine
 {
 	IEngineLoop* _engineLoop;
-	std::vector<pcstr> _rendererInterface;
-	void* _window;
-	IRenderer* _renderer;
-	Logger* _logger;
+	void* _window = nullptr;
+	IRenderer* _renderer = nullptr;
 
 public:
 	RayEngine();
@@ -52,27 +46,7 @@ public:
 
 	void Initialize(IEngineLoop* engineLoop) override;
 	void Tick() override;
-
-
-	// Унаследовано через listener
-	virtual void on_key_down(int) override;
-
-	virtual void on_key_up(int) override;
-
-	virtual void on_mouse_move(int, int) override;
-
-	virtual void on_left_mouse_down(int, int) override;
-
-	virtual void on_left_mouse_up(int, int) override;
-
-	virtual void on_right_mouse_down(int, int) override;
-
-	virtual void on_right_mouse_up(int, int) override;
-
 };
-
-// TODO: Phew! Global variable!
-extern RAY_ENGINE_API IEngine* gEngine;
 
 /** Request engine exit - be it normal exit or crash. */
 RAY_ENGINE_API bool IsEngineExitRequested() noexcept;

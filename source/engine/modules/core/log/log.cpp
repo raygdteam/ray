@@ -8,7 +8,7 @@
 using pstr = char*;
 using pcstr = const char*;
 
-static u64 gTimestamp;
+static u64 gTimestamp = 0;
 
 
 Logger::Logger(pcstr name)
@@ -20,6 +20,13 @@ Logger::Logger(pcstr name)
 	if (strlen(name) > 16) assert(false);
 
 	strcpy(_name, name);
+
+	if (gTimestamp == 0) gTimestamp = GetTickCount64();
+}
+
+Logger::~Logger()
+{
+	free(_name);
 }
 
 void Logger::Log(pcstr msg)
@@ -48,16 +55,4 @@ void Logger::Log(pcstr msg)
 #if defined(RAY_DEBUG) || defined(RAY_DEVELOPMENT)
 	printf(str);
 #endif
-}
-
-
-extern "C" void __declspec(dllexport) hai()
-{
-	gTimestamp = GetTickCount64();
-
-	Logger a("core");
-	a.Log("AAAAAAAAAAAAAAA");
-
-	Logger b("renderer_dx12");
-	b.Log("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
 }

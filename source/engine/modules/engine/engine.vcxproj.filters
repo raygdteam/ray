@@ -8,10 +8,22 @@
     <ClInclude Include="engine\engine_def.hpp">
       <Filter>engine</Filter>
     </ClInclude>
+    <ClInclude Include="bundle\bundle_meta.hpp">
+      <Filter>bundle</Filter>
+    </ClInclude>
+    <ClInclude Include="state\state.hpp">
+      <Filter>state</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="engine">
       <UniqueIdentifier>{e27168b1-9c42-48fd-97c5-e5dd4e7305bc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="bundle">
+      <UniqueIdentifier>{6226b311-7e8a-409b-bbe0-f41d9ad09471}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="state">
+      <UniqueIdentifier>{04de3668-c600-4f1d-856f-80d6a510882a}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -19,5 +31,8 @@
       <Filter>engine</Filter>
     </ClCompile>
     <ClCompile Include="module_engine.cpp" />
+    <ClCompile Include="state\state.cpp">
+      <Filter>state</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

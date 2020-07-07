@@ -26,6 +26,7 @@
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v142</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
+    <EnableUnitySupport>true</EnableUnitySupport>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
@@ -33,6 +34,7 @@
     <PlatformToolset>v142</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
+    <EnableUnitySupport>true</EnableUnitySupport>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Development|x64'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
@@ -40,6 +42,7 @@
     <PlatformToolset>v142</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
+    <EnableUnitySupport>true</EnableUnitySupport>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
@@ -131,13 +134,16 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="bundle\bundle_meta.hpp" />
     <ClInclude Include="engine\engine.hpp" />
     <ClInclude Include="engine\engine_def.hpp" />
     <ClInclude Include="pch.hpp" />
+    <ClInclude Include="state\state.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="engine\engine.cpp" />
     <ClCompile Include="module_engine.cpp" />
+    <ClCompile Include="state\state.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\thirdparty\mimalloc\mimalloc.vcxproj">
@@ -148,9 +154,6 @@
     </ProjectReference>
     <ProjectReference Include="..\core\core.vcxproj">
       <Project>{134c88c3-3c53-4b8b-8884-95f2a2283cea}</Project>
-    </ProjectReference>
-    <ProjectReference Include="..\input\input.vcxproj">
-      <Project>{a0c4e72f-34fb-4871-9c79-cd18b7743e2f}</Project>
     </ProjectReference>
     <ProjectReference Include="..\renderer_core\renderer_core.vcxproj">
       <Project>{1575e148-c79e-402e-ac64-89e9f37b477b}</Project>

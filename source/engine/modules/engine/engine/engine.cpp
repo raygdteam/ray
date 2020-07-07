@@ -2,7 +2,6 @@
 #include "engine.hpp"
 #include <app_framework/base/platform_window.hpp>
 
-#include <input/input.hpp>
 
 using namespace ray::core;
 
@@ -25,10 +24,6 @@ void RayEngine::Initialize(IEngineLoop* engineLoop)
 	_renderer = new IRenderer;
 	_renderer->Initialize(window);
 	
-	_logger = new Logger("engine");
-
-	input::add_listener(this);
-
 	window->SetWindowVisibility(true);
 
 	_window = window;
@@ -36,9 +31,8 @@ void RayEngine::Initialize(IEngineLoop* engineLoop)
 
 void RayEngine::Tick()
 {
-	input::update();
-
 	static_cast<core::IPlatformWindow*>(_window)->Update();
+	
 	//for debugging
 	bool bShouldClose = static_cast<core::IPlatformWindow*>(_window)->ShouldClose();
 	if (bShouldClose)
@@ -46,42 +40,7 @@ void RayEngine::Tick()
 		ray::RequestEngineExit(true);
 		return;
 	}
-	 _renderer->Draw();
-}
-
-void RayEngine::on_key_down(int key)
-{
-	_logger->Log("key is down");
-}
-
-void RayEngine::on_key_up(int key)
-{
-	_logger->Log("key is up");
-}
-
-void RayEngine::on_mouse_move(int x, int y)
-{
-
-}
-
-void RayEngine::on_left_mouse_down(int x, int y)
-{
-	_logger->Log("left mouse is down");
-}
-
-void RayEngine::on_left_mouse_up(int x, int y)
-{
-	_logger->Log("left mouse is up");
-}
-
-void RayEngine::on_right_mouse_down(int x, int y)
-{
-	_logger->Log("right mouse is down");
-}
-
-void RayEngine::on_right_mouse_up(int x, int y)
-{
-	_logger->Log("right mouse is up");
+	_renderer->Draw();
 }
 
 RayEngine::~RayEngine()

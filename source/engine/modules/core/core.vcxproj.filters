@@ -8,11 +8,20 @@
     <ClInclude Include="memory\new_delete_override.hpp">
       <Filter>memory</Filter>
     </ClInclude>
+    <ClInclude Include="module\module_meta.hpp">
+      <Filter>module</Filter>
+    </ClInclude>
+    <ClInclude Include="module\module.hpp">
+      <Filter>module</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="core_entry_point.cpp" />
     <ClCompile Include="log\log.cpp">
       <Filter>log</Filter>
+    </ClCompile>
+    <ClCompile Include="module\module.cpp">
+      <Filter>module</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -22,5 +31,16 @@
     <Filter Include="memory">
       <UniqueIdentifier>{d4e4e43a-4ad3-44ad-81ea-3a7fef35f2f3}</UniqueIdentifier>
     </Filter>
+    <Filter Include="module">
+      <UniqueIdentifier>{0a8196d5-8b60-417c-8e73-432d6a16ce72}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="lib">
+      <UniqueIdentifier>{8042c20f-e8ea-4910-9c18-8e0c9a020aec}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="lib\result.hpp">
+      <Filter>lib</Filter>
+    </None>
   </ItemGroup>
 </Project>

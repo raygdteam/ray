@@ -6,20 +6,17 @@ extern "C" void __declspec(dllimport) hai();
 
 int RayMain()
 {
-	hai();
-
 	ray::launcher::EngineLoop engineLoop;
 	engineLoop.PreInitialize();
 	engineLoop.Initialize();
 
-	if(ray::IsEngineExitRequested())
+	if (ray::IsEngineExitRequested())
 	{
 		// TODO: xxx
 	}
 
 	while (!ray::IsEngineExitRequested())
 		engineLoop.Tick();
-
 
 	return 0;
 }
