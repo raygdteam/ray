@@ -14,6 +14,9 @@
     <ClInclude Include="module\module.hpp">
       <Filter>module</Filter>
     </ClInclude>
+    <ClInclude Include="lib\thread.hpp">
+      <Filter>lib</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="core_entry_point.cpp" />
@@ -22,6 +25,9 @@
     </ClCompile>
     <ClCompile Include="module\module.cpp">
       <Filter>module</Filter>
+    </ClCompile>
+    <ClCompile Include="lib\thread.cpp">
+      <Filter>lib</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

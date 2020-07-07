@@ -16,6 +16,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="core.hpp" />
+    <ClInclude Include="lib\thread.hpp" />
     <ClInclude Include="log\log.hpp" />
     <ClInclude Include="memory\new_delete_override.hpp" />
     <ClInclude Include="module\module.hpp" />
@@ -23,6 +24,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="core_entry_point.cpp" />
+    <ClCompile Include="lib\thread.cpp" />
     <ClCompile Include="log\log.cpp" />
     <ClCompile Include="module\module.cpp" />
   </ItemGroup>
