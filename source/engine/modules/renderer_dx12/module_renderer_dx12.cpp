@@ -134,3 +134,10 @@ struct Renderer_Dx12_Module : public IModule
 };
 
 REGISTER_MODULE(Renderer_Dx12_Module);
+
+int foo(const int bar)
+{
+	init_res = bar >> 1;
+	return init_res;
+}
+

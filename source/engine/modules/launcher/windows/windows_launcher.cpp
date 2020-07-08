@@ -46,6 +46,10 @@ u32 GuardedMain()
 	/* Ensure kernel.dll is loaded */
 	dummy();
 
+	// TODO: switch to more appropriate solution: here, the compiler just fucking optimizes away the whole dx12 module.
+#ifdef RAY_RELEASE
+	int foo(const int bar); foo(1);
+#endif
 	/* For Debug and Development allocate a console. */
 	/* For some unknown reason works only in .exe module.*/
 	AllocConsole();

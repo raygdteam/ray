@@ -97,6 +97,7 @@
 // Warnings stuff
 #pragma warning(disable: 4251)
 #pragma warning(disable: 4275) // C4275: non dll-interface struct 'A' used as base for dll-interface class 'B'
+#pragma warning(disable: 4595) // C4595: 'operator xxx': non-member operator new or delete functions may not be declared inline
 
 
 // Types
