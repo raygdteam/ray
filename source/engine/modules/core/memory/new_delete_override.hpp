@@ -1,4 +1,5 @@
 #pragma once
+#include <core/core.hpp>
 
 #if defined(_RELEASE) && !defined(RAY_BUILD_CORE)
 #else
