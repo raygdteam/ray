@@ -1,6 +1,9 @@
 #pragma once
 #include <core/core.hpp>
+#include <core/memory/memory_debug.hpp>
 
+#ifndef DEBUG_MEMORY
+#ifdef __cplusplus
 #if defined(_RELEASE) && !defined(RAY_BUILD_CORE)
 #else
 
@@ -32,4 +35,6 @@ inline void* operator new  (std::size_t n, std::align_val_t al, const std::nothr
 inline void* operator new[](std::size_t n, std::align_val_t al, const std::nothrow_t&) noexcept { return mi_new_aligned_nothrow(n, static_cast<size_t>(al)); }
 #endif
 
+#endif
+#endif
 #endif

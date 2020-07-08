@@ -1,10 +1,13 @@
 #include <windows.h>
+#include "../core/memory/memory_debug.hpp"
 
 void krnlInitMemory();
 
 static int _process_init(void) 
 {
+#ifndef DEBUG_MEMORY
     krnlInitMemory();
+#endif
 	return 0;
 }
 

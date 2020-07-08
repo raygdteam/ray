@@ -23,6 +23,9 @@
     <ClInclude Include="object\object_db.hpp">
       <Filter>object</Filter>
     </ClInclude>
+    <ClInclude Include="memory\memory_debug.hpp">
+      <Filter>memory</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="core_entry_point.cpp" />

@@ -88,7 +88,6 @@ namespace ray::renderer_core_api
 	void IRenderer::UpdatePipeline()
 	{
 		bool result;
-		WaitForPreviousFrame();
 
 		ICPUDescriptor* rtvHandle = _class_helper->CreateCPUDescriptor();
 		rtvHandle->Initialize(_descriptor_heap);
@@ -122,13 +121,15 @@ namespace ray::renderer_core_api
 	{
 		bool result;
 		UpdatePipeline();
-
+		
 		ICommandList* lists[] = { _command_list };
 		_command_queue->SetCommandLists(lists, 1);
 		_command_queue->ExecuteCommandLists();
 
 		result = _command_queue->Signal(_fences[_frame_index], static_cast<u32>(_fence_values[_frame_index]));
 		SetRunning(result);
+
+		WaitForPreviousFrame();
 
 		result = _swap_chain->Present(0, 0);
 		SetRunning(result);
