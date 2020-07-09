@@ -139,6 +139,7 @@
     <ClInclude Include="engine\engine_def.hpp" />
     <ClInclude Include="pch.hpp" />
     <ClInclude Include="state\state.hpp" />
+    <ClInclude Include="world\node.hpp" />
     <ClInclude Include="world\world.hpp" />
   </ItemGroup>
   <ItemGroup>

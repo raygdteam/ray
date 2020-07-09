@@ -7,7 +7,7 @@ using ObjectCreateFunc = RayObject * ();
 struct RayObjectMeta
 {
 	char Name[128];
-	ObjectCreateFunc CreateFunc;
+	ObjectCreateFunc* CreateFunc;
 };
 
 struct RayObject
