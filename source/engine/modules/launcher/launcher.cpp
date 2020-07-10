@@ -2,8 +2,6 @@
 #include "engine_loop.hpp"
 #include <engine/engine/engine.hpp>
 
-extern "C" void __declspec(dllimport) hai();
-
 int RayMain()
 {
 	ray::launcher::EngineLoop engineLoop;

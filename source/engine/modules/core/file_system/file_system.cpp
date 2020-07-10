@@ -19,6 +19,8 @@ namespace ray::file_system
     }
 
 #if _WIN32
+#pragma comment(lib, "Shlwapi.lib")
+
     bool file_exists(std::string file_path)
     {
         if (!PathFileExists(file_path.c_str()))

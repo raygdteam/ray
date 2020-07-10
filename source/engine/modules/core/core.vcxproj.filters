@@ -26,6 +26,9 @@
     <ClInclude Include="memory\memory_debug.hpp">
       <Filter>memory</Filter>
     </ClInclude>
+    <ClInclude Include="file_system\file_system.hpp">
+      <Filter>file_system</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="core_entry_point.cpp" />
@@ -40,6 +43,9 @@
     </ClCompile>
     <ClCompile Include="object\object_db.cpp">
       <Filter>object</Filter>
+    </ClCompile>
+    <ClCompile Include="file_system\file_system.cpp">
+      <Filter>file_system</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -57,6 +63,9 @@
     </Filter>
     <Filter Include="object">
       <UniqueIdentifier>{38f7b246-aad7-4f88-b312-9428bd6b8c4a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="file_system">
+      <UniqueIdentifier>{f27e7e92-fa19-4022-bc8b-f1ba03579d05}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

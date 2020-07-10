@@ -15,8 +15,8 @@ class PlatformWindow : public ray::core::IPlatformWindow
 {
 	HWND _windowHandle = nullptr;
 	MSG _lastMsg;
-	u16 _width;
-	u16 _height;
+	u16 _width = 1280;
+	u16 _height = 720;
 	bool _osRequestedClose = false;
 
 public:
@@ -46,8 +46,6 @@ void PlatformWindow::Initialize()
 
 bool PlatformWindow::CreateWindow(const char* name)
 {
-	_width = 1280;
-	_height = 720;
 	_windowHandle = CreateWindowA("RAY_ENGINE", name, WS_OVERLAPPEDWINDOW | WS_VISIBLE, CW_USEDEFAULT, CW_USEDEFAULT, _width,
 								_height, nullptr, nullptr, GetModuleHandleA(0), 0);
 

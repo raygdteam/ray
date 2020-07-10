@@ -265,7 +265,7 @@ namespace ray::renderer::d3d12
             desc = CD3DX12_RESOURCE_DESC::Tex1D(utils::ConvertShaderTypeToDXGI(inDesc._shader_type), inDesc._width);
             break;
         case ray::renderer_core_api::resources::ResourceType::eTexture2D:
-            desc = desc = CD3DX12_RESOURCE_DESC::Tex2D(utils::ConvertShaderTypeToDXGI(inDesc._shader_type), inDesc._width, inDesc._height);
+            desc = CD3DX12_RESOURCE_DESC::Tex2D(utils::ConvertShaderTypeToDXGI(inDesc._shader_type), inDesc._width, inDesc._height);
             break;
         case ray::renderer_core_api::resources::ResourceType::eTexture3D:
             break;
