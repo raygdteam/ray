@@ -6,12 +6,14 @@
 #include <core/object/object_db.hpp>
 
 #include <engine/engine/engine.hpp>
+#include <core/file_system/file_system.hpp>
 
 struct IRayState
 {
 	/* core */
 	ModuleManager* ModuleManager;
 	ObjectDb* ObjectDb;
+	ray::file_system::FileSystem* FileSystem;
 
 	/* engine */
 	ray::IEngine* Engine;

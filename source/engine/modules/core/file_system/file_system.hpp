@@ -1,12 +1,18 @@
 #pragma once
+#include <core/core.hpp>
 
-#include <string>
 
 namespace ray::file_system
 {
-	void mount_directory(const char* virtual_directory, const char* physical_directory);
-	void unmount_directory(const char* virtual_directory);
+	
+class RAY_CORE_API FileSystem
+{
+public:
+	void MountDirectory(pcstr virtualDirectory, pcstr physicalDirectory);
+	void UnmountDirectory(pcstr virtualDirectory);
 
-	bool file_exists(std::string file_path);
-	bool directory_exists(std::string directory_path);
+	bool FileExists(pcstr filePath);
+	bool DirectoryExists(pcstr directoryPath);
 };
+
+}
