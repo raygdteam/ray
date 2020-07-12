@@ -22,27 +22,23 @@ namespace ray::renderer_core_api
 	public:
 		bool Initialize(IRenderer* renderer, PrimitiveTopology topology = PrimitiveTopology::eUndefined);
 
-		static void BeginScene();
-		static void EndScene();
-
-		static void Execute();
-
 		void Draw(Vertex* vertices, size_t vertexCount);
 		void DrawIndexed(Vertex* vertices, size_t vertexCount, u32* indices, size_t indexCount);
 
 	private:
 		IDevice* _device;
-		IRRCClassHelper* _class_helper;
-		IRootSignature* _root_signature;
-		IPipelineState* _pipeline_state;
-		IVertexShader* _vertex_shader;
-		IPixelShader* _pixel_shader;
-		resources::IVertexBuffer* _vertex_buffer;
-		resources::IIndexBuffer* _index_buffer;
-		resources::IResourceBarrier* _resource_barrier;
-		ICommandList* _command_list;
-		static std::vector<ICommandList*> _lists;
-		static ICommandQueue* _command_queue;
+		IRRCClassHelper* _classHelper;
+		IRootSignature* _rootSignature;
+		IPipelineState* _pipelineState;
+		IVertexShader* _vertexShader;
+		IPixelShader* _pixelShader;
+		resources::IVertexBuffer* _vertexBuffer;
+		resources::IIndexBuffer* _indexBuffer;
+		resources::IResourceBarrier* _resourceBarrier;
+		ICommandList* _commandList;
+		ICommandAllocator* _3dCommandAllocator;
+		ICommandAllocator* _copyCommandAllocator; // is not used yet
+		ICommandAllocator* _computeCommandAllocator; // is not used yet
 	};
 }
 

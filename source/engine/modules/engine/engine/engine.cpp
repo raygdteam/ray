@@ -46,7 +46,12 @@ void RayEngine::Tick()
 		ray::RequestEngineExit(true);
 		return;
 	}
-	_renderer->Draw();
+	_renderer->BeginScene();
+
+	// renderer commands ...
+
+	_renderer->Execute();
+	_renderer->EndScene();
 }
 
 RayEngine::~RayEngine()
