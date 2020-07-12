@@ -107,12 +107,7 @@ namespace ray::renderer_core_api
 
 		float clearColor[] = { 1.f, 0.f, 0.f, 1.f };
 		_rtvCommandList->ClearRenderTarget(rtvHandle, clearColor);
-
-		_resourceBarrier->Transition(_renderTargets[_frameIndex], resources::ResourceState::eRenderTarget, resources::ResourceState::ePresent);
-		_rtvCommandList->ResourceBarrier(_resourceBarrier, 1);
-
-		_rtvCommandList->Close();
-
+		
 		delete rtvHandle;
 	} 
 
@@ -123,6 +118,11 @@ namespace ray::renderer_core_api
 
 	void IRenderer::Execute()
 	{
+		_resourceBarrier->Transition(_renderTargets[_frameIndex], resources::ResourceState::eRenderTarget, resources::ResourceState::ePresent);
+		_rtvCommandList->ResourceBarrier(_resourceBarrier, 1);
+
+		_rtvCommandList->Close();
+
 		_3dCommandQueue->SetCommandLists(_3dLists.data(), _3dLists.size());
 		_3dCommandQueue->ExecuteCommandLists();
 		_3dCommandQueue->Signal(_fences[_frameIndex], u32(_fenceValues[_frameIndex]));
