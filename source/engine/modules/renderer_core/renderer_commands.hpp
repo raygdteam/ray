@@ -1,5 +1,5 @@
 #pragma once
-#include "math/vector3.hpp"
+#include <core/math/vector3.hpp>
 #include "renderer.hpp"
 #include <vector>
 

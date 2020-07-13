@@ -140,9 +140,6 @@
     <ClInclude Include="descriptor_heap.hpp" />
     <ClInclude Include="device.hpp" />
     <ClInclude Include="fence.hpp" />
-    <ClInclude Include="math\vector2.hpp" />
-    <ClInclude Include="math\vector3.hpp" />
-    <ClInclude Include="math\vector4.hpp" />
     <ClInclude Include="pipeline_state.hpp" />
     <ClInclude Include="pixel_shader.hpp" />
     <ClInclude Include="ray_renderer_core_base.hpp" />
@@ -160,9 +157,6 @@
     <ClInclude Include="viewport.hpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="math\vector2.cpp" />
-    <ClCompile Include="math\vector3.cpp" />
-    <ClCompile Include="math\vector4.cpp" />
     <ClCompile Include="module_renderer_core.cpp" />
     <ClCompile Include="renderer.cpp" />
     <ClCompile Include="renderer_commands.cpp" />
