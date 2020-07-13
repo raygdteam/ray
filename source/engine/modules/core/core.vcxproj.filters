@@ -38,6 +38,9 @@
     <ClInclude Include="math\vector4.hpp">
       <Filter>math</Filter>
     </ClInclude>
+    <ClInclude Include="lib\scoped_allocation.hpp">
+      <Filter>lib</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="core_entry_point.cpp" />

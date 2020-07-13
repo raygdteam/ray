@@ -1,9 +1,12 @@
 #include "core/core.hpp"
 #include <Windows.h>
-#include <shellapi.h>
 #include <stdio.h>
 #include <core/memory/new_delete_override.hpp>
 
+extern "C"
+{
+#include <kernel/kernel_thread.h>
+}
 
 /** Exports for video drivers to request the most powerful GPU available. Mainly for OGL/DX11 because Vulkan allows app to choose the GPU. */
 extern "C" { _declspec(dllexport) u32 NvOptimusEnablement = 0x00000001; }
@@ -45,16 +48,19 @@ u32 GuardedMain()
 {
 	/* Ensure kernel.dll is loaded */
 	dummy();
-
+	
 	// TODO: switch to more appropriate solution: here, the compiler just fucking optimizes away the whole dx12 module.
 #ifdef RAY_RELEASE
 	int foo(const int bar); foo(1);
 #endif
+	
 	/* For Debug and Development allocate a console. */
 	/* For some unknown reason works only in .exe module.*/
-	//AllocConsole();
-	//freopen_s((FILE**)stdout, "CONOUT$", "w", stdout);
-
+#if !defined(RAY_RELEASE)
+	AllocConsole();
+	freopen_s((FILE**)stdout, "CONOUT$", "w", stdout);
+#endif
+	
 	return RayMain();
 }
 
@@ -63,8 +69,19 @@ int __stdcall WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 //void WinMainCRTStartup()
 {
 	u32 returnCode = 0;
-	returnCode = GuardedMain();
-	// return returnCode;
+
+	__try
+	{
+		returnCode = GuardedMain();
+	}
+	__except (EXCEPTION_EXECUTE_HANDLER)
+	{
+		MessageBoxA(nullptr, "The engine crashed!", "Ray Engine - Error", MB_OK | MB_ICONERROR);
+#if !defined(RAY_RELEASE)
+		__debugbreak();
+#endif
+	}
+	
 	ExitProcess(returnCode);
 }
 

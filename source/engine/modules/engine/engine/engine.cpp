@@ -2,6 +2,8 @@
 #include "engine.hpp"
 #include <app_framework/base/platform_window.hpp>
 
+
+#include <core/lib/thread.hpp>
 #include "state/state.hpp"
 
 
@@ -20,6 +22,7 @@ void RayEngine::Initialize(IEngineLoop* engineLoop)
 	_engineLoop = engineLoop;
 
 	ray::core::IPlatformWindow* window = core::IPlatformWindow::CreateInstance();
+	
 	window->Initialize();
 	window->CreateWindow("RAY_ENGINE");
 
@@ -27,10 +30,12 @@ void RayEngine::Initialize(IEngineLoop* engineLoop)
 	auto res = RayState()->ModuleManager->LoadModule("renderer_dx12");
 	if (!res.IsSuccess()) __debugbreak();
 
+	window->SetWindowVisibility(true);
+
+	
 	_renderer = new IRenderer;
 	_renderer->Initialize(window, res.Data);
 	
-	window->SetWindowVisibility(true);
 
 	_window = window;
 }
