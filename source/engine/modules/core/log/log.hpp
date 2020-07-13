@@ -10,5 +10,5 @@ public:
 	Logger(pcstr name);
 	~Logger();
 	
-	void Log(pcstr msg);
+	void Log(pcstr msg, ...);
 };
