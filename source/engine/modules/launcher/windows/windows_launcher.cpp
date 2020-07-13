@@ -52,8 +52,8 @@ u32 GuardedMain()
 #endif
 	/* For Debug and Development allocate a console. */
 	/* For some unknown reason works only in .exe module.*/
-	AllocConsole();
-	freopen_s((FILE**)stdout, "CONOUT$", "w", stdout);
+	//AllocConsole();
+	//freopen_s((FILE**)stdout, "CONOUT$", "w", stdout);
 
 	return RayMain();
 }

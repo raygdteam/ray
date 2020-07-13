@@ -15,4 +15,9 @@
   <ItemGroup>
     <ClInclude Include="engine_loop.hpp" />
   </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="resource.rc">
+      <Filter>windows</Filter>
+    </ResourceCompile>
+  </ItemGroup>
 </Project>

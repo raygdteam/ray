@@ -30,8 +30,8 @@ namespace ray::renderer_core_api
 		_vertexShader->Compile("..\\shaders_d3d12\\VertexShader.hlsl");
 		_pixelShader->Compile("..\\shaders_d3d12\\PixelShader.hlsl");
 #else
-		_vertex_shader->LoadBytecode("");
-		_pixel_shader->LoadBytecode("");
+		_vertexShader->LoadBytecode("");
+		_pixelShader->LoadBytecode("");
 #endif
 
 		InputElementDesc inputLayout[] =
