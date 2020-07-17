@@ -2,7 +2,7 @@
 
 namespace ray::core::lib
 {
-    int strlength(const char* _str)
+    int StrLength(const char* _str)
     {
         int size = 0;
 
@@ -11,46 +11,46 @@ namespace ray::core::lib
         return size;
     }
 
-    void strcopy(char* in_str, const char* src_str)
+    void StrCopy(char* in_str, const char* src_str)
     {
-        for (int i = 0; i < strlength(in_str); i++)
+        for (int i = 0; i < StrLength(in_str); i++)
             in_str[i] = src_str[i];
     }
 
-    bool strcompare(char* str_f, char* str_s)
+    bool StrCompare(char* str_f, char* str_s)
     {
         int i = 0;
 
-        for (; str_f[i] == str_s[i] && i < strlength(str_f); i++);
+        for (; str_f[i] == str_s[i] && i < StrLength(str_f); i++);
 
-        return (i == strlength(str_f)) ? true : false;
+        return (i == StrLength(str_f)) ? true : false;
     }
 
-    inline void swap(char* x, char* y)
+    inline void Swap(char* x, char* y)
     {
         char temp = *x; *x = *y; *y = temp;
     }
 
-    char* reverse(char* buffer, int i, int j)
+    char* Reverse(char* buffer, int i, int j)
     {
         while (i < j)
-            swap(&buffer[i++], &buffer[j--]);
+            Swap(&buffer[i++], &buffer[j--]);
 
         return buffer;
     }
 
-    int abs(int i)
+    int Abs(int i)
     {
         return i < 0 ? -i : i;
     }
 
 
-    char* itoa(int value, char* buffer, int base)
+    char* IToA(int value, char* buffer, int base)
     {
         if (base < 2 || base > 32)
             return buffer;
 
-        int n = abs(value);
+        int n = Abs(value);
 
         int i = 0;
         while (n)
@@ -73,7 +73,7 @@ namespace ray::core::lib
 
         buffer[i] = '\0';
 
-        return reverse(buffer, 0, i - 1);
+        return Reverse(buffer, 0, i - 1);
     }
 
     class String
@@ -98,57 +98,56 @@ namespace ray::core::lib
         friend bool operator<(const String&, const String&);
         friend bool operator<=(const String&, const String&);
 
-        char* c_str() { return str; }
+        char* c_str() { return _str; }
 
     private:
-        char* str;
-        int length;
+        char* _str;
     };
 
     String::String(const char* _str)
     {
-        str = new char[strlength(_str) + 1];
-        strcopy(str, _str);
+        _str = new char[StrLength(_str) + 1];
+        StrCopy(this->_str, _str);
     }
 
     String::String(int _int)
     {
         char buffer[sizeof(_int)];
-        itoa(_int, buffer, 10);
-        str = new char[strlength(buffer) + 1];
-        strcopy(str, buffer);
+        IToA(_int, buffer, 10);
+        _str = new char[StrLength(buffer) + 1];
+        StrCopy(_str, buffer);
     }
 
     /*String::String(double _double)
     {
-        str = new char[strlength(_str) + 1];
-        strcopy(str, _str);
+        _str = new char[StrLength(_str) + 1];
+        StrCopy(_str, _str);
     }
 
     String::String(float _float)
     {
-        str = new char[strlength(_str) + 1];
-        strcopy(str, _str);
+        _str = new char[StrLength(_str) + 1];
+        StrCopy(_str, _str);
     } */
 
     String::String(const String& rhs)
     {
-        str = new char[strlength(rhs.str) + 1];
-        strcopy(str, rhs.str);
+        _str = new char[StrLength(rhs._str) + 1];
+        StrCopy(_str, rhs._str);
     }
 
     String::~String()
     {
-        delete str;
+        delete _str;
     }
 
     String& String::operator=(const String& rhs)
     {
         if (this != &rhs)
         {
-            delete[] this->str;
-            this->str = new char[strlength(rhs.str) + 1];
-            strcopy(this->str, rhs.str);
+            delete[] this->_str;
+            this->_str = new char[StrLength(rhs._str) + 1];
+            StrCopy(this->_str, rhs._str);
         }
 
         return *this;
@@ -156,17 +155,17 @@ namespace ray::core::lib
 
     String& String::operator+=(const String& rhs)
     {
-        int sz = strlength(this->str) + strlength(rhs.str);
+        int sz = StrLength(this->_str) + StrLength(rhs._str);
 
         char* ts = new char[sz + 1];
 
-        for (int i = 0; i < strlength(this->str); i++)
-            ts[i] = this->str[i];
-        for (int ii = strlength(this->str), j = 0; ii <= sz; ii++, j++)
-            ts[ii] = rhs.str[j];
+        for (int i = 0; i < StrLength(this->_str); i++)
+            ts[i] = this->_str[i];
+        for (int ii = StrLength(this->_str), j = 0; ii <= sz; ii++, j++)
+            ts[ii] = rhs._str[j];
 
-        delete this->str;
-        this->str = ts;
+        delete this->_str;
+        this->_str = ts;
 
         return *this;
     }
@@ -180,31 +179,31 @@ namespace ray::core::lib
 
     bool operator==(const String& lhs, const String& rhs)
     {
-        return strcompare(lhs.str, rhs.str);
+        return StrCompare(lhs._str, rhs._str);
     }
 
     bool operator!=(const String& lhs, const String& rhs)
     {
-        return !(strcompare(lhs.str, rhs.str));
+        return !(StrCompare(lhs._str, rhs._str));
     }
 
     bool operator>(const String& lhs, const String& rhs)
     {
-        return (strlength(lhs.str) > strlength(rhs.str)) ? true : false;
+        return (StrLength(lhs._str) > StrLength(rhs._str)) ? true : false;
     }
 
     bool operator>=(const String& lhs, const String& rhs)
     {
-        return (strlength(lhs.str) >= strlength(rhs.str)) ? true : false;
+        return (StrLength(lhs._str) >= StrLength(rhs._str)) ? true : false;
     }
 
     bool operator<(const String& lhs, const String& rhs)
     {
-        return (strlength(lhs.str) < strlength(rhs.str)) ? true : false;
+        return (StrLength(lhs._str) < StrLength(rhs._str)) ? true : false;
     }
 
     bool operator<=(const String& lhs, const String& rhs)
     {
-        return (strlength(lhs.str) <= strlength(rhs.str)) ? true : false;
+        return (StrLength(lhs._str) <= StrLength(rhs._str)) ? true : false;
     }
 }
