@@ -36,6 +36,12 @@ void EngineLoop::Tick()
 
 EngineLoop::~EngineLoop()
 {
+	IRayState* state = RayState();
+	delete state->FileSystem;
+	delete state->ModuleManager;
+	delete state->ObjectDb;
+	
+	delete state;
 	delete _engine;
 }
 	
