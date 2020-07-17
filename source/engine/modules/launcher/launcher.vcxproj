@@ -122,6 +122,7 @@
       <LanguageStandard>stdcpplatest</LanguageStandard>
       <AdditionalIncludeDirectories>$(SolutionDir)\source\engine\modules;$(SolutionDir)\source\engine\thirdparty</AdditionalIncludeDirectories>
       <ExceptionHandling>Async</ExceptionHandling>
+      <Optimization>Full</Optimization>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
