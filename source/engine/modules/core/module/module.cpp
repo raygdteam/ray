@@ -80,7 +80,7 @@ Result<IModule*, ModuleLoadError> ModuleManager::LoadModule(pcstr name)
 	void* rawHandle = nullptr;
 
 	/* 2. If not in static environment, load the appropriate .dll. */
-	if (RAY_STATIC == 0)
+#if RAY_STATIC == 0
 	{
 		HMODULE lib = nullptr;
 		char tmp[64];
@@ -102,7 +102,7 @@ Result<IModule*, ModuleLoadError> ModuleManager::LoadModule(pcstr name)
 		module = (*entry)();
 		rawHandle = lib;
 	}
-
+#endif
 	/* 3. Initialize module. */
 	module->OnLoad();
 	
