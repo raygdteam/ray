@@ -29,6 +29,21 @@
     <ClInclude Include="file_system\file_system.hpp">
       <Filter>file_system</Filter>
     </ClInclude>
+    <ClInclude Include="math\vector2.hpp">
+      <Filter>math</Filter>
+    </ClInclude>
+    <ClInclude Include="math\vector3.hpp">
+      <Filter>math</Filter>
+    </ClInclude>
+    <ClInclude Include="math\vector4.hpp">
+      <Filter>math</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\scoped_allocation.hpp">
+      <Filter>lib</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\string.hpp">
+      <Filter>lib</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="core_entry_point.cpp" />
@@ -46,6 +61,15 @@
     </ClCompile>
     <ClCompile Include="file_system\file_system.cpp">
       <Filter>file_system</Filter>
+    </ClCompile>
+    <ClCompile Include="math\vector2.cpp">
+      <Filter>math</Filter>
+    </ClCompile>
+    <ClCompile Include="math\vector3.cpp">
+      <Filter>math</Filter>
+    </ClCompile>
+    <ClCompile Include="math\vector4.cpp">
+      <Filter>math</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -66,6 +90,9 @@
     </Filter>
     <Filter Include="file_system">
       <UniqueIdentifier>{f27e7e92-fa19-4022-bc8b-f1ba03579d05}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="math">
+      <UniqueIdentifier>{9d889400-2c3c-44dd-bf1e-1c9ebb16f654}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

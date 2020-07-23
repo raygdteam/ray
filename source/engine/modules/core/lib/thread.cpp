@@ -20,3 +20,29 @@ void IThread::Start()
 {
 	krnlResumeThread(_rawHandle);
 }
+
+void IThread::Join()
+{
+	krnlJoinThread(_rawHandle);
+}
+
+struct ILambdaThread : IThread
+{
+	ILambdaThread(std::function<void()> fn)
+	{
+		_fn = fn;
+	}
+
+	void ThreadEntry()
+	{
+		_fn();
+	}
+private:
+	std::function<void()> _fn;
+};
+
+IThread* IThread::Start(const std::function<void()>& fn)
+{
+	ILambdaThread* thread = new ILambdaThread(fn);
+	return thread;
+}

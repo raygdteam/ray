@@ -17,7 +17,7 @@
     <ClInclude Include="world\world.hpp">
       <Filter>world</Filter>
     </ClInclude>
-    <ClInclude Include="world\node.hpp">
+    <ClInclude Include="world\actor.hpp">
       <Filter>world</Filter>
     </ClInclude>
   </ItemGroup>

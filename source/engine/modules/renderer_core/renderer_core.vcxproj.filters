@@ -35,35 +35,14 @@
     <ClInclude Include="resources\vertex_buffer.hpp">
       <Filter>resources</Filter>
     </ClInclude>
-    <ClInclude Include="math\vector2.hpp">
-      <Filter>math</Filter>
-    </ClInclude>
-    <ClInclude Include="math\vector3.hpp">
-      <Filter>math</Filter>
-    </ClInclude>
-    <ClInclude Include="math\vector4.hpp">
-      <Filter>math</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="renderer.cpp" />
     <ClCompile Include="module_renderer_core.cpp" />
-    <ClCompile Include="math\vector2.cpp">
-      <Filter>math</Filter>
-    </ClCompile>
-    <ClCompile Include="math\vector3.cpp">
-      <Filter>math</Filter>
-    </ClCompile>
-    <ClCompile Include="math\vector4.cpp">
-      <Filter>math</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="resources">
       <UniqueIdentifier>{bdaef45a-1ec2-4972-97c6-c570ecdd0460}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="math">
-      <UniqueIdentifier>{7aa455b6-93de-4476-bca8-b11c3281084a}</UniqueIdentifier>
     </Filter>
     <Filter Include="pipeline">
       <UniqueIdentifier>{5650675c-a7f8-402e-ba12-5a0d27ebeb85}</UniqueIdentifier>

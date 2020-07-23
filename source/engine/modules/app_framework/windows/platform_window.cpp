@@ -46,7 +46,7 @@ void PlatformWindow::Initialize()
 
 bool PlatformWindow::CreateWindow(const char* name)
 {
-	_windowHandle = CreateWindowA("RAY_ENGINE", name, WS_OVERLAPPEDWINDOW | WS_VISIBLE, CW_USEDEFAULT, CW_USEDEFAULT, _width,
+	_windowHandle = CreateWindowA("RAY_ENGINE", name, WS_OVERLAPPEDWINDOW, CW_USEDEFAULT, CW_USEDEFAULT, _width,
 								_height, nullptr, nullptr, GetModuleHandleA(0), 0);
 
 	UpdateWindow(_windowHandle);

@@ -17,8 +17,13 @@
   <ItemGroup>
     <ClInclude Include="core.hpp" />
     <ClInclude Include="file_system\file_system.hpp" />
+    <ClInclude Include="lib\scoped_allocation.hpp" />
+    <ClInclude Include="lib\string.hpp" />
     <ClInclude Include="lib\thread.hpp" />
     <ClInclude Include="log\log.hpp" />
+    <ClInclude Include="math\vector2.hpp" />
+    <ClInclude Include="math\vector3.hpp" />
+    <ClInclude Include="math\vector4.hpp" />
     <ClInclude Include="memory\memory_debug.hpp" />
     <ClInclude Include="memory\new_delete_override.hpp" />
     <ClInclude Include="module\module.hpp" />
@@ -31,6 +36,9 @@
     <ClCompile Include="file_system\file_system.cpp" />
     <ClCompile Include="lib\thread.cpp" />
     <ClCompile Include="log\log.cpp" />
+    <ClCompile Include="math\vector2.cpp" />
+    <ClCompile Include="math\vector3.cpp" />
+    <ClCompile Include="math\vector4.cpp" />
     <ClCompile Include="module\module.cpp" />
     <ClCompile Include="object\object_db.cpp" />
   </ItemGroup>
@@ -156,6 +164,7 @@
       <AdditionalIncludeDirectories>$(SolutionDir)\source\engine\modules;$(SolutionDir)\source\engine\thirdparty</AdditionalIncludeDirectories>
       <TreatWarningAsError>true</TreatWarningAsError>
       <DiagnosticsFormat>Caret</DiagnosticsFormat>
+      <Optimization>Full</Optimization>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
