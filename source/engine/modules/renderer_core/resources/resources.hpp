@@ -55,6 +55,8 @@ class IResource : public ray::renderer_core_api::IRRCBase
 public:
 	virtual ~IResource() {}
 	
+	virtual bool Map(u32 subresourceIndex, u32 start, u32 end, void* data) = 0;
+	virtual void Unmap(u32 subresourceIndex, u32 start, u32 end) = 0;
 
 	void SetData(void* data, size_t size /*in bytes*/) noexcept { _data = data; }
 	void* GetData() const noexcept { return _data; }

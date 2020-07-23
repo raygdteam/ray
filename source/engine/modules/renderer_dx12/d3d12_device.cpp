@@ -287,6 +287,7 @@ namespace ray::renderer::d3d12
             nullptr, // optimized clear value must be null for this type of resource. used for render targets and depth/stencil buffers
             IID_PPV_ARGS(&tempResource));
 
+        SetInstance(tempResource);
 
         return hResult == S_OK;
     }

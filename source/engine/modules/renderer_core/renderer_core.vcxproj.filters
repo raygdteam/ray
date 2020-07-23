@@ -18,7 +18,6 @@
     <ClInclude Include="resources\textures.hpp">
       <Filter>resources</Filter>
     </ClInclude>
-    <ClInclude Include="renderer_commands.hpp" />
     <ClInclude Include="viewport.hpp" />
     <ClInclude Include="root_signature.hpp" />
     <ClInclude Include="shader.hpp">
@@ -48,7 +47,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="renderer.cpp" />
-    <ClCompile Include="renderer_commands.cpp" />
     <ClCompile Include="module_renderer_core.cpp" />
     <ClCompile Include="math\vector2.cpp">
       <Filter>math</Filter>

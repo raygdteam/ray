@@ -68,6 +68,7 @@ namespace ray::renderer_core_api
 			if (!_device->CreateCommandAllocator(_commandAllocators[i], CommandListType::eDirect))
 				return;
 
+
 			_fenceValues[i] = 0;
 
 			if (!_device->CreateFence(_fences[i], 0))
@@ -78,8 +79,6 @@ namespace ray::renderer_core_api
 			return;
 
 		_rtvCommandList->Close();
-
-		Add3DCommandList(_rtvCommandList);
 
 		if (!_device->CreateFenceEvent(_fenceEvent, nullptr, false, false))
 			return;

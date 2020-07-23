@@ -27,10 +27,6 @@ namespace ray::renderer_core_api
 
 		bool IsRunning() { return _running; }
 
-		void Add3DCommandList(ICommandList* _3dCommandList) noexcept { _3dLists.push_back(_3dCommandList); }
-		void AddCopyCommandList(ICommandList* copyCommandList) noexcept { _copyLists.push_back(copyCommandList); }
-		void AddComputeCommandList(ICommandList* computeCommandList) noexcept { _computeLists.push_back(computeCommandList); }
-
 		IDevice* GetDevice() const noexcept { return _device; }
 
 	private:
@@ -44,13 +40,9 @@ namespace ray::renderer_core_api
 		IDevice* _device;
 		ICommandList* _rtvCommandList;
 		std::vector<ICommandList*> _3dLists;
-		std::vector<ICommandList*> _copyLists;
-		std::vector<ICommandList*> _computeLists;
 		IDescriptorHeap* _descriptorHeap;
 		ISwapChain* _swapChain;
 		ICommandQueue* _3dCommandQueue; 
-		ICommandQueue* _copyCommandQueue; // is not used yet
-		ICommandQueue* _computeCommandQueue; // is not used yet
 		static const u32 FRAME_BUFFER_COUNT = 3;
 		IFenceEvent* _fenceEvent;
 		u32 _frameIndex;
