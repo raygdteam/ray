@@ -21,6 +21,12 @@ void RayEngine::Initialize(IEngineLoop* engineLoop)
 {
 	_engineLoop = engineLoop;
 
+	ray::file_system::FileSystem example;
+
+	example.MountDirectory("example1/", "example/");
+
+	example.FileExists("example1/what.txt");
+
 	eng->Log("Initializing Ray engine...");
 	eng->Log("version %s.%s.%s [%s]", RAY_VERSION_MAJOR, RAY_VERSION_MINOR, RAY_VERSION_PATCH, RAY_VERSION_CODENAME);
 	eng->Log("built on \"%s\"", __TIMESTAMP__);
