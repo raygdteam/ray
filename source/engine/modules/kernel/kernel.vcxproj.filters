@@ -5,6 +5,7 @@
     <ClCompile Include="kernel_memory.c" />
     <ClCompile Include="kernel_hook.c" />
     <ClCompile Include="kernel_thread.c" />
+    <ClCompile Include="kernel_file.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="kernel_thread.h" />

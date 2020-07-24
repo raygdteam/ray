@@ -15,6 +15,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="kernel_file.c" />
     <ClCompile Include="kernel_hook.c" />
     <ClCompile Include="kernel_init.c" />
     <ClCompile Include="kernel_memory.c" />
