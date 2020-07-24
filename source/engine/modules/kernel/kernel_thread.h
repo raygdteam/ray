@@ -1,8 +1,6 @@
 #pragma once
 #include "kernel.h"
 
-typedef void* rayHandle;
-
 typedef unsigned long long(__stdcall* THREAD_START_PROC)(void*);
 
 RAY_KERNEL_API rayHandle krnlCreateThread(unsigned stackSize, THREAD_START_PROC threadStartProc, void* parameter, unsigned long* outThreadId);

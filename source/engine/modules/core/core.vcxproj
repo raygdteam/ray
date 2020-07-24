@@ -17,9 +17,7 @@
   <ItemGroup>
     <ClInclude Include="core.hpp" />
     <ClInclude Include="file_system\file_system.hpp" />
-    <ClInclude Include="lib\cstring.hpp" />
     <ClInclude Include="lib\scoped_allocation.hpp" />
-    <ClInclude Include="lib\string.hpp" />
     <ClInclude Include="lib\thread.hpp" />
     <ClInclude Include="log\log.hpp" />
     <ClInclude Include="math\vector2.hpp" />
@@ -35,7 +33,6 @@
   <ItemGroup>
     <ClCompile Include="core_entry_point.cpp" />
     <ClCompile Include="file_system\file_system.cpp" />
-    <ClCompile Include="lib\string.cpp" />
     <ClCompile Include="lib\thread.cpp" />
     <ClCompile Include="log\log.cpp" />
     <ClCompile Include="math\vector2.cpp" />

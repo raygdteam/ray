@@ -5,3 +5,5 @@
 #else
 #define RAY_KERNEL_API __declspec(dllimport)
 #endif
+
+typedef void* rayHandle;

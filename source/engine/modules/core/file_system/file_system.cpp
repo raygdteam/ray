@@ -1,77 +1,21 @@
 ﻿#include "file_system.hpp"
-#include <map>
-#include <Shlwapi.h>
-#include <core/lib/string.hpp>
 
-namespace ray::file_system
+namespace ray
 {
 
-    struct MountData
-    {
-        pcstr VirtualPath;
-        pcstr PhysicalPath;
-    };
+struct MountData
+{
+    pcstr VirtualPath;
+    pcstr PhysicalPath;
+};
 
-    // TODO: rewrite to our containers
-    std::map<pcstr, pcstr> gMountedDirectories;
+void FileSystem::MountDirectory(pcstr virtualDirectory, pcstr physicalDirectory)
+{
+}
 
-    void FileSystem::MountDirectory(pcstr virtualDirectory, pcstr physicalDirectory)
-    {
-        gMountedDirectories[virtualDirectory] = physicalDirectory;
-    }
-
-    void FileSystem::UnmountDirectory(pcstr virtualDirectory)
-    {
-        gMountedDirectories.erase(virtualDirectory);
-    }
+void FileSystem::UnmountDirectory(pcstr virtualDirectory)
+{
+}
 
 
-#if _WIN32
-#pragma comment(lib, "Shlwapi.lib")
-
-    bool FileSystem::FileExists(pcstr filePath)
-    {
-        if (!PathFileExists(filePath))
-        {
-            string file_path(filePath);
-            string directory;
-            string file;
-
-            if (string::npos != file_path.rfind('/'))
-            {
-                directory = file_path.substr(0, file_path.rfind('/') + 1);
-                file = file_path.substr(directory.length());
-            }
-
-            string resolved_file_path = gMountedDirectories[directory.c_str()] + file;
-
-            return PathFileExists(resolved_file_path.c_str());
-        }
-        else
-            return true;
-
-    }
-
-    bool FileSystem::DirectoryExists(pcstr directoryPath)
-    {
-        if (!PathIsDirectory(directoryPath))
-        {
-            string directory_path(directoryPath);
-            string path;
-            string directory;
-
-            if (string::npos != directory_path.rfind('/'))
-            {
-                path = directory_path.substr(0, directory_path.rfind('/') + 1);
-                directory = directory_path.substr(path.length());
-            }
-
-            string resolved_directory_path = gMountedDirectories[path.c_str()] + directory;
-
-            return PathIsDirectory(resolved_directory_path.c_str());
-        }
-        else
-            return true;
-    }
-#endif
 };
