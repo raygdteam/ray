@@ -44,6 +44,9 @@
     <ClInclude Include="threading\critical_section.hpp">
       <Filter>threading</Filter>
     </ClInclude>
+    <ClInclude Include="lib\array.hpp">
+      <Filter>lib</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="core_entry_point.cpp" />
