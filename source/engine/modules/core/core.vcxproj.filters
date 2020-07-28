@@ -29,15 +29,6 @@
     <ClInclude Include="file_system\file_system.hpp">
       <Filter>file_system</Filter>
     </ClInclude>
-    <ClInclude Include="math\vector2.hpp">
-      <Filter>math</Filter>
-    </ClInclude>
-    <ClInclude Include="math\vector3.hpp">
-      <Filter>math</Filter>
-    </ClInclude>
-    <ClInclude Include="math\vector4.hpp">
-      <Filter>math</Filter>
-    </ClInclude>
     <ClInclude Include="lib\scoped_allocation.hpp">
       <Filter>lib</Filter>
     </ClInclude>
@@ -46,6 +37,9 @@
     </ClInclude>
     <ClInclude Include="lib\array.hpp">
       <Filter>lib</Filter>
+    </ClInclude>
+    <ClInclude Include="math\vector.hpp">
+      <Filter>math</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -64,15 +58,6 @@
     </ClCompile>
     <ClCompile Include="file_system\file_system.cpp">
       <Filter>file_system</Filter>
-    </ClCompile>
-    <ClCompile Include="math\vector2.cpp">
-      <Filter>math</Filter>
-    </ClCompile>
-    <ClCompile Include="math\vector3.cpp">
-      <Filter>math</Filter>
-    </ClCompile>
-    <ClCompile Include="math\vector4.cpp">
-      <Filter>math</Filter>
     </ClCompile>
     <ClCompile Include="threading\critical_section.cpp">
       <Filter>threading</Filter>
