@@ -3,7 +3,7 @@
 #include <app_framework/base/platform_window.hpp>
 #include <core/lib/thread.hpp>
 #include "state/state.hpp"
-#include <core/logger/logger.hpp>
+#include <core/log/log.hpp>
 
 using namespace ray::core;
 

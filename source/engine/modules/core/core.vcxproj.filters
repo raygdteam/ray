@@ -2,6 +2,9 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <ClInclude Include="core.hpp" />
+    <ClInclude Include="log\log.hpp">
+      <Filter>log</Filter>
+    </ClInclude>
     <ClInclude Include="memory\new_delete_override.hpp">
       <Filter>memory</Filter>
     </ClInclude>
@@ -38,12 +41,12 @@
     <ClInclude Include="math\vector.hpp">
       <Filter>math</Filter>
     </ClInclude>
-    <ClInclude Include="logger\logger.hpp">
-      <Filter>logger</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="core_entry_point.cpp" />
+    <ClCompile Include="log\log.cpp">
+      <Filter>log</Filter>
+    </ClCompile>
     <ClCompile Include="module\module.cpp">
       <Filter>module</Filter>
     </ClCompile>
@@ -59,11 +62,11 @@
     <ClCompile Include="threading\critical_section.cpp">
       <Filter>threading</Filter>
     </ClCompile>
-    <ClCompile Include="logger\logger.cpp">
-      <Filter>logger</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <Filter Include="log">
+      <UniqueIdentifier>{1e537b0d-46a6-4cb6-8081-7f9f5f5cfc7c}</UniqueIdentifier>
+    </Filter>
     <Filter Include="memory">
       <UniqueIdentifier>{d4e4e43a-4ad3-44ad-81ea-3a7fef35f2f3}</UniqueIdentifier>
     </Filter>
@@ -84,9 +87,6 @@
     </Filter>
     <Filter Include="threading">
       <UniqueIdentifier>{1547e6b9-8f70-4623-8685-ad062680d928}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="logger">
-      <UniqueIdentifier>{1e537b0d-46a6-4cb6-8081-7f9f5f5cfc7c}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

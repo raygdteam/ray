@@ -1,5 +1,7 @@
 #include <core/core.hpp>
-#include <core/threading/critical_section.hpp>
+
+using pstr = char*;
+using pcstr = const char*;
 
 class RAY_CORE_API Logger
 {

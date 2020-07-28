@@ -1,12 +1,14 @@
-#include <windows.h>
 #include <assert.h>
-
+#include <Windows.h>
+#include <core/core.hpp>
+#include "log.hpp"
 #include <cstdio>
 
-#include "logger.hpp"
+using pstr = char*;
+using pcstr = const char*;
 
 static u64 gTimestamp = 0;
-static ray::CriticalSection gCriticalSection;
+
 
 Logger::Logger(pcstr name)
 {
@@ -14,14 +16,12 @@ Logger::Logger(pcstr name)
 	memset(_name, 0, 17 * sizeof(char));
 	_name[16] = '\0';
 
-	/* Logger name cannot be 16 characters maximum. */
-	if (strlen(name) > 16)
-		assert(false);
+	// Log name can be max. 16 chars
+	if (strlen(name) > 16) assert(false);
 
 	memcpy(_name, name, strlen(name) * sizeof(char));
 
-	if (gTimestamp == 0)
-		gTimestamp = GetTickCount64();
+	if (gTimestamp == 0) gTimestamp = GetTickCount64();
 }
 
 Logger::~Logger()
@@ -31,7 +31,7 @@ Logger::~Logger()
 
 void Logger::Log(pcstr msg, ...)
 {
-	/* 1. Get timestamp. We need to call it as early as possible. */
+	/* 1. Get timestamp. We need to call it as early as possible.*/
 	char time[64] = {};
 	_itoa_s(int(GetTickCount64() - gTimestamp), time, 10);
 
@@ -44,9 +44,10 @@ void Logger::Log(pcstr msg, ...)
 	buf[bufSize] = 0;
 	va_end(mark);
 
+	
 	/* 3. Format user string. */
 	char str[512] = {};
-	strcat_s(str, "[");
+	strcat_s(str, "{");
 	strcat_s(str, _name);
 
 	for (size_t i = strlen(_name); i <= 17; i++)
@@ -57,17 +58,13 @@ void Logger::Log(pcstr msg, ...)
 	for (size_t i = strlen(time); i <= 10; i++)
 		strcat_s(str, " ");
 
-	strcat_s(str, "] ");
+	strcat_s(str, "}   ");
 	strcat_s(str, buf);
 	strcat_s(str, "\n");
-
-	gCriticalSection.Enter();
 
 	OutputDebugStringA(str);
 
 #if defined(RAY_DEBUG) || defined(RAY_DEVELOPMENT)
 	printf(str);
 #endif
-
-	gCriticalSection.Leave();
 }
