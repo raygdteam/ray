@@ -16,8 +16,6 @@ namespace ray::renderer_core_api
 {
 	struct RAY_RENDERERCORE_API IRenderer final// : public Object
 	{
-		friend class RendererCommands;
-
 		void Initialize(ray::core::IPlatformWindow* window, IModule* rendererModule);
 		void Shutdown();
 
@@ -36,8 +34,6 @@ namespace ray::renderer_core_api
 	private:
 		bool _running;
 		resources::IResourceBarrier* _resourceBarrier;
-		IRRCClassHelper* _classHelper;
-		IDevice* _device;
 		ICommandList* _rtvCommandList;
 		std::vector<ICommandList*> _3dLists;
 		IDescriptorHeap* _descriptorHeap;

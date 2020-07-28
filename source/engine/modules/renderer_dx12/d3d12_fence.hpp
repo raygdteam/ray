@@ -10,6 +10,7 @@ namespace ray::renderer::d3d12
 
 		bool SetEventOnCompletion(IFenceEvent* fenceEvent, u64 value) override;
 		u64 GetCompletedValue() override;
+		bool Signal(u64 fenceValue) override;
 	};
 
 	class D3D12FenceEvent : public IFenceEvent

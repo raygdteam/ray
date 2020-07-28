@@ -173,4 +173,28 @@ namespace ray::renderer::d3d12::utils
 			return D3D12_COMMAND_LIST_TYPE_DIRECT;
 		}
 	}
+	D3D12_RESOURCE_STATES ConvertResourceStateToD3D12(ResourceState state)
+	{
+		switch (state)
+		{
+		case ray::renderer_core_api::resources::ResourceState::ePresent:
+			return D3D12_RESOURCE_STATE_PRESENT;
+
+		case ray::renderer_core_api::resources::ResourceState::eCopyDest:
+			return D3D12_RESOURCE_STATE_COPY_DEST;
+
+		case ray::renderer_core_api::resources::ResourceState::eRenderTarget:
+			return D3D12_RESOURCE_STATE_RENDER_TARGET;
+
+		case ray::renderer_core_api::resources::ResourceState::eVertexAndConstantBuffer:
+			return D3D12_RESOURCE_STATE_VERTEX_AND_CONSTANT_BUFFER;
+
+		case ray::renderer_core_api::resources::ResourceState::eCommon:
+			return D3D12_RESOURCE_STATE_COMMON;
+
+		default:
+			return D3D12_RESOURCE_STATE_COMMON;
+
+		}
+	}
 }

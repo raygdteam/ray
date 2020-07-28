@@ -3,23 +3,45 @@
 
 namespace ray::renderer::d3d12
 {
-	bool D3D12CPUDescriptor::Initialize(IDescriptorHeap* descriptorHeap)
-	{
-		auto temp = static_cast<ID3D12DescriptorHeap*>(descriptorHeap->GetInstance());
-		CD3DX12_CPU_DESCRIPTOR_HANDLE* descriptorHandle = new CD3DX12_CPU_DESCRIPTOR_HANDLE(temp->GetCPUDescriptorHandleForHeapStart());
-		SetInstance(descriptorHandle);
 
-		return true; 
+	template<typename DescriptorHandleType>
+	DescriptorHandleType* GetDescriptorHandleForHeapStart(D3D12DescriptorHeap* heap, bool bShaderVisible)
+	{
+		auto temp = static_cast<ID3D12DescriptorHeap*>(heap->GetInstance());
+		DescriptorHandleType* src;
+		if (bShaderVisible)
+			src = temp->GetGPUDescriptorHandleForHeapStart();
+		else
+			src = temp->GetCPUDescriptorHandleForHeapStart();
+		
+		DescriptorHandleType* dest = new DescriptorHandleType;
+		memcpy(dest, &src, sizeof(DescriptorHandleType));
+		return dest;
+	}
+
+	void D3D12DescriptorHeap::GetCPUDescriptorHandleForHeapStart(ICPUDescriptor* outHandle)
+	{
+		outHandle->SetInstance(GetDescriptorHandleForHeapStart<D3D12_CPU_DESCRIPTOR_HANDLE>(this, false));
+	}
+
+	void D3D12DescriptorHeap::GetGPUDescriptorHandleForHeapStart(IGPUDescriptor* outHandle)
+	{
+		outHandle->SetInstance(GetDescriptorHandleForHeapStart<D3D12_GPU_DESCRIPTOR_HANDLE>(this, true));
 	}
 
 	bool D3D12CPUDescriptor::Offset(u32 step)
 	{
 		if (GetDescriptorSize() == 0)
 			return false;
-		auto temp = static_cast<CD3DX12_CPU_DESCRIPTOR_HANDLE*>(GetInstance());
-		temp->Offset(step, GetDescriptorSize());
+		auto temp = static_cast<D3D12_CPU_DESCRIPTOR_HANDLE*>(GetInstance());
+		temp->ptr += step * GetDescriptorSize();
 	
 		return true;
+	}
+
+	bool D3D12CPUDescriptor::Increment()
+	{
+		return Offset(1);
 	}
 
 	D3D12CPUDescriptor::~D3D12CPUDescriptor()

@@ -1,5 +1,9 @@
 #pragma once
 #include "../ray_renderer_core_base.hpp"
+#include "../renderer_globals.hpp"
+#include <core/math/vector2.hpp>
+#include <core/math/vector3.hpp>
+#include <core/math/vector4.hpp>
 
 namespace ray::renderer_core_api::resources
 {
@@ -24,7 +28,8 @@ enum class ResourceState
 	ePresent,
 	eCopyDest,
 	eRenderTarget,
-	eVertexAndConstantBuffer
+	eVertexAndConstantBuffer,
+	eCommon
 };
 
 enum class ShaderType
@@ -49,14 +54,22 @@ struct ResourceDesc
 	u64 _alignment;
 	//other properties for textures...
 };
+
+struct Range
+{
+	u32 Start;
+	u32 End;
+};
 	
 class IResource : public ray::renderer_core_api::IRRCBase
 {
 public:
 	virtual ~IResource() {}
 	
-	virtual bool Map(u32 subresourceIndex, u32 start, u32 end, void* data) = 0;
-	virtual void Unmap(u32 subresourceIndex, u32 start, u32 end) = 0;
+	virtual bool Map(u32 subresourceIndex, Range* range, void** data) = 0;
+	virtual void Unmap(u32 subresourceIndex, Range* range) = 0;
+
+	virtual GpuVirtualAddress GetGpuVirtualAddress() = 0;
 
 	void SetData(void* data, size_t size /*in bytes*/) noexcept { _data = data; }
 	void* GetData() const noexcept { return _data; }

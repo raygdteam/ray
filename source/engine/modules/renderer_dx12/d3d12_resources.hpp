@@ -7,8 +7,10 @@ namespace ray::renderer::d3d12::resources
 	public:
 		~D3D12Resource();
 
-		bool Map(u32 subresourceIndex, u32 start, u32 end, void* data) override;
-		void Unmap(u32 subresourceIndex, u32 start, u32 end) override;
+		bool Map(u32 subresourceIndex, Range* range, void** data) override;
+		void Unmap(u32 subresourceIndex, Range* range) override;
+
+		GpuVirtualAddress GetGpuVirtualAddress() override;
 	};
 
 	class D3D12ResourceBarrier : public IResourceBarrier

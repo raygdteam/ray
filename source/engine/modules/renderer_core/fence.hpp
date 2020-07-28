@@ -25,8 +25,9 @@ class IFence : public IRRCBase
 public:
 	virtual ~IFence() {}
 
-	virtual bool SetEventOnCompletion(IFenceEvent*, u64) = 0;
+	virtual bool SetEventOnCompletion(IFenceEvent* fenceEvent, u64 fenceValue) = 0;
 	virtual u64 GetCompletedValue() = 0;
+	virtual bool Signal(u64 fenceValue) = 0;
 };
 
 

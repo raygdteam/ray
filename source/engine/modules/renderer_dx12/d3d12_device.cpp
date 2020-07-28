@@ -74,6 +74,8 @@ namespace ray::renderer::d3d12
     {
         HRESULT hResult;
         D3D12_COMMAND_QUEUE_DESC d3d12Desc = {};
+        d3d12Desc.NodeMask = desc.NodeMask;
+        d3d12Desc.Type = utils::ConvertCommandListTypeToD3D12(desc.Type);
         ID3D12CommandQueue* d3d12Queue;
         hResult = static_cast<ID3D12Device*>(GetInstance())->CreateCommandQueue(&d3d12Desc, IID_PPV_ARGS(&d3d12Queue));
         if (FAILED(hResult))

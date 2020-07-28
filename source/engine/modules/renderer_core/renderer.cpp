@@ -1,4 +1,5 @@
 #include "renderer.hpp"
+#include "renderer_globals.hpp"
 
 //ñäåëàéòå óæå èíòåðôåéñ äëÿ ðàáîòû ñ ìîäóëÿìè
 #include <Windows.h>
@@ -10,28 +11,28 @@ namespace ray::renderer_core_api
 
 	void IRenderer::Initialize(ray::core::IPlatformWindow* window, IModule* rendererModule)
 	{
-		_classHelper = static_cast<IRRCClassHelper*>(rendererModule->QueryModuleInterface());
+		gClassHelper = static_cast<IRRCClassHelper*>(rendererModule->QueryModuleInterface());
 
-		_device = _classHelper->CreateDevice();
-		_rtvCommandList = _classHelper->CreateCommandList();
-		_3dCommandQueue = _classHelper->CreateCommandQueue();
-		_descriptorHeap = _classHelper->CreateDescriptorHeap();
-		_swapChain = _classHelper->CreateSwapChain();
-		_fenceEvent = _classHelper->CreateFenceEvent();
-		_resourceBarrier = _classHelper->CreateResourceBarrier();
+		gDevice = gClassHelper->CreateDevice();
+		_rtvCommandList = gClassHelper->CreateCommandList();
+		_3dCommandQueue = gClassHelper->CreateCommandQueue();
+		_descriptorHeap = gClassHelper->CreateDescriptorHeap();
+		_swapChain = gClassHelper->CreateSwapChain();
+		_fenceEvent = gClassHelper->CreateFenceEvent();
+		_resourceBarrier = gClassHelper->CreateResourceBarrier();
 
 		for (u32 i = 0; i < FRAME_BUFFER_COUNT; i++)
 		{
-			_renderTargets[i] = _classHelper->CreateResource();
-			_commandAllocators[i] = _classHelper->CreateCommandAllocator();
-			_fences[i] = _classHelper->CreateFence();
+			_renderTargets[i] = gClassHelper->CreateResource();
+			_commandAllocators[i] = gClassHelper->CreateCommandAllocator();
+			_fences[i] = gClassHelper->CreateFence();
 		}
 
-		if (!_device->Initialize())
+		if (!gDevice->Initialize())
 			return;
 
 		CommandQueueDesc cmdQueueDesc;
-		if (!_device->CreateCommandQueue(cmdQueueDesc, _3dCommandQueue))
+		if (!gDevice->CreateCommandQueue(cmdQueueDesc, _3dCommandQueue))
 			return;
 
 		SwapChainDesc swapChainDesc;
@@ -45,14 +46,12 @@ namespace ray::renderer_core_api
 			return;
 
 		DescriptorHeapDesc rtvHeapDesc;
-		rtvHeapDesc._num_descriptors = FRAME_BUFFER_COUNT;
-		rtvHeapDesc._shader_visible = false;
-		rtvHeapDesc._type = DescriptorHeapType::eRTV;
-		_device->CreateDescriptorHeap(rtvHeapDesc, _descriptorHeap);
+		rtvHeapDesc.NumDescriptors = FRAME_BUFFER_COUNT;
+		rtvHeapDesc.ShaderVisible = false;
+		rtvHeapDesc.Type = DescriptorHeapType::eRTV;
+		gDevice->CreateDescriptorHeap(rtvHeapDesc, _descriptorHeap);
 
-		ICPUDescriptor* rtvDescriptor = _classHelper->CreateCPUDescriptor();
-		rtvDescriptor->Initialize(_descriptorHeap);
-		rtvDescriptor->SetDescriptorSize(_device->GetDescriptorHandleIncrementSize(DescriptorHeapType::eRTV));
+		auto rtvDescriptor = gDescriptorAllocator->Allocate(3);
 
 		for (u32 i = 0; i < FRAME_BUFFER_COUNT; i++)
 		{
@@ -60,27 +59,27 @@ namespace ray::renderer_core_api
 				return;
 
 			RenderTargetViewDesc rtvDesc = {};
-			_device->CreateRenderTargetView(_renderTargets[i], rtvDesc, rtvDescriptor);
+			gDevice->CreateRenderTargetView(_renderTargets[i], rtvDesc, rtvDescriptor);
 
-			if (!rtvDescriptor->Offset(1))
+			if (!rtvDescriptor->Increment())
 				return;
 
-			if (!_device->CreateCommandAllocator(_commandAllocators[i], CommandListType::eDirect))
+			if (!gDevice->CreateCommandAllocator(_commandAllocators[i], CommandListType::eDirect))
 				return;
 
 
 			_fenceValues[i] = 0;
 
-			if (!_device->CreateFence(_fences[i], 0))
+			if (!gDevice->CreateFence(_fences[i], 0))
 				return;
 		}
 
-		if (!_device->CreateCommandList(_rtvCommandList, _commandAllocators[0], nullptr, CommandListType::eDirect))
+		if (!gDevice->CreateCommandList(_rtvCommandList, _commandAllocators[0], nullptr, CommandListType::eDirect))
 			return;
 
 		_rtvCommandList->Close();
 
-		if (!_device->CreateFenceEvent(_fenceEvent, nullptr, false, false))
+		if (!gDevice->CreateFenceEvent(_fenceEvent, nullptr, false, false))
 			return;
 
 		delete rtvDescriptor;
@@ -90,9 +89,9 @@ namespace ray::renderer_core_api
 	{
 		WaitForPreviousFrame();
 
-		ICPUDescriptor* rtvHandle = _classHelper->CreateCPUDescriptor();
-		rtvHandle->Initialize(_descriptorHeap);
-		rtvHandle->SetDescriptorSize(_device->GetDescriptorHandleIncrementSize(DescriptorHeapType::eRTV));
+		ICPUDescriptor* rtvHandle = gClassHelper->CreateCPUDescriptor();
+		_descriptorHeap->GetCPUDescriptorHandleForHeapStart(rtvHandle);
+		rtvHandle->SetDescriptorSize(gDevice->GetDescriptorHandleIncrementSize(DescriptorHeapType::eRTV));
 		rtvHandle->Offset(_frameIndex);
 
 		_commandAllocators[_frameIndex]->Reset();
@@ -151,7 +150,7 @@ namespace ray::renderer_core_api
 		delete _rtvCommandList;
 		delete _3dCommandQueue;
 		delete _descriptorHeap;
-		delete _device;
+		delete gDevice;
 		for (size_t i = 0; i < FRAME_BUFFER_COUNT; i++)
 		{
 			delete _commandAllocators[i];
@@ -161,6 +160,6 @@ namespace ray::renderer_core_api
 		delete _fenceEvent;
 		delete _resourceBarrier;
 		delete _swapChain;
-		// delete _class_helper;
+		delete gClassHelper;
 	}
 }

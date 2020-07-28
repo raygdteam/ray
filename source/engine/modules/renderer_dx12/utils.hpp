@@ -9,4 +9,5 @@ namespace ray::renderer::d3d12::utils
 	D3D12_RESOURCE_DIMENSION ConvertResourceTypeToResourceDimension(ResourceType type);
 	D3D12_DESCRIPTOR_HEAP_TYPE ConvertDescriptorHeapTypeToD3D12(DescriptorHeapType type);
 	D3D12_COMMAND_LIST_TYPE ConvertCommandListTypeToD3D12(CommandListType type);
+	D3D12_RESOURCE_STATES ConvertResourceStateToD3D12(ResourceState state);
 }

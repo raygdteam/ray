@@ -33,7 +33,17 @@ namespace ray::renderer::d3d12
 
 		auto hResult = tempQueue->Signal(tempFence, static_cast<UINT64>(fenceValue));
 
-		return (hResult == S_OK) ? true : false;
+		return hResult == S_OK;
+	}
+
+	bool D3D12CommandQueue::Wait(IFence* fence, u64 fenceValue)
+	{
+		auto tempQueue = static_cast<ID3D12CommandQueue*>(GetInstance());
+		auto tempFence = static_cast<ID3D12Fence*>(fence->GetInstance());
+
+		auto hResult = tempQueue->Wait(tempFence, fenceValue);
+
+		return hResult == S_OK;
 	}
 
 	D3D12CommandQueue::~D3D12CommandQueue()

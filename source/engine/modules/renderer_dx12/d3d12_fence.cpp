@@ -10,12 +10,19 @@ namespace ray::renderer::d3d12
 
 		auto hResult = tempFence->SetEventOnCompletion(value, tempEvent);
 
-		return (hResult == S_OK) ? true : false;
+		return hResult == S_OK;
 	}
 
 	u64 D3D12Fence::GetCompletedValue()
 	{
 		return static_cast<ID3D12Fence*>(GetInstance())->GetCompletedValue();
+	}
+
+	bool D3D12Fence::Signal(u64 fenceValue)
+	{
+		auto temp = static_cast<ID3D12Fence*>(GetInstance());
+		auto hResult = temp->Signal(fenceValue);
+		return hResult == S_OK;
 	}
 
 	u32 D3D12FenceEvent::WaitFor()

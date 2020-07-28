@@ -9,18 +9,31 @@ namespace ray::renderer::d3d12::resources
 			static_cast<ID3D12Resource*>(GetInstance())->Release();
 	}
 
-	bool D3D12IndexBuffer::Map(u32 subresourceIndex, u32 start, u32 end, void* data)
+	bool D3D12IndexBuffer::Map(u32 subresourceIndex, Range* range, void** data)
 	{
 		auto temp = static_cast<ID3D12Resource*>(GetInstance());
-		CD3DX12_RANGE range(start, end);
-		auto hResult = temp->Map(subresourceIndex, &range, static_cast<void**>(data));
-		return hResult == S_OK;
+		if (range == nullptr)
+			return temp->Map(subresourceIndex, nullptr, data) == S_OK;
+
+		CD3DX12_RANGE d3dRange(range->Start, range->End);
+		return temp->Map(subresourceIndex, &d3dRange, data) == S_OK;
 	}
 
-	void D3D12IndexBuffer::Unmap(u32 subresourceIndex, u32 start, u32 end)
+	void D3D12IndexBuffer::Unmap(u32 subresourceIndex, Range* range)
 	{
 		auto temp = static_cast<ID3D12Resource*>(GetInstance());
-		CD3DX12_RANGE range(start, end);
-		temp->Unmap(subresourceIndex, &range);
+		if (range == nullptr)
+		{
+			temp->Unmap(subresourceIndex, nullptr);
+			return;
+		}
+		CD3DX12_RANGE d3dRange(range->Start, range->End);
+		temp->Unmap(subresourceIndex, &d3dRange);
+	}
+
+	GpuVirtualAddress D3D12IndexBuffer::GetGpuVirtualAddress()
+	{
+		auto temp = static_cast<ID3D12Resource*>(GetInstance());
+		return static_cast<GpuVirtualAddress>(temp->GetGPUVirtualAddress());
 	}
 }

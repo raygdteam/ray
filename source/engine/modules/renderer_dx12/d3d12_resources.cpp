@@ -1,35 +1,14 @@
 #include "pch.hpp"
 #include "d3d12_resources.hpp"
+#include "utils.hpp"
 
 namespace ray::renderer::d3d12::resources
 {
 	void D3D12ResourceBarrier::Transition(IResource* inResource, ResourceState beforeState, ResourceState afterState)
 	{
-		D3D12_RESOURCE_STATES before, after;
-		switch (beforeState)
-		{
-		case ray::renderer_core_api::resources::ResourceState::ePresent:
-			before = D3D12_RESOURCE_STATE_PRESENT;
-			break;
-		case ray::renderer_core_api::resources::ResourceState::eRenderTarget:
-			before = D3D12_RESOURCE_STATE_RENDER_TARGET;
-			break;
-		default:
-			return;
-			break;
-		}
-		switch (afterState)
-		{
-		case ray::renderer_core_api::resources::ResourceState::ePresent:
-			after = D3D12_RESOURCE_STATE_PRESENT;
-			break;
-		case ray::renderer_core_api::resources::ResourceState::eRenderTarget:
-			after = D3D12_RESOURCE_STATE_RENDER_TARGET;
-			break;
-		default:
-			return;
-			break;
-		}
+		auto before = utils::ConvertResourceStateToD3D12(beforeState);
+		auto after = utils::ConvertResourceStateToD3D12(afterState);
+		
 		auto tempResource = static_cast<ID3D12Resource*>(inResource->GetInstance());
 		if (GetInstance())
 			delete GetInstance();
@@ -54,19 +33,32 @@ namespace ray::renderer::d3d12::resources
 		
 	}
 
-	bool D3D12Resource::Map(u32 subresourceIndex, u32 start, u32 end, void* data)
+	bool D3D12Resource::Map(u32 subresourceIndex, Range* range, void** data)
 	{
 		auto temp = static_cast<ID3D12Resource*>(GetInstance());
-		CD3DX12_RANGE range(start, end);
-		auto hResult = temp->Map(subresourceIndex, &range, static_cast<void**>(data));
-		return hResult == S_OK;
+		if (range == nullptr)
+			return temp->Map(subresourceIndex, nullptr, data) == S_OK;
+
+		CD3DX12_RANGE d3dRange(range->Start, range->End);
+		return temp->Map(subresourceIndex, &d3dRange, data) == S_OK;
 	}
 
-	void D3D12Resource::Unmap(u32 subresourceIndex, u32 start, u32 end)
+	void D3D12Resource::Unmap(u32 subresourceIndex, Range* range)
 	{
 		auto temp = static_cast<ID3D12Resource*>(GetInstance());
-		CD3DX12_RANGE range(start, end);
-		temp->Unmap(subresourceIndex, &range);
+		if (range == nullptr)
+		{
+			temp->Unmap(subresourceIndex, nullptr);
+			return;
+		}
+		CD3DX12_RANGE d3dRange(range->Start, range->End);
+		temp->Unmap(subresourceIndex, &d3dRange);
+	}
+
+	GpuVirtualAddress D3D12Resource::GetGpuVirtualAddress()
+	{
+		auto temp = static_cast<ID3D12Resource*>(GetInstance());
+		return static_cast<GpuVirtualAddress>(temp->GetGPUVirtualAddress());
 	}
 
 }

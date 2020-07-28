@@ -6,6 +6,10 @@
 **	Direct3D 12:	ID3D12CommandAllocator
 */
 
+#include <mutex>
+#include <vector>
+#include <queue>
+
 namespace ray::renderer_core_api
 {
 class ICommandAllocator : public IRRCBase
@@ -17,5 +21,25 @@ public:
 	
 };
 
+class CommandAllocatorPool
+{
+public:
+	CommandAllocatorPool(CommandListType type) : _type(type) {}
+	~CommandAllocatorPool();
+
+	void Shutdown();
+
+	size_t Size() { return _allocatorPool.size(); }
+
+	ICommandAllocator* RequestAllocator(u64 completedFenceValue);
+	void DiscardAllocator(ICommandAllocator* allocator, u64 fenceValue);
+
+private:
+	CommandListType _type;
+	std::mutex _allocatorMutex;
+	std::vector<ICommandAllocator*> _allocatorPool;
+	std::queue<std::pair<u64, ICommandAllocator*>> _readyAllocators;
+
+};
 
 }
