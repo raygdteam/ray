@@ -5,98 +5,98 @@
 namespace ray::math
 {
 	template<size_t n, class type>
-	struct RAY_CORE_API vector
+	struct RAY_CORE_API Vector
 	{
 	public:
-		vector()
+		Vector()
 		{
-			this->data = new type[n];
+			this->_data = new type[n];
 		}
 
 		template <typename ... Arguments>
-		vector(Arguments ... arguments)
+		Vector(Arguments ... arguments)
 		{
-			this->data = new type[n]{ arguments ... };
+			this->_data = new type[n]{ arguments ... };
 		}
 
-		vector(const vector& other)
+		Vector(const Vector& other)
 		{
-			this->data = other.data;
+			this->_data = other._data;
 		}
 
-		vector& add(const vector& other)
+		Vector& add(const Vector& other)
 		{
-			for (auto i = 0; i < sizeof(this->data) / sizeof(this->data[0]); i++)
-				this->data[i] += other.data[i];
+			for (auto i = 0; i < sizeof(this->_data) / sizeof(this->_data[0]); i++)
+				this->_data[i] += other._data[i];
 
 			return this;
 		}
 
-		vector& subtract(const vector& other)
+		Vector& subtract(const Vector& other)
 		{
-			for (auto i = 0; i < sizeof(this->data) / sizeof(this->data[0]); i++)
-				this->data[i] -= other.data[i];
+			for (auto i = 0; i < sizeof(this->_data) / sizeof(this->_data[0]); i++)
+				this->_data[i] -= other._data[i];
 
 			return this;
 		}
 
-		vector& multiply(const vector& other)
+		Vector& multiply(const Vector& other)
 		{
-			for (auto i = 0; i < sizeof(this->data) / sizeof(this->data[0]); i++)
-				this->data[i] *= other.data[i];
+			for (auto i = 0; i < sizeof(this->_data) / sizeof(this->_data[0]); i++)
+				this->_data[i] *= other._data[i];
 
 			return this;
 		}
 
-		vector& divide(const vector& other)
+		Vector& divide(const Vector& other)
 		{
-			for (auto i = 0; i < sizeof(this->data) / sizeof(this->data[0]); i++)
-				this->data[i] /= other.data[i];
+			for (auto i = 0; i < sizeof(this->_data) / sizeof(this->_data[0]); i++)
+				this->_data[i] /= other._data[i];
 
 			return this;
 		}
 
-		friend vector operator+(vector left, const vector& right)
+		friend Vector operator+(Vector left, const Vector& right)
 		{
 			return left.add(right);
 		}
 
-		friend vector operator-(vector left, const vector& right)
+		friend Vector operator-(Vector left, const Vector& right)
 		{
 			return left.subtract(right);
 		}
 
-		friend vector operator*(vector left, const vector& right)
+		friend Vector operator*(Vector left, const Vector& right)
 		{
 			return left.multiply(right);
 		}
 
-		friend vector operator/(vector left, const vector& right)
+		friend Vector operator/(Vector left, const Vector& right)
 		{
 			return left.divide(right);
 		}
 
-		vector& operator+=(const vector& other)
+		Vector& operator+=(const Vector& other)
 		{
 			return add(other);
 		}
 
-		vector& operator-=(const vector& other)
+		Vector& operator-=(const Vector& other)
 		{
 			return subtract(other);
 		}
 
-		vector& operator*=(const vector& other)
+		Vector& operator*=(const Vector& other)
 		{
 			return multiply(other);
 		}
 
-		vector& operator/=(const vector& other)
+		Vector& operator/=(const Vector& other)
 		{
 			return divide(other);
 		}
 
-		bool operator==(const vector& other)
+		bool operator==(const Vector& other)
 		{
 			/*return (x == other.x && y == other.y); */
 				/* I'm too lazy to come up with a quick way to compare two vectors. */
@@ -104,11 +104,11 @@ namespace ray::math
 			return false;
 		}
 
-		bool operator!=(const vector& other)
+		bool operator!=(const Vector& other)
 		{
 			return !(this == other);
 		}
 
-		type* data;
+		type* _data;
 	};
 }
