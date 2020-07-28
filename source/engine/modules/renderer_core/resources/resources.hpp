@@ -1,9 +1,9 @@
 #pragma once
+
 #include "../ray_renderer_core_base.hpp"
 #include "../renderer_globals.hpp"
-#include <core/math/vector2.hpp>
-#include <core/math/vector3.hpp>
-#include <core/math/vector4.hpp>
+
+#include <core/math/vector.hpp>
 
 namespace ray::renderer_core_api::resources
 {

@@ -8,8 +8,8 @@ namespace ray::renderer_core_api
 
 	struct QuadVertex
 	{
-		math::Vector3 Position;
-		math::Vector4 Color;
+		math::Vector<3, float> Position;
+		math::Vector<4, float> Color;
 	};
 
 	struct Renderer2DData
@@ -26,7 +26,7 @@ namespace ray::renderer_core_api
 		u32* IndexData;
 		size_t VertexBufferSize;
 		size_t IndexCount;
-		math::Vector4 DefaultVertexPosition[4];
+		math::Vector<4, float> DefaultVertexPosition[4];
 	};
 
 	Renderer2DData gRenderData;
@@ -76,7 +76,7 @@ namespace ray::renderer_core_api
 		Flush();
 	}
 
-	void Renderer2D::DrawQuad(math::Vector3 pos, math::Vector4 color)
+	void Renderer2D::DrawQuad(math::Vector<3, float> pos, math::Vector<4, float> color)
 	{
 		const size_t quadVertexCount = 4;
 
