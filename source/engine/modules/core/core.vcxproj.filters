@@ -29,20 +29,17 @@
     <ClInclude Include="file_system\file_system.hpp">
       <Filter>file_system</Filter>
     </ClInclude>
-    <ClInclude Include="math\vector2.hpp">
-      <Filter>math</Filter>
-    </ClInclude>
-    <ClInclude Include="math\vector3.hpp">
-      <Filter>math</Filter>
-    </ClInclude>
-    <ClInclude Include="math\vector4.hpp">
-      <Filter>math</Filter>
-    </ClInclude>
     <ClInclude Include="lib\scoped_allocation.hpp">
       <Filter>lib</Filter>
     </ClInclude>
-    <ClInclude Include="lib\string.hpp">
+    <ClInclude Include="threading\critical_section.hpp">
+      <Filter>threading</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\array.hpp">
       <Filter>lib</Filter>
+    </ClInclude>
+    <ClInclude Include="math\vector.hpp">
+      <Filter>math</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -62,14 +59,8 @@
     <ClCompile Include="file_system\file_system.cpp">
       <Filter>file_system</Filter>
     </ClCompile>
-    <ClCompile Include="math\vector2.cpp">
-      <Filter>math</Filter>
-    </ClCompile>
-    <ClCompile Include="math\vector3.cpp">
-      <Filter>math</Filter>
-    </ClCompile>
-    <ClCompile Include="math\vector4.cpp">
-      <Filter>math</Filter>
+    <ClCompile Include="threading\critical_section.cpp">
+      <Filter>threading</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -93,6 +84,9 @@
     </Filter>
     <Filter Include="math">
       <UniqueIdentifier>{9d889400-2c3c-44dd-bf1e-1c9ebb16f654}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="threading">
+      <UniqueIdentifier>{1547e6b9-8f70-4623-8685-ad062680d928}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

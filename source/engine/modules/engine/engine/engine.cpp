@@ -75,6 +75,7 @@ RayEngine::~RayEngine()
 	_renderer->Shutdown();
 
 	delete _renderer;
+	delete _window;
 }
 
 /************************************/

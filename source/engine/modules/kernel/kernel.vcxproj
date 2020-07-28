@@ -15,10 +15,12 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="kernel_file.c" />
     <ClCompile Include="kernel_hook.c" />
     <ClCompile Include="kernel_init.c" />
     <ClCompile Include="kernel_memory.c" />
     <ClCompile Include="kernel_thread.c" />
+    <ClCompile Include="kernel_win32_critical_section.c" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\thirdparty\mimalloc\mimalloc.vcxproj">
@@ -28,6 +30,7 @@
   <ItemGroup>
     <ClInclude Include="kernel.h" />
     <ClInclude Include="kernel_thread.h" />
+    <ClInclude Include="kernel_win32_critical_section.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>

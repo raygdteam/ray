@@ -13,7 +13,7 @@ struct IRayState
 	/* core */
 	ModuleManager* ModuleManager;
 	ObjectDb* ObjectDb;
-	ray::file_system::FileSystem* FileSystem;
+	ray::FileSystem* FileSystem;
 
 	/* engine */
 	ray::IEngine* Engine;

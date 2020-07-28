@@ -2,8 +2,6 @@
 #include "kernel_thread.h"
 #include <windows.h>
 
-#define RAY_INVALID_HANDLE ((rayHandle)-1)
-
 volatile long gThreadCount = 0;
 
 struct RayThreadStartParams
