@@ -99,12 +99,12 @@
 #pragma warning(disable: 4275) // C4275: non dll-interface struct 'A' used as base for dll-interface class 'B'
 #pragma warning(disable: 4595) // C4595: 'operator xxx': non-member operator new or delete functions may not be declared inline
 
-
 // Types
 using u8  = uint8_t;  using s8  = int8_t;
 using u16 = uint16_t; using s16 = int16_t;
 using u32 = uint32_t; using s32 = int32_t;
 using u64 = uint64_t; using s64 = int64_t;
 
+using pstr = char*;
 using pcstr = const char*;
 using pcwstr = const wchar_t*;

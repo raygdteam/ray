@@ -20,7 +20,7 @@
     <ClInclude Include="lib\array.hpp" />
     <ClInclude Include="lib\scoped_allocation.hpp" />
     <ClInclude Include="lib\thread.hpp" />
-    <ClInclude Include="log\log.hpp" />
+    <ClInclude Include="logger\logger.hpp" />
     <ClInclude Include="math\vector.hpp" />
     <ClInclude Include="memory\memory_debug.hpp" />
     <ClInclude Include="memory\new_delete_override.hpp" />
@@ -34,7 +34,7 @@
     <ClCompile Include="core_entry_point.cpp" />
     <ClCompile Include="file_system\file_system.cpp" />
     <ClCompile Include="lib\thread.cpp" />
-    <ClCompile Include="log\log.cpp" />
+    <ClCompile Include="logger\logger.cpp" />
     <ClCompile Include="module\module.cpp" />
     <ClCompile Include="object\object_db.cpp" />
     <ClCompile Include="threading\critical_section.cpp" />
