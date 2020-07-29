@@ -24,7 +24,7 @@ HANDLE gMutex;
 
 void ReleaseMutex()
 {
-	if(gMutex)
+	if (gMutex)
 	{
 		ReleaseMutex(gMutex);
 		gMutex = nullptr;

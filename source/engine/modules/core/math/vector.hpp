@@ -1,114 +1,113 @@
 #pragma once
-
 #include <core/core.hpp>
 
 namespace ray::math
 {
-	template<size_t n, class type>
-	struct RAY_CORE_API Vector
+
+template<size_t Rank, typename Type>
+struct RAY_CORE_API Vector
+{
+	Type* _data;
+public:
+	Vector()
 	{
-	public:
-		Vector()
-		{
-			this->_data = new type[n];
-		}
+		this->_data = new Type[n];
+	}
 
-		template <typename ... Arguments>
-		Vector(Arguments ... arguments)
-		{
-			this->_data = new type[n]{ arguments ... };
-		}
+	template <typename... Arguments>
+	Vector(Arguments... arguments)
+	{
+		this->_data = new Type[n]{ arguments ... };
+	}
 
-		Vector(const Vector& other)
-		{
-			this->_data = other._data;
-		}
+	Vector(const Vector& other)
+	{
+		this->_data = other._data;
+	}
 
-		Vector& add(const Vector& other)
-		{
-			for (auto i = 0; i < sizeof(this->_data) / sizeof(this->_data[0]); i++)
-				this->_data[i] += other._data[i];
+	Vector& Add(const Vector& other)
+	{
+		for (auto i = 0; i < sizeof(this->_data) / sizeof(this->_data[0]); i++)
+			this->_data[i] += other._data[i];
 
-			return this;
-		}
+		return this;
+	}
 
-		Vector& subtract(const Vector& other)
-		{
-			for (auto i = 0; i < sizeof(this->_data) / sizeof(this->_data[0]); i++)
-				this->_data[i] -= other._data[i];
+	Vector& Subtract(const Vector& other)
+	{
+		for (auto i = 0; i < sizeof(this->_data) / sizeof(this->_data[0]); i++)
+			this->_data[i] -= other._data[i];
 
-			return this;
-		}
+		return this;
+	}
 
-		Vector& multiply(const Vector& other)
-		{
-			for (auto i = 0; i < sizeof(this->_data) / sizeof(this->_data[0]); i++)
-				this->_data[i] *= other._data[i];
+	Vector& Multiply(const Vector& other)
+	{
+		for (auto i = 0; i < sizeof(this->_data) / sizeof(this->_data[0]); i++)
+			this->_data[i] *= other._data[i];
 
-			return this;
-		}
+		return this;
+	}
 
-		Vector& divide(const Vector& other)
-		{
-			for (auto i = 0; i < sizeof(this->_data) / sizeof(this->_data[0]); i++)
-				this->_data[i] /= other._data[i];
+	Vector& Divide(const Vector& other)
+	{
+		for (auto i = 0; i < sizeof(this->_data) / sizeof(this->_data[0]); i++)
+			this->_data[i] /= other._data[i];
 
-			return this;
-		}
+		return this;
+	}
 
-		friend Vector operator+(Vector left, const Vector& right)
-		{
-			return left.add(right);
-		}
+	friend Vector operator+(Vector left, const Vector& right)
+	{
+		return left.Add(right);
+	}
 
-		friend Vector operator-(Vector left, const Vector& right)
-		{
-			return left.subtract(right);
-		}
+	friend Vector operator-(Vector left, const Vector& right)
+	{
+		return left.Subtract(right);
+	}
 
-		friend Vector operator*(Vector left, const Vector& right)
-		{
-			return left.multiply(right);
-		}
+	friend Vector operator*(Vector left, const Vector& right)
+	{
+		return left.Multiply(right);
+	}
 
-		friend Vector operator/(Vector left, const Vector& right)
-		{
-			return left.divide(right);
-		}
+	friend Vector operator/(Vector left, const Vector& right)
+	{
+		return left.Divide(right);
+	}
 
-		Vector& operator+=(const Vector& other)
-		{
-			return add(other);
-		}
+	Vector& operator+=(const Vector& other)
+	{
+		return Add(other);
+	}
 
-		Vector& operator-=(const Vector& other)
-		{
-			return subtract(other);
-		}
+	Vector& operator-=(const Vector& other)
+	{
+		return Subtract(other);
+	}
 
-		Vector& operator*=(const Vector& other)
-		{
-			return multiply(other);
-		}
+	Vector& operator*=(const Vector& other)
+	{
+		return Multiply(other);
+	}
 
-		Vector& operator/=(const Vector& other)
-		{
-			return divide(other);
-		}
+	Vector& operator/=(const Vector& other)
+	{
+		return Divide(other);
+	}
 
-		bool operator==(const Vector& other)
-		{
-			/*return (x == other.x && y == other.y); */
-				/* I'm too lazy to come up with a quick way to compare two vectors. */
+	bool operator==(const Vector& other)
+	{
+		/*return (x == other.x && y == other.y); */
+			/* I'm too lazy to come up with a quick way to compare two vectors. */
 
-			return false;
-		}
+		return false;
+	}
 
-		bool operator!=(const Vector& other)
-		{
-			return !(this == other);
-		}
-
-		type* _data;
-	};
+	bool operator!=(const Vector& other)
+	{
+		return !(this == other);
+	}
+};
 }

@@ -97,8 +97,7 @@ u16 PlatformWindow::GetHeight()
 
 void PlatformWindow::Destroy()
 {
-	//DestroyWindow(_windowHandle);
-	FreeConsole();
+	DestroyWindow(_windowHandle);
 }
 
 void PlatformWindow::Shutdown()
