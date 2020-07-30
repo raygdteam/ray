@@ -11,13 +11,13 @@ struct RAY_CORE_API Vector
 public:
 	Vector()
 	{
-		this->_data = new Type[n];
+		this->_data = new Type[Rank];
 	}
 
 	template <typename... Arguments>
 	Vector(Arguments... arguments)
 	{
-		this->_data = new Type[n]{ arguments ... };
+		this->_data = new Type[Rank]{ arguments ... };
 	}
 
 	Vector(const Vector& other)
