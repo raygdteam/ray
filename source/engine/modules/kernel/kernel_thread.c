@@ -41,7 +41,7 @@ rayHandle krnlCreateThread(unsigned stackSize, THREAD_START_PROC threadStartProc
 		return RAY_INVALID_HANDLE;
 	}
 
-	if (outThreadId == NULL) *outThreadId = threadId;
+	if (outThreadId != NULL) *outThreadId = threadId;
 
 	return result;
 }
