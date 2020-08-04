@@ -26,20 +26,22 @@ rayHandle krnlCreateThread(unsigned stackSize, THREAD_START_PROC threadStartProc
 {
 	if (threadStartProc == NULL) return RAY_INVALID_HANDLE;
 
-	unsigned long long threadId = 0;
+	unsigned long threadId = 0;
 
 	struct RayThreadStartParams* params = malloc(sizeof(struct RayThreadStartParams));
 
 	params->ThreadStartProc = threadStartProc;
 	params->Parameter = parameter;
 
-	HANDLE result = CreateThread(0, stackSize, RayThreadEntry, params, CREATE_SUSPENDED, outThreadId);
+	HANDLE result = CreateThread(0, stackSize, RayThreadEntry, params, CREATE_SUSPENDED, &threadId);
 
 	if (result == NULL)
 	{
 		if (outThreadId != NULL) *outThreadId = 0;
 		return RAY_INVALID_HANDLE;
 	}
+
+	if (outThreadId == NULL) *outThreadId = threadId;
 
 	return result;
 }
