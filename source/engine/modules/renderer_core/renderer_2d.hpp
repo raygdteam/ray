@@ -1,7 +1,7 @@
 #pragma once
-#include <core/math/vector2.hpp>
-#include <core/math/vector3.hpp>
-#include <core/math/vector4.hpp>
+
+#include <core/math/vector.hpp>
+
 #include "command_list.hpp"
 #include "device.hpp"
 #include "core/module/module_meta.hpp"
@@ -17,7 +17,7 @@ namespace ray::renderer_core_api
 		static void Begin();
 		static void End();
 
-		static void DrawQuad(math::Vector3 pos, math::Vector4 color);
+		static void DrawQuad(math::Vector<3, float> pos, math::Vector<4, float> color);
 
 	private:
 		static ICommandAllocator* _commandAllocator;

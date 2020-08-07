@@ -1,32 +1,24 @@
-#include "object_db.hpp"
+#include <core/core.hpp>
+#include <core/object/object_db.hpp>
+#include <core/lib/array.hpp>
 
-#include <cstring>
+#include <cstring>s
 
-struct ObjectLinkedList
-{
-	RayObjectMeta* Meta;
-	ObjectLinkedList* Next;
-};
-
-static ObjectLinkedList* _objects = nullptr;
+static ray::Array<RayObjectMeta*>* gObjects = nullptr;
 
 ObjectDb::ObjectDb()
 {
-	
+	gObjects = new ray::Array<RayObjectMeta*>();
 }
 
 RayObjectMeta* ObjectDb::GetObject(pcstr name)
 {
-	if (_objects != nullptr)
+	if (!gObjects->IsEmpty())
 	{
-		ObjectLinkedList* current = _objects;
-
-		while (current)
+		for (RayObjectMeta* object : gObjects)
 		{
-			if (strcmp(current->Meta->Name, name) == 0)
-				return current->Meta;
-			
-			current = current->Next;
+			if (strcmp(object->Name, name) == 0)
+				return object;
 		}
 	}
 
@@ -35,22 +27,5 @@ RayObjectMeta* ObjectDb::GetObject(pcstr name)
 
 void ObjectDb::RegisterObject(RayObjectMeta* meta)
 {
-	if (_objects == nullptr)
-	{
-		_objects = new ObjectLinkedList { meta, nullptr };
-		return;
-	}
-
-	ObjectLinkedList* current = _objects;
-
-	while (current)
-	{
-		if (current->Next == nullptr)
-		{
-			current->Next = new ObjectLinkedList{ meta, nullptr };
-			return;
-		}
-		
-		current = current->Next;
-	}
+	gObjects->PushBack(meta);
 }

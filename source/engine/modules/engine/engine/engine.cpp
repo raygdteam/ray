@@ -60,6 +60,8 @@ void RayEngine::Tick()
 		ray::RequestEngineExit(true);
 		return;
 	}
+
+
 	_renderer->BeginScene();
 
 	// renderer commands ...

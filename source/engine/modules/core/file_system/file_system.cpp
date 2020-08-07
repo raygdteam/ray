@@ -3,12 +3,6 @@
 namespace ray
 {
 
-struct MountData
-{
-    pcstr VirtualPath;
-    pcstr PhysicalPath;
-};
-
 void FileSystem::MountDirectory(pcstr virtualDirectory, pcstr physicalDirectory)
 {
 }

@@ -1,19 +1,34 @@
 #pragma once
+
 #include <core/core.hpp>
 
 namespace ray
 {
-template<typename type, typename IndexSize = u32>
+template<typename Type, typename IndexSize = u32>
 class Array
 {
+	template<typename Type>
+	class Node
+	{
+	public:
+		Node* Next;
+		Type Data;
+
+		Node(Type data = Type(), Node* next = nullptr)
+		{
+			this->Data = data;
+			this->Next = next;
+		}
+	};
+
 	IndexSize _size;
-	Node<type>* _head;
+	Node<Type>* _head;
 
 public:
 	Array()
 	{
 		_size = 0;
-		this->_head = nullptr;
+		_head = nullptr;
 	}
 
 	~Array()
@@ -21,32 +36,32 @@ public:
 		Clear();
 	}
 
-	// void Push(type data, int index);
+	// void Push(type data, IndexSize index);
 
-	void PushFront(type data)
+	void PushFront(Type data)
 	{
-		this->_head = new Node<type>(data, this->_head);
+		_head = new Node<Type>(data, _head);
 		_size++;
 	}
 
-	void PushBack(type data)
+	void PushBack(Type data)
 	{
-		if (this->_head == nullptr)
-			this->_head = new Node<type>(data);
+		if (_head == nullptr)
+			_head = new Node<Type>(data);
 		else
 		{
-			Node<type>* current = this->_head;
+			Node<Type>* current = _head;
 
-			while (current->_next != nullptr)
-				current = current->_next;
+			while (current->Next != nullptr)
+				current = current->Next;
 
-			current->_next = new Node<type>(data);
+			current->Next = new Node<Type>(data);
 		}
 
 		_size++;
 	}
 
-	// void Insert(type data, int index);
+	// void Insert(type data, IndexSize index);
 
 	// void InsertFront(type data);
 	// void InsertBack(type data);
@@ -57,13 +72,13 @@ public:
 			PopFront();
 		else
 		{
-			Node<type>* previous = this->_head;
+			Node<Type>* previous = _head;
 			for (IndexSize i = 0; i < index - 1; i++)
-				previous = previous->_next;
+				previous = previous->Next;
 
-			Node<type>* toDelete = previous->_next;
+			Node<Type>* toDelete = previous->Next;
 
-			previous->_next = toDelete->_next;
+			previous->Next = toDelete->Next;
 
 			delete toDelete;
 
@@ -73,9 +88,9 @@ public:
 
 	void PopFront()
 	{
-		Node<type>* temp = this->_head;
+		Node<Type>* temp = _head;
 
-		this->_head = this->_head->_next;
+		_head = _head->Next;
 
 		delete temp;
 
@@ -89,42 +104,80 @@ public:
 
 	void Clear()
 	{
-		while (this->_size)
+		while (_size)
 			PopFront();
 	}
 
 	IndexSize Size() { return this->_size; }
 	bool IsEmpty() { return this->_size == 0; }
 
-	type& operator[](const int index)
+	Type& operator[](const IndexSize index)
 	{
 		IndexSize counter = 0;
 
-		Node<type>* current = this->_head;
+		Node<Type>* current = _head;
 
 		while (current != nullptr)
 		{
 			if (counter == index)
-				return current->_data;
+				return current->Data;
 
-			current = current->_next;
+			current = current->Next;
 			counter++;
 		}
 	}
 
-private:
-	template<typename type>
-	class Node
+	class Iterator /* нужно переписать этот класс */
 	{
-	public:
-		Node* _next;
-		type _data;
+		Node<Type>* _current;
 
-		Node(type data = type(), Node* next = nullptr)
+	public:
+		Iterator() noexcept : _current(this->_head) {}
+
+		Iterator(const Node<Type>* unnamed) noexcept : _current(unnamed) {}
+
+		Iterator& operator=(Node<Type>* unnamed)
 		{
-			this->_data = data;
-			this->_next = next;
+			this->_current = unnamed;
+
+			return *this;
+		}
+
+		bool operator!=(const Iterator& iterator)
+		{
+			return this->_current != iterator._current;
+		}
+
+		Iterator& operator++()
+		{
+			if (this->_current)
+				this->_current = this->_current->_next_node;
+
+			return *this;
+		}
+
+		Iterator operator++(IndexSize)
+		{
+			Iterator iterator = *this;
+			++* this;
+
+			return iterator;
+		}
+
+		Type operator*()
+		{
+			return this->_current->Data;
 		}
 	};
+
+	Iterator begin()
+	{
+		return Iterator(this->_head);
+	}
+
+	Iterator end()
+	{
+		return Iterator(nullptr);
+	}
 };
 }

@@ -1,6 +1,8 @@
 #pragma once
+
 #include "../ray_renderer_core_base.hpp"
 #include "../renderer_globals.hpp"
+
 #include <core/math/vector.hpp>
 
 namespace ray::renderer_core_api::resources
@@ -27,15 +29,11 @@ enum class ResourceState
 	eCopyDest,
 	eRenderTarget,
 	eVertexAndConstantBuffer,
-	eCommon,
-	eUnorderedAccess,
-	eGenericRead
+	eCommon
 };
 
 enum class ShaderType
 {
-	eUnknown,
-
 	eTypeless4,
 	eFloat4,
 	eInt4,
@@ -47,44 +45,14 @@ enum class ShaderType
 	eUint3
 };
 
-struct SampleDesc
-{
-	u32 Quality;
-	u32 Count;
-};
-
-enum class TextureLayout
-{
-	eUnknown,
-	eRowMajor
-};
-
-enum class ResourceFlags
-{
-	eNone = 0,
-	eAllowRenderTarget = 0x1, 
-	eAllowDepthStencil = 0x2,
-	eAllowUnordererAccess = 0x4,
-	eDenyShaderResource = 0x8,
-};
-
 struct ResourceDesc
 {
-	resources::ResourceType ResourceType;
-	resources::ShaderType ShaderType;
-	u64 Width;
-	u64 Height;
-	u64 Alignment;
-	u16 DepthOrArraySize;
-	u16 MipLevels;
-	resources::SampleDesc SampleDesc;
-	resources::TextureLayout TextureLayout;
-	ResourceFlags Flags;
-};
-
-struct ResourceHeapProperties
-{
-	ResourceUsage Usage;
+	ResourceType _resource_type;
+	ShaderType _shader_type;
+	u64 _width;
+	u64 _height;
+	u64 _alignment;
+	//other properties for textures...
 };
 
 struct Range

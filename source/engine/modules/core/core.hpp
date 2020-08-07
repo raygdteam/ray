@@ -61,8 +61,8 @@
 	#define RAY_PLATFORM_LINUX
 #endif //__linux__
 
-#ifdef _DEBUG
-	#define RAY_ASSERT(cond, msg) // assert(cond && msg);
+#ifdef RAY_DEBUG
+	#define RAY_ASSERT(cond, msg) do { if (!(cond)) { __debugbreak(); } } while (false);
 #else
 	#define RAY_ASSERT(cond, msg)
 #endif
@@ -105,6 +105,8 @@ using u8  = uint8_t;  using s8  = int8_t;
 using u16 = uint16_t; using s16 = int16_t;
 using u32 = uint32_t; using s32 = int32_t;
 using u64 = uint64_t; using s64 = int64_t;
+
+using f32 = float; using f64 = double;
 
 using pcstr = const char*;
 using pcwstr = const wchar_t*;

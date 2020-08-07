@@ -1,4 +1,6 @@
+#include <core/core.hpp>
 #include <core/module/module.hpp>
+#include <core/lib/array.hpp>
 
 #include <cstring>
 #include <cstdio>
@@ -6,14 +8,13 @@
 // TODO(dark): rewrite to kernel
 #include <Windows.h>
 
-struct ModuleLinkedList
+struct ModuleDef
 {
 	IModule* Module;
 	void* RawOsHandle;
-	ModuleLinkedList* Next;
 };
 
-static ModuleLinkedList* Modules = nullptr;
+static ray::Array<ModuleDef*>* gModules = nullptr;
 
 /* We have to keep it as static memory, since we can't use */
 /* memory allocation functions as we're not sure if it's initialized. */
@@ -21,57 +22,36 @@ static RayModuleEntryFn* StaticallyLoadedModules[32] = {};
 
 ModuleManager::ModuleManager()
 {
+	if (gModules == nullptr)
+		gModules = new ray::Array<ModuleDef*>();
+	else __debugbreak();
+
 	for (auto& module : StaticallyLoadedModules)
 	{
 		if (module == nullptr) 
 			continue;
 		
-		if (Modules == nullptr)
-		{
-			Modules = new ModuleLinkedList{ (*module)(), nullptr, nullptr };
-		}
-		else
-		{
-			ModuleLinkedList* current = Modules;
-			ModuleLinkedList* new_ = new ModuleLinkedList{ (*module)(), nullptr, nullptr };
-
-			while (current)
-			{
-				if (current->Next == nullptr)
-				{
-					current->Next = new_;
-					break;
-				}
-				current = current->Next;
-			}
-		}
+		gModules->PushBack(new ModuleDef { (*module)(), nullptr });
 	}
 
 	memset(&StaticallyLoadedModules, 0, sizeof(RayModuleEntryFn*) * 32);
 
 	/* Call IModule#OnLoad */
-	ModuleLinkedList* current = Modules;
-
-	while (current)
+	for (ModuleDef* module : gModules)
 	{
-		current->Module->OnLoad();
-		current = current->Next;
+		module->Module->OnLoad();
 	}
 }
 
 Result<IModule*, ModuleLoadError> ModuleManager::LoadModule(pcstr name)
 {
 	/* 1. Check is it's already loaded. */
-	if (Modules != nullptr)
+	if (!gModules->IsEmpty())
 	{
-		ModuleLinkedList* current = Modules;
-
-		while (current)
+		for (ModuleDef* module : gModules)
 		{
-			if (strcmp(current->Module->Meta.Name, name) == 0)
-				return { current->Module, eSuccess };
-			
-			current = current->Next;
+			if (strcmp(module->Module->Meta.Name, name) == 0)
+				return { module->Module, eSuccess };
 		}
 	}
 
@@ -107,25 +87,7 @@ Result<IModule*, ModuleLoadError> ModuleManager::LoadModule(pcstr name)
 	module->OnLoad();
 	
 	/* 4. Add to the linked list. */
-	if (Modules == nullptr)
-	{
-		Modules = new ModuleLinkedList { module, rawHandle, nullptr };
-	}
-	else
-	{
-		ModuleLinkedList* current = Modules;
-		ModuleLinkedList* new_ = new ModuleLinkedList { module, rawHandle, nullptr };
-
-		while (current)
-		{
-			if (current->Next == nullptr)
-			{
-				current->Next = new_;
-				break;
-			}
-			current = current->Next;
-		}
-	}
+	gModules->PushBack(new ModuleDef { module, rawHandle });
 	
 	return { module, eSuccess };
 }
