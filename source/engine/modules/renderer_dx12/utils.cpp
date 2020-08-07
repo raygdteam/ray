@@ -7,6 +7,9 @@ namespace ray::renderer::d3d12::utils
 	{
 		switch (type)
 		{
+		case ray::renderer_core_api::resources::ShaderType::eUnknown:
+			return DXGI_FORMAT_UNKNOWN;
+
 		case ray::renderer_core_api::resources::ShaderType::eTypeless4:
 			return DXGI_FORMAT_R32G32B32A32_TYPELESS;
 
@@ -192,9 +195,30 @@ namespace ray::renderer::d3d12::utils
 		case ray::renderer_core_api::resources::ResourceState::eCommon:
 			return D3D12_RESOURCE_STATE_COMMON;
 
+		case ray::renderer_core_api::resources::ResourceState::eUnorderedAccess:
+			return D3D12_RESOURCE_STATE_UNORDERED_ACCESS;
+
+		case ray::renderer_core_api::resources::ResourceState::eGenericRead:
+			return D3D12_RESOURCE_STATE_GENERIC_READ;
+
 		default:
 			return D3D12_RESOURCE_STATE_COMMON;
 
 		}
 	}
+
+	D3D12_TEXTURE_LAYOUT ConvertTextureLayoutToD3D12(TextureLayout layout)
+	{
+		switch (layout)
+		{
+		case ray::renderer_core_api::resources::TextureLayout::eUnknown:
+			return D3D12_TEXTURE_LAYOUT_UNKNOWN;
+		case ray::renderer_core_api::resources::TextureLayout::eRowMajor:
+			return D3D12_TEXTURE_LAYOUT_ROW_MAJOR;
+
+		default:
+			return D3D12_TEXTURE_LAYOUT_UNKNOWN;
+		}
+	}
+
 }

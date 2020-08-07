@@ -43,6 +43,7 @@
     <ClInclude Include="resources\linear_allocator.hpp">
       <Filter>resources\memory</Filter>
     </ClInclude>
+    <ClInclude Include="command_context.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="renderer.cpp" />
@@ -54,6 +55,7 @@
     <ClCompile Include="resources\linear_allocator.cpp">
       <Filter>resources\memory</Filter>
     </ClCompile>
+    <ClCompile Include="command_context.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="resources">

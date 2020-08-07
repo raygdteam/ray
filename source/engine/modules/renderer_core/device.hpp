@@ -33,7 +33,7 @@ public:
 	virtual bool CreateFenceEvent(IFenceEvent*, pcstr, bool, bool) = 0;
 	virtual bool CreateRootSignature(RootSignatureDesc&, IRootSignature*) = 0;
 	virtual bool CreatePipelineState(PipelineStateDesc&, IPipelineState*) = 0;
-	virtual bool CreateCommittedResource(resources::ResourceDesc&, resources::ResourceUsage, resources::IResource*) = 0;
+	virtual bool CreateCommittedResource(resources::ResourceDesc& inDesc, resources::ResourceHeapProperties heapProps, resources::ResourceState defaultState,  resources::IResource* outResource) = 0;
 	virtual s32 GetDescriptorHandleIncrementSize(DescriptorHeapType) = 0;
 };
 

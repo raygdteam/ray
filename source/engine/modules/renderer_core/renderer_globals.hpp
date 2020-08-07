@@ -18,5 +18,7 @@ namespace ray::renderer_core_api
 		DescriptorHeapType::eUAV_SRV_CBV
 	};
 
+	extern ContextManager gContextManager;
+
 	extern CommandListManager gCommandManager;
 }

@@ -6,7 +6,7 @@
 **	Direct3D 12:	ID3D12CommandAllocator
 */
 
-#include <mutex>
+#include <core/threading/critical_section.hpp>
 #include <vector>
 #include <queue>
 
@@ -36,7 +36,7 @@ public:
 
 private:
 	CommandListType _type;
-	std::mutex _allocatorMutex;
+	ray::CriticalSection _allocatorMutex;
 	std::vector<ICommandAllocator*> _allocatorPool;
 	std::queue<std::pair<u64, ICommandAllocator*>> _readyAllocators;
 

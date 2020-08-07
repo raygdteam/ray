@@ -22,7 +22,7 @@ namespace ray::renderer::d3d12
         bool CreateFenceEvent(IFenceEvent* outFenceEvent, pcstr name, bool bManualReset, bool bInitialState) override;
         bool CreateRootSignature(RootSignatureDesc& desc, IRootSignature* outRootSignature) override;
         bool CreatePipelineState(PipelineStateDesc& inDesc, IPipelineState* outPipelineState) override;
-        bool CreateCommittedResource(ResourceDesc& inDesc, ResourceUsage usage, IResource* outResource) override;
+        bool CreateCommittedResource(resources::ResourceDesc& inDesc, resources::ResourceHeapProperties heapProps, resources::ResourceState defaultState, resources::IResource* outResource) override;
         s32 GetDescriptorHandleIncrementSize(DescriptorHeapType type) override;
 
     private:

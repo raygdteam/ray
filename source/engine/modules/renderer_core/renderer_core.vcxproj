@@ -136,6 +136,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="command_allocator.hpp" />
+    <ClInclude Include="command_context.hpp" />
     <ClInclude Include="command_list.hpp" />
     <ClInclude Include="command_queue.hpp" />
     <ClInclude Include="descriptor_heap.hpp" />
@@ -162,6 +163,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="command_allocator.cpp" />
+    <ClCompile Include="command_context.cpp" />
     <ClCompile Include="command_queue.cpp" />
     <ClCompile Include="descriptor_heap.cpp" />
     <ClCompile Include="module_renderer_core.cpp" />

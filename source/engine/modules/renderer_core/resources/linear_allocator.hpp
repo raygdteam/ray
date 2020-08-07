@@ -11,6 +11,12 @@ namespace ray::renderer_core_api::memory
 {
 	struct DynAlloc
 	{
+		DynAlloc(GpuResource& resource, size_t offset, size_t size)
+			: Buffer(resource)
+			, Offset(offset)
+			, Size(size)
+		{}
+
 		GpuResource& Buffer;
 		size_t Size;
 		size_t Offset;
@@ -20,6 +26,8 @@ namespace ray::renderer_core_api::memory
 
 	class LinearAllocationPage : public GpuResource
 	{
+		friend class LinearAllocator;
+
 	public:
 		LinearAllocationPage(IResource* inResource, ResourceState usage) : GpuResource()
 		{
@@ -97,6 +105,8 @@ namespace ray::renderer_core_api::memory
 
 	class LinearAllocator
 	{
+		friend LinearAllocationPage;
+
 	public:
 		LinearAllocator(LinearAllocatorType type) 
 			: _type(type)

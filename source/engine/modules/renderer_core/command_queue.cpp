@@ -1,32 +1,34 @@
 #include "command_queue.hpp"
-#include "renderer_globals.hpp"
 
 namespace ray::renderer_core_api
 {
-	CommandQueue::CommandQueue(CommandListType type)
-		: _type(type)
-		, _commandQueue(gClassHelper->CreateCommandQueue())
-		, _fence(gClassHelper->CreateFence())
-		, _event(gClassHelper->CreateFenceEvent())
+	CommandQueue::CommandQueue(IRRCClassHelper* classHelper, CommandListType type)
+		: _classHelper(classHelper)
+		, _type(type)
+		, _commandQueue(classHelper->CreateCommandQueue())
+		, _fence(classHelper->CreateFence())
+		, _event(classHelper->CreateFenceEvent())
 		, _nextFenceValue(static_cast<u64>(type) << FENCE_SHIFT | 1)
 		, _lastCompletedFenceValue(static_cast<u64>(type) << FENCE_SHIFT)
 		, _allocatorPool(type)
 	{}
 
-	bool CommandQueue::Create()
+	bool CommandQueue::Create(IDevice* device)
 	{
 		if (IsReady() || _allocatorPool.Size() != 0)
 			return false;
 
+		_device = device;
+
 		CommandQueueDesc desc;
 		desc.Type = _type;
 		desc.NodeMask = 1;
-		gDevice->CreateCommandQueue(desc, _commandQueue);
+		_device->CreateCommandQueue(desc, _commandQueue);
 
-		gDevice->CreateFence(_fence, 0);
+		_device->CreateFence(_fence, 0);
 		_fence->Signal(static_cast<u64>(_type) << FENCE_SHIFT);
 
-		if (!gDevice->CreateFenceEvent(_event, nullptr, false, false))
+		if (!_device->CreateFenceEvent(_event, nullptr, false, false))
 			return false;
 
 		return IsReady();
@@ -63,9 +65,12 @@ namespace ray::renderer_core_api
 		return fenceValue <= _lastCompletedFenceValue;
 	}
 
+	extern CommandListManager gCommandListManager;
+
 	void CommandQueue::StallForFence(u64 fenceValue)
 	{
-		// TODO: 
+		CommandQueue& producer = gCommandListManager.GetQueue(static_cast<CommandListType>(fenceValue >> FENCE_SHIFT));
+		_commandQueue->Wait(producer._fence, fenceValue);
 	}
 
 	void CommandQueue::StallForProducer(CommandQueue& producer)
@@ -81,6 +86,10 @@ namespace ray::renderer_core_api
 		if (IsFenceComplete(fenceValue))
 			return;
 
+		// TODO:  Think about how this might affect a multi-threaded situation.  Suppose thread A
+		// wants to wait for fence 100, then thread B comes along and wants to wait for 99.  If
+		// the fence can only have one event set on completion, then thread B has to wait for 
+		// 100 before it knows 99 is ready.  Maybe insert sequential events?
 		{
 			std::lock_guard<std::mutex> lockGuard(_eventMutex);
 
@@ -120,19 +129,21 @@ namespace ray::renderer_core_api
 
 	//----------------------------------COMMAND LIST MANAGER----------------------------------//
 
-	extern CommandListManager gCommandManager;
 
-	CommandListManager::CommandListManager()
-		: _graphicsQueue(CommandListType::eDirect)
-		, _computeQueue(CommandListType::eCompute)
-		, _copyQueue(CommandListType::eCopy)
+	CommandListManager::CommandListManager(IRRCClassHelper* classHelper)
+		: _classHelper(classHelper)
+		, _graphicsQueue(classHelper, CommandListType::eDirect)
+		, _computeQueue(classHelper, CommandListType::eCompute)
+		, _copyQueue(classHelper, CommandListType::eCopy)
 	{}
 
-	void CommandListManager::Create()
+	void CommandListManager::Create(IDevice* device)
 	{
-		_graphicsQueue.Create();
-		_computeQueue.Create();
-		_copyQueue.Create();
+		_device = device;
+
+		_graphicsQueue.Create(device);
+		_computeQueue.Create(device);
+		_copyQueue.Create(device);
 	}
 
 	void CommandListManager::CreateNewCommandList(CommandListType type, ICommandAllocator* allocator, ICommandList* list)
@@ -155,7 +166,7 @@ namespace ray::renderer_core_api
 			break;
 		}
 
-		gDevice->CreateCommandList(list, allocator, nullptr, type);
+		_device->CreateCommandList(list, allocator, nullptr, type);
 	}
 
 	void CommandListManager::WaitForFence(u64 fenceValue)

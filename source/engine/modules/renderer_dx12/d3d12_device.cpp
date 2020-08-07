@@ -252,40 +252,29 @@ namespace ray::renderer::d3d12
         return true;
     }
 
-    bool D3D12Device::CreateCommittedResource(ResourceDesc& inDesc, ResourceUsage usage, IResource* outResource)
+    bool D3D12Device::CreateCommittedResource(resources::ResourceDesc& inDesc, resources::ResourceHeapProperties heapProps, resources::ResourceState defaultState, resources::IResource* outResource)
     {
         auto tempDevice = static_cast<ID3D12Device*>(GetInstance());
         auto tempResource = static_cast<ID3D12Resource*>(outResource->GetInstance());
-        CD3DX12_RESOURCE_DESC desc;
-
-        switch (inDesc._resource_type)
-        {
-        case ray::renderer_core_api::resources::ResourceType::eBuffer:
-            desc = CD3DX12_RESOURCE_DESC::Buffer(inDesc._width);
-            break;
-        case ray::renderer_core_api::resources::ResourceType::eTexture1D:
-            desc = CD3DX12_RESOURCE_DESC::Tex1D(utils::ConvertShaderTypeToDXGI(inDesc._shader_type), inDesc._width);
-            break;
-        case ray::renderer_core_api::resources::ResourceType::eTexture2D:
-            desc = CD3DX12_RESOURCE_DESC::Tex2D(utils::ConvertShaderTypeToDXGI(inDesc._shader_type), inDesc._width, inDesc._height);
-            break;
-        case ray::renderer_core_api::resources::ResourceType::eTexture3D:
-            break;
-        default:
-            break;
-        }
-
-        D3D12_RESOURCE_STATES state;
-        if (usage == ResourceUsage::eDefault)
-            state = D3D12_RESOURCE_STATE_COPY_DEST;
-        else if (usage == ResourceUsage::eUpload)
-            state = D3D12_RESOURCE_STATE_GENERIC_READ;
+        
+        D3D12_RESOURCE_DESC desc = {};
+        desc.Alignment = inDesc.Alignment;
+        desc.Width = inDesc.Width;
+        desc.Height = inDesc.Height;
+        desc.DepthOrArraySize = inDesc.DepthOrArraySize;
+        desc.MipLevels = inDesc.MipLevels;
+        desc.Format = utils::ConvertShaderTypeToDXGI(inDesc.ShaderType);
+        desc.SampleDesc.Count = inDesc.SampleDesc.Count;
+        desc.SampleDesc.Quality = inDesc.SampleDesc.Quality;
+        desc.Dimension = utils::ConvertResourceTypeToResourceDimension(inDesc.ResourceType);
+        desc.Layout = utils::ConvertTextureLayoutToD3D12(inDesc.TextureLayout);
+        desc.Flags = static_cast<D3D12_RESOURCE_FLAGS>(inDesc.Flags);
 
         auto hResult = tempDevice->CreateCommittedResource(
-            &CD3DX12_HEAP_PROPERTIES(utils::ConvertResourceUsageToHeapType(usage)), // a default heap
+            &CD3DX12_HEAP_PROPERTIES(utils::ConvertResourceUsageToHeapType(heapProps.Usage)), // a default heap
             D3D12_HEAP_FLAG_NONE, // no flags
             &desc, 
-            state, 
+            utils::ConvertResourceStateToD3D12(defaultState), 
             nullptr, // optimized clear value must be null for this type of resource. used for render targets and depth/stencil buffers
             IID_PPV_ARGS(&tempResource));
 

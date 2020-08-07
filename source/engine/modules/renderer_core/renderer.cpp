@@ -6,11 +6,16 @@
 
 #include <engine/state/state.hpp>
 
+bool IRenderer::_sbReady = false;
+
 namespace ray::renderer_core_api
 {
 
 	void IRenderer::Initialize(ray::core::IPlatformWindow* window, IModule* rendererModule)
 	{
+		if (IsReady())
+			return;
+
 		gClassHelper = static_cast<IRRCClassHelper*>(rendererModule->QueryModuleInterface());
 
 		gDevice = gClassHelper->CreateDevice();
@@ -83,6 +88,8 @@ namespace ray::renderer_core_api
 			return;
 
 		delete rtvDescriptor;
+
+		_sbReady = true;
 	}
 
 	void IRenderer::BeginScene()

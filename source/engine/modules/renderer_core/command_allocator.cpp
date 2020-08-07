@@ -1,5 +1,6 @@
 #include "command_allocator.hpp"
 #include "renderer_globals.hpp"
+#include <cassert>
 
 namespace ray::renderer_core_api
 {
@@ -10,7 +11,7 @@ namespace ray::renderer_core_api
 
 	ICommandAllocator* CommandAllocatorPool::RequestAllocator(u64 completedFenceValue)
 	{
-		std::lock_guard<std::mutex> lockGuard(_allocatorMutex);
+		_allocatorMutex.TryEnter();
 
 		ICommandAllocator* ret = gClassHelper->CreateCommandAllocator();
 
@@ -21,8 +22,7 @@ namespace ray::renderer_core_api
 			if (pair.first <= completedFenceValue)
 			{
 				ret = pair.second;
-				if (!ret->Reset())
-					return nullptr;
+				assert(ret->Reset());
 				_readyAllocators.pop();
 			}
 		}
@@ -34,14 +34,18 @@ namespace ray::renderer_core_api
 			_allocatorPool.push_back(ret);
 		}
 
+		_allocatorMutex.Leave();
+
 		return ret;
 	}
 
 	void CommandAllocatorPool::DiscardAllocator(ICommandAllocator* allocator, u64 fenceValue)
 	{
-		std::lock_guard<std::mutex> lockGuard(_allocatorMutex);
+		_allocatorMutex.TryEnter();
 
 		_readyAllocators.push(std::make_pair(fenceValue, allocator));
+	
+		_allocatorMutex.Leave();
 	}
 
 	void CommandAllocatorPool::Shutdown()

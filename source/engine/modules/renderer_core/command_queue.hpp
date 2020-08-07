@@ -38,12 +38,14 @@ class CommandListManager;
 
 class CommandQueue
 {
-	friend CommandListManager;
+	friend class CommandListManager;
+	friend class CommandContext;
+
 public:
-	CommandQueue(CommandListType type);
+	CommandQueue(IRRCClassHelper* classHelper, CommandListType type);
 	~CommandQueue();
 
-	bool Create();
+	bool Create(IDevice* device);
 	void Shutdown();
 
 	bool IsReady() { return _commandQueue != nullptr; }
@@ -68,6 +70,9 @@ private:
 	CommandListType _type;
 	CommandAllocatorPool _allocatorPool;
 
+	IDevice* _device;
+	IRRCClassHelper* _classHelper;
+
 private:
 	ICommandAllocator* RequestAllocator();
 	void DiscardAllocator(u64 fenceValueForReset, ICommandAllocator* allocator);
@@ -78,10 +83,10 @@ private:
 class CommandListManager
 {
 public:
-	CommandListManager();
+	CommandListManager(IRRCClassHelper* classHelper);
 	~CommandListManager();
 
-	void Create();
+	void Create(IDevice* device);
 	void Shutdown();
 
 	CommandQueue& GetGraphicsQueue() { return _graphicsQueue; }
@@ -120,6 +125,9 @@ private:
 	CommandQueue _graphicsQueue;
 	CommandQueue _computeQueue;
 	CommandQueue _copyQueue;
+
+	IDevice* _device;
+	IRRCClassHelper* _classHelper;
 
 };
 

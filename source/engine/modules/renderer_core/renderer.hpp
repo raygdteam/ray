@@ -23,16 +23,14 @@ namespace ray::renderer_core_api
 		void EndScene();
 		void Execute();
 
-		bool IsRunning() { return _running; }
-
-		IDevice* GetDevice() const noexcept { return _device; }
+		static bool IsReady() { return _sbReady; }
 
 	private:
 		void WaitForPreviousFrame(); //temporary
 
 
 	private:
-		bool _running;
+		static bool _sbReady;
 		resources::IResourceBarrier* _resourceBarrier;
 		ICommandList* _rtvCommandList;
 		std::vector<ICommandList*> _3dLists;
