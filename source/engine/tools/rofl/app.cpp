@@ -1,4 +1,5 @@
 // Любезно взято из o2
+#define _CRT_SECURE_NO_WARNINGS
 #include "app.hpp"
 
 #include <algorithm>
@@ -109,8 +110,8 @@ map<string, TimeStamp> CodeToolApplication::GetFolderFiles(const string& path)
 {
 	map<string, TimeStamp> res;
 
-	WIN32_FIND_DATA f;
-	HANDLE h = FindFirstFile((path + "/*").c_str(), &f);
+	WIN32_FIND_DATAA f;
+	HANDLE h = FindFirstFileA((path + "/*").c_str(), &f);
 	if (h != INVALID_HANDLE_VALUE)
 	{
 		do
@@ -129,7 +130,7 @@ map<string, TimeStamp> CodeToolApplication::GetFolderFiles(const string& path)
 				string filePath = path + "/" + f.cFileName;
 				res[filePath] = GetFileEditedDate(filePath);
 			}
-		} while (FindNextFile(h, &f));
+		} while (FindNextFileA(h, &f));
 	}
 
 	FindClose(h);
@@ -216,7 +217,7 @@ string CodeToolApplication::ReadFile(const string& path) const
 
 bool CodeToolApplication::IsFileExist(const string& path) const
 {
-	DWORD tp = GetFileAttributes(path.c_str());
+	DWORD tp = GetFileAttributesA(path.c_str());
 
 	if (tp == INVALID_FILE_ATTRIBUTES)
 		return false;
@@ -251,26 +252,16 @@ string CodeToolApplication::GetParentPath(const string& path)
 string CodeToolApplication::GetRelativePath(const string& from, const string& to)
 {
 	char out[MAX_PATH];
-	PathRelativePathTo(out, from.c_str(), FILE_ATTRIBUTE_DIRECTORY, to.c_str(), FILE_ATTRIBUTE_NORMAL);
+	PathRelativePathToA(out, from.c_str(), FILE_ATTRIBUTE_DIRECTORY, to.c_str(), FILE_ATTRIBUTE_NORMAL);
 	return (string)out;
 }
 
 void CodeToolApplication::LoadCache()
 {
-	if (mNeedReset)
-	{
-		for (auto& file : mCache.parentProjects)
-			mCache.Load(file, false);
-
-		return;
-	}
-
-	mCache.Load(mSourcesPath + "/" + mCachePath);
 }
 
 void CodeToolApplication::SaveCache()
 {
-	mCache.Save(mSourcesPath + "/" + mCachePath);
 }
 
 
@@ -278,229 +269,6 @@ void CodeToolApplication::UpdateProjectFilesFilter()
 {
 	if (mMSVCProjectPath.empty())
 		return;
-
-	pugi::xml_document doc;
-	doc.load_file((mMSVCProjectPath + ".filters").c_str());
-
-	pugi::xml_node projectNode = doc.child("Project");
-	if (!projectNode)
-		return;
-
-	string MSVCProjectDir = GetParentPath(mMSVCProjectPath);
-
-	vector<string> filters;
-	vector<string> files;
-	for (auto file : mSourceFiles)
-	{
-		string filePath = file.first;
-
-		if (!EndsWith(filePath, ".h") && !EndsWith(filePath, ".cpp"))
-			continue;
-
-		for (int i = 0; i < filePath.length(); i++)
-		{
-			if (filePath[i] == '/')
-				filePath[i] = '\\';
-		}
-
-		string dir = GetRelativePath(MSVCProjectDir, GetParentPath(filePath));
-
-		while (!dir.empty() && dir[0] == '.')
-		{
-			auto slashPos = dir.find('\\');
-			if (slashPos != string::npos)
-				dir.erase(0, slashPos + 1);
-		}
-
-		if (dir.find("OSX") != string::npos)
-			continue;
-
-		if (dir.find("Android") != string::npos)
-			continue;
-
-		while (!dir.empty() && find(filters.begin(), filters.end(), dir) == filters.end())
-		{
-			filters.push_back(dir);
-			dir = GetParentPath(dir);
-		}
-
-		string relativePath = GetRelativePath(MSVCProjectDir, filePath);
-
-		if (relativePath.length() > 1 && relativePath[0] == '.' && relativePath[1] == '\\')
-			relativePath.erase(0, 2);
-
-		files.push_back(relativePath);
-	}
-
-	vector<pugi::xml_node> oldFiltersNodes, ignoringGroups;
-	vector<string> oldFilters, oldFiles, newFilters, newFiles;
-
-	bool projectStructureChanged = false;
-	for (auto groupNode : projectNode)
-	{
-		for (auto itemNode : groupNode)
-		{
-			if ((string)"Filter" == itemNode.name())
-			{
-				string filter = itemNode.attribute("Include").as_string();
-				if (find(filters.begin(), filters.end(), filter) != filters.end())
-				{
-					oldFiltersNodes.push_back(itemNode);
-					oldFilters.push_back(filter);
-				}
-				else
-				{
-					VerboseLog("Project changed: %s - removed filter\n", filter.c_str());
-					projectStructureChanged = true;
-				}
-			}
-			else if ((string)"ClInclude" == itemNode.name() || (string)"ClCompile" == itemNode.name())
-			{
-				string file = itemNode.attribute("Include").as_string();
-				if (find(files.begin(), files.end(), file) != files.end())
-					oldFiles.push_back(file);
-				else
-				{
-					VerboseLog("Project changed: %s - removed file\n", file.c_str());
-					projectStructureChanged = true;
-				}
-			}
-			else
-			{
-				ignoringGroups.push_back(groupNode);
-				break;
-			}
-		}
-	}
-
-	for (auto& filter : filters)
-		if (find(oldFilters.begin(), oldFilters.end(), filter) == oldFilters.end())
-			newFilters.push_back(filter);
-
-	for (auto& file : files)
-		if (find(oldFiles.begin(), oldFiles.end(), file) == oldFiles.end())
-			newFiles.push_back(file);
-
-	projectStructureChanged = projectStructureChanged || !newFiles.empty() || !newFilters.empty() || mNeedReset;
-
-	if (!projectStructureChanged)
-	{
-		VerboseLog("Project wasn't changed\n");
-		return;
-	}
-
-	VerboseLog("Project changed. New files:%i, new filters:%i, need reset:%s\n", newFiles.size(), newFilters.size(),
-		(mNeedReset ? "true" : "false"));
-
-	// generate new filters file
-	pugi::xml_document newDoc;
-	pugi::xml_node newProjectNode = newDoc.append_child("Project");
-	newProjectNode.append_attribute("ToolsVersion") = projectNode.attribute("ToolsVersion").as_string();
-	newProjectNode.append_attribute("xmlns") = projectNode.attribute("xmlns").as_string();
-
-	// filters
-	pugi::xml_node filtersNode = newProjectNode.append_child("ItemGroup");
-	for (auto& oldFilterNode : oldFiltersNodes)
-		filtersNode.append_copy(oldFilterNode);
-
-	for (auto& newFilter : newFilters)
-		filtersNode.append_child("Filter").append_attribute("Include") = newFilter.c_str();
-
-	// includes
-	pugi::xml_node headersNode = newProjectNode.append_child("ItemGroup");
-	for (auto& file : files)
-	{
-		if (EndsWith(file, ".h"))
-		{
-			auto node = headersNode.append_child("ClInclude");
-			node.append_attribute("Include") = file.c_str();
-
-			auto slashPos = file.find('\\');
-			if (slashPos != string::npos)
-			{
-				while (file[slashPos + 1] == '.')
-					slashPos = file.find('\\', slashPos + 1);
-
-				string filter = GetParentPath(file.substr(slashPos + 1));
-				if (!filter.empty())
-					node.append_child("Filter").append_child(pugi::node_pcdata).set_value(filter.c_str());
-			}
-		}
-	}
-
-	// sources
-	pugi::xml_node sourcesNode = newProjectNode.append_child("ItemGroup");
-	for (auto& file : files)
-	{
-		if (EndsWith(file, ".cpp"))
-		{
-			auto node = sourcesNode.append_child("ClCompile");
-			node.append_attribute("Include") = file.c_str();
-
-			auto slashPos = file.find('\\');
-			if (slashPos != string::npos)
-			{
-				while (file[slashPos + 1] == '.')
-					slashPos = file.find('\\', slashPos + 1);
-
-				string filter = GetParentPath(file.substr(slashPos + 1));
-				if (!filter.empty())
-					node.append_child("Filter").append_child(pugi::node_pcdata).set_value(filter.c_str());
-			}
-		}
-	}
-
-	// ignored
-	for (auto& x : ignoringGroups)
-		newProjectNode.append_copy(x);
-
-	newDoc.save_file((mMSVCProjectPath + ".filters").c_str());
-
-	//and update project
-	pugi::xml_document projectDoc, newProjectDoc;
-	projectDoc.load_file(mMSVCProjectPath.c_str());
-
-	projectNode = projectDoc.child("Project");
-	newProjectNode = newProjectDoc.append_child("Project");
-	newProjectNode.append_attribute("DefaultTargets") = projectNode.attribute("DefaultTargets").as_string();
-	newProjectNode.append_attribute("ToolsVersion") = projectNode.attribute("ToolsVersion").as_string();
-	newProjectNode.append_attribute("xmlns") = projectNode.attribute("xmlns").as_string();
-
-	for (auto node : projectNode)
-	{
-		if ((string)"ItemGroup" != node.name() || node.attribute("Label") || (!node.child("ClInclude") && !node.child("ClCompile")))
-			newProjectNode.append_copy(node);
-	}
-
-	// headers
-	pugi::xml_node newProjectHeadersGroup = newProjectNode.append_child("ItemGroup");
-	for (auto& file : files)
-	{
-		if (EndsWith(file, ".h"))
-			newProjectHeadersGroup.append_child("ClInclude").append_attribute("Include") = file.c_str();
-	}
-
-	// sources
-	pugi::xml_node newProjectSourcesGroup = newProjectNode.append_child("ItemGroup");
-	for (auto& file : files)
-	{
-		if (EndsWith(file, ".cpp"))
-		{
-			auto clCompile = newProjectSourcesGroup.append_child("ClCompile");
-			clCompile.append_attribute("Include") = file.c_str();
-
-			if (EndsWith(file, "stdafx.cpp"))
-			{
-				auto headerDebug = clCompile.append_child("PrecompiledHeader");
-				headerDebug.append_child(pugi::node_pcdata).set_value("Create");
-
-				auto headerRelease = clCompile.append_child("PrecompiledHeader");
-				headerRelease.append_child(pugi::node_pcdata).set_value("Create");
-			}
-		}
-	}
-
-	newProjectDoc.save_file(mMSVCProjectPath.c_str());
 }
 
 void CodeToolApplication::UpdateCodeReflection()
@@ -577,7 +345,7 @@ void CodeToolApplication::UpdateSourceReflection(SyntaxFile* file)
 
 	string hSource = file->GetData();
 
-	if (hSource.find("@CODETOOLIGNORE") != string::npos)
+	if (hSource.find("@RoflIgnoreFile") != string::npos)
 		return;
 
 	RemoveMetas(hSource, "META_TEMPLATES(", "END_META;");
@@ -957,7 +725,8 @@ void CodeToolApplication::AggregateTemplates(SyntaxSection* sec, string& templat
 			templates += "META_TEMPLATES(" + cls->GetTemplateParameters() + ")\n";
 
 			string classTemplates = cls->GetTemplateParameters();
-			RemoveSubstrs(classTemplates, (std::string)"typename ");
+			string typenameStr = "typename ";
+			RemoveSubstrs(classTemplates, typenameStr);
 
 			fullName += "<" + classTemplates + ">";
 		}
@@ -1269,54 +1038,6 @@ void CodeToolCache::SearchAttributes(SyntaxSection* section, SyntaxClass* attrib
 		}
 
 		SearchAttributes(childSection, attributeClass);
-	}
-}
-
-void CodeToolCache::Save(const string& file) const
-{
-	pugi::xml_document doc;
-
-	pugi::xml_node filesNode = doc.append_child("files");
-	for (auto file : originalFiles)
-		file->SaveTo(filesNode.append_child("file"));
-
-	pugi::xml_node parentProjsNode = doc.append_child("parentProjects");
-	for (auto& proj : parentProjects)
-		parentProjsNode.append_child("project").append_attribute("path") = proj.c_str();
-
-	doc.save_file(file.c_str());
-}
-
-void CodeToolCache::Load(const string& file, bool original /*= true*/)
-{
-	pugi::xml_document doc;
-	doc.load_file(file.c_str());
-
-	pugi::xml_node filesNode = doc.child("files");
-	for (auto x : filesNode)
-	{
-		SyntaxFile* newFile = new SyntaxFile();
-		newFile->LoadFrom(x);
-		files.push_back(newFile);
-
-		if (original)
-			originalFiles.push_back(newFile);
-	}
-
-	if (original)
-	{
-		for (auto x : parentProjects)
-			Load(x, false);
-	}
-	else
-	{
-		pugi::xml_node parentProjsNode = doc.child("parentProjects");
-		for (auto x : parentProjsNode)
-		{
-			string path = x.attribute("path").as_string();
-			parentProjects.push_back(path);
-			Load(path, false);
-		}
 	}
 }
 

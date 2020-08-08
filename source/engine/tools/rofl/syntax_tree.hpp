@@ -4,7 +4,6 @@
 #include <string>
 #include <vector>
 #include <map>
-#include "pugixml/pugixml.hpp"
 
 #undef GetClassName
 
@@ -48,12 +47,6 @@ struct TimeStamp
 
 	bool operator==(const TimeStamp& wt) const;
 	bool operator!=(const TimeStamp& wt) const;
-
-	// Saves data to xml node
-	void SaveTo(pugi::xml_node& node) const;
-
-	// Loads data from xml node
-	void LoadFrom(pugi::xml_node& node);
 };
 
 // Abstract syntax tree file
@@ -77,13 +70,7 @@ public:
 
 	// Returns global syntax namespace in this file
 	SyntaxNamespace* GetGlobalNamespace() const;
-
-	// Saves data to xml node
-	void SaveTo(pugi::xml_node& node) const;
-
-	// Loads data from xml node
-	void LoadFrom(pugi::xml_node& node);
-
+	
 protected:
 	string           mPath;                      // File path
 	string           mData;                      // File data
@@ -140,13 +127,7 @@ public:
 
 	// Returns using namespace (if found)
 	SyntaxSection* GetUsingNamespace() const;
-
-	// Saves data to xml node
-	void SaveTo(pugi::xml_node& node) const;
-
-	// Loads data from xml node
-	void LoadFrom(pugi::xml_node& node);
-
+	
 protected:
 	string          mUsingNamespaceName;       // Using namespace name
 	SyntaxSection* mUsingNamespace = nullptr; // Using namespace (if found)
@@ -170,12 +151,6 @@ public:
 
 	// Returns new defined name (Y)
 	SyntaxSection* GetNewDef() const;
-
-	// Saves data to xml node
-	void SaveTo(pugi::xml_node& node) const;
-
-	// Loads data from xml node
-	void LoadFrom(pugi::xml_node& node);
 
 protected:
 	string          mWhatName;              // What was used to defined name (X)
@@ -244,12 +219,6 @@ public:
 	// Returns attributes definitions
 	virtual const SyntaxAttributesVec& GetAttributes() const;
 
-	// Saves data to xml node
-	virtual void SaveTo(pugi::xml_node& node) const;
-
-	// Loads data from xml node
-	virtual void LoadFrom(pugi::xml_node& node);
-
 protected:
 	string                   mName;                    // Short name of section
 	string                   mFullName;                // Full name of section with all parents names
@@ -300,12 +269,6 @@ public:
 
 	// Check equality operator
 	bool operator==(const SyntaxClassInheritance& other) const;
-
-	// Saves data to xml node
-	void SaveTo(pugi::xml_node& node) const;
-
-	// Loads data from xml node
-	void LoadFrom(pugi::xml_node& node);
 
 protected:
 	string                  mClassName;       // Inheritance class name
@@ -372,12 +335,6 @@ public:
 
 	// Returns attributes definitions
 	const SyntaxAttributesVec& GetAttributes() const;
-
-	// Saves data to xml node
-	void SaveTo(pugi::xml_node& node) const;
-
-	// Loads data from xml node
-	void LoadFrom(pugi::xml_node& node);
 
 protected:
 	SyntaxClassInheritancsVec mBaseClasses;             // Base classes

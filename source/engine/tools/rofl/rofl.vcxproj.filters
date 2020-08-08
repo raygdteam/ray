@@ -2,27 +2,13 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="pugixml\pugixml.cpp">
-      <Filter>pugixml</Filter>
-    </ClCompile>
     <ClCompile Include="syntax_tree.cpp" />
     <ClCompile Include="syntax_parser.cpp" />
     <ClCompile Include="app.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="syntax_tree.hpp" />
-    <ClInclude Include="pugixml\pugixml.hpp">
-      <Filter>pugixml</Filter>
-    </ClInclude>
-    <ClInclude Include="pugixml\pugiconfig.hpp">
-      <Filter>pugixml</Filter>
-    </ClInclude>
     <ClInclude Include="syntax_parser.hpp" />
     <ClInclude Include="app.hpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <Filter Include="pugixml">
-      <UniqueIdentifier>{9870db58-ae4e-4c9e-86bb-e6825abf14ff}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
 </Project>

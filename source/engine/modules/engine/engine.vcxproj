@@ -147,6 +147,7 @@
     <ClCompile Include="engine\engine.cpp" />
     <ClCompile Include="module_engine.cpp" />
     <ClCompile Include="state\state.cpp" />
+    <ClCompile Include="world\world.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\thirdparty\mimalloc\mimalloc.vcxproj">

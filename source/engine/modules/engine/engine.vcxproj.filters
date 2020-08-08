@@ -43,5 +43,8 @@
     <ClCompile Include="state\state.cpp">
       <Filter>state</Filter>
     </ClCompile>
+    <ClCompile Include="world\world.cpp">
+      <Filter>world</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

@@ -10,7 +10,7 @@
 #include <iostream>
 #include <sstream>
 
-string& TrimStart(const string& str, const string& chars /*= " "*/)
+string& TrimStart(string& str, const string& chars /*= " "*/)
 {
 	int l = (int)str.length();
 	int i = 0;
@@ -25,7 +25,7 @@ string& TrimStart(const string& str, const string& chars /*= " "*/)
 	return str;
 }
 
-string& TrimEnd(const string& str, const string& chars /*= " "*/)
+string& TrimEnd(string& str, const string& chars /*= " "*/)
 {
 	int l = (int)str.length();
 	int i = l - 1;
@@ -40,7 +40,7 @@ string& TrimEnd(const string& str, const string& chars /*= " "*/)
 	return str;
 }
 
-string& Trim(const string& str, const string& chars /*= " "*/)
+string& Trim(string str, const string& chars /*= " "*/)
 {
 	return TrimStart(TrimEnd(str, chars), chars);
 }
@@ -477,7 +477,7 @@ void CppSyntaxParser::ParseNamespace(SyntaxSection& section, int& caret,
 	newNamespace->mBegin = begin;
 	newNamespace->mLength = caret - begin;
 	newNamespace->mLine = GetLineNumber(section.mData, caret);
-	newNamespace->mData = Trim(block.substr(1, block.length() - 1), " \r\t\n");
+	newNamespace->mData = Trim(string(block.substr(1, block.length() - 1)), " \r\t\n");
 	newNamespace->mName = namespaceName;
 	newNamespace->mFullName = section.mFullName.empty() ? namespaceName : section.mFullName + "::" + namespaceName;
 	newNamespace->mFile = section.mFile;

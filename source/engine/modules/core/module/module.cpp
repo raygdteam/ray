@@ -31,13 +31,13 @@ ModuleManager::ModuleManager()
 		if (module == nullptr) 
 			continue;
 		
-		gModules->PushBack(new ModuleDef { (*module)(), nullptr });
+		gModules->Push(new ModuleDef { (*module)(), nullptr });
 	}
 
 	memset(&StaticallyLoadedModules, 0, sizeof(RayModuleEntryFn*) * 32);
 
 	/* Call IModule#OnLoad */
-	for (ModuleDef* module : gModules)
+	for (ModuleDef* module : *gModules)
 	{
 		module->Module->OnLoad();
 	}
@@ -48,7 +48,7 @@ Result<IModule*, ModuleLoadError> ModuleManager::LoadModule(pcstr name)
 	/* 1. Check is it's already loaded. */
 	if (!gModules->IsEmpty())
 	{
-		for (ModuleDef* module : gModules)
+		for (ModuleDef* module : *gModules)
 		{
 			if (strcmp(module->Module->Meta.Name, name) == 0)
 				return { module->Module, eSuccess };
@@ -87,7 +87,7 @@ Result<IModule*, ModuleLoadError> ModuleManager::LoadModule(pcstr name)
 	module->OnLoad();
 	
 	/* 4. Add to the linked list. */
-	gModules->PushBack(new ModuleDef { module, rawHandle });
+	gModules->Push(new ModuleDef { module, rawHandle });
 	
 	return { module, eSuccess };
 }

@@ -15,7 +15,7 @@ RayObjectMeta* ObjectDb::GetObject(pcstr name)
 {
 	if (!gObjects->IsEmpty())
 	{
-		for (RayObjectMeta* object : gObjects)
+		for (RayObjectMeta* object : *gObjects)
 		{
 			if (strcmp(object->Name, name) == 0)
 				return object;
@@ -27,5 +27,5 @@ RayObjectMeta* ObjectDb::GetObject(pcstr name)
 
 void ObjectDb::RegisterObject(RayObjectMeta* meta)
 {
-	gObjects->PushBack(meta);
+	gObjects->Push(meta);
 }

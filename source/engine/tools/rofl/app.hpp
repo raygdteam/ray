@@ -49,12 +49,6 @@ public:
 	// Returns section by name in where
 	SyntaxSection* FindSection(const string& what, SyntaxSection* where);
 
-	// Saves data to file
-	void Save(const string& file) const;
-
-	// Loads data from file
-	void Load(const string& file, bool original = true);
-
 protected:
 	void AppendSection(SyntaxSection* currentSection, SyntaxSection* newSection);
 	void ResolveDependencies(SyntaxSection* section);

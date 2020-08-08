@@ -4,7 +4,7 @@
 
 bool EndsWith(const string& str, const string& ends);
 bool StartsWith(const string& str, const string& starts);
-string& Trim(string& str, const string& chars = " ");
+string& Trim(string str, const string& chars = " ");
 string& TrimEnd(string& str, const string& chars = " ");
 string& TrimStart(string& str, const string& chars = " ");
 void Split(const string& s, char delim, vector<string>& elems);

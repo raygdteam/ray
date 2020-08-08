@@ -1,183 +1,74 @@
 #pragma once
-
 #include <core/core.hpp>
 
 namespace ray
 {
-template<typename Type, typename IndexSize = u32>
+template<typename Type>
 class Array
 {
-	template<typename Type>
-	class Node
-	{
-	public:
-		Node* Next;
-		Type Data;
-
-		Node(Type data = Type(), Node* next = nullptr)
-		{
-			this->Data = data;
-			this->Next = next;
-		}
-	};
-
-	IndexSize _size;
-	Node<Type>* _head;
-
+	u64 _size = 0;
+	u64 _capacity = 32;
+	Type* _data = nullptr;
 public:
 	Array()
 	{
 		_size = 0;
-		_head = nullptr;
+		_capacity = 32;
+		_data = new Type*[32];
 	}
 
-	~Array()
+	/**
+	 * Gets the current array size.
+	 */
+	u64 Size()
 	{
-		Clear();
+		return _size;
 	}
 
-	// void Push(type data, IndexSize index);
-
-	void PushFront(Type data)
+	/**
+	 * Gets the allocated array capacity.
+	 */
+	u64 Capacity()
 	{
-		_head = new Node<Type>(data, _head);
-		_size++;
+		return _capacity;
 	}
 
-	void PushBack(Type data)
+	void Push(Type data)
 	{
-		if (_head == nullptr)
-			_head = new Node<Type>(data);
-		else
+		if (_size == _capacity)
 		{
-			Node<Type>* current = _head;
-
-			while (current->Next != nullptr)
-				current = current->Next;
-
-			current->Next = new Node<Type>(data);
+			// TODO: realloc
+			return;
 		}
 
-		_size++;
+		_data[_size] = data;
+		_size += 1;
 	}
 
-	// void Insert(type data, IndexSize index);
-
-	// void InsertFront(type data);
-	// void InsertBack(type data);
-
-	void Pop(IndexSize index)
+	/**
+	 * Iterator-like: returs the first element of array.
+	 */
+	Type* Begin()
 	{
-		if (index == 0)
-			PopFront();
-		else
-		{
-			Node<Type>* previous = _head;
-			for (IndexSize i = 0; i < index - 1; i++)
-				previous = previous->Next;
-
-			Node<Type>* toDelete = previous->Next;
-
-			previous->Next = toDelete->Next;
-
-			delete toDelete;
-
-			_size--;
-		}
+		return _data[0];
 	}
 
-	void PopFront()
+	/**
+	 * Iterator-like: returs the last element of array.
+	 */
+	Type* End()
 	{
-		Node<Type>* temp = _head;
-
-		_head = _head->Next;
-
-		delete temp;
-
-		_size--;
+		return _data[_size - 1];
 	}
 
-	void PopBack()
+	/* Aliases for c++ compilers since they require lowercase 'begin' / 'end'  */
+	auto begin() -> decltype(this->Begin())	{ return Begin(); }
+	auto end() -> decltype(this->End())	{ return End(); }
+
+	
+	bool IsEmpty()
 	{
-		Pop(_size - 1);
-	}
-
-	void Clear()
-	{
-		while (_size)
-			PopFront();
-	}
-
-	IndexSize Size() { return this->_size; }
-	bool IsEmpty() { return this->_size == 0; }
-
-	Type& operator[](const IndexSize index)
-	{
-		IndexSize counter = 0;
-
-		Node<Type>* current = _head;
-
-		while (current != nullptr)
-		{
-			if (counter == index)
-				return current->Data;
-
-			current = current->Next;
-			counter++;
-		}
-	}
-
-	class Iterator /* нужно переписать этот класс */
-	{
-		Node<Type>* _current;
-
-	public:
-		Iterator() noexcept : _current(this->_head) {}
-
-		Iterator(const Node<Type>* unnamed) noexcept : _current(unnamed) {}
-
-		Iterator& operator=(Node<Type>* unnamed)
-		{
-			this->_current = unnamed;
-
-			return *this;
-		}
-
-		bool operator!=(const Iterator& iterator)
-		{
-			return this->_current != iterator._current;
-		}
-
-		Iterator& operator++()
-		{
-			if (this->_current)
-				this->_current = this->_current->_next_node;
-
-			return *this;
-		}
-
-		Iterator operator++(IndexSize)
-		{
-			Iterator iterator = *this;
-			++* this;
-
-			return iterator;
-		}
-
-		Type operator*()
-		{
-			return this->_current->Data;
-		}
-	};
-
-	Iterator begin()
-	{
-		return Iterator(this->_head);
-	}
-
-	Iterator end()
-	{
-		return Iterator(nullptr);
+		return _size == 0;
 	}
 };
 }

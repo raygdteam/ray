@@ -167,6 +167,11 @@
     <ClCompile Include="app_framework.cpp" />
     <ClCompile Include="windows\platform_window.cpp" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\thirdparty\mimalloc\mimalloc.vcxproj">
+      <Project>{615c925d-85a3-4099-85bc-6bbb744c128e}</Project>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
