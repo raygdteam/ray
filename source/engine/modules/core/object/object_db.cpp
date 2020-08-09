@@ -2,7 +2,7 @@
 #include <core/object/object_db.hpp>
 #include <core/lib/array.hpp>
 
-#include <cstring>s
+#include <cstring>
 
 static ray::Array<RayObjectMeta*>* gObjects = nullptr;
 

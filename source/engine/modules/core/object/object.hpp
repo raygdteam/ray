@@ -17,5 +17,8 @@ struct RayObjectMeta
 
 struct RayObject
 {
-	
+	RayObject() {}
+	virtual ~RayObject();
+
+		
 };

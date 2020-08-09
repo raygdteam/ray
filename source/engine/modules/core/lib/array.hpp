@@ -14,7 +14,7 @@ public:
 	{
 		_size = 0;
 		_capacity = 32;
-		_data = new Type*[32];
+		_data = new Type[32];
 	}
 
 	/**
@@ -45,20 +45,32 @@ public:
 		_size += 1;
 	}
 
-	/**
-	 * Iterator-like: returs the first element of array.
-	 */
-	Type* Begin()
+	void Push(Type* data)
 	{
-		return _data[0];
+		if (_size == _capacity)
+		{
+			// TODO: realloc
+			return;
+		}
+
+		_data[_size] = *data;
+		_size += 1;
 	}
 
 	/**
-	 * Iterator-like: returs the last element of array.
+	 * Iterator-like: returns the first element of array.
+	 */
+	Type* Begin()
+	{
+		return &_data[0];
+	}
+
+	/**
+	 * Iterator-like: returns the last element of array.
 	 */
 	Type* End()
 	{
-		return _data[_size - 1];
+		return &_data[_size - 1];
 	}
 
 	/* Aliases for c++ compilers since they require lowercase 'begin' / 'end'  */

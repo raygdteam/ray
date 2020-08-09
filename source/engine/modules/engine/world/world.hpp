@@ -10,12 +10,3 @@ class World : RayObject
 	// ray::Array<IActor*> 
 };
 
-struct IRayObjectSystem_Meta_World
-{
-	IRayObjectSystem_Meta_World()
-	{
-		__debugbreak();
-	}
-};
-
-extern IRayObjectSystem_Meta_World Metadsgsdgsdag;

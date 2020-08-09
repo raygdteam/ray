@@ -1,7 +1,14 @@
 #pragma once
 #include "core/object/object.hpp"
 
-class Actor : RayObject
+namespace ray
 {
+
+class IActor : public RayObject
+{
+public:
+	IActor();
 	
 };
+	
+}
