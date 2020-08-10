@@ -20,5 +20,6 @@ struct RayObject
 	RayObject() {}
 	virtual ~RayObject();
 
-		
+	virtual void Serialize(Archive&) = 0;
+	virtual void Deserialize(Archive&) = 0;
 };

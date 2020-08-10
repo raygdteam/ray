@@ -20,6 +20,12 @@
     <ClInclude Include="world\actor.hpp">
       <Filter>world</Filter>
     </ClInclude>
+    <ClInclude Include="world\components\transform.hpp">
+      <Filter>world\components</Filter>
+    </ClInclude>
+    <ClInclude Include="world\level.hpp">
+      <Filter>world</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="engine">
@@ -33,6 +39,9 @@
     </Filter>
     <Filter Include="world">
       <UniqueIdentifier>{2a35b505-1c90-4de7-9705-98d20c9672d1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="world\components">
+      <UniqueIdentifier>{d4acd06e-4e1a-47b4-b2a4-d8cee7add7c7}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
