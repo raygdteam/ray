@@ -2,7 +2,7 @@
 #include <core/object/object_db.hpp>
 #include <core/lib/array.hpp>
 
-#include <cstring>s
+#include <cstring>
 
 static ray::Array<RayObjectMeta*>* gObjects = nullptr;
 
@@ -15,7 +15,7 @@ RayObjectMeta* ObjectDb::GetObject(pcstr name)
 {
 	if (!gObjects->IsEmpty())
 	{
-		for (RayObjectMeta* object : gObjects)
+		for (RayObjectMeta* object : *gObjects)
 		{
 			if (strcmp(object->Name, name) == 0)
 				return object;
@@ -27,5 +27,5 @@ RayObjectMeta* ObjectDb::GetObject(pcstr name)
 
 void ObjectDb::RegisterObject(RayObjectMeta* meta)
 {
-	gObjects->PushBack(meta);
+	gObjects->Push(meta);
 }

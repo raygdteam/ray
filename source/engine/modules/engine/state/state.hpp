@@ -2,21 +2,26 @@
 #include <core/core.hpp>
 #include <engine/engine/engine_def.hpp>
 
-#include <core/module/module.hpp>
-#include <core/object/object_db.hpp>
+namespace ray
+{
+// Core
+class RAY_CORE_API ModuleManager;
+class RAY_CORE_API ObjectDb;
+class RAY_CORE_API FileSystem;
 
-#include <engine/engine/engine.hpp>
-#include <core/file_system/file_system.hpp>
+// Engine
+struct IEngine;
 
 struct IRayState
 {
 	/* core */
 	ModuleManager* ModuleManager;
 	ObjectDb* ObjectDb;
-	ray::FileSystem* FileSystem;
+	FileSystem* FileSystem;
 
 	/* engine */
-	ray::IEngine* Engine;
+	IEngine* Engine;
 };
 
 RAY_ENGINE_API IRayState* RayState();
+}

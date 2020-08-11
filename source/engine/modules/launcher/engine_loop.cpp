@@ -1,6 +1,11 @@
 #include "engine_loop.hpp"
 #include <core/core.hpp>
+
 #include <engine/state/state.hpp>
+
+#include <core/object/object_db.hpp>
+#include <core/module/module.hpp>
+#include <core/file_system/file_system.hpp>
 
 
 namespace ray::launcher

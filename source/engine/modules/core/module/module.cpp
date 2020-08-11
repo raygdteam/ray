@@ -8,6 +8,8 @@
 // TODO(dark): rewrite to kernel
 #include <Windows.h>
 
+namespace ray
+{
 struct ModuleDef
 {
 	IModule* Module;
@@ -28,16 +30,16 @@ ModuleManager::ModuleManager()
 
 	for (auto& module : StaticallyLoadedModules)
 	{
-		if (module == nullptr) 
+		if (module == nullptr)
 			continue;
-		
-		gModules->PushBack(new ModuleDef { (*module)(), nullptr });
+
+		gModules->Push(new ModuleDef{ (*module)(), nullptr });
 	}
 
 	memset(&StaticallyLoadedModules, 0, sizeof(RayModuleEntryFn*) * 32);
 
 	/* Call IModule#OnLoad */
-	for (ModuleDef* module : gModules)
+	for (ModuleDef* module : *gModules)
 	{
 		module->Module->OnLoad();
 	}
@@ -48,7 +50,7 @@ Result<IModule*, ModuleLoadError> ModuleManager::LoadModule(pcstr name)
 	/* 1. Check is it's already loaded. */
 	if (!gModules->IsEmpty())
 	{
-		for (ModuleDef* module : gModules)
+		for (ModuleDef* module : *gModules)
 		{
 			if (strcmp(module->Module->Meta.Name, name) == 0)
 				return { module->Module, eSuccess };
@@ -64,7 +66,7 @@ Result<IModule*, ModuleLoadError> ModuleManager::LoadModule(pcstr name)
 	{
 		HMODULE lib = nullptr;
 		char tmp[64];
-		
+
 		sprintf_s(tmp, "libray-%s.dll", name);
 		lib = LoadLibraryA(tmp);
 		if (lib == nullptr)
@@ -85,10 +87,10 @@ Result<IModule*, ModuleLoadError> ModuleManager::LoadModule(pcstr name)
 #endif
 	/* 3. Initialize module. */
 	module->OnLoad();
-	
+
 	/* 4. Add to the linked list. */
-	gModules->PushBack(new ModuleDef { module, rawHandle });
-	
+	gModules->Push(new ModuleDef{ module, rawHandle });
+
 	return { module, eSuccess };
 }
 
@@ -103,4 +105,4 @@ void ModuleManager::__Internal_LoadModuleStatic(RayModuleEntryFn module)
 		}
 	}
 }
-
+}

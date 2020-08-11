@@ -4,13 +4,14 @@
 #include <core/lib/thread.hpp>
 #include "state/state.hpp"
 #include <core/log/log.hpp>
+#include <core/module/module.hpp>
 
 using namespace ray::core;
 
-Logger* eng;
-
 namespace ray
 {
+
+static Logger* eng;
 
 RayEngine::RayEngine() : _engineLoop(nullptr)
 {
@@ -21,7 +22,7 @@ void RayEngine::Initialize(IEngineLoop* engineLoop)
 {
 	_engineLoop = engineLoop;
 
-	eng->Log("Initializing Ray engine...");
+	eng->Log("Initializing Ray engine");
 	eng->Log("version %s.%s.%s [%s]", RAY_VERSION_MAJOR, RAY_VERSION_MINOR, RAY_VERSION_PATCH, RAY_VERSION_CODENAME);
 	eng->Log("built on \"%s\"", __TIMESTAMP__);
 

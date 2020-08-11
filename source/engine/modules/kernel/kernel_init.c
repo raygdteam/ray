@@ -42,7 +42,7 @@ BOOL WINAPI DllMain(HINSTANCE inst, DWORD reason, LPVOID reserved)
 // dummy exported function to enable .lib generation
 __declspec(dllexport) void dummy()
 {
-    asm("nop");
+    (void)0x0;
 }
 
 #endif

@@ -44,6 +44,9 @@
     <ClInclude Include="math\common.hpp">
       <Filter>math</Filter>
     </ClInclude>
+    <ClInclude Include="debug\debug.hpp">
+      <Filter>debug</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="core_entry_point.cpp" />
@@ -64,6 +67,9 @@
     </ClCompile>
     <ClCompile Include="threading\critical_section.cpp">
       <Filter>threading</Filter>
+    </ClCompile>
+    <ClCompile Include="debug\debug.cpp">
+      <Filter>debug</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -90,6 +96,9 @@
     </Filter>
     <Filter Include="threading">
       <UniqueIdentifier>{1547e6b9-8f70-4623-8685-ad062680d928}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="debug">
+      <UniqueIdentifier>{6e0c4758-45f2-4625-a108-e05f3992ef46}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

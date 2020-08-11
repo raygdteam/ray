@@ -16,7 +16,7 @@ struct Engine_Module : public IModule
 
 		ObjectDb* objects = RayState()->ObjectDb;
 
-		objects->RegisterObject(new RayObjectMeta{ "//.//world/world", &Create_World });
+		//objects->RegisterObject(new RayObjectMeta{ "//.//world/world", &Create_World });
 	}
 
 	void OnUnload() override

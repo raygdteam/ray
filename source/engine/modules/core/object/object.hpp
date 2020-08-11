@@ -4,10 +4,10 @@ struct RayObject;
 
 using ObjectCreateFunc = RayObject * ();
 
-#define RAYOBJECT()
-#define RAYOBJECT_BODY()
-#define PROPERTY()
-#define METHOD()
+#define RAYOBJECT(Name)
+#define RAYOBJECT_BODY(Type)
+#define PROPERTY(Props)
+#define METHOD(Props)
 
 struct RayObjectMeta
 {
@@ -17,5 +17,9 @@ struct RayObjectMeta
 
 struct RayObject
 {
-	
+	RayObject() {}
+	virtual ~RayObject();
+
+	virtual void Serialize(Archive&) = 0;
+	virtual void Deserialize(Archive&) = 0;
 };
