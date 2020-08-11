@@ -5,6 +5,9 @@
 namespace ray
 {
 
+/**
+ * Generic actor in scene.
+ */
 class Actor : public RayObject
 {
 	Transform _transform;

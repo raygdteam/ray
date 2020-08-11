@@ -5,6 +5,9 @@
 
 namespace ray
 {
+/**
+ * Represents a collection of Actors and all necessary data for level to render.
+ */
 RAYOBJECT("engine://world/level")
 class Level : public RayObject
 {
