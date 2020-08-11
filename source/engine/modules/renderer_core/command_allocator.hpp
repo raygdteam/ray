@@ -12,14 +12,6 @@
 
 namespace ray::renderer_core_api
 {
-class ICommandAllocator : public IRRCBase
-{
-public:
-	virtual ~ICommandAllocator() {};
-
-	virtual bool Reset() = 0;
-	
-};
 
 class CommandAllocatorPool
 {

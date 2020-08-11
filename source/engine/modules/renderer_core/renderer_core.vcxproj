@@ -137,12 +137,9 @@
   <ItemGroup>
     <ClInclude Include="command_allocator.hpp" />
     <ClInclude Include="command_context.hpp" />
-    <ClInclude Include="command_list.hpp" />
     <ClInclude Include="command_queue.hpp" />
     <ClInclude Include="descriptor_heap.hpp" />
-    <ClInclude Include="device.hpp" />
     <ClInclude Include="pipeline_state.hpp" />
-    <ClInclude Include="pixel_shader.hpp" />
     <ClInclude Include="ray_renderer_core_base.hpp" />
     <ClInclude Include="ray_renderer_core_class_helper.hpp" />
     <ClInclude Include="renderer.hpp" />
@@ -150,10 +147,6 @@
     <ClInclude Include="renderer_globals.hpp" />
     <ClInclude Include="resources\gpu_resource.hpp" />
     <ClInclude Include="resources\linear_allocator.hpp" />
-    <ClInclude Include="resources\resources.hpp" />
-    <ClInclude Include="shader.hpp" />
-    <ClInclude Include="vertex_shader.hpp" />
-    <ClInclude Include="viewport.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="command_allocator.cpp" />

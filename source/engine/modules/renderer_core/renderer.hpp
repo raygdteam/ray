@@ -31,19 +31,6 @@ namespace ray::renderer_core_api
 
 	private:
 		static bool _sbReady;
-		resources::IResourceBarrier* _resourceBarrier;
-		ICommandList* _rtvCommandList;
-		std::vector<ICommandList*> _3dLists;
-		IDescriptorHeap* _descriptorHeap;
-		ISwapChain* _swapChain;
-		ICommandQueue* _3dCommandQueue; 
-		static const u32 FRAME_BUFFER_COUNT = 3;
-		IFenceEvent* _fenceEvent;
-		u32 _frameIndex;
-		resources::IResource* _renderTargets[FRAME_BUFFER_COUNT];
-		ICommandAllocator* _commandAllocators[FRAME_BUFFER_COUNT];
-		IFence* _fences[FRAME_BUFFER_COUNT];
-		u64 _fenceValues[FRAME_BUFFER_COUNT];
 
 	};
 

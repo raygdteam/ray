@@ -2,7 +2,7 @@
 #include "command_list.hpp"
 #include "command_allocator.hpp"
 
-#include <mutex>
+#include <core/threading/critical_section.hpp>
 #include <algorithm>
 
 #define FENCE_SHIFT 56
@@ -14,24 +14,6 @@
 
 namespace ray::renderer_core_api
 {
-
-struct CommandQueueDesc
-{
-	CommandListType Type;
-	u32 NodeMask;
-};
-
-class ICommandQueue : public IRRCBase
-{
-public:
-	virtual ~ICommandQueue() {}
-
-	virtual void SetCommandLists(ICommandList**, size_t) = 0;
-	virtual void ExecuteCommandLists() = 0;
-	virtual bool Signal(IFence*, u32) = 0;
-	virtual bool Wait(IFence* fence, u64 fenceValue) = 0;
-
-};
 
 class CommandListManager;
 
@@ -62,8 +44,8 @@ private:
 	IFence* _fence;
 	IFenceEvent* _event;
 
-	std::mutex _fenceMutex;
-	std::mutex _eventMutex;
+	ray::CriticalSection _fenceMutex;
+	ray::CriticalSection _eventMutex;
 
 	ICommandQueue* _commandQueue;
 	CommandListType _type;

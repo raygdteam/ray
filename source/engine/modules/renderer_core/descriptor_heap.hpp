@@ -12,60 +12,6 @@
 
 namespace ray::renderer_core_api
 {
-enum class DescriptorHeapType
-{
-	eRTV,
-	eUAV_SRV_CBV,
-	eSampler,
-	eDSV
-};
-
-struct DescriptorHeapDesc
-{
-	u32 NumDescriptors;
-	DescriptorHeapType Type;
-	bool ShaderVisible;
-};
-
-class ICPUDescriptor;
-class IGPUDescriptor;
-
-class IDescriptorHeap : public IRRCBase
-{
-public:
-	virtual ~IDescriptorHeap() {}
-	
-	virtual void GetCPUDescriptorHandleForHeapStart(ICPUDescriptor* outHandle) noexcept = 0;
-	virtual void GetGPUDescriptorHandleForHeapStart(IGPUDescriptor* outHandle) noexcept = 0;
-};
-
-
-class IDescriptor : public IRRCBase
-{
-public:
-	IDescriptor() : _size(0) {}
-	virtual bool Offset(u32 step) = 0;
-	virtual bool Increment() = 0;
-
-	size_t GetDescriptorSize() { return _size; }
-	void SetDescriptorSize(size_t size) { _size = size; }
-
-private:
-	size_t _size;
-
-};
-
-class ICPUDescriptor : public IDescriptor
-{
-public:
-	virtual ~ICPUDescriptor() {}
-};
-
-class IGPUDescriptor : public IDescriptor
-{
-	virtual ~IGPUDescriptor() {}
-};
-
 class DescriptorAllocator
 {
 public:

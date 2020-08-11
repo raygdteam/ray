@@ -140,32 +140,12 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="d3d12_command_allocator.cpp" />
-    <ClCompile Include="d3d12_command_list.cpp" />
-    <ClCompile Include="d3d12_command_queue.cpp" />
-    <ClCompile Include="d3d12_descriptor_heap.cpp" />
-    <ClCompile Include="d3d12_device.cpp" />
-    <ClCompile Include="d3d12_pipeline_state.cpp" />
-    <ClCompile Include="d3d12_pixel_shader.cpp" />
-    <ClCompile Include="d3d12_resources.cpp" />
-    <ClCompile Include="d3d12_vertex_shader.cpp" />
     <ClCompile Include="module_renderer_dx12.cpp" />
     <ClCompile Include="ray_renderer_core_class_helper.cpp" />
-    <ClCompile Include="utils.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="d3d12_command_allocator.hpp" />
-    <ClInclude Include="d3d12_command_list.hpp" />
-    <ClInclude Include="d3d12_command_queue.hpp" />
-    <ClInclude Include="d3d12_descriptor_heap.hpp" />
-    <ClInclude Include="d3d12_device.hpp" />
-    <ClInclude Include="d3d12_pipeline_state.hpp" />
-    <ClInclude Include="d3d12_pixel_shader.hpp" />
-    <ClInclude Include="d3d12_resources.hpp" />
-    <ClInclude Include="d3d12_vertex_shader.hpp" />
     <ClInclude Include="d3dx12.h" />
     <ClInclude Include="pch.hpp" />
-    <ClInclude Include="utils.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\thirdparty\mimalloc\mimalloc.vcxproj">

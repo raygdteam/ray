@@ -2,27 +2,12 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <ClInclude Include="command_allocator.hpp" />
-    <ClInclude Include="command_list.hpp" />
     <ClInclude Include="command_queue.hpp" />
     <ClInclude Include="descriptor_heap.hpp" />
-    <ClInclude Include="device.hpp" />
     <ClInclude Include="pipeline_state.hpp" />
     <ClInclude Include="ray_renderer_core_base.hpp" />
     <ClInclude Include="ray_renderer_core_class_helper.hpp" />
     <ClInclude Include="renderer.hpp" />
-    <ClInclude Include="resources\resources.hpp">
-      <Filter>resources</Filter>
-    </ClInclude>
-    <ClInclude Include="viewport.hpp" />
-    <ClInclude Include="shader.hpp">
-      <Filter>pipeline</Filter>
-    </ClInclude>
-    <ClInclude Include="vertex_shader.hpp">
-      <Filter>pipeline</Filter>
-    </ClInclude>
-    <ClInclude Include="pixel_shader.hpp">
-      <Filter>pipeline</Filter>
-    </ClInclude>
     <ClInclude Include="renderer_2d.hpp" />
     <ClInclude Include="renderer_globals.hpp" />
     <ClInclude Include="resources\gpu_resource.hpp">
@@ -48,9 +33,6 @@
   <ItemGroup>
     <Filter Include="resources">
       <UniqueIdentifier>{bdaef45a-1ec2-4972-97c6-c570ecdd0460}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="pipeline">
-      <UniqueIdentifier>{5650675c-a7f8-402e-ba12-5a0d27ebeb85}</UniqueIdentifier>
     </Filter>
     <Filter Include="resources\memory">
       <UniqueIdentifier>{3b02b848-2e07-4835-b1dc-a32307628676}</UniqueIdentifier>
