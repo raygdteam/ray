@@ -63,7 +63,7 @@ public:
 
 class IGPUDescriptor : public IDescriptor
 {
-
+	virtual ~IGPUDescriptor() {}
 };
 
 class DescriptorAllocator

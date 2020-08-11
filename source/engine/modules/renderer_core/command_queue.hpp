@@ -1,6 +1,5 @@
 #pragma once
 #include "command_list.hpp"
-#include "fence.hpp"
 #include "command_allocator.hpp"
 
 #include <mutex>

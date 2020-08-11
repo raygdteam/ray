@@ -6,20 +6,14 @@
     <ClInclude Include="command_queue.hpp" />
     <ClInclude Include="descriptor_heap.hpp" />
     <ClInclude Include="device.hpp" />
-    <ClInclude Include="fence.hpp" />
     <ClInclude Include="pipeline_state.hpp" />
     <ClInclude Include="ray_renderer_core_base.hpp" />
     <ClInclude Include="ray_renderer_core_class_helper.hpp" />
     <ClInclude Include="renderer.hpp" />
-    <ClInclude Include="swap_chain.hpp" />
     <ClInclude Include="resources\resources.hpp">
       <Filter>resources</Filter>
     </ClInclude>
-    <ClInclude Include="resources\textures.hpp">
-      <Filter>resources</Filter>
-    </ClInclude>
     <ClInclude Include="viewport.hpp" />
-    <ClInclude Include="root_signature.hpp" />
     <ClInclude Include="shader.hpp">
       <Filter>pipeline</Filter>
     </ClInclude>
@@ -28,12 +22,6 @@
     </ClInclude>
     <ClInclude Include="pixel_shader.hpp">
       <Filter>pipeline</Filter>
-    </ClInclude>
-    <ClInclude Include="resources\index_buffer.hpp">
-      <Filter>resources</Filter>
-    </ClInclude>
-    <ClInclude Include="resources\vertex_buffer.hpp">
-      <Filter>resources</Filter>
     </ClInclude>
     <ClInclude Include="renderer_2d.hpp" />
     <ClInclude Include="renderer_globals.hpp" />

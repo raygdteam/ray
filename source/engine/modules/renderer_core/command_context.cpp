@@ -1,6 +1,8 @@
 #include "command_context.hpp"
 #include <cassert>
 
+// TODO: FIX GLOBAL VARIABLES
+
 namespace ray::renderer_core_api
 {
 	// ------------------------ CONTEXT MANAGER ------------------------ //
@@ -100,9 +102,77 @@ namespace ray::renderer_core_api
 		: _type(type)
 		, _cpuLinearAllocator(memory::LinearAllocatorType::eCpuWritable)
 		, _gpuLinearAllocator(memory::LinearAllocatorType::eGpuExclusive)
-		, _listManager(nullptr)
-		, // TODO: FIX GLOBAL VARIABLES
+		, _listManager(gClassHelper)
+		, _commandList(gClassHelper->CreateCommandList())
+		, _commandAllocator(gClassHelper->CreateCommandAllocator())
+		//TODO: 
 	{}
+
+	CommandContext::~CommandContext()
+	{
+		if (_commandList->GetInstance() != nullptr)
+			delete _commandList;
+
+		if (_commandAllocator->GetInstance() != nullptr)
+			delete _commandList;
+	}
+	
+	void CommandContext::Initialize()
+	{
+		gCommandManager.CreateNewCommandList(_type, _commandAllocator, _commandList);
+	}
+
+	void CommandContext::Reset()
+	{
+		assert(_commandList->GetInstance() != nullptr && _commandAllocator->GetInstance() == nullptr);
+		_commandAllocator = gCommandManager.GetQueue(_type).RequestAllocator();
+		_commandList->Reset(_commandAllocator, nullptr);
+
+		//TODO:
+	}
+
+	void CommandContext::TransitionResource(resources::GpuResource& dest, resources::ResourceState newState, bool bFlushImmediate)
+	{
+		resources::ResourceState oldState = dest._usageState;
+		if (newState == oldState)
+		{
+			assert(_numResourcesToFlush < TRANSITION_STATE_DESC_COUNT);
+			resources::ResourceTransitionStateDesc transitionStateDesc = _transitionStateDesc[_numResourcesToFlush];
+			transitionStateDesc.NewState = newState;
+			transitionStateDesc.OldState = oldState;
+			transitionStateDesc.Resource = dest._resource;
+			transitionStateDesc.SubresourceIndex = resources::ALL_SUBRESOURCES;
+
+			if (newState == dest._transitioningState)
+			{
+				//TODO:
+			}
+
+			dest._usageState = newState;
+		}
+
+		if (bFlushImmediate || _numResourcesToFlush == 16)
+			FlushResourceBarriers();
+	}
+
+	void CommandContext::BeginResourceTransition(resources::GpuResource& dest, resources::ResourceState newState, bool bFlushImmediate)
+	{
+		//TODO:
+	}
+
+	void CommandContext::FlushResourceBarriers()
+	{
+		if (_numResourcesToFlush > 0)
+		{
+			_commandList->Transition(_transitionStateDesc, _numResourcesToFlush);
+			_numResourcesToFlush = 0;
+		}
+	}
+
+	void CommandContext::BindDescriptorHeaps()
+	{
+		
+	}
 
 	// ------------------------ COMPUTE CONTEXT ------------------------ //
 

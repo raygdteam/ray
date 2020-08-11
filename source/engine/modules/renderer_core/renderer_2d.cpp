@@ -18,8 +18,8 @@ namespace ray::renderer_core_api
 		const size_t MAX_VERTEX_COUNT = MAX_QUAD_COUNT * 4;
 		const size_t MAX_INDEX_COUNT = MAX_QUAD_COUNT * 6;
 
-		resources::IVertexBuffer* VertexBuffer;
-		resources::IIndexBuffer* IndexBuffer;
+		resources::IResource* VertexBuffer;
+		resources::IResource* IndexBuffer;
 		IPipelineState* PipelineState;
 
 		QuadVertex* VertexData;

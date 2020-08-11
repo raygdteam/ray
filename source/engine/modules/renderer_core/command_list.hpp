@@ -26,8 +26,10 @@ class ICommandList : public IRRCBase
 public:
 	virtual ~ICommandList() {}
 
-	virtual void ResourceBarrier(resources::IResourceBarrier* resourceBarrier, u32 barrierCount) = 0;
+	//virtual void ResourceBarrier(resources::IResourceBarrier* resourceBarrier, u32 barrierCount) = 0;
+	virtual void Transition(resources::ResourceTransitionStateDesc* desc, u32 descCount) = 0;
 	virtual void OMSetRenderTargetView(u32, ICPUDescriptor*, ICPUDescriptor*, bool) = 0;
+	virtual void SetPipelineState(IPipelineState* pso) = 0;
 	virtual void ClearRenderTarget(ICPUDescriptor*, float*) = 0;
 	virtual bool Reset(ICommandAllocator*, IPipelineState*) = 0;
 	/**

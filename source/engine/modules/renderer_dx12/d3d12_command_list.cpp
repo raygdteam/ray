@@ -16,11 +16,28 @@ namespace ray::renderer::d3d12
 		return hResult == S_OK;
 	}
 
-	void D3D12CommandList::ResourceBarrier(resources::IResourceBarrier* inResourceBarrier, u32 numBarriers)
+	/*void D3D12CommandList::ResourceBarrier(resources::IResourceBarrier* inResourceBarrier, u32 numBarriers)
 	{
 		auto tempList = static_cast<ID3D12GraphicsCommandList*>(GetInstance());
 		auto tempResourceBarrier = static_cast<CD3DX12_RESOURCE_BARRIER*>(inResourceBarrier->GetInstance());
 		tempList->ResourceBarrier(numBarriers, tempResourceBarrier);
+	}*/
+
+	void D3D12CommandList::Transition(resources::ResourceTransitionStateDesc* desc, u32 descCount)
+	{
+		auto temp = static_cast<ID3D12GraphicsCommandList*>(GetInstance());
+		D3D12_RESOURCE_BARRIER* resourceBarriers = new D3D12_RESOURCE_BARRIER[descCount];
+		for (u32 i = 0; i < descCount; i++)
+		{
+			resourceBarriers[i].Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
+			resourceBarriers[i].Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
+			resourceBarriers[i].Transition.pResource = static_cast<ID3D12Resource*>(desc[i].Resource->GetInstance());
+			resourceBarriers[i].Transition.StateAfter = utils::ConvertResourceStateToD3D12(desc[i].NewState);
+			resourceBarriers[i].Transition.StateBefore = utils::ConvertResourceStateToD3D12(desc[i].OldState);
+			resourceBarriers[i].Transition.Subresource = desc[i].SubresourceIndex;
+		}
+
+		temp->ResourceBarrier(descCount, resourceBarriers);
 	}
 
 	void D3D12CommandList::OMSetRenderTargetView(u32 numRTs, ICPUDescriptor* inRtHandle, ICPUDescriptor* inDsHandle, bool bRTsSingleHandleToDescriptorRange)
@@ -32,6 +49,12 @@ namespace ray::renderer::d3d12
 			tempDsHandle = static_cast<CD3DX12_CPU_DESCRIPTOR_HANDLE*>(inDsHandle->GetInstance());
 
 		tempList->OMSetRenderTargets(numRTs, tempRtHandle, bRTsSingleHandleToDescriptorRange, tempDsHandle);
+	}
+
+	void D3D12CommandList::SetPipelineState(IPipelineState* pso)
+	{
+		auto temp = static_cast<ID3D12GraphicsCommandList*>(GetInstance());
+		temp->SetPipelineState(static_cast<ID3D12PipelineState*>(pso->GetInstance()));
 	}
 
 	void D3D12CommandList::ClearRenderTarget(ICPUDescriptor* inRtHandle, float* rgba)
