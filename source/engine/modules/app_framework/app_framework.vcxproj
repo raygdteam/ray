@@ -73,7 +73,7 @@
     <LinkIncremental>true</LinkIncremental>
     <OutDir>$(SolutionDir).build\bin\</OutDir>
     <IntDir>$(SolutionDir).build\int\$(ProjectName)\</IntDir>
-    <TargetName>libray-$(ProjectName)</TargetName>
+    <TargetName>$(ProjectName)</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
@@ -85,7 +85,7 @@
     <LinkIncremental>false</LinkIncremental>
     <OutDir>$(SolutionDir).build\bin\</OutDir>
     <IntDir>$(SolutionDir).build\int\$(ProjectName)\</IntDir>
-    <TargetName>libray-$(ProjectName)</TargetName>
+    <TargetName>$(ProjectName)</TargetName>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>

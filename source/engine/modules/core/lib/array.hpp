@@ -150,12 +150,12 @@ namespace ray
 			Iterator& operator++()
 			{
 				if (this->_current)
-					this->_current = this->_current->_next_node;
+					this->_current = this->_current->Next;
 
 				return *this;
 			}
 
-			Iterator operator++(IndexSize)
+			Iterator operator++(int) // MSVC requirement to be exactly 'int'
 			{
 				Iterator iterator = *this;
 				++* this;
