@@ -33,15 +33,15 @@ ModuleManager::ModuleManager()
 		if (module == nullptr)
 			continue;
 
-		gModules->Push(new ModuleDef{ (*module)(), nullptr });
+		gModules->PushBack(new ModuleDef{ (*module)(), nullptr });
 	}
 
 	memset(&StaticallyLoadedModules, 0, sizeof(RayModuleEntryFn*) * 32);
 
 	/* Call IModule#OnLoad */
-	for (ModuleDef* module : *gModules)
+	for (u32 i = 0; i < gModules->Size(); ++i)
 	{
-		module->Module->OnLoad();
+		(*gModules)[i]->Module->OnLoad();
 	}
 }
 
@@ -50,8 +50,10 @@ Result<IModule*, ModuleLoadError> ModuleManager::LoadModule(pcstr name)
 	/* 1. Check is it's already loaded. */
 	if (!gModules->IsEmpty())
 	{
-		for (ModuleDef* module : *gModules)
+		for (u32 i = 0; i < gModules->Size(); ++i)
 		{
+			ModuleDef* module = (*gModules)[i];
+			
 			if (strcmp(module->Module->Meta.Name, name) == 0)
 				return { module->Module, eSuccess };
 		}
@@ -67,7 +69,7 @@ Result<IModule*, ModuleLoadError> ModuleManager::LoadModule(pcstr name)
 		HMODULE lib = nullptr;
 		char tmp[64];
 
-		sprintf_s(tmp, "libray-%s.dll", name);
+		sprintf_s(tmp, "%s.dll", name);
 		lib = LoadLibraryA(tmp);
 		if (lib == nullptr)
 		{
@@ -89,7 +91,7 @@ Result<IModule*, ModuleLoadError> ModuleManager::LoadModule(pcstr name)
 	module->OnLoad();
 
 	/* 4. Add to the linked list. */
-	gModules->Push(new ModuleDef{ module, rawHandle });
+	gModules->PushBack(new ModuleDef{ module, rawHandle });
 
 	return { module, eSuccess };
 }

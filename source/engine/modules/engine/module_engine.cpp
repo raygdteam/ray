@@ -6,7 +6,7 @@
 
 #include <engine/world/world.hpp>
 
-RayObject* Create_World() { return new World; }
+// RayObject* Create_World() { return new World; }
 
 struct Engine_Module : public IModule
 {
@@ -14,7 +14,7 @@ struct Engine_Module : public IModule
 	{
 		this->Meta = ModuleMeta{ "engine", false };
 
-		ObjectDb* objects = RayState()->ObjectDb;
+		// ObjectDb* objects = RayState()->ObjectDb;
 
 		//objects->RegisterObject(new RayObjectMeta{ "//.//world/world", &Create_World });
 	}

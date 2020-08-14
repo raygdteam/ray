@@ -99,6 +99,10 @@
 #pragma warning(disable: 4275) // C4275: non dll-interface struct 'A' used as base for dll-interface class 'B'
 #pragma warning(disable: 4595) // C4595: 'operator xxx': non-member operator new or delete functions may not be declared inline
 
+#ifdef RAY_PLATFORM_WIN
+// Asks compiler to pass parameters as registers, where possible
+#define CCFASTCALL __fastcall
+#endif
 
 // Types
 using u8  = uint8_t;  using s8  = int8_t;

@@ -19,7 +19,7 @@ rayFileHandle krnlFileOpen(const char* path, int mode)
         access = GENERIC_READ | GENERIC_WRITE;
         break;
     default:
-        access = NULL;
+        access = 0;
         break;
     }
 
@@ -32,13 +32,13 @@ rayFileHandle krnlFileOpen(const char* path, int mode)
     else if (share == OF_SHARE_DENY_NONE)
         share = FILE_SHARE_READ | FILE_SHARE_WRITE;
     else if (share == OF_SHARE_EXCLUSIVE)
-        share = NULL;
+        share = 0;
     else if (share == OF_SHARE_COMPAT)
         share = FILE_SHARE_READ | FILE_SHARE_WRITE;
     else
-        share = NULL;
+        share = 0;
 
-    rayFileHandle unnamed = CreateFile(path, access, share, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
+    rayFileHandle unnamed = CreateFileA(path, access, share, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
 
     if (unnamed == INVALID_HANDLE_VALUE)
         return RAY_INVALID_HANDLE;

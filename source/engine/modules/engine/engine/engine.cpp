@@ -6,6 +6,15 @@
 #include <core/log/log.hpp>
 #include <core/module/module.hpp>
 
+// ALL OF THIS IS TEMP
+#include <renderer_null/renderer.hpp>
+#include <engine/world/level.hpp>
+#include <chrono>
+
+Renderer* tempRenderer = nullptr;
+Level* tempLevel = nullptr;
+u64 tempLastTime = 0;
+
 using namespace ray::core;
 
 namespace ray
@@ -16,6 +25,8 @@ static Logger* eng;
 RayEngine::RayEngine() : _engineLoop(nullptr)
 {
 	eng = new Logger("engine");
+	tempRenderer = new Renderer;
+	tempLevel = new Level;
 }
 
 void RayEngine::Initialize(IEngineLoop* engineLoop)
@@ -34,50 +45,75 @@ void RayEngine::Initialize(IEngineLoop* engineLoop)
 
 	eng->Log("[2/4] Renderer load...");
 
+#ifndef _TEMP_NO_RENDERER_CORE_API_
 	// Load renderer module
-	auto res = RayState()->ModuleManager->LoadModule("renderer_dx12");
+	auto res = RayState()->ModuleManager->LoadModule("renderer_core");
 	if (!res.IsSuccess()) __debugbreak();
+#endif
 
 	eng->Log("[3/4] Renderer init...");
-	
+	tempRenderer->Initialize();
+	tempLevel->LoadLevel();
+
+#ifndef _TEMP_NO_RENDERER_CORE_API_
 	_renderer = new IRenderer;
 	_renderer->Initialize(window, res.Data);
+#endif
 
 	eng->Log("[4/4] Finishing...");
 	
-	window->SetWindowVisibility(true);
+	// window->SetWindowVisibility(true);
 
 	_window = window;
 }
 
 void RayEngine::Tick()
 {
+	static f64 delta = 0;
+	auto __start = std::chrono::high_resolution_clock::now();
+	
 	static_cast<core::IPlatformWindow*>(_window)->Update();
 	
 	//for debugging
-	bool bShouldClose = static_cast<core::IPlatformWindow*>(_window)->ShouldClose();
+	bool bShouldClose = tempRenderer->ShouldClose(); //static_cast<core::IPlatformWindow*>(_window)->ShouldClose();
 	if (bShouldClose)
 	{
 		ray::RequestEngineExit(true);
 		return;
 	}
 
-
+#ifndef _TEMP_NO_RENDERER_CORE_API_
 	_renderer->BeginScene();
 
 	// renderer commands ...
 
 	_renderer->Execute();
 	_renderer->EndScene();
+#else
+	tempLevel->Tick(delta);
+	tempRenderer->BeginFrame();
+	for (u32 i = 0; i < tempLevel->_actors.Size(); ++i)
+	{
+		Actor* actor = tempLevel->_actors[i];
+		Transform* transform = actor->GetTransform();
+		
+		tempRenderer->DrawRect(transform->Position.x, transform->Position.y, 100, 100, {1.0f, 1.0f, 1.0f});
+	}
+	tempRenderer->EndFrame();
+#endif
+	auto elapsed = std::chrono::high_resolution_clock::now() - __start;
+	delta = std::chrono::duration_cast<std::chrono::microseconds>(elapsed).count() / 1000.f;
 }
 
 RayEngine::~RayEngine()
 {
 	static_cast<core::IPlatformWindow*>(_window)->Destroy();
 	static_cast<core::IPlatformWindow*>(_window)->Shutdown();
+#ifndef _TEMP_NO_RENDERER_CORE_API_
 	_renderer->Shutdown();
 
 	delete _renderer;
+#endif
 	delete _window;
 }
 

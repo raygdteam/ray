@@ -124,59 +124,8 @@ namespace ray
 				current = current->Next;
 				counter++;
 			}
-		}
 
-		class Iterator /* нужно переписать этот класс */
-		{
-			Node<Type>* _current;
-
-		public:
-			Iterator() noexcept : _current(this->_head) {}
-
-			Iterator(const Node<Type>* unnamed) noexcept : _current(unnamed) {}
-
-			Iterator& operator=(Node<Type>* unnamed)
-			{
-				this->_current = unnamed;
-
-				return *this;
-			}
-
-			bool operator!=(const Iterator& iterator)
-			{
-				return this->_current != iterator._current;
-			}
-
-			Iterator& operator++()
-			{
-				if (this->_current)
-					this->_current = this->_current->_next_node;
-
-				return *this;
-			}
-
-			Iterator operator++(IndexSize)
-			{
-				Iterator iterator = *this;
-				++* this;
-
-				return iterator;
-			}
-
-			Type operator*()
-			{
-				return this->_current->Data;
-			}
-		};
-
-		Iterator begin()
-		{
-			return Iterator(this->_head);
-		}
-
-		Iterator end()
-		{
-			return Iterator(nullptr);
+			return *(Type*)nullptr;
 		}
 	};
 }

@@ -4,7 +4,9 @@
 
 #include <cstring>
 
-static ray::Array<RayObjectMeta*>* gObjects = nullptr;
+namespace ray
+{
+static Array<RayObjectMeta*>* gObjects = nullptr;
 
 ObjectDb::ObjectDb()
 {
@@ -13,19 +15,10 @@ ObjectDb::ObjectDb()
 
 RayObjectMeta* ObjectDb::GetObject(pcstr name)
 {
-	if (!gObjects->IsEmpty())
-	{
-		for (RayObjectMeta* object : *gObjects)
-		{
-			if (strcmp(object->Name, name) == 0)
-				return object;
-		}
-	}
-
 	return nullptr;
 }
 
 void ObjectDb::RegisterObject(RayObjectMeta* meta)
 {
-	gObjects->Push(meta);
+}
 }
