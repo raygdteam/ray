@@ -39,5 +39,7 @@ bool Debug::Initialize()
 	signal(SIGILL, Debug::handleSignal); // illegal instruction
 	signal(SIGFPE, Debug::handleSignal); // FPU error
 	signal(SIGSEGV, Debug::handleSignal); // Segmentation fault
+
+	return true;
 }
 }

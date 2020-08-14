@@ -26,6 +26,9 @@
     <ClInclude Include="world\level.hpp">
       <Filter>world</Filter>
     </ClInclude>
+    <ClInclude Include="world\components\component_base.hpp">
+      <Filter>world\components</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="engine">
@@ -53,6 +56,15 @@
       <Filter>state</Filter>
     </ClCompile>
     <ClCompile Include="world\world.cpp">
+      <Filter>world</Filter>
+    </ClCompile>
+    <ClCompile Include="world\actor.cpp">
+      <Filter>world</Filter>
+    </ClCompile>
+    <ClCompile Include="world\level.cpp">
+      <Filter>world</Filter>
+    </ClCompile>
+    <ClCompile Include="world\level_test.cpp">
       <Filter>world</Filter>
     </ClCompile>
   </ItemGroup>

@@ -152,9 +152,6 @@
     <ProjectReference Include="..\kernel\kernel.vcxproj">
       <Project>{481e9d9e-4af6-4693-96ab-660b91dd8b57}</Project>
     </ProjectReference>
-    <ProjectReference Include="..\renderer_dx12\renderer_dx12.vcxproj">
-      <Project>{12a7922b-557b-4143-9a5c-0371e30a19b2}</Project>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="windows\resource.rc" />

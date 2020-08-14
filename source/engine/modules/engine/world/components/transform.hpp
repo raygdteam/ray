@@ -1,11 +1,14 @@
 #pragma once
 #include <core/core.hpp>
+#include <engine/world/components/component_base.hpp>
+#include <core/math/vector.hpp>
 
-namespace ray
+struct Transform : IComponent
 {
-	struct Transform
-	{
-		f64 x;
-		f64 y;
-	};
-}
+	FVector<2> Position;
+	// FVector<2> Scale;
+
+	void Init() override {}
+	void Tick() override {}
+	void OnDestroy() override {}
+};

@@ -58,7 +58,7 @@ struct FVector<2>
 	{
 		return FVector<2> {
 			.x = this->x * scalar,
-				.y = this->y * scalar
+			.y = this->y * scalar
 		};
 	}
 
@@ -70,7 +70,7 @@ struct FVector<2>
 	{
 		return FVector<2> {
 			.x = this->x + vec.x,
-				.y = this->x + vec.y,
+			.y = this->x + vec.y,
 		};
 	}
 
@@ -103,8 +103,8 @@ struct FVector<3>
 	{
 		return FVector<3> {
 			.x = this->x * scalar,
-				.y = this->y * scalar,
-				.z = this->z * scalar
+			.y = this->y * scalar,
+			.z = this->z * scalar
 		};
 	}
 
@@ -116,8 +116,8 @@ struct FVector<3>
 	{
 		return FVector<3> {
 			.x = this->x + vec.x,
-				.y = this->x + vec.y,
-				.z = this->z + vec.z
+			.y = this->x + vec.y,
+			.z = this->z + vec.z
 		};
 	}
 
@@ -152,9 +152,9 @@ struct FVector<4>
 	{
 		return FVector<4> {
 			.x = this->x * scalar,
-				.y = this->y * scalar,
-				.z = this->z * scalar,
-				.w = this->w * scalar,
+			.y = this->y * scalar,
+			.z = this->z * scalar,
+			.w = this->w * scalar,
 		};
 	}
 
@@ -166,9 +166,9 @@ struct FVector<4>
 	{
 		return FVector<4> {
 			.x = this->x + vec.x,
-				.y = this->x + vec.y,
-				.z = this->z + vec.z,
-				.w = this->w + vec.w,
+			.y = this->x + vec.y,
+			.z = this->z + vec.z,
+			.w = this->w + vec.w,
 		};
 	}
 

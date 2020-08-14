@@ -78,9 +78,10 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;_DEBUG;RAY_BUILD_RENDERER_NULL;</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpplatest</LanguageStandard>
+      <AdditionalIncludeDirectories>$(ProjectDir);$(SolutionDir)\source\engine\modules;$(SolutionDir)\source\engine\thirdparty;$(SolutionDir)\source\engine\modules\engine</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -93,9 +94,10 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;NDEBUG;_RELEASE;RAY_BUILD_RENDERER_NULL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpplatest</LanguageStandard>
+      <AdditionalIncludeDirectories>$(ProjectDir);$(SolutionDir)\source\engine\modules;$(SolutionDir)\source\engine\thirdparty;$(SolutionDir)\source\engine\modules\engine</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -110,9 +112,10 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;_DEVELOPMENT;NDEBUG;RAY_BUILD_RENDERER_NULL;;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpplatest</LanguageStandard>
+      <AdditionalIncludeDirectories>$(ProjectDir);$(SolutionDir)\source\engine\modules;$(SolutionDir)\source\engine\thirdparty;$(SolutionDir)\source\engine\modules\engine</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -122,6 +125,39 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="glfw\context.c" />
+    <ClCompile Include="glfw\egl_context.c" />
+    <ClCompile Include="glfw\init.c" />
+    <ClCompile Include="glfw\input.c" />
+    <ClCompile Include="glfw\monitor.c" />
+    <ClCompile Include="glfw\osmesa_context.c" />
+    <ClCompile Include="glfw\vulkan.c" />
+    <ClCompile Include="glfw\wgl_context.c" />
+    <ClCompile Include="glfw\win32_init.c" />
+    <ClCompile Include="glfw\win32_joystick.c" />
+    <ClCompile Include="glfw\win32_monitor.c" />
+    <ClCompile Include="glfw\win32_thread.c" />
+    <ClCompile Include="glfw\win32_time.c" />
+    <ClCompile Include="glfw\win32_window.c" />
+    <ClCompile Include="glfw\window.c" />
+    <ClCompile Include="renderer.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="glfw\egl_context.h" />
+    <ClInclude Include="glfw\glx_context.h" />
+    <ClInclude Include="glfw\internal.h" />
+    <ClInclude Include="glfw\mappings.h" />
+    <ClInclude Include="glfw\osmesa_context.h" />
+    <ClInclude Include="glfw\wgl_context.h" />
+    <ClInclude Include="glfw\win32_joystick.h" />
+    <ClInclude Include="glfw\win32_platform.h" />
+    <ClInclude Include="renderer.hpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="glfw\glfw3.pc.in" />
+    <None Include="glfw\glfw3Config.cmake.in" />
+    <None Include="glfw\glfw_config.h.in" />
+    <None Include="glfw\mappings.h.in" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

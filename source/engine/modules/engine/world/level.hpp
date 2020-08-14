@@ -3,8 +3,6 @@
 #include <core/lib/array.hpp>
 #include <engine/world/actor.hpp>
 
-namespace ray
-{
 /**
  * Represents a collection of Actors and all necessary data for level to render.
  */
@@ -13,8 +11,18 @@ class Level : public RayObject
 {
 	RAYOBJECT_BODY(Level);
 
+	// Temp
+public:
 	PROPERTY(Serializable)
-	ray::Array<ray::Actor*> _actors;
-};
+	ray::Array<Actor*> _actors;
 
-}
+	Level();
+
+	void SpawnActor(Actor* actor);
+
+	// TEMPORARY
+	void LoadLevel();
+	void Tick(f64 delta);
+
+	friend class Actor;
+};

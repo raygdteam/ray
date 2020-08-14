@@ -39,9 +39,9 @@ ModuleManager::ModuleManager()
 	memset(&StaticallyLoadedModules, 0, sizeof(RayModuleEntryFn*) * 32);
 
 	/* Call IModule#OnLoad */
-	for (ModuleDef* module : *gModules)
+	for (u32 i = 0; i < gModules->Size(); ++i)
 	{
-		module->Module->OnLoad();
+		(*gModules)[i]->Module->OnLoad();
 	}
 }
 
@@ -50,8 +50,10 @@ Result<IModule*, ModuleLoadError> ModuleManager::LoadModule(pcstr name)
 	/* 1. Check is it's already loaded. */
 	if (!gModules->IsEmpty())
 	{
-		for (ModuleDef* module : *gModules)
+		for (u32 i = 0; i < gModules->Size(); ++i)
 		{
+			ModuleDef* module = (*gModules)[i];
+			
 			if (strcmp(module->Module->Meta.Name, name) == 0)
 				return { module->Module, eSuccess };
 		}

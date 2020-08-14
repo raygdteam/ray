@@ -1,9 +1,18 @@
 #pragma once
+
+#define _TEMP_NO_RENDERER_CORE_API_
+
 #include "engine/engine/engine_def.hpp"
+
+#ifndef _TEMP_NO_RENDERER_CORE_API_
 #include <renderer_core/renderer.hpp>
+#endif
+
 // #include <renderer_core/renderer_commands.hpp>
 
+#ifndef _TEMP_NO_RENDERER_CORE_API_
 using namespace ray::renderer_core_api;
+#endif
 
 namespace ray
 {
@@ -38,8 +47,9 @@ class RAY_ENGINE_API RayEngine : public IEngine
 {
 	IEngineLoop* _engineLoop;
 	void* _window = nullptr;
+#ifndef _TEMP_NO_RENDERER_CORE_API_
 	IRenderer* _renderer = nullptr;
-
+#endif
 public:
 	RayEngine();
 	~RayEngine();
