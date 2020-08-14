@@ -45,7 +45,7 @@ void Logger::Log(pcstr msg, ...)
 	va_list mark;
 	char buf[2048];
 	va_start(mark, msg);
-	int sz = _vsnprintf_s(buf, sizeof(buf) - 1, msg, mark);
+	_vsnprintf_s(buf, sizeof(buf) - 1, msg, mark);
 	ULONG bufSize = sizeof(buf) - 1;
 	buf[bufSize] = 0;
 	va_end(mark);
@@ -72,7 +72,7 @@ void Logger::Log(pcstr msg, ...)
 	OutputDebugStringA(str);
 
 #if defined(RAY_DEBUG) || defined(RAY_DEVELOPMENT)
-	printf(str);
+	printf("%s", str);
 #endif
 	gLoggerMutex->Leave();
 }

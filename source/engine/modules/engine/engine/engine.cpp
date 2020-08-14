@@ -114,7 +114,7 @@ RayEngine::~RayEngine()
 
 	delete _renderer;
 #endif
-	delete _window;
+	delete (core::IPlatformWindow*)_window;
 }
 
 /************************************/
