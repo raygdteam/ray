@@ -13,7 +13,7 @@ namespace ray::renderer_core_api
 		static void Begin();
 		static void End();
 
-		static void DrawQuad(math::Vector<3, float> pos, math::Vector<4, float> color);
+		static void DrawQuad(FVector<3> pos, FVector<4> color);
 
 	private:
 
