@@ -1,15 +1,23 @@
 #include "renderer.hpp"
-#include "renderer_globals.hpp"
+#include "command_context.hpp"
+#include "command_queue.hpp"
 
 //ñäåëàéòå óæå èíòåðôåéñ äëÿ ðàáîòû ñ ìîäóëÿìè
 #include <Windows.h>
 
 #include <engine/state/state.hpp>
 
-bool IRenderer::_sbReady = false;
-
 namespace ray::renderer_core_api
 {
+	namespace globals
+	{
+		CommandListManager gCommandListManager;
+		ContextManager gContextManager;
+		ID3D12Device* gDevice;
+	}
+
+
+	bool IRenderer::_sbReady = false;
 
 	void IRenderer::Initialize(ray::core::IPlatformWindow* window, IModule* rendererModule)
 	{

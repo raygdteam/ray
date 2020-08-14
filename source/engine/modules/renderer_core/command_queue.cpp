@@ -1,75 +1,82 @@
 #include "command_queue.hpp"
+#include <cassert>
+#include <algorithm>
 
 namespace ray::renderer_core_api
 {
-	CommandQueue::CommandQueue(IRRCClassHelper* classHelper, CommandListType type)
-		: _classHelper(classHelper)
-		, _type(type)
-		, _commandQueue(classHelper->CreateCommandQueue())
-		, _fence(classHelper->CreateFence())
-		, _event(classHelper->CreateFenceEvent())
+	CommandQueue::CommandQueue(D3D12_COMMAND_LIST_TYPE type)
+		: _type(type)
+		, _commandQueue(nullptr)
+		, _fence(nullptr)
 		, _nextFenceValue(static_cast<u64>(type) << FENCE_SHIFT | 1)
 		, _lastCompletedFenceValue(static_cast<u64>(type) << FENCE_SHIFT)
 		, _allocatorPool(type)
 	{}
 
-	bool CommandQueue::Create(IDevice* device)
+	bool CommandQueue::Create(ID3D12Device* device)
 	{
 		if (IsReady() || _allocatorPool.Size() != 0)
 			return false;
 
 		_device = device;
 
-		CommandQueueDesc desc;
+		D3D12_COMMAND_QUEUE_DESC desc;
 		desc.Type = _type;
 		desc.NodeMask = 1;
-		_device->CreateCommandQueue(desc, _commandQueue);
+		_device->CreateCommandQueue(&desc, IID_PPV_ARGS(&_commandQueue));
 
-		_device->CreateFence(_fence, 0);
+		_device->CreateFence(0, D3D12_FENCE_FLAG_NONE, IID_PPV_ARGS(&_fence));
 		_fence->Signal(static_cast<u64>(_type) << FENCE_SHIFT);
 
-		if (!_device->CreateFenceEvent(_event, nullptr, false, false))
-			return false;
+		_event = CreateEvent(nullptr, false, false, nullptr);
+		assert(_event != nullptr);
 
 		return IsReady();
 	}
 
-	u64 CommandQueue::ExecuteCommandList(ICommandList* list)
+	u64 CommandQueue::ExecuteCommandList(ID3D12CommandList* list)
 	{
-		std::lock_guard<std::mutex> lockGuard(_fenceMutex);
+		_fenceMutex.Enter();
 
-		list->Close();
+		static_cast<ID3D12GraphicsCommandList*>(list)->Close();
 
-		_commandQueue->SetCommandLists(&list, 1);
-		_commandQueue->ExecuteCommandLists();
+		_commandQueue->ExecuteCommandLists(1, &list);
 
 		_commandQueue->Signal(_fence, _nextFenceValue);
+
+		_fenceMutex.Leave();
 
 		return _nextFenceValue++;
 	}
 
 	u64 CommandQueue::IncrementFence()
 	{
-		std::lock_guard<std::mutex> lockGuard(_fenceMutex);
+		_fenceMutex.Enter();
 
 		_commandQueue->Signal(_fence, _nextFenceValue);
 		
+		_fenceMutex.Leave();
+
 		return _nextFenceValue++;
 	}
 
 	bool CommandQueue::IsFenceComplete(u64 fenceValue)
 	{
+		using namespace std;
 		if (fenceValue > _lastCompletedFenceValue)
-			_lastCompletedFenceValue = std::max(_lastCompletedFenceValue, _fence->GetCompletedValue());
+			_lastCompletedFenceValue = max(_lastCompletedFenceValue, _fence->GetCompletedValue());
 
 		return fenceValue <= _lastCompletedFenceValue;
 	}
 
-	extern CommandListManager gCommandListManager;
+	namespace globals
+	{
+		extern CommandListManager gCommandListManager;
+	}
 
 	void CommandQueue::StallForFence(u64 fenceValue)
 	{
-		CommandQueue& producer = gCommandListManager.GetQueue(static_cast<CommandListType>(fenceValue >> FENCE_SHIFT));
+		CommandQueue& producer = globals::gCommandListManager.GetQueue(static_cast<D3D12_COMMAND_LIST_TYPE>(fenceValue >> FENCE_SHIFT));
 		_commandQueue->Wait(producer._fence, fenceValue);
 	}
 
@@ -91,21 +98,23 @@ namespace ray::renderer_core_api
 		// the fence can only have one event set on completion, then thread B has to wait for 
 		// 100 before it knows 99 is ready.  Maybe insert sequential events?
 		{
-			std::lock_guard<std::mutex> lockGuard(_eventMutex);
+			_eventMutex.Enter();
 
-			_fence->SetEventOnCompletion(_event, fenceValue);
-			_event->WaitFor();
+			_fence->SetEventOnCompletion(fenceValue, _event);
+			WaitForSingleObject(_event, INFINITE);
 			_lastCompletedFenceValue = fenceValue;
+		
+			_eventMutex.Leave();
 		}
 	}
 
-	ICommandAllocator* CommandQueue::RequestAllocator()
+	ID3D12CommandAllocator* CommandQueue::RequestAllocator()
 	{
 		u64 completedValue = _fence->GetCompletedValue();
 		return _allocatorPool.RequestAllocator(completedValue);
 	}
 
-	void CommandQueue::DiscardAllocator(u64 fenceValue, ICommandAllocator* allocator)
+	void CommandQueue::DiscardAllocator(u64 fenceValue, ID3D12CommandAllocator* allocator)
 	{
 		_allocatorPool.DiscardAllocator(allocator, fenceValue);
 	}
@@ -117,27 +126,31 @@ namespace ray::renderer_core_api
 
 	void CommandQueue::Shutdown()
 	{
-		if (_commandQueue->GetInstance() == nullptr)
+		if (_commandQueue == nullptr)
 			return;
 
 		_allocatorPool.Shutdown();
 
-		delete _fence;
-		delete _event;
-		delete _commandQueue;
+		_fence->Release();
+		_fence = nullptr;
+
+		CloseHandle(_event);
+		_event = nullptr;
+
+		_commandQueue->Release();
+		_commandQueue = nullptr;
 	}
 
 	//----------------------------------COMMAND LIST MANAGER----------------------------------//
 
 
-	CommandListManager::CommandListManager(IRRCClassHelper* classHelper)
-		: _classHelper(classHelper)
-		, _graphicsQueue(classHelper, CommandListType::eDirect)
-		, _computeQueue(classHelper, CommandListType::eCompute)
-		, _copyQueue(classHelper, CommandListType::eCopy)
+	CommandListManager::CommandListManager()
+		: _graphicsQueue(D3D12_COMMAND_LIST_TYPE_DIRECT)
+		, _computeQueue(D3D12_COMMAND_LIST_TYPE_COMPUTE)
+		, _copyQueue(D3D12_COMMAND_LIST_TYPE_COPY)
 	{}
 
-	void CommandListManager::Create(IDevice* device)
+	void CommandListManager::Create(ID3D12Device* device)
 	{
 		_device = device;
 
@@ -146,32 +159,32 @@ namespace ray::renderer_core_api
 		_copyQueue.Create(device);
 	}
 
-	void CommandListManager::CreateNewCommandList(CommandListType type, ICommandAllocator* allocator, ICommandList* list)
+	void CommandListManager::CreateNewCommandList(D3D12_COMMAND_LIST_TYPE type, ID3D12CommandAllocator* allocator, ID3D12CommandList* list)
 	{
 		switch (type)
 		{
-		case ray::renderer_core_api::CommandListType::eDirect:
+		case D3D12_COMMAND_LIST_TYPE_DIRECT:
 			allocator = _graphicsQueue.RequestAllocator();
 			break;
 		
-		case ray::renderer_core_api::CommandListType::eBundle:
+		case D3D12_COMMAND_LIST_TYPE_BUNDLE:
 			return;
 		
-		case ray::renderer_core_api::CommandListType::eCompute:
+		case D3D12_COMMAND_LIST_TYPE_COMPUTE:
 			allocator = _computeQueue.RequestAllocator();
 			break;
 		
-		case ray::renderer_core_api::CommandListType::eCopy:
+		case D3D12_COMMAND_LIST_TYPE_COPY:
 			allocator = _copyQueue.RequestAllocator();
 			break;
 		}
 
-		_device->CreateCommandList(list, allocator, nullptr, type);
+		assert(_device->CreateCommandList(1, type, allocator, nullptr, IID_PPV_ARGS(&list)) == S_OK);
 	}
 
 	void CommandListManager::WaitForFence(u64 fenceValue)
 	{
-		CommandQueue& producer = GetQueue(static_cast<CommandListType>(fenceValue >> FENCE_SHIFT));
+		CommandQueue& producer = GetQueue(static_cast<D3D12_COMMAND_LIST_TYPE>(fenceValue >> FENCE_SHIFT));
 		producer.WaitForFence(fenceValue);
 	}
 

@@ -1,6 +1,7 @@
 #include "command_allocator.hpp"
 #include "renderer_globals.hpp"
 #include <cassert>
+#include "renderer.hpp"
 
 namespace ray::renderer_core_api
 {
@@ -9,15 +10,15 @@ namespace ray::renderer_core_api
 		Shutdown();
 	}
 
-	ICommandAllocator* CommandAllocatorPool::RequestAllocator(u64 completedFenceValue)
+	ID3D12CommandAllocator* CommandAllocatorPool::RequestAllocator(u64 completedFenceValue)
 	{
 		_allocatorMutex.TryEnter();
 
-		ICommandAllocator* ret = gClassHelper->CreateCommandAllocator();
+		ID3D12CommandAllocator* ret = nullptr;
 
 		if (!_readyAllocators.empty())
 		{
-			std::pair<u64, ICommandAllocator*>& pair = _readyAllocators.front();
+			std::pair<u64, ID3D12CommandAllocator*>& pair = _readyAllocators.front();
 
 			if (pair.first <= completedFenceValue)
 			{
@@ -27,9 +28,9 @@ namespace ray::renderer_core_api
 			}
 		}
 
-		if (ret->GetInstance() == nullptr)
+		if (ret == nullptr)
 		{
-			if (!gDevice->CreateCommandAllocator(ret, _type))
+			if (!globals::gDevice->CreateCommandAllocator(_type, IID_PPV_ARGS(&ret)))
 				return nullptr;
 			_allocatorPool.push_back(ret);
 		}
@@ -39,7 +40,7 @@ namespace ray::renderer_core_api
 		return ret;
 	}
 
-	void CommandAllocatorPool::DiscardAllocator(ICommandAllocator* allocator, u64 fenceValue)
+	void CommandAllocatorPool::DiscardAllocator(ID3D12CommandAllocator* allocator, u64 fenceValue)
 	{
 		_allocatorMutex.TryEnter();
 

@@ -1,5 +1,6 @@
 #include "command_context.hpp"
 #include <cassert>
+#include "renderer.hpp"
 
 // TODO: FIX GLOBAL VARIABLES
 
@@ -7,7 +8,7 @@ namespace ray::renderer_core_api
 {
 	// ------------------------ CONTEXT MANAGER ------------------------ //
 
-	CommandContext* ContextManager::AllocateContext(CommandListType type)
+	CommandContext* ContextManager::AllocateContext(D3D12_COMMAND_LIST_TYPE type) noexcept
 	{
 		_sContextManagerMutex.TryEnter();
 
@@ -35,7 +36,7 @@ namespace ray::renderer_core_api
 		return ret;
 	}
 
-	void ContextManager::FreeContext(CommandContext* context)
+	void ContextManager::FreeContext(CommandContext* context) noexcept
 	{
 		_sContextManagerMutex.TryEnter();
 
@@ -45,19 +46,17 @@ namespace ray::renderer_core_api
 		_sContextManagerMutex.Leave();
 	}
 
-	void ContextManager::DestroyAllContexts()
+	void ContextManager::DestroyAllContexts() noexcept
 	{
 		for (u16 i = 0; i < 4; i++)
 			_sContextPool[i].clear();
 	}
 
-	extern ContextManager gContextManager;
-
 	// ------------------------ COMMAND CONTEXT ------------------------ //
 
 	CommandContext& CommandContext::Begin()
 	{
-		CommandContext* newContext = gContextManager.AllocateContext(CommandListType::eDirect);
+		CommandContext* newContext = globals::gContextManager.AllocateContext(D3D12_COMMAND_LIST_TYPE_DIRECT);
 		return *newContext;
 	}
 
@@ -65,10 +64,10 @@ namespace ray::renderer_core_api
 	{
 		// FlushResourceBarriers
 
-		u64 fenceValue = gCommandManager.GetQueue(_type).ExecuteCommandList(_commandList);
+		u64 fenceValue = globals::gCommandListManager.GetQueue(_type).ExecuteCommandList(_commandList);
 
 		if (bWaitForComplition)
-			gCommandManager.WaitForFence(fenceValue);
+			globals::gCommandListManager.WaitForFence(fenceValue);
 
 		_commandList->Reset(_commandAllocator, nullptr);
 
@@ -81,7 +80,7 @@ namespace ray::renderer_core_api
 	{
 		// FlushResourceBarriers
 
-		CommandQueue& queue = gCommandManager.GetQueue(_type);
+		CommandQueue& queue = globals::gCommandListManager.GetQueue(_type);
 		u64 fenceValue = queue.ExecuteCommandList(_commandList);
 		queue.DiscardAllocator(fenceValue, _commandAllocator);
 		_commandAllocator = nullptr;
@@ -91,81 +90,114 @@ namespace ray::renderer_core_api
 		// TODO: 
 
 		if (bWaitForComplition)
-			gCommandManager.WaitForFence(fenceValue);
+			globals::gCommandListManager.WaitForFence(fenceValue);
 
-		gContextManager.FreeContext(this);
+		globals::gContextManager.FreeContext(this);
 
 		return fenceValue;
 	}
 
-	CommandContext::CommandContext(CommandListType type)
+	CommandContext::CommandContext(D3D12_COMMAND_LIST_TYPE type)
 		: _type(type)
-		, _cpuLinearAllocator(memory::LinearAllocatorType::eCpuWritable)
-		, _gpuLinearAllocator(memory::LinearAllocatorType::eGpuExclusive)
-		, _listManager(gClassHelper)
-		, _commandList(gClassHelper->CreateCommandList())
-		, _commandAllocator(gClassHelper->CreateCommandAllocator())
+		, _cpuLinearAllocator(LinearAllocatorType::eCpuWritable)
+		, _gpuLinearAllocator(LinearAllocatorType::eGpuExclusive)
+		, _listManager()
+		, _commandList(nullptr)
+		, _commandAllocator(nullptr)
+		, _numBarriersToFlush(0)
 		//TODO: 
 	{}
 
 	CommandContext::~CommandContext()
 	{
-		if (_commandList->GetInstance() != nullptr)
-			delete _commandList;
+		if (_commandList != nullptr)
+		{
+			_commandList->Release();
+			_commandList = nullptr;
+		}
 
-		if (_commandAllocator->GetInstance() != nullptr)
-			delete _commandList;
+		if (_commandAllocator != nullptr)
+		{
+			_commandAllocator->Release();
+			_commandAllocator = nullptr;
+		}
 	}
 	
 	void CommandContext::Initialize()
 	{
-		gCommandManager.CreateNewCommandList(_type, _commandAllocator, _commandList);
+		globals::gCommandListManager.CreateNewCommandList(_type, _commandAllocator, _commandList);
 	}
 
 	void CommandContext::Reset()
 	{
-		assert(_commandList->GetInstance() != nullptr && _commandAllocator->GetInstance() == nullptr);
-		_commandAllocator = gCommandManager.GetQueue(_type).RequestAllocator();
+		assert(_commandList != nullptr && _commandAllocator == nullptr);
+		_commandAllocator = globals::gCommandListManager.GetQueue(_type).RequestAllocator();
 		_commandList->Reset(_commandAllocator, nullptr);
 
 		//TODO:
 	}
 
-	void CommandContext::TransitionResource(resources::GpuResource& dest, resources::ResourceState newState, bool bFlushImmediate)
+	void CommandContext::TransitionResource(resources::GpuResource& dest, D3D12_RESOURCE_STATES newState, bool bFlushImmediate)
 	{
-		resources::ResourceState oldState = dest._usageState;
+		D3D12_RESOURCE_STATES oldState = dest._usageState;
 		if (newState == oldState)
 		{
-			assert(_numResourcesToFlush < TRANSITION_STATE_DESC_COUNT);
-			resources::ResourceTransitionStateDesc transitionStateDesc = _transitionStateDesc[_numResourcesToFlush];
-			transitionStateDesc.NewState = newState;
-			transitionStateDesc.OldState = oldState;
-			transitionStateDesc.Resource = dest._resource;
-			transitionStateDesc.SubresourceIndex = resources::ALL_SUBRESOURCES;
+			assert(_numBarriersToFlush < 16);
+			D3D12_RESOURCE_BARRIER& barrier = _barriers[_numBarriersToFlush++];
+			barrier.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
+			barrier.Transition.StateAfter = newState;
+			barrier.Transition.StateBefore = oldState;
+			barrier.Transition.pResource = dest._resource;
+			barrier.Transition.Subresource = D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES;
 
 			if (newState == dest._transitioningState)
 			{
-				//TODO:
+				barrier.Flags = D3D12_RESOURCE_BARRIER_FLAG_END_ONLY;
+				dest._transitioningState = static_cast<D3D12_RESOURCE_STATES>(-1);
 			}
+			else
+				barrier.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
 
 			dest._usageState = newState;
 		}
+		else if(newState == D3D12_RESOURCE_STATE_UNORDERED_ACCESS)
+		{ /*TODO:*/ }
 
-		if (bFlushImmediate || _numResourcesToFlush == 16)
+		if (bFlushImmediate || _numBarriersToFlush == 16)
 			FlushResourceBarriers();
 	}
 
-	void CommandContext::BeginResourceTransition(resources::GpuResource& dest, resources::ResourceState newState, bool bFlushImmediate)
+	void CommandContext::BeginResourceTransition(resources::GpuResource& dest, D3D12_RESOURCE_STATES newState, bool bFlushImmediate)
 	{
-		//TODO:
+		if (dest._transitioningState != static_cast<D3D12_RESOURCE_STATES>(-1))
+			TransitionResource(dest, dest._transitioningState);
+
+		auto oldState = dest._usageState;
+		if (oldState != newState)
+		{
+			assert(_numBarriersToFlush < 16);
+			auto& barrier = _barriers[_numBarriersToFlush++];
+
+			barrier.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
+			barrier.Transition.pResource = dest._resource;
+			barrier.Transition.StateAfter = newState;
+			barrier.Transition.StateBefore = oldState;
+			barrier.Transition.Subresource = D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES;
+			barrier.Flags = D3D12_RESOURCE_BARRIER_FLAG_BEGIN_ONLY;
+
+			dest._transitioningState = newState;
+		}
+
+		if (bFlushImmediate || _numBarriersToFlush == 16)
+			FlushResourceBarriers();
 	}
 
 	void CommandContext::FlushResourceBarriers()
 	{
-		if (_numResourcesToFlush > 0)
+		if (_numBarriersToFlush > 0)
 		{
-			_commandList->Transition(_transitionStateDesc, _numResourcesToFlush);
-			_numResourcesToFlush = 0;
+			_commandList->ResourceBarrier(_numBarriersToFlush, _barriers);
+			_numBarriersToFlush = 0;
 		}
 	}
 
@@ -178,8 +210,8 @@ namespace ray::renderer_core_api
 
 	ComputeContext& ComputeContext::Begin(bool bAsync)
 	{
-		ComputeContext& newContext = gContextManager.AllocateContext
-					(bAsync ? CommandListType::eCompute : CommandListType::eDirect)->GetComputeContext();
+		ComputeContext& newContext = globals::gContextManager.AllocateContext
+					(bAsync ? D3D12_COMMAND_LIST_TYPE_COMPUTE : D3D12_COMMAND_LIST_TYPE_DIRECT)->GetComputeContext();
 
 		return newContext;
 	}

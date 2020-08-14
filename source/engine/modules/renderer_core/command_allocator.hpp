@@ -1,14 +1,8 @@
 #pragma once
-#include "ray_renderer_core_base.hpp"
-
-/*
-**	Vulkan:			VkCommandPool
-**	Direct3D 12:	ID3D12CommandAllocator
-*/
-
 #include <core/threading/critical_section.hpp>
 #include <vector>
 #include <queue>
+#include <d3d12.h>
 
 namespace ray::renderer_core_api
 {
@@ -16,21 +10,21 @@ namespace ray::renderer_core_api
 class CommandAllocatorPool
 {
 public:
-	CommandAllocatorPool(CommandListType type) : _type(type) {}
+	CommandAllocatorPool(D3D12_COMMAND_LIST_TYPE type) : _type(type) {}
 	~CommandAllocatorPool();
 
 	void Shutdown();
 
 	size_t Size() { return _allocatorPool.size(); }
 
-	ICommandAllocator* RequestAllocator(u64 completedFenceValue);
-	void DiscardAllocator(ICommandAllocator* allocator, u64 fenceValue);
+	ID3D12CommandAllocator* RequestAllocator(u64 completedFenceValue);
+	void DiscardAllocator(ID3D12CommandAllocator* allocator, u64 fenceValue);
 
 private:
-	CommandListType _type;
+	D3D12_COMMAND_LIST_TYPE _type;
 	ray::CriticalSection _allocatorMutex;
-	std::vector<ICommandAllocator*> _allocatorPool;
-	std::queue<std::pair<u64, ICommandAllocator*>> _readyAllocators;
+	std::vector<ID3D12CommandAllocator*> _allocatorPool;
+	std::queue<std::pair<u64, ID3D12CommandAllocator*>> _readyAllocators;
 
 };
 

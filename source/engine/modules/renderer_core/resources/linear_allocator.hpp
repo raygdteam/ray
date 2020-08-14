@@ -1,39 +1,38 @@
+#pragma once
 #include "gpu_resource.hpp"
 #include <vector>
 #include <queue>
-#include <mutex>
+#include <core/threading/critical_section.hpp>
 
 #define DEFAULT_ALIGN 256
 
-using namespace ray::renderer_core_api::resources;
-
-namespace ray::renderer_core_api::memory
+namespace ray::renderer_core_api
 {
 	struct DynAlloc
 	{
-		DynAlloc(GpuResource& resource, size_t offset, size_t size)
+		DynAlloc(resources::GpuResource& resource, size_t offset, size_t size)
 			: Buffer(resource)
 			, Offset(offset)
 			, Size(size)
 		{}
 
-		GpuResource& Buffer;
+		resources::GpuResource& Buffer;
 		size_t Size;
 		size_t Offset;
 		void* Data;
-		GpuVirtualAddress GpuVirtualAddress;
+		D3D12_GPU_VIRTUAL_ADDRESS GpuVirtualAddress;
 	};
 
-	class LinearAllocationPage : public GpuResource
+	class LinearAllocationPage : public resources::GpuResource
 	{
 		friend class LinearAllocator;
 
 	public:
-		LinearAllocationPage(IResource* inResource, ResourceState usage) : GpuResource()
+		LinearAllocationPage(ID3D12Resource* inResource, D3D12_RESOURCE_STATES usage) : GpuResource()
 		{
 			_resource = inResource;
 			_usageState = usage;
-			_gpuVirtualAddress = _resource->GetGpuVirtualAddress();
+			_gpuVirtualAddress = _resource->GetGPUVirtualAddress();
 			_resource->Map(0, nullptr, &_cpuVirtualAddress);
 		}
 
@@ -99,7 +98,7 @@ namespace ray::renderer_core_api::memory
 		std::queue<std::pair<u64, LinearAllocationPage*>> _deletionQueue;
 		std::queue<LinearAllocationPage*> _availablePages;
 
-		std::mutex _mutex;
+		ray::CriticalSection _mutex;
 
 	};
 

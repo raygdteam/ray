@@ -1,9 +1,8 @@
 #pragma once
-#include "command_list.hpp"
 #include "command_allocator.hpp"
 
 #include <core/threading/critical_section.hpp>
-#include <algorithm>
+#include <d3d12.h>
 
 #define FENCE_SHIFT 56
 
@@ -23,10 +22,10 @@ class CommandQueue
 	friend class CommandContext;
 
 public:
-	CommandQueue(IRRCClassHelper* classHelper, CommandListType type);
+	CommandQueue(D3D12_COMMAND_LIST_TYPE type);
 	~CommandQueue();
 
-	bool Create(IDevice* device);
+	bool Create(ID3D12Device* device);
 	void Shutdown();
 
 	bool IsReady() { return _commandQueue != nullptr; }
@@ -41,57 +40,56 @@ public:
 private:
 	u64 _nextFenceValue;
 	u64 _lastCompletedFenceValue;
-	IFence* _fence;
-	IFenceEvent* _event;
+	ID3D12Fence* _fence;
+	HANDLE _event;
 
 	ray::CriticalSection _fenceMutex;
 	ray::CriticalSection _eventMutex;
 
-	ICommandQueue* _commandQueue;
-	CommandListType _type;
+	ID3D12CommandQueue* _commandQueue;
+	D3D12_COMMAND_LIST_TYPE _type;
 	CommandAllocatorPool _allocatorPool;
 
-	IDevice* _device;
-	IRRCClassHelper* _classHelper;
+	ID3D12Device* _device;
 
 private:
-	ICommandAllocator* RequestAllocator();
-	void DiscardAllocator(u64 fenceValueForReset, ICommandAllocator* allocator);
-	u64 ExecuteCommandList(ICommandList* commandList);
+	ID3D12CommandAllocator* RequestAllocator();
+	void DiscardAllocator(u64 fenceValueForReset, ID3D12CommandAllocator* allocator);
+	u64 ExecuteCommandList(ID3D12CommandList* commandList);
 
 };
 
 class CommandListManager
 {
 public:
-	CommandListManager(IRRCClassHelper* classHelper);
+	CommandListManager();
 	~CommandListManager();
 
-	void Create(IDevice* device);
+	void Create(ID3D12Device* device);
 	void Shutdown();
 
 	CommandQueue& GetGraphicsQueue() { return _graphicsQueue; }
 	CommandQueue& GetComputeQueue() { return _computeQueue; }
 	CommandQueue& GetCopyQueue() { return _copyQueue; }
 
-	CommandQueue& GetQueue(CommandListType type)
+	CommandQueue& GetQueue(D3D12_COMMAND_LIST_TYPE type)
 	{
 		switch (type)
 		{
-		case CommandListType::eCompute:
+		case D3D12_COMMAND_LIST_TYPE_COMPUTE:
 			return _computeQueue;
-		case CommandListType::eCopy:
+		case D3D12_COMMAND_LIST_TYPE_COPY:
 			return _copyQueue;
 		default:
 			return _graphicsQueue;
 		}
 	}
 
-	ICommandQueue* GetCommandQueue() { return _graphicsQueue._commandQueue; }
-	void CreateNewCommandList(CommandListType type, ICommandAllocator* allocator, ICommandList* list);
+	ID3D12CommandQueue* GetCommandQueue() { return _graphicsQueue._commandQueue; }
+	void CreateNewCommandList(D3D12_COMMAND_LIST_TYPE type, ID3D12CommandAllocator* allocator, ID3D12CommandList* list);
 	bool IsFenceComplete(u64 fenceValue)
 	{
-		return GetQueue(static_cast<CommandListType>(fenceValue >> FENCE_SHIFT)).IsFenceComplete(fenceValue);
+		return GetQueue(static_cast<D3D12_COMMAND_LIST_TYPE>(fenceValue >> FENCE_SHIFT)).IsFenceComplete(fenceValue);
 	}
 
 	void WaitForFence(u64 fenceValue);
@@ -107,7 +105,7 @@ private:
 	CommandQueue _computeQueue;
 	CommandQueue _copyQueue;
 
-	IDevice* _device;
+	ID3D12Device* _device;
 	IRRCClassHelper* _classHelper;
 
 };

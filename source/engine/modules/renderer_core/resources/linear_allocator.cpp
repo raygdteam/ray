@@ -1,10 +1,10 @@
 #include "linear_allocator.hpp"
-#include "../renderer_globals.hpp"
+#include "../renderer.hpp"
 #include "../command_queue.hpp"
 #include <core/math/common.hpp>
 #include <cassert>
 
-namespace ray::renderer_core_api::memory
+namespace ray::renderer_core_api
 {
 	LinearAllocatorType LinearAllocatorPageManager::_sDefaultType = LinearAllocatorType::eGpuExclusive;
 
@@ -20,9 +20,9 @@ namespace ray::renderer_core_api::memory
 
 	LinearAllocationPage* LinearAllocatorPageManager::RequestPage()
 	{
-		std::lock_guard<std::mutex> lockGuard(_mutex);
+		_mutex.Enter();
 
-		while (!_retiredPage.empty() && gCommandManager.IsFenceComplete(_retiredPage.front().first))
+		while (!_retiredPage.empty() && globals::gCommandListManager.IsFenceComplete(_retiredPage.front().first))
 		{
 			_availablePages.push(_retiredPage.front().second);
 			_retiredPage.pop();
@@ -41,19 +41,23 @@ namespace ray::renderer_core_api::memory
 			_pagePool.emplace_back(ret);
 		}
 
+		_mutex.Leave();
+
 		return ret;
 	}
 
 	void LinearAllocatorPageManager::DiscardPages(u64 fenceValue, const std::vector<LinearAllocationPage*>& pages)
 	{
-		std::lock_guard<std::mutex> lockGuard(_mutex);
+		_mutex.Enter();
 		for (auto it = pages.cbegin(); it != pages.cend(); ++it)
 			_retiredPage.push(std::make_pair(fenceValue, *it));
+		
+		_mutex.Leave();
 	}
 
 	void LinearAllocatorPageManager::FreeLargePages(u64 fenceValue, const std::vector<LinearAllocationPage*>& pages)
 	{
-		while (!_deletionQueue.empty() && gCommandManager.IsFenceComplete(_deletionQueue.front().first))
+		while (!_deletionQueue.empty() && globals::gCommandListManager.IsFenceComplete(_deletionQueue.front().first))
 		{
 			delete _deletionQueue.front().second;
 			_deletionQueue.pop();
@@ -68,37 +72,37 @@ namespace ray::renderer_core_api::memory
 
 	LinearAllocationPage* LinearAllocatorPageManager::CreateNewPage(size_t pageSize)
 	{
-		ResourceDesc resourceDesc;
-		resourceDesc.ResourceType = ResourceType::eBuffer;
+		D3D12_RESOURCE_DESC resourceDesc;
+		resourceDesc.Dimension = D3D12_RESOURCE_DIMENSION_BUFFER;
 		resourceDesc.Alignment = 0;
 		resourceDesc.Height = 1;
 		resourceDesc.DepthOrArraySize = 1;
 		resourceDesc.MipLevels = 1;
-		resourceDesc.ShaderType = ShaderType::eUnknown;
+		resourceDesc.Format = DXGI_FORMAT_UNKNOWN;
 		resourceDesc.SampleDesc.Count = 1;
 		resourceDesc.SampleDesc.Quality = 0;
-		resourceDesc.TextureLayout = TextureLayout::eRowMajor;
+		resourceDesc.Layout = D3D12_TEXTURE_LAYOUT_ROW_MAJOR;
 
-		ResourceState defaultState;
-		ResourceHeapProperties heapProps;
+		D3D12_RESOURCE_STATES defaultState;
+		D3D12_HEAP_PROPERTIES heapProps;
 
 		if (_type == eGpuExclusive)
 		{
-			heapProps.Usage = ResourceUsage::eDefault;
+			heapProps.Type = D3D12_HEAP_TYPE_DEFAULT;
 			resourceDesc.Width = pageSize == 0 ? gGpuAllocatorPageSize : pageSize;
-			resourceDesc.Flags = ResourceFlags::eAllowUnordererAccess;
-			defaultState = ResourceState::eUnorderedAccess;
+			resourceDesc.Flags = D3D12_RESOURCE_FLAG_ALLOW_UNORDERED_ACCESS;
+			defaultState = D3D12_RESOURCE_STATE_UNORDERED_ACCESS;
 		}
 		else
 		{
-			heapProps.Usage = ResourceUsage::eUpload;
+			heapProps.Type = D3D12_HEAP_TYPE_UPLOAD;
 			resourceDesc.Width = pageSize == 0 ? gCpuAllocatorPageSize : pageSize;
-			resourceDesc.Flags = ResourceFlags::eNone;
-			defaultState = ResourceState::eGenericRead;
+			resourceDesc.Flags = D3D12_RESOURCE_FLAG_NONE;
+			defaultState = D3D12_RESOURCE_STATE_GENERIC_READ;
 		}
 
-		IResource* buffer = gClassHelper->CreateResource();
-		if (!gDevice->CreateCommittedResource(resourceDesc, heapProps, defaultState, buffer))
+		ID3D12Resource* buffer = nullptr;
+		if (!globals::gDevice->CreateCommittedResource(&heapProps, D3D12_HEAP_FLAG_NONE, &resourceDesc, defaultState, nullptr, IID_PPV_ARGS(&buffer)))
 			return nullptr;
 
 		return new LinearAllocationPage(buffer, defaultState);

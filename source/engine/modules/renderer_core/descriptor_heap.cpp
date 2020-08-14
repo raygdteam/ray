@@ -1,25 +1,25 @@
 #include "descriptor_heap.hpp"
-#include "renderer_globals.hpp"
+#include "renderer.hpp"
 
 namespace ray::renderer_core_api
 {
-    std::vector<IDescriptorHeap*> DescriptorAllocator::sDescriptorHeapPool;
-    std::mutex DescriptorAllocator::sAllocationMutex;
+    std::vector<ID3D12DescriptorHeap*> DescriptorAllocator::sDescriptorHeapPool;
+    ray::CriticalSection DescriptorAllocator::sAllocationMutex;
 
-    ICPUDescriptor* DescriptorAllocator::Allocate(size_t count)
+    D3D12_CPU_DESCRIPTOR_HANDLE DescriptorAllocator::Allocate(size_t count)
     {
         if (_currentHeap == nullptr || _remainingFreeHandles < count)
         {
             _currentHeap = RequestNewHeap(_type);
-            _currentHeap->GetCPUDescriptorHandleForHeapStart(_currentHandle);
+            _currentHandle = _currentHeap->GetCPUDescriptorHandleForHeapStart();
             _remainingFreeHandles = sNumDescriptorsPerHeap;
 
             if (_descriptorSize == 0)
-                _descriptorSize = gDevice->GetDescriptorHandleIncrementSize();
+                _descriptorSize = globals::gDevice->GetDescriptorHandleIncrementSize(_type);
         }
 
-        ICPUDescriptor* ret = _currentHandle;
-        _currentHandle->Offset(count);
+        D3D12_CPU_DESCRIPTOR_HANDLE ret = _currentHandle;
+        _currentHandle.ptr += count * _descriptorSize;
         _remainingFreeHandles -= count;
 
 
@@ -31,18 +31,22 @@ namespace ray::renderer_core_api
         sDescriptorHeapPool.clear();
     }
 
-    IDescriptorHeap* DescriptorAllocator::RequestNewHeap(DescriptorHeapType type)
+    ID3D12DescriptorHeap* DescriptorAllocator::RequestNewHeap(D3D12_DESCRIPTOR_HEAP_TYPE type)
     {
-        std::lock_guard<std::mutex> LockGuard(sAllocationMutex);
+        sAllocationMutex.Enter();
 
-        DescriptorHeapDesc desc;
+        D3D12_DESCRIPTOR_HEAP_DESC desc;
         desc.NumDescriptors = sNumDescriptorsPerHeap;
         desc.Type = type;
-        desc.ShaderVisible = false;
+        desc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_NONE;
+        desc.NodeMask = 1;
 
-        IDescriptorHeap* heap = nullptr;
-        gDevice->CreateDescriptorHeap(desc, heap);
+        ID3D12DescriptorHeap* heap = nullptr;
+        globals::gDevice->CreateDescriptorHeap(&desc, IID_PPV_ARGS(&heap));
         sDescriptorHeapPool.push_back(heap);
+
+        sAllocationMutex.Leave();
+
         return heap;
     }
 

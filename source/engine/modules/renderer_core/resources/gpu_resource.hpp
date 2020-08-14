@@ -1,5 +1,4 @@
-#include "resources.hpp"
-#include "../renderer_globals.hpp"
+#include <d3d12.h>
 
 #include <core/core.hpp>
 
@@ -12,25 +11,25 @@ namespace ray::renderer_core_api::resources
 		friend class ComputeContext;
 	public:
 		GpuResource() noexcept
-			: _resource(gClassHelper->CreateResource())
+			: _resource(nullptr)
 			, _userAllocatedMemory(nullptr)
-			, _gpuVirtualAddress(GPU_VIRTUAL_ADDRESS_NULL)
-			, _usageState(ResourceState::eCommon)
-			, _transitioningState(static_cast<ResourceState>(-1))
+			, _gpuVirtualAddress(0)
+			, _usageState(D3D12_RESOURCE_STATE_COMMON)
+			, _transitioningState(static_cast<D3D12_RESOURCE_STATES>(-1))
 		{}
 
-		GpuResource(IResource* inResource, ResourceState currentState) noexcept
+		GpuResource(ID3D12Resource* inResource, D3D12_RESOURCE_STATES currentState) noexcept
 			: _resource(inResource)
 			, _usageState(currentState)
-			, _gpuVirtualAddress(GPU_VIRTUAL_ADDRESS_NULL)
-			, _transitioningState(static_cast<ResourceState>(-1))
+			, _gpuVirtualAddress(0)
+			, _transitioningState(static_cast<D3D12_RESOURCE_STATES>(-1))
 			, _userAllocatedMemory(nullptr)
 		{}
 
 		void Destroy() noexcept
 		{
 			_resource = nullptr;
-			_gpuVirtualAddress = GPU_VIRTUAL_ADDRESS_NULL;
+			_gpuVirtualAddress = 0;
 			if (_userAllocatedMemory == nullptr)
 			{
 				// TODO: VirtualFree
@@ -39,17 +38,17 @@ namespace ray::renderer_core_api::resources
 			}
 		}
 
-		GpuVirtualAddress GetGpuVirtualAddress() const noexcept { return _gpuVirtualAddress; }
-		IResource* GetResource() const noexcept { return _resource; }
+		D3D12_GPU_VIRTUAL_ADDRESS GetGpuVirtualAddress() const noexcept { return _gpuVirtualAddress; }
+		ID3D12Resource* GetResource() const noexcept { return _resource; }
 		void* GetUserAllocatedMemory() const noexcept { return _userAllocatedMemory; }
 
 
 	protected:
 		void* _userAllocatedMemory;
-		GpuVirtualAddress _gpuVirtualAddress;
-		IResource* _resource;
-		ResourceState _usageState;
-		ResourceState _transitioningState;
+		D3D12_GPU_VIRTUAL_ADDRESS _gpuVirtualAddress;
+		ID3D12Resource* _resource;
+		D3D12_RESOURCE_STATES _usageState;
+		D3D12_RESOURCE_STATES _transitioningState;
 
 	};
 }

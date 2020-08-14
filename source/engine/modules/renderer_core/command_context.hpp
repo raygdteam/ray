@@ -1,20 +1,12 @@
 #pragma once
-#include "command_list.hpp"
 #include "command_queue.hpp"
-#include "command_allocator.hpp"
 #include "resources/linear_allocator.hpp"
 #include "pipeline_state.hpp"
 #include <core/threading/critical_section.hpp>
+#include <d3d12.h>
 
 namespace ray::renderer_core_api
 {
-	enum class CommandContextType
-	{
-		e3D,
-		eCopy,
-		eCompute
-		//, eBundle
-	};
 
 	struct NonCopyable
 	{
@@ -32,7 +24,7 @@ namespace ray::renderer_core_api
 	public:
 		ContextManager() {}
 
-		CommandContext* AllocateContext(CommandListType type) noexcept;
+		CommandContext* AllocateContext(D3D12_COMMAND_LIST_TYPE type) noexcept;
 		void FreeContext(CommandContext* context) noexcept;
 		static void DestroyAllContexts() noexcept;
 
@@ -48,7 +40,7 @@ namespace ray::renderer_core_api
 		friend class ContextManager;
 
 	private:
-		CommandContext(CommandListType type);
+		CommandContext(D3D12_COMMAND_LIST_TYPE type);
 		
 	public:
 		~CommandContext();
@@ -69,7 +61,7 @@ namespace ray::renderer_core_api
 			return reinterpret_cast<ComputeContext&>(*this);
 		}
 
-		ICommandList* GetCommandList() const noexcept
+		ID3D12CommandList* GetCommandList() const noexcept
 		{
 			return _commandList;
 		}
@@ -83,7 +75,7 @@ namespace ray::renderer_core_api
 		void ResetCounter()
 		*/
 
-		memory::DynAlloc ReserveUploadMemory(size_t sizeInBytes)
+		DynAlloc ReserveUploadMemory(size_t sizeInBytes)
 		{
 			return _cpuLinearAllocator.Allocate(sizeInBytes);
 		}
@@ -105,28 +97,32 @@ namespace ray::renderer_core_api
 		void WriteBuffer(resources::GpuResource& dest, size_t destOffset, const void* data, size_t numBytes);
 		void FillBuffer(resources::GpuResource& dest, size_t destOffset, float value, size_t numBytes);
 
-		void TransitionResource(resources::GpuResource& dest, resources::ResourceState newState, bool bFlushImmediate = false);
-		void BeginResourceTransition(resources::GpuResource& dest, resources::ResourceState newState, bool bFlushImmediate = false);
+		void TransitionResource(resources::GpuResource& dest, D3D12_RESOURCE_STATES newState, bool bFlushImmediate = false);
+		void BeginResourceTransition(resources::GpuResource& dest, D3D12_RESOURCE_STATES newState, bool bFlushImmediate = false);
 		inline void FlushResourceBarriers();
 
-		void SetPipelineState(IPipelineState* pso)
+		void SetPipelineState(PipelineState& pso)
 		{
-			if (_currentPipelineState == pso)
+			auto newPSO = pso.GetPSO();
+			if (_currentPipelineState == newPSO)
 				return;
 
-			_commandList->SetPipelineState(pso);
-			_currentPipelineState = pso;
+			_commandList->SetPipelineState(newPSO);
+			_currentPipelineState = newPSO;
 		}
 
 	protected:
-		CommandListType _type;
+		D3D12_COMMAND_LIST_TYPE _type;
 		CommandListManager _listManager;
-		ICommandList* _commandList;
-		ICommandAllocator* _commandAllocator;
-		IPipelineState* _currentPipelineState;
+		ID3D12GraphicsCommandList* _commandList;
+		ID3D12CommandAllocator* _commandAllocator;
+		ID3D12PipelineState* _currentPipelineState;
 
-		memory::LinearAllocator _cpuLinearAllocator;
-		memory::LinearAllocator _gpuLinearAllocator;
+		LinearAllocator _cpuLinearAllocator;
+		LinearAllocator _gpuLinearAllocator;
+
+		D3D12_RESOURCE_BARRIER _barriers[16];
+		u32 _numBarriersToFlush;
 
 	protected:
 		void BindDescriptorHeaps();

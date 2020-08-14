@@ -1,9 +1,9 @@
 #pragma once
 #include "ray_renderer_core_base.hpp"
 #include <core/core.hpp>
-
-#include <mutex>
 #include <vector>
+#include <core/threading/critical_section.hpp>
+#include <d3d12.h>
 
 /*
 **	Vulkan:			VkDescriptorPool
@@ -15,23 +15,23 @@ namespace ray::renderer_core_api
 class DescriptorAllocator
 {
 public:
-	DescriptorAllocator(DescriptorHeapType type) : _type(type), _currentHeap(nullptr) {}
+	DescriptorAllocator(D3D12_DESCRIPTOR_HEAP_TYPE type) : _type(type), _currentHeap(nullptr) {}
 
-	ICPUDescriptor* Allocate(size_t count = 1);
+	D3D12_CPU_DESCRIPTOR_HANDLE Allocate(size_t count = 1);
 	void DestroyAll();
 
 private:
 	static const uint32_t sNumDescriptorsPerHeap = 256;
-	static std::mutex sAllocationMutex;
-	static std::vector<IDescriptorHeap*> sDescriptorHeapPool;
-	static IDescriptorHeap* RequestNewHeap(DescriptorHeapType Type);
+	static ray::CriticalSection sAllocationMutex;
+	static std::vector<ID3D12DescriptorHeap*> sDescriptorHeapPool;
+	static ID3D12DescriptorHeap* RequestNewHeap(D3D12_DESCRIPTOR_HEAP_TYPE Type);
 
-	IDescriptorHeap* _currentHeap;
-	DescriptorHeapType _type;
-	std::vector<IDescriptorHeap*> _descriptorHeapPool;
+	ID3D12DescriptorHeap* _currentHeap;
+	D3D12_DESCRIPTOR_HEAP_TYPE _type;
+	std::vector<ID3D12DescriptorHeap*> _descriptorHeapPool;
 	size_t _remainingFreeHandles;
 	size_t _descriptorSize;
-	ICPUDescriptor* _currentHandle;
+	D3D12_CPU_DESCRIPTOR_HANDLE _currentHandle;
 
 };
 
