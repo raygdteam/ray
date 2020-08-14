@@ -6,9 +6,9 @@ namespace ray::renderer_core_api::resources
 {
 	class GpuResource
 	{
-		friend class CommandContext;
-		friend class GraphicsContext;
-		friend class ComputeContext;
+		friend class ray::renderer_core_api::CommandContext;
+		friend class ray::renderer_core_api::GraphicsContext;
+		friend class ray::renderer_core_api::ComputeContext;
 	public:
 		GpuResource() noexcept
 			: _resource(nullptr)

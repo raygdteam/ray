@@ -177,6 +177,9 @@ namespace ray::renderer_core_api
 		case D3D12_COMMAND_LIST_TYPE_COPY:
 			allocator = _copyQueue.RequestAllocator();
 			break;
+		default:
+			allocator = _graphicsQueue.RequestAllocator();
+
 		}
 
 		assert(_device->CreateCommandList(1, type, allocator, nullptr, IID_PPV_ARGS(&list)) == S_OK);

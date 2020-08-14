@@ -12,4 +12,3 @@ using namespace ray::renderer_core_api;
 #include <d3dcompiler.h>
 
 #include "d3dx12.h"
-#include "utils.hpp"

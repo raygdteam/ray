@@ -1,5 +1,8 @@
 #pragma once
 #include <core/core.hpp>
+
+//fix it pls
+#undef CreateWindow
 #include <app_framework/base/platform_window.hpp>
 
 #include "ray_renderer_core_class_helper.hpp"
@@ -7,6 +10,8 @@
 #include <vector>
 #include <core\module\module_meta.hpp>
 #include <d3d12.h>
+
+
 
 #ifdef RAY_BUILD_RENDERER_CORE
 #define RAY_RENDERERCORE_API __declspec(dllexport)
