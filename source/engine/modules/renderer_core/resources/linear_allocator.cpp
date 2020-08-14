@@ -140,9 +140,9 @@ namespace ray::renderer_core_api
 	DynAlloc LinearAllocator::Allocate(size_t size, size_t alignment)
 	{
 		const size_t alignmentMask = alignment - 1;
-		assert(alignment & alignmentMask == 0);
+		assert((alignment & alignmentMask) == 0);
 		 
-		const size_t alignmentSize = ray::core::math::AlignUpWithMask(size, alignmentSize);
+		const size_t alignmentSize = ray::core::math::AlignUpWithMask(size, alignmentMask);
 
 		if (alignmentSize > _pageSize)
 			return AllocateLargePage(alignmentSize);

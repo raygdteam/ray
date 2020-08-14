@@ -6,14 +6,14 @@ namespace ray
 	template<typename Type, typename IndexSize = u32>
 	class Array
 	{
-		template<typename Type>
+		template<typename TType>
 		class Node
 		{
 		public:
 			Node* Next;
-			Type Data;
+			TType Data;
 
-			Node(Type data = Type(), Node* next = nullptr)
+			Node(TType data = TType(), Node* next = nullptr)
 			{
 				this->Data = data;
 				this->Next = next;

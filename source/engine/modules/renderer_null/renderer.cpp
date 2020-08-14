@@ -1,6 +1,6 @@
 #include "renderer.hpp"
 
-#include <GLFW/glfw3.h>
+#include <glfw/glfw3.h>
 
 #include <cstdlib>
 #include <assert.h>

@@ -8,8 +8,8 @@ namespace ray::renderer_core_api
 
 	struct QuadVertex
 	{
-		math::Vector<3, float> Position;
-		math::Vector<4, float> Color;
+		FVector<3> Position;
+		FVector<4> Color;
 	};
 
 
@@ -28,7 +28,7 @@ namespace ray::renderer_core_api
 		Flush();
 	}
 
-	void Renderer2D::DrawQuad(math::Vector<3, float> pos, math::Vector<4, float> color)
+	void Renderer2D::DrawQuad(FVector<3> pos, FVector<4> color)
 	{
 		
 

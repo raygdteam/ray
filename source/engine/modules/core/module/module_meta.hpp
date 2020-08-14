@@ -8,10 +8,7 @@ struct ModuleMeta
 };
 
 struct IModuleInterface
-{
-private:
-	char _pad[8];
-};
+{ };
 
 struct IModule
 {

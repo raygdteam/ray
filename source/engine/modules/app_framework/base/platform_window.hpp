@@ -1,6 +1,8 @@
 #pragma once
 #include "app_framework/app_framework.hpp"
 
+#undef CreateWindow
+
 namespace ray::core
 {
 

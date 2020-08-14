@@ -5,7 +5,6 @@
 class RAY_CORE_API IThread
 {
 	void* _rawHandle = nullptr;
-	bool _finished = false;
 	static u64 RawThreadEntry(void* thisptr);
 public:
 	IThread();
