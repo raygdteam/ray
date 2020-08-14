@@ -5,11 +5,11 @@
 namespace ray::renderer_core_api
 {
 	CommandQueue::CommandQueue(D3D12_COMMAND_LIST_TYPE type)
-		: _type(type)
-		, _commandQueue(nullptr)
-		, _fence(nullptr)
-		, _nextFenceValue(static_cast<u64>(type) << FENCE_SHIFT | 1)
+		: _nextFenceValue(static_cast<u64>(type) << FENCE_SHIFT | 1)
 		, _lastCompletedFenceValue(static_cast<u64>(type) << FENCE_SHIFT)
+		, _fence(nullptr)
+		, _commandQueue(nullptr)
+		, _type(type)
 		, _allocatorPool(type)
 	{}
 

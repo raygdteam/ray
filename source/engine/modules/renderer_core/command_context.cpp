@@ -99,11 +99,11 @@ namespace ray::renderer_core_api
 
 	CommandContext::CommandContext(D3D12_COMMAND_LIST_TYPE type)
 		: _type(type)
-		, _cpuLinearAllocator(LinearAllocatorType::eCpuWritable)
-		, _gpuLinearAllocator(LinearAllocatorType::eGpuExclusive)
 		, _listManager()
 		, _commandList(nullptr)
 		, _commandAllocator(nullptr)
+		, _cpuLinearAllocator(LinearAllocatorType::eCpuWritable)
+		, _gpuLinearAllocator(LinearAllocatorType::eGpuExclusive)
 		, _numBarriersToFlush(0)
 		//TODO: 
 	{}

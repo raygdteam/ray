@@ -1,6 +1,7 @@
 #include <d3d12.h>
 
 #include <core/core.hpp>
+#include "renderer_core/command_context.hpp"
 
 namespace ray::renderer_core_api::resources
 {
@@ -11,19 +12,19 @@ namespace ray::renderer_core_api::resources
 		friend class ray::renderer_core_api::ComputeContext;
 	public:
 		GpuResource() noexcept
-			: _resource(nullptr)
-			, _userAllocatedMemory(nullptr)
+			: _userAllocatedMemory(nullptr)
 			, _gpuVirtualAddress(0)
+			, _resource(nullptr)
 			, _usageState(D3D12_RESOURCE_STATE_COMMON)
 			, _transitioningState(static_cast<D3D12_RESOURCE_STATES>(-1))
 		{}
 
 		GpuResource(ID3D12Resource* inResource, D3D12_RESOURCE_STATES currentState) noexcept
-			: _resource(inResource)
-			, _usageState(currentState)
+			: _userAllocatedMemory(nullptr)
 			, _gpuVirtualAddress(0)
+			, _resource(inResource)
+			, _usageState(currentState)
 			, _transitioningState(static_cast<D3D12_RESOURCE_STATES>(-1))
-			, _userAllocatedMemory(nullptr)
 		{}
 
 		void Destroy() noexcept

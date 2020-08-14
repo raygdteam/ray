@@ -15,7 +15,7 @@ namespace ray::renderer_core_api
 class DescriptorAllocator
 {
 public:
-	DescriptorAllocator(D3D12_DESCRIPTOR_HEAP_TYPE type) : _type(type), _currentHeap(nullptr) {}
+	DescriptorAllocator(D3D12_DESCRIPTOR_HEAP_TYPE type) : _currentHeap(nullptr), _type(type) {}
 
 	D3D12_CPU_DESCRIPTOR_HANDLE Allocate(size_t count = 1);
 	void DestroyAll();

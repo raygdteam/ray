@@ -12,8 +12,8 @@ namespace ray::renderer_core_api
 	{
 		DynAlloc(resources::GpuResource& resource, size_t offset, size_t size)
 			: Buffer(resource)
-			, Offset(offset)
 			, Size(size)
+			, Offset(offset)
 		{}
 
 		resources::GpuResource& Buffer;
@@ -110,8 +110,8 @@ namespace ray::renderer_core_api
 		LinearAllocator(LinearAllocatorType type) 
 			: _type(type)
 			, _currentOffset(~static_cast<size_t>(0))
-			, _currentPage(nullptr)
 			, _pageSize(0)
+			, _currentPage(nullptr)
 		{
 			if (!(type > eInvalidAllocator && type < eNumAllocatorTypes))
 				return;

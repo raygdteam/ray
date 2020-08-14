@@ -106,7 +106,7 @@ private:
 	CommandQueue _copyQueue;
 
 	ID3D12Device* _device;
-	IRRCClassHelper* _classHelper;
+	// IRRCClassHelper* _classHelper;
 
 };
 
