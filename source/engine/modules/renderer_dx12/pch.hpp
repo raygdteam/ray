@@ -1,8 +1,6 @@
 #pragma once
 #include <core/core.hpp>
 
-using namespace ray::renderer_core_api;
-
 
 #include <d3d12.h>
 #include <dxgi.h>
