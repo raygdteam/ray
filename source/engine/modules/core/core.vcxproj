@@ -44,6 +44,9 @@
     <ClCompile Include="threading\critical_section.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\thirdparty\eastl\eastl.vcxproj">
+      <Project>{34ff6296-b8e5-43b8-a8a1-b57163615e2a}</Project>
+    </ProjectReference>
     <ProjectReference Include="..\..\thirdparty\mimalloc\mimalloc.vcxproj">
       <Project>{615c925d-85a3-4099-85bc-6bbb744c128e}</Project>
     </ProjectReference>

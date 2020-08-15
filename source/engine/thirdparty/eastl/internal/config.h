@@ -1644,7 +1644,7 @@ typedef EASTL_SSIZE_T eastl_ssize_t; // Signed version of eastl_size_t. Concept 
 ///////////////////////////////////////////////////////////////////////////////
 
 #ifndef EASTL_ALLOCATOR_EXPLICIT_ENABLED
-	#define EASTL_ALLOCATOR_EXPLICIT_ENABLED 0
+	#define EASTL_ALLOCATOR_EXPLICIT_ENABLED 1
 #endif
 
 #if EASTL_ALLOCATOR_EXPLICIT_ENABLED
