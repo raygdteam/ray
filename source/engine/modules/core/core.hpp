@@ -102,6 +102,7 @@
 #pragma clang diagnostic ignored "-Winline-new-delete"
 #pragma clang diagnostic ignored "-Wunused-command-line-argument"
 #pragma clang diagnostic warning "-Wnull-dereference"
+#pragma clang diagnostic warning "-Wunused-parameter"
 
 #ifdef RAY_PLATFORM_WIN
 // Asks compiler to pass parameters as registers, where possible

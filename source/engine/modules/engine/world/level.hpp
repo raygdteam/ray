@@ -14,7 +14,7 @@ class Level : public RayObject
 	// Temp
 public:
 	PROPERTY(Serializable)
-	ray::Array<Actor*> _actors;
+	Array<Actor*> _actors;
 
 	Level();
 

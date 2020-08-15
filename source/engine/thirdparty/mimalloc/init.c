@@ -422,6 +422,10 @@ static void mi_allocator_done() {
 
 // Called once by the process loader
 static void mi_process_load(void) {
+    static bool once = false;
+    if (once) return;
+    once = true;
+	
   mi_heap_main_init();
   #if defined(MI_TLS_RECURSE_GUARD)
   volatile mi_heap_t* dummy = _mi_heap_default; // access TLS to allocate it before setting tls_initialized to true;

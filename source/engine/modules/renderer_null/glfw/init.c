@@ -250,6 +250,7 @@ GLFWAPI int glfwInit(void)
 
     glfwDefaultWindowHints();
 
+#if 0
     {
         int i;
 
@@ -262,7 +263,8 @@ GLFWAPI int glfwInit(void)
             }
         }
     }
-
+#endif
+	
     return GLFW_TRUE;
 }
 

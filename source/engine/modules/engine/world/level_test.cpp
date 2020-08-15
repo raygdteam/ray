@@ -19,7 +19,7 @@ protected:
 	
 	void Tick(f64 delta) override
 	{
-		// std::cout << "delta " << delta << "; fps " << 1000.f / delta << "\n";
+		std::cout << "delta " << delta << "; fps " << 1000.f / delta << "\n";
 		if (GetKeyState('D') & 0x8000)
 		{
 			GetTransform()->Position.x += 0.1f * delta;

@@ -17,7 +17,7 @@ class RAY_ENGINE_API Actor : public RayObject
 {
 	friend class Level;
 	
-	ray::Array<IComponent*> _components;
+	Array<IComponent*> _components;
 protected:
 	virtual void BeginPlay() = 0;
 	virtual void Tick(f64 delta) = 0;
