@@ -7,7 +7,7 @@
 #define DEFAULT_ALIGN 256
 
 namespace ray::renderer_core_api
-{
+{		
 	struct DynAlloc
 	{
 		DynAlloc(resources::GpuResource& resource, size_t offset, size_t size)

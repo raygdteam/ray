@@ -1,15 +1,22 @@
+#pragma once
 #include <d3d12.h>
 
 #include <core/core.hpp>
 #include "renderer_core/command_context.hpp"
+
+namespace ray::renderer_core_api
+{
+	class ComputeContext;
+	class GraphicsContext;
+}
 
 namespace ray::renderer_core_api::resources
 {
 	class GpuResource
 	{
 		friend class ray::renderer_core_api::CommandContext;
-		friend class ray::renderer_core_api::GraphicsContext;
-		friend class ray::renderer_core_api::ComputeContext;
+		friend class ::ray::renderer_core_api::GraphicsContext;
+		friend class ::ray::renderer_core_api::ComputeContext;
 	public:
 		GpuResource() noexcept
 			: _userAllocatedMemory(nullptr)
