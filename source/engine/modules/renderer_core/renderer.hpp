@@ -34,7 +34,7 @@ namespace ray::renderer_core_api
 
 	struct RAY_RENDERERCORE_API IRenderer final// : public Object
 	{
-		void Initialize(ray::core::IPlatformWindow* window, IModule* rendererModule);
+		void Initialize(ray::core::IPlatformWindow* window);
 		void Shutdown();
 
 		void BeginScene();

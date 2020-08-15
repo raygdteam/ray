@@ -10,7 +10,7 @@ static Array<RayObjectMeta*>* gObjects = nullptr;
 
 ObjectDb::ObjectDb()
 {
-	gObjects = new ray::Array<RayObjectMeta*>();
+	gObjects = new Array<RayObjectMeta*>();
 }
 
 RayObjectMeta* ObjectDb::GetObject(pcstr name)

@@ -8,6 +8,10 @@ namespace ray::renderer_core_api
 {
 	// ------------------------ CONTEXT MANAGER ------------------------ //
 
+	ray::CriticalSection ContextManager::_sContextManagerMutex;
+	std::vector<CommandContext*> ContextManager::_sContextPool[4];
+	std::queue<CommandContext*> ContextManager::_sAvailableContexts[4];
+
 	CommandContext* ContextManager::AllocateContext(D3D12_COMMAND_LIST_TYPE type) noexcept
 	{
 		_sContextManagerMutex.TryEnter();

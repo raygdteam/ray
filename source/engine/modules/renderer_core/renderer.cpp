@@ -19,7 +19,7 @@ namespace ray::renderer_core_api
 
 	bool IRenderer::_sbReady = false;
 
-	void IRenderer::Initialize(ray::core::IPlatformWindow* window, IModule* rendererModule)
+	void IRenderer::Initialize(ray::core::IPlatformWindow* window)
 	{
 		
 	}

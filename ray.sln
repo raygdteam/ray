@@ -38,6 +38,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tools", "tools", "{A6A76ACE
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "dev", "dev", "{DAF59CAE-37A7-4EF2-A794-D0184587E5DD}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "eastl", "source\engine\thirdparty\eastl\eastl.vcxproj", "{34FF6296-B8E5-43B8-A8A1-B57163615E2A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -111,6 +113,12 @@ Global
 		{75BAA850-D9AD-4A4A-BD6F-3763E9EABFFE}.Development|x64.Build.0 = Development|x64
 		{75BAA850-D9AD-4A4A-BD6F-3763E9EABFFE}.Release|x64.ActiveCfg = Release|x64
 		{75BAA850-D9AD-4A4A-BD6F-3763E9EABFFE}.Release|x64.Build.0 = Release|x64
+		{34FF6296-B8E5-43B8-A8A1-B57163615E2A}.Debug|x64.ActiveCfg = Debug|x64
+		{34FF6296-B8E5-43B8-A8A1-B57163615E2A}.Debug|x64.Build.0 = Debug|x64
+		{34FF6296-B8E5-43B8-A8A1-B57163615E2A}.Development|x64.ActiveCfg = Development|x64
+		{34FF6296-B8E5-43B8-A8A1-B57163615E2A}.Development|x64.Build.0 = Development|x64
+		{34FF6296-B8E5-43B8-A8A1-B57163615E2A}.Release|x64.ActiveCfg = Release|x64
+		{34FF6296-B8E5-43B8-A8A1-B57163615E2A}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -131,6 +139,7 @@ Global
 		{75BAA850-D9AD-4A4A-BD6F-3763E9EABFFE} = {DF3EE222-3019-400F-B5E1-CE877D5B042C}
 		{A6A76ACE-57C7-4D25-AC84-CA10098F0E18} = {78108E38-C75D-497D-BF3A-3054DED90B32}
 		{DAF59CAE-37A7-4EF2-A794-D0184587E5DD} = {78108E38-C75D-497D-BF3A-3054DED90B32}
+		{34FF6296-B8E5-43B8-A8A1-B57163615E2A} = {E8FC5EA3-3134-4B92-A35C-2D5A42FE0B49}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {D76C9034-44D0-4436-B2B4-7BEF777F9FDD}

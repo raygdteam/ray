@@ -32,7 +32,6 @@ namespace ray::renderer_core_api
 		static std::vector<CommandContext*> _sContextPool[4];
 		static std::queue<CommandContext*> _sAvailableContexts[4];
 		static ray::CriticalSection _sContextManagerMutex;
-
 	};
 
 	class CommandContext : public NonCopyable
@@ -104,6 +103,7 @@ namespace ray::renderer_core_api
 		void SetPipelineState(PipelineState& pso)
 		{
 			auto newPSO = pso.GetPSO();
+
 			if (_currentPipelineState == newPSO)
 				return;
 

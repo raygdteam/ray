@@ -16,7 +16,7 @@ struct ModuleDef
 	void* RawOsHandle;
 };
 
-static ray::Array<ModuleDef*>* gModules = nullptr;
+static Array<ModuleDef*>* gModules = nullptr;
 
 /* We have to keep it as static memory, since we can't use */
 /* memory allocation functions as we're not sure if it's initialized. */
@@ -25,7 +25,7 @@ static RayModuleEntryFn* StaticallyLoadedModules[32] = {};
 ModuleManager::ModuleManager()
 {
 	if (gModules == nullptr)
-		gModules = new ray::Array<ModuleDef*>();
+		gModules = new Array<ModuleDef*>();
 	else __debugbreak();
 
 	for (auto& module : StaticallyLoadedModules)
@@ -33,27 +33,25 @@ ModuleManager::ModuleManager()
 		if (module == nullptr)
 			continue;
 
-		gModules->PushBack(new ModuleDef{ (*module)(), nullptr });
+		gModules->push_back(new ModuleDef{ (*module)(), nullptr });
 	}
 
 	memset(&StaticallyLoadedModules, 0, sizeof(RayModuleEntryFn*) * 32);
 
 	/* Call IModule#OnLoad */
-	for (u32 i = 0; i < gModules->Size(); ++i)
+	for (ModuleDef*& gModule : *gModules)
 	{
-		(*gModules)[i]->Module->OnLoad();
+		gModule->Module->OnLoad();
 	}
 }
 
 Result<IModule*, ModuleLoadError> ModuleManager::LoadModule(pcstr name)
 {
 	/* 1. Check is it's already loaded. */
-	if (!gModules->IsEmpty())
+	if (!gModules->empty())
 	{
-		for (u32 i = 0; i < gModules->Size(); ++i)
+		for (ModuleDef* module : *gModules)
 		{
-			ModuleDef* module = (*gModules)[i];
-			
 			if (strcmp(module->Module->Meta.Name, name) == 0)
 				return { module->Module, eSuccess };
 		}
@@ -91,7 +89,7 @@ Result<IModule*, ModuleLoadError> ModuleManager::LoadModule(pcstr name)
 	module->OnLoad();
 
 	/* 4. Add to the linked list. */
-	gModules->PushBack(new ModuleDef{ module, rawHandle });
+	gModules->push_back(new ModuleDef{ module, rawHandle });
 
 	return { module, eSuccess };
 }

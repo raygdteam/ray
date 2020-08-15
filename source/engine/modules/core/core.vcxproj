@@ -19,6 +19,7 @@
     <ClInclude Include="debug\debug.hpp" />
     <ClInclude Include="file_system\file_system.hpp" />
     <ClInclude Include="lib\array.hpp" />
+    <ClInclude Include="lib\old_array.hpp" />
     <ClInclude Include="lib\scoped_allocation.hpp" />
     <ClInclude Include="lib\thread.hpp" />
     <ClInclude Include="log\log.hpp" />
