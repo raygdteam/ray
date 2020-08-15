@@ -50,6 +50,9 @@
     <ClInclude Include="lib\array.hpp">
       <Filter>lib</Filter>
     </ClInclude>
+    <ClInclude Include="extended_instuctions\sse\common.hpp">
+      <Filter>extended instructions\sse</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="core_entry_point.cpp" />
@@ -102,6 +105,15 @@
     </Filter>
     <Filter Include="debug">
       <UniqueIdentifier>{6e0c4758-45f2-4625-a108-e05f3992ef46}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="extended instructions">
+      <UniqueIdentifier>{0ab4e525-32ba-4e84-a487-c22c3d530283}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="extended instructions\sse">
+      <UniqueIdentifier>{4b6e17ab-9d50-44c4-a95c-009b947d0d07}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="extended instructions\avx">
+      <UniqueIdentifier>{dc52e1fd-08e1-4c59-ac4b-ffc5b74e7ed6}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

@@ -17,6 +17,7 @@
       <Filter>resources\memory</Filter>
     </ClInclude>
     <ClInclude Include="command_context.hpp" />
+    <ClInclude Include="..\renderer_dx12\d3dx12.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="renderer.cpp" />

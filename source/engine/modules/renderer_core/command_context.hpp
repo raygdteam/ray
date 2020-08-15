@@ -79,18 +79,9 @@ namespace ray::renderer_core_api
 			return _cpuLinearAllocator.Allocate(sizeInBytes);
 		}
 
-		static void InitializeTexture(resources::GpuResource& dest, u32 numSubResources, const void* data, u64 rowPitch, u64 slicePitch)
-		{
-			//TODO:
-		}
-
-		static void InitializeTextureArraySlice(resources::GpuResource& dest, u64 sliceIndex, resources::GpuResource& src)
-		{
-			//TODO:
-		}
-
-		//TODO: void ReadbackTexture2D()
-		
+		static void InitializeTexture(resources::GpuResource& dest, u32 numSubResources, const void* data, u64 rowPitch, u64 slicePitch);
+		static void InitializeTextureArraySlice(resources::GpuResource& dest, u64 sliceIndex, resources::GpuResource& src);
+		static void ReadbackTexture2D(resources::GpuResource& readbackBuffer/*, TODO: resources::PixelBuffer& srcBuffer*/);
 		static void InitializeBuffer(resources::GpuResource& dest, const void* data, size_t numBytes, size_t offset = 0);
 
 		void WriteBuffer(resources::GpuResource& dest, size_t destOffset, const void* data, size_t numBytes);
@@ -111,18 +102,46 @@ namespace ray::renderer_core_api
 			_currentPipelineState = newPSO;
 		}
 
+		inline void SetDescriptorHeap(D3D12_DESCRIPTOR_HEAP_TYPE type, ID3D12DescriptorHeap* heap)
+		{
+			if (heap != nullptr && _currentDescriptorHeaps[type] != heap)
+			{
+				_currentDescriptorHeaps[type] = heap;
+				BindDescriptorHeaps();
+			}
+		}
+
+		inline void SetDescriptorHeaps(size_t numHeaps, D3D12_DESCRIPTOR_HEAP_TYPE* types, ID3D12DescriptorHeap** heaps)
+		{
+			bool bAnyChanged = false;
+
+			for (size_t i = 0; i < numHeaps; ++i)
+			{
+				if (heaps[i] != nullptr && heaps[i] != _currentDescriptorHeaps[types[i]])
+				{
+					_currentDescriptorHeaps[types[i]] = heaps[i];
+					bAnyChanged = true;
+				}
+			}
+
+			if (bAnyChanged)
+				BindDescriptorHeaps();
+		}
+
 	protected:
 		D3D12_COMMAND_LIST_TYPE _type;
-		CommandListManager _listManager;
 		ID3D12GraphicsCommandList* _commandList;
 		ID3D12CommandAllocator* _commandAllocator;
 		ID3D12PipelineState* _currentPipelineState;
+		CommandListManager _listManager;
 
 		LinearAllocator _cpuLinearAllocator;
 		LinearAllocator _gpuLinearAllocator;
 
 		D3D12_RESOURCE_BARRIER _barriers[16];
 		u32 _numBarriersToFlush;
+
+		ID3D12DescriptorHeap* _currentDescriptorHeaps[D3D12_DESCRIPTOR_HEAP_TYPE_NUM_TYPES];
 
 	protected:
 		void BindDescriptorHeaps();

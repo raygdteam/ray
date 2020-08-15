@@ -5,7 +5,6 @@
     <ClCompile Include="module_renderer_dx12.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="d3dx12.h" />
     <ClInclude Include="pch.hpp" />
   </ItemGroup>
 </Project>

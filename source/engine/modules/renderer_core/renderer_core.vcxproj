@@ -136,6 +136,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="..\renderer_dx12\d3dx12.h" />
     <ClInclude Include="command_allocator.hpp" />
     <ClInclude Include="command_context.hpp" />
     <ClInclude Include="command_queue.hpp" />

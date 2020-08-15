@@ -1,8 +1,12 @@
 #include "command_context.hpp"
 #include <cassert>
 #include "renderer.hpp"
+#include "d3dx12.h"
+#include <core/extended_instuctions/sse/common.hpp>
+#include <core/math/common.hpp>
 
-// TODO: FIX GLOBAL VARIABLES
+namespace sse = ray::core::sse;
+namespace math = ray::core::math;
 
 namespace ray::renderer_core_api
 {
@@ -64,9 +68,18 @@ namespace ray::renderer_core_api
 		return *newContext;
 	}
 
+	void CommandContext::DestroyAllContexts()
+	{
+		LinearAllocator::DestroyAll();
+
+		globals::gContextManager.DestroyAllContexts();
+	}
+
 	u64 CommandContext::Flush(bool bWaitForComplition)
 	{
-		// FlushResourceBarriers
+		FlushResourceBarriers();
+
+		assert(_commandAllocator != nullptr);
 
 		u64 fenceValue = globals::gCommandListManager.GetQueue(_type).ExecuteCommandList(_commandList);
 
@@ -82,7 +95,9 @@ namespace ray::renderer_core_api
 
 	u64 CommandContext::Finish(bool bWaitForComplition)
 	{
-		// FlushResourceBarriers
+		FlushResourceBarriers();
+
+		assert(_commandAllocator != nullptr);
 
 		CommandQueue& queue = globals::gCommandListManager.GetQueue(_type);
 		u64 fenceValue = queue.ExecuteCommandList(_commandList);
@@ -141,6 +156,100 @@ namespace ray::renderer_core_api
 		//TODO:
 	}
 
+	void CommandContext::InitializeTexture(resources::GpuResource& dest, u32 numSubResources, const void* data, u64 rowPitch, u64 slicePitch)
+	{
+		u64 uploadBufferSize = GetRequiredIntermediateSize(dest.GetResource(), 0, numSubResources);
+		
+		CommandContext& context = CommandContext::Begin();
+		DynAlloc uploadBuffer = context.ReserveUploadMemory(uploadBufferSize);
+		
+		D3D12_SUBRESOURCE_DATA srcData;
+		srcData.pData = data;
+		srcData.RowPitch = rowPitch;
+		srcData.SlicePitch = slicePitch;
+		
+		UpdateSubresources(context._commandList, dest.GetResource(), uploadBuffer.Buffer.GetResource(), 0, 0, numSubResources, &srcData);
+		context.TransitionResource(dest, D3D12_RESOURCE_STATE_GENERIC_READ);
+
+		context.Finish(true);
+	}
+
+	void CommandContext::InitializeTextureArraySlice(resources::GpuResource& dest, u64 sliceIndex, resources::GpuResource& src)
+	{
+		CommandContext& context = CommandContext::Begin();
+
+		context.TransitionResource(dest, D3D12_RESOURCE_STATE_COPY_DEST);
+		context.FlushResourceBarriers();
+
+		const D3D12_RESOURCE_DESC& destDesc = dest.GetResource()->GetDesc();
+		const D3D12_RESOURCE_DESC& srcDesc = src.GetResource()->GetDesc();
+
+		assert(sliceIndex < destDesc.DepthOrArraySize&&
+			srcDesc.DepthOrArraySize == 1 &&
+			destDesc.Width == srcDesc.Width &&
+			destDesc.Height == srcDesc.Height &&
+			destDesc.MipLevels <= srcDesc.MipLevels
+		);
+
+		UINT subResourceIndex = sliceIndex * destDesc.MipLevels;
+
+		for (UINT i = 0; i < destDesc.MipLevels; ++i)
+		{
+			D3D12_TEXTURE_COPY_LOCATION destCopyLocation =
+			{
+				dest.GetResource(),
+				D3D12_TEXTURE_COPY_TYPE_SUBRESOURCE_INDEX,
+				subResourceIndex + i
+			};
+
+			D3D12_TEXTURE_COPY_LOCATION srcCopyLocation =
+			{
+				src.GetResource(),
+				D3D12_TEXTURE_COPY_TYPE_SUBRESOURCE_INDEX,
+				i
+			};
+
+			context._commandList->CopyTextureRegion(&destCopyLocation, 0, 0, 0, &srcCopyLocation, nullptr);
+		}
+
+		context.TransitionResource(dest, D3D12_RESOURCE_STATE_GENERIC_READ);
+		context.Finish(true);
+	}
+
+	void CommandContext::ReadbackTexture2D(resources::GpuResource& readbackBuffer)
+	{
+	}
+
+	void CommandContext::InitializeBuffer(resources::GpuResource& dest, const void* data, size_t numBytes, size_t offset)
+	{
+		CommandContext& context = CommandContext::Begin();
+		DynAlloc mem = context.ReserveUploadMemory(numBytes);
+
+		sse::MemCopy(mem.Data, data, math::DivideByMultiple(numBytes, 16));
+		
+		context.TransitionResource(dest, D3D12_RESOURCE_STATE_COPY_DEST, true);
+		context._commandList->CopyBufferRegion(dest.GetResource(), offset, mem.Buffer.GetResource(), 0, size);
+		context.TransitionResource(dest, D3D12_RESOURCE_STATE_GENERIC_READ);
+
+		context.Finish(true);
+	}
+
+	void CommandContext::WriteBuffer(resources::GpuResource& dest, size_t destOffset, const void* data, size_t numBytes)
+	{
+		assert(data != nullptr && math::IsAligned(numBytes, 16));
+		DynAlloc mem = _cpuLinearAllocator.Allocate(numBytes, 512);
+		sse::MemCopy(mem.Data, data, math::DivideByMultiple(numBytes, 16));
+		CopyBufferRegion(dest, destOffset, mem.Buffer, mem.Offset, numBytes);
+	}
+
+	void CommandContext::FillBuffer(resources::GpuResource& dest, size_t destOffset, float value, size_t numBytes)
+	{
+		DynAlloc mem = _cpuLinearAllocator.Allocate(numBytes, 512);
+		__m128 vectorValue = _mm_set1_ps(value);
+		sse::MemFill(mem.Data, vectorValue, math::DivideByMultiple(numBytes, 16));
+		CopyBufferRegion(dest, destOffset, mem.Buffer, mem.Offset, numBytes);
+	}
+
 	void CommandContext::TransitionResource(resources::GpuResource& dest, D3D12_RESOURCE_STATES newState, bool bFlushImmediate)
 	{
 		D3D12_RESOURCE_STATES oldState = dest._usageState;
@@ -196,7 +305,7 @@ namespace ray::renderer_core_api
 			FlushResourceBarriers();
 	}
 
-	void CommandContext::FlushResourceBarriers()
+	inline void CommandContext::FlushResourceBarriers()
 	{
 		if (_numBarriersToFlush > 0)
 		{
@@ -205,9 +314,56 @@ namespace ray::renderer_core_api
 		}
 	}
 
+	void CommandContext::CopyBuffer(resources::GpuResource& dest, resources::GpuResource& src)
+	{
+		TransitionResource(dest, D3D12_RESOURCE_STATE_COPY_DEST);
+		TransitionResource(src, D3D12_RESOURCE_STATE_COPY_SOURCE);
+		FlushResourceBarriers();
+		_commandList->CopyResource(dest.GetResource(), src.GetResource());
+	}
+
+	void CommandContext::CopyBufferRegion(resources::GpuResource& dest, size_t destOffset, resources::GpuResource& src, size_t srcOffset, size_t numBytes)
+	{
+		TransitionResource(dest, D3D12_RESOURCE_STATE_COPY_DEST);
+		TransitionResource(src, D3D12_RESOURCE_STATE_COPY_SOURCE);
+		FlushResourceBarriers();
+		_commandList->CopyBufferRegion(dest.GetResource(), destOffset, src.GetResource(), srcOffset, numBytes);
+	}
+
+	void CommandContext::CopySubresource(resources::GpuResource& dest, u32 destSubIndex, resources::GpuResource& src, u32 srcSubIndex)
+	{
+		FlushResourceBarriers();
+
+		D3D12_TEXTURE_COPY_LOCATION destLocation =
+		{
+			dest.GetResource(),
+			D3D12_TEXTURE_COPY_TYPE_SUBRESOURCE_INDEX,
+			destSubIndex
+		};
+
+		D3D12_TEXTURE_COPY_LOCATION srcLocation =
+		{
+			src.GetResource(),
+			D3D12_TEXTURE_COPY_TYPE_SUBRESOURCE_INDEX,
+			srcSubIndex
+		};
+
+		_commandList->CopyTextureRegion(&destLocation, 0, 0, 0, &srcLocation, nullptr);
+	}
+
 	void CommandContext::BindDescriptorHeaps()
 	{
-		
+		u32 nonNullHeaps = 0;
+		ID3D12DescriptorHeap* heapsToBind[D3D12_DESCRIPTOR_HEAP_TYPE_NUM_TYPES];
+		for (size_t i = 0; i < D3D12_DESCRIPTOR_HEAP_TYPE_NUM_TYPES; ++i)
+		{
+			auto it = _currentDescriptorHeaps[i];
+			if (it != nullptr)
+				heapsToBind[nonNullHeaps++] = it;
+		}
+
+		if (nonNullHeaps > 0)
+			_commandList->SetDescriptorHeaps(nonNullHeaps, heapsToBind);
 	}
 
 	// ------------------------ COMPUTE CONTEXT ------------------------ //

@@ -10,7 +10,7 @@ namespace ray::renderer_core_api
 	class GraphicsContext;
 }
 
-namespace ray::renderer_core_api::resources
+namespace ray::renderer_core_api::resources 
 {
 	class GpuResource
 	{

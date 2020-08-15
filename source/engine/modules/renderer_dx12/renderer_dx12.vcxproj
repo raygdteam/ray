@@ -144,7 +144,6 @@
     <ClCompile Include="ray_renderer_core_class_helper.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="d3dx12.h" />
     <ClInclude Include="pch.hpp" />
   </ItemGroup>
   <ItemGroup>
