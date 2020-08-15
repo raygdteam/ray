@@ -133,7 +133,6 @@ namespace ray::renderer_core_api
 		ID3D12GraphicsCommandList* _commandList;
 		ID3D12CommandAllocator* _commandAllocator;
 		ID3D12PipelineState* _currentPipelineState;
-		CommandListManager _listManager;
 
 		LinearAllocator _cpuLinearAllocator;
 		LinearAllocator _gpuLinearAllocator;

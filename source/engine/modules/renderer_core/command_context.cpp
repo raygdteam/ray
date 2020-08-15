@@ -8,6 +8,8 @@
 namespace sse = ray::core::sse;
 namespace math = ray::core::math;
 
+#pragma clang diagnostic ignored "-Wmissing-braces" 
+
 namespace ray::renderer_core_api
 {
 	// ------------------------ CONTEXT MANAGER ------------------------ //
@@ -118,9 +120,9 @@ namespace ray::renderer_core_api
 
 	CommandContext::CommandContext(D3D12_COMMAND_LIST_TYPE type)
 		: _type(type)
-		, _listManager()
 		, _commandList(nullptr)
 		, _commandAllocator(nullptr)
+		, _currentPipelineState(nullptr)
 		, _cpuLinearAllocator(LinearAllocatorType::eCpuWritable)
 		, _gpuLinearAllocator(LinearAllocatorType::eGpuExclusive)
 		, _numBarriersToFlush(0)
@@ -206,7 +208,7 @@ namespace ray::renderer_core_api
 			{
 				src.GetResource(),
 				D3D12_TEXTURE_COPY_TYPE_SUBRESOURCE_INDEX,
-				i
+				i 
 			};
 
 			context._commandList->CopyTextureRegion(&destCopyLocation, 0, 0, 0, &srcCopyLocation, nullptr);
@@ -218,6 +220,7 @@ namespace ray::renderer_core_api
 
 	void CommandContext::ReadbackTexture2D(resources::GpuResource& readbackBuffer)
 	{
+		readbackBuffer.GetResource();
 	}
 
 	void CommandContext::InitializeBuffer(resources::GpuResource& dest, const void* data, size_t numBytes, size_t offset)
@@ -228,7 +231,7 @@ namespace ray::renderer_core_api
 		sse::MemCopy(mem.Data, data, math::DivideByMultiple(numBytes, 16));
 		
 		context.TransitionResource(dest, D3D12_RESOURCE_STATE_COPY_DEST, true);
-		context._commandList->CopyBufferRegion(dest.GetResource(), offset, mem.Buffer.GetResource(), 0, size);
+		context._commandList->CopyBufferRegion(dest.GetResource(), offset, mem.Buffer.GetResource(), 0, numBytes);
 		context.TransitionResource(dest, D3D12_RESOURCE_STATE_GENERIC_READ);
 
 		context.Finish(true);
@@ -338,14 +341,14 @@ namespace ray::renderer_core_api
 		{
 			dest.GetResource(),
 			D3D12_TEXTURE_COPY_TYPE_SUBRESOURCE_INDEX,
-			destSubIndex
+			{ destSubIndex }
 		};
 
 		D3D12_TEXTURE_COPY_LOCATION srcLocation =
 		{
 			src.GetResource(),
 			D3D12_TEXTURE_COPY_TYPE_SUBRESOURCE_INDEX,
-			srcSubIndex
+			{ srcSubIndex }
 		};
 
 		_commandList->CopyTextureRegion(&destLocation, 0, 0, 0, &srcLocation, nullptr);
