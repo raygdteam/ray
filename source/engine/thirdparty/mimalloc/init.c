@@ -498,7 +498,7 @@ static void mi_process_done(void) {
 
 #if defined(_WIN32) && defined(MI_SHARED_LIB)
   // Windows DLL: easy to hook into process_init and thread_done
-  __declspec(dllexport) BOOL WINAPI DllMain(HINSTANCE inst, DWORD reason, LPVOID reserved) {
+  BOOL WINAPI DllMain(HINSTANCE inst, DWORD reason, LPVOID reserved) {
     UNUSED(reserved);
     UNUSED(inst);
     if (reason==DLL_PROCESS_ATTACH) {

@@ -3,6 +3,8 @@
 #include <engine/engine/engine.hpp>
 #include <core/log/log.hpp>
 
+#include <core/memory/new_delete_override.hpp>
+
 static Logger* gLog;
 
 int RayMain()

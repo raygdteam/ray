@@ -241,7 +241,7 @@ namespace eastl
 #else
 	#define EASTL_API
 	#define EASTL_LOCAL
-	#define EASTL_DLL 0
+	#define EASTL_DLL 1
 #endif
 // RAY MOD
 

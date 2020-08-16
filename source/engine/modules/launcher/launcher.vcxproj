@@ -61,19 +61,19 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <IntDir>$(SolutionDir).build\int\$(ProjectName)\</IntDir>
+    <IntDir>$(SolutionDir).build\int\$(Configuration)\$(ProjectName)\</IntDir>
     <OutDir>$(SolutionDir).build\bin\</OutDir>
     <TargetName>$(ProjectName)</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <IntDir>$(SolutionDir).build\int\$(ProjectName)\</IntDir>
+    <IntDir>$(SolutionDir).build\int\$(Configuration)\$(ProjectName)\</IntDir>
     <OutDir>$(SolutionDir).build\bin\</OutDir>
     <TargetName>$(ProjectName)</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Development|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <IntDir>$(SolutionDir).build\int\$(ProjectName)\</IntDir>
+    <IntDir>$(SolutionDir).build\int\$(Configuration)\$(ProjectName)\</IntDir>
     <OutDir>$(SolutionDir).build\bin\</OutDir>
     <TargetName>$(ProjectName)</TargetName>
   </PropertyGroup>
@@ -154,7 +154,9 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="windows\resource.rc" />
+    <ResourceCompile Include="windows\resource.rc">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
+    </ResourceCompile>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
