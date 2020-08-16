@@ -1,7 +1,18 @@
 #include <Windows.h>
-#include "kernel.h"
+#include <Shlwapi.h>
+#include "kernel_file.h"
+
+#pragma comment(lib, "shlwapi.lib")
 
 typedef rayHandle rayFileHandle;
+
+void palFileSysSwitchToExeDirectory()
+{
+    char exePath[260];
+    GetModuleFileNameA(NULL, exePath, 260);
+    PathRemoveFileSpecA(exePath);
+    SetCurrentDirectoryA(exePath);
+}
 
 rayFileHandle krnlFileOpen(const char* path, int mode)
 {

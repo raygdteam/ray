@@ -53,6 +53,9 @@
     <ClInclude Include="extended_instuctions\sse\common.hpp">
       <Filter>extended instructions\sse</Filter>
     </ClInclude>
+    <ClInclude Include="file_system\file.hpp">
+      <Filter>file_system</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="core_entry_point.cpp" />

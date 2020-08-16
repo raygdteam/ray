@@ -1,15 +1,27 @@
 #pragma once
-
 #include <core/core.hpp>
+#include <core/file_system/file.hpp>
 
-namespace ray
+enum FileMode
 {
+    Read = 0x01,
+    Write = 0x02,
+    ReadWrite = Read | Write,
+    Append = 0x04,
+};
 
 class RAY_CORE_API FileSystem
 {
 public:
-	void MountDirectory(pcstr virtualDirectory, pcstr physicalDirectory);
-	void UnmountDirectory(pcstr virtualDirectory);
-};
+	FileSystem();
 
-}
+	/*
+	 * Open the file.
+	 * Path is relative to the folder .exe is in.
+	 * For instance, '../../ray.sln' will resolve to
+	 * 'ray/.build/bin/../../ray.sln' ==> 'ray/ray.sln'
+	 *
+	 * NOTE: FileMode#Write will erase your file contents if it exists!!!
+	 */
+    IFile* OpenFile(pcstr name, FileMode mode);
+};

@@ -18,7 +18,7 @@ void EngineLoop::PreInitialize()
 	IRayState* state = RayState();
 	state->ObjectDb = new ObjectDb();
 	state->ModuleManager = new ModuleManager();
-	state->FileSystem = new ray::FileSystem();
+	state->FileSystem = new FileSystem();
 
 	/* 2. Load the engine module. This will register the objects we need. */
 	auto res = state->ModuleManager->LoadModule("engine");
