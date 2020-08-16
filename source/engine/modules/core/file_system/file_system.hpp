@@ -22,6 +22,7 @@ public:
 	 * 'ray/.build/bin/../../ray.sln' ==> 'ray/ray.sln'
 	 *
 	 * NOTE: FileMode#Write will erase your file contents if it exists!!!
+	 * NOTE: You must call IFile#Close and delete the instance yourself!!
 	 */
-    IFile* OpenFile(pcstr name, FileMode mode);
+	IFile* OpenFile(pcstr name, FileMode mode);
 };
