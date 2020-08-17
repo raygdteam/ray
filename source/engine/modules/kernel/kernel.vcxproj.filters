@@ -12,5 +12,6 @@
     <ClInclude Include="kernel_thread.h" />
     <ClInclude Include="kernel.h" />
     <ClInclude Include="kernel_win32_critical_section.h" />
+    <ClInclude Include="kernel_file.h" />
   </ItemGroup>
 </Project>

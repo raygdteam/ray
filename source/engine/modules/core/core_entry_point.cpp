@@ -3,7 +3,7 @@
 
 extern "C" RAY_DLLIMPORT void dummy();
 
-u32 __stdcall DllMain(void* instance, unsigned long reason, void*)
+u32 __stdcall DllMain(void*, unsigned long, void*)
 {
 	dummy();
 	return 1;

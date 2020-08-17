@@ -15,10 +15,12 @@ ObjectDb::ObjectDb()
 
 RayObjectMeta* ObjectDb::GetObject(pcstr name)
 {
+	(void)name;
 	return nullptr;
 }
 
 void ObjectDb::RegisterObject(RayObjectMeta* meta)
 {
+	(void)meta;
 }
 }

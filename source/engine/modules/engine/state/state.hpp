@@ -2,12 +2,13 @@
 #include <core/core.hpp>
 #include <engine/engine/engine_def.hpp>
 
+class RAY_CORE_API FileSystem;
+
 namespace ray
 {
 // Core
 class RAY_CORE_API ModuleManager;
 class RAY_CORE_API ObjectDb;
-class RAY_CORE_API FileSystem;
 
 // Engine
 struct IEngine;
