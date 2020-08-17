@@ -2,6 +2,7 @@
 #include "command_queue.hpp"
 #include "resources/linear_allocator.hpp"
 #include "pipeline_state.hpp"
+#include "resources/color_buffer.hpp"
 #include <core/threading/critical_section.hpp>
 #include <d3d12.h>
 #include <cassert>
@@ -88,7 +89,7 @@ namespace ray::renderer_core_api
 
 		static void InitializeTexture(resources::GpuResource& dest, u32 numSubResources, const void* data, u64 rowPitch, u64 slicePitch);
 		static void InitializeTextureArraySlice(resources::GpuResource& dest, u64 sliceIndex, resources::GpuResource& src);
-		static void ReadbackTexture2D(resources::GpuResource& readbackBuffer/*, TODO: resources::PixelBuffer& srcBuffer*/);
+		static void ReadbackTexture2D(resources::GpuResource& readbackBuffer, resources::PixelBuffer& srcBuffer);
 		static void InitializeBuffer(resources::GpuResource& dest, const void* data, size_t numBytes, size_t offset = 0);
 
 		void WriteBuffer(resources::GpuResource& dest, size_t destOffset, const void* data, size_t numBytes);
@@ -172,7 +173,29 @@ namespace ray::renderer_core_api
 			return CommandContext::Begin().GetGraphicsContext();
 		}
 
+		void ClearUAV(resources::GpuResource& target) {}
+		void ClearUAV(resources::ColorBuffer& target) {}
+		void ClearColor(resources::ColorBuffer& target);
+		void ClearDepth() {}
+		void ClearStencil() {}
+		void ClearDepthAndStencil() {}
 
+		void SetRenderTargets(u32 numRTV, D3D12_CPU_DESCRIPTOR_HANDLE* rtv);
+		void SetRenderTargets(u32 numRtV, D3D12_CPU_DESCRIPTOR_HANDLE* rtv, D3D12_CPU_DESCRIPTOR_HANDLE dsv);
+		void SetRenderTarget(D3D12_CPU_DESCRIPTOR_HANDLE rtv) { SetRenderTargets(1, &rtv); }
+		void SetRenderTarget(D3D12_CPU_DESCRIPTOR_HANDLE rtv, D3D12_CPU_DESCRIPTOR_HANDLE dsv) { SetRenderTargets(1, &rtv, dsv); }
+		void SetDepthStencilView(D3D12_CPU_DESCRIPTOR_HANDLE dsv) { SetRenderTargets(0, nullptr, dsv); }
+
+		void SetViewport(const D3D12_VIEWPORT& viewport);
+		void SetViewport(float x, float y, float w, float h, float minDepth = 0.f, float maxDepth = 1.f);
+		void SetScissor(const D3D12_RECT& rect);
+		void SetScissor(u32 left, u32 top, u32 right, u32 bottom);
+		void SetViewportAndScissor(const D3D12_VIEWPORT& viewport, const D3D12_RECT& rect);
+		void SetViewportAndScissor(u32 x, u32 y, u32 w, u32 h);
+		void SetBlendFactor(float r, float g, float b, float a);
+		void SetPrimitiveTopology(D3D12_PRIMITIVE_TOPOLOGY primitiveTopology);
+
+		// TODO: 
 
 	private:
 

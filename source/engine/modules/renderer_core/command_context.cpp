@@ -217,10 +217,21 @@ namespace ray::renderer_core_api
 		context.Finish(true);
 	}
 
-	void CommandContext::ReadbackTexture2D(resources::GpuResource& readbackBuffer)
+	void CommandContext::ReadbackTexture2D(resources::GpuResource& readbackBuffer, resources::PixelBuffer& srcBuffer)
 	{
-		readbackBuffer.GetResource();
+		D3D12_PLACED_SUBRESOURCE_FOOTPRINT placedSubresource;
+		globals::gDevice->GetCopyableFootprints(&(srcBuffer.GetResource()->GetDesc()), 0, 1, 0, &placedSubresource, nullptr, nullptr, nullptr);
+
+		CommandContext& context = CommandContext::Begin();
+		context.TransitionResource(srcBuffer, D3D12_RESOURCE_STATE_COPY_SOURCE, true);
+
+		CD3DX12_TEXTURE_COPY_LOCATION srcCopyLocation(srcBuffer.GetResource(), 0);
+		CD3DX12_TEXTURE_COPY_LOCATION destCopyLocation(readbackBuffer.GetResource(), placedSubresource);
+
+		context._commandList->CopyTextureRegion(&destCopyLocation, 0, 0, 0, &srcCopyLocation, nullptr);
+		context.Finish(true);
 	}
+
 
 	void CommandContext::InitializeBuffer(resources::GpuResource& dest, const void* data, size_t numBytes, size_t offset)
 	{
@@ -377,4 +388,82 @@ namespace ray::renderer_core_api
 
 		return newContext;
 	}
+
+	// ------------------------ GRAPHICS CONTEXT ------------------------ //
+
+	void GraphicsContext::ClearColor(resources::ColorBuffer& target)
+	{
+		float color[4];
+		target.GetClearColor(&color[0], &color[1], &color[2], &color[3]);
+		_commandList->ClearRenderTargetView(target.GetRTV(), color, 0, nullptr);
+	}
+
+	void GraphicsContext::SetRenderTargets(u32 numRTV, D3D12_CPU_DESCRIPTOR_HANDLE* rtv)
+	{
+		_commandList->OMSetRenderTargets(numRTV, rtv, static_cast<BOOL>(false), nullptr);
+	}
+
+	void GraphicsContext::SetRenderTargets(u32 numRTV, D3D12_CPU_DESCRIPTOR_HANDLE* rtv, D3D12_CPU_DESCRIPTOR_HANDLE dsv)
+	{
+		_commandList->OMSetRenderTargets(numRTV, rtv, static_cast<BOOL>(false), &dsv);
+	}
+
+	void GraphicsContext::SetViewport(const D3D12_VIEWPORT& viewport)
+	{
+		_commandList->RSSetViewports(1, &viewport);
+	}
+
+	void GraphicsContext::SetViewport(float x, float y, float w, float h, float minDepth, float maxDepth)
+	{
+		D3D12_VIEWPORT viewport;
+		viewport.Width = w;
+		viewport.Height = h;
+		viewport.TopLeftX = x;
+		viewport.TopLeftY = y;
+		viewport.MaxDepth = maxDepth;
+		viewport.MinDepth = minDepth;
+
+		_commandList->RSSetViewports(1, &viewport);
+	}
+
+	void GraphicsContext::SetScissor(const D3D12_RECT& rect)
+	{
+		assert(rect.left < rect.right && rect.top < rect.bottom);
+		_commandList->RSSetScissorRects(1, &rect);
+	}
+
+	void GraphicsContext::SetScissor(u32 left, u32 top, u32 right, u32 bottom)
+	{
+		CD3DX12_RECT rect(left, top, right, bottom);
+		SetScissor(rect);
+	}
+
+	void GraphicsContext::SetViewportAndScissor(const D3D12_VIEWPORT& viewport, const D3D12_RECT& rect)
+	{
+		assert(rect.left < rect.right&& rect.top < rect.bottom);
+		_commandList->RSSetViewports(1, &viewport);
+		_commandList->RSSetScissorRects(1, &rect);
+	}
+
+	void GraphicsContext::SetViewportAndScissor(u32 x, u32 y, u32 w, u32 h)
+	{
+		SetViewport(static_cast<float>(x), static_cast<float>(y), static_cast<float>(w), static_cast<float>(h));
+		SetScissor(x, y, x + w, y + h);
+	}
+
+	void GraphicsContext::SetBlendFactor(float r, float g, float b, float a)
+	{
+		float color[4] =
+		{
+			r, g, b, a
+		};
+		_commandList->OMSetBlendFactor(color);
+	}
+
+	void GraphicsContext::SetPrimitiveTopology(D3D12_PRIMITIVE_TOPOLOGY primitiveTopology)
+	{
+		_commandList->IASetPrimitiveTopology(primitiveTopology);
+	}
+
+
 }
