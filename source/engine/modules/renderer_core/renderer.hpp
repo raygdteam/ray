@@ -6,6 +6,7 @@
 #include <app_framework/base/platform_window.hpp>
 
 #include "ray_renderer_core_class_helper.hpp"
+#include "descriptor_heap.hpp"
 
 #include <vector>
 #include <core\module\module_meta.hpp>
@@ -30,6 +31,12 @@ namespace ray::renderer_core_api
 		extern CommandListManager gCommandListManager;
 		extern ContextManager gContextManager;
 		extern ID3D12Device* gDevice;
+		extern DescriptorAllocator gDescriptorAllocator[];
+	}
+
+	D3D12_CPU_DESCRIPTOR_HANDLE AllocateDescriptor(D3D12_DESCRIPTOR_HEAP_TYPE type, u32 count = 1)
+	{
+		return globals::gDescriptorAllocator[type].Allocate(count);
 	}
 
 	struct RAY_RENDERERCORE_API IRenderer final// : public Object

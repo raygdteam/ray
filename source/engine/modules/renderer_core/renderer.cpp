@@ -14,6 +14,13 @@ namespace ray::renderer_core_api
 		CommandListManager gCommandListManager;
 		ContextManager gContextManager;
 		ID3D12Device* gDevice;
+		DescriptorAllocator gDescriptorAllocator[D3D12_DESCRIPTOR_HEAP_TYPE_NUM_TYPES] =
+		{
+			D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV,
+			D3D12_DESCRIPTOR_HEAP_TYPE_SAMPLER,
+			D3D12_DESCRIPTOR_HEAP_TYPE_RTV,
+			D3D12_DESCRIPTOR_HEAP_TYPE_DSV
+		};
 	}
 
 

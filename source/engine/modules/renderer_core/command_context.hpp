@@ -4,6 +4,7 @@
 #include "pipeline_state.hpp"
 #include <core/threading/critical_section.hpp>
 #include <d3d12.h>
+#include <cassert>
 
 namespace ray::renderer_core_api
 {
@@ -54,6 +55,12 @@ namespace ray::renderer_core_api
 
 		void Initialize();
 		void Reset();
+
+		GraphicsContext& GetGraphicsContext() noexcept
+		{
+			assert(_type != D3D12_COMMAND_LIST_TYPE_COMPUTE);
+			return reinterpret_cast<GraphicsContext&>(*this);
+		}
 
 		ComputeContext& GetComputeContext() noexcept
 		{
@@ -160,6 +167,11 @@ namespace ray::renderer_core_api
 	class GraphicsContext : public CommandContext
 	{
 	public:
+		static GraphicsContext& Begin()
+		{
+			return CommandContext::Begin().GetGraphicsContext();
+		}
+
 
 
 	private:

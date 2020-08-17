@@ -1,5 +1,4 @@
 #include "command_context.hpp"
-#include <cassert>
 #include "renderer.hpp"
 #include "d3dx12.h"
 #include <core/extended_instuctions/sse/common.hpp>

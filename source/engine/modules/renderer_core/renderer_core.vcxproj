@@ -150,8 +150,10 @@
     <ClInclude Include="renderer.hpp" />
     <ClInclude Include="renderer_2d.hpp" />
     <ClInclude Include="renderer_globals.hpp" />
+    <ClInclude Include="resources\color_buffer.hpp" />
     <ClInclude Include="resources\gpu_resource.hpp" />
     <ClInclude Include="resources\linear_allocator.hpp" />
+    <ClInclude Include="resources\pixel_buffer.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="command_allocator.cpp" />
@@ -161,7 +163,9 @@
     <ClCompile Include="module_renderer_core.cpp" />
     <ClCompile Include="renderer.cpp" />
     <ClCompile Include="renderer_2d.cpp" />
+    <ClCompile Include="resources\color_buffer.cpp" />
     <ClCompile Include="resources\linear_allocator.cpp" />
+    <ClCompile Include="resources\pixel_buffer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\thirdparty\mimalloc\mimalloc.vcxproj">
