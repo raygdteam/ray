@@ -9,7 +9,7 @@
 RAYOBJECT("engine://world/level")
 class Level : public RayObject
 {
-	RAYOBJECT_BODY(Level);
+	RAYOBJECT_BODY(Level, RayObject);
 
 	// Temp
 public:

@@ -5,7 +5,7 @@ struct RayObject;
 using ObjectCreateFunc = RayObject * ();
 
 #define RAYOBJECT(Name)
-#define RAYOBJECT_BODY(Type)
+#define RAYOBJECT_BODY(Type, Base) using Super = Base;
 #define PROPERTY(Props)
 #define METHOD(Props)
 
