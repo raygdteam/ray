@@ -8,6 +8,7 @@
 
 class TestActor1 : public Actor
 {
+	RAYOBJECT_BODY(TestActor1, Actor);
 public:
 	TestActor1()
 	{
@@ -18,7 +19,6 @@ public:
 protected:
 	void BeginPlay() override
 	{
-		
 	}
 	
 	void Tick(f64 delta) override

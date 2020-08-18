@@ -38,11 +38,13 @@ void RayEngine::Initialize(IEngineLoop* engineLoop)
 	eng->Log("built on \"%s\"", __TIMESTAMP__);
 
 	eng->Log("[1/4] Window init...");
+	
+#ifndef _TEMP_NO_RENDERER_CORE_API_
 	ray::core::IPlatformWindow* window = core::IPlatformWindow::CreateInstance();
 	
 	window->Initialize();
 	window->CreateWindow("RAY_ENGINE");
-
+#endif
 	eng->Log("[2/4] Renderer load...");
 
 #ifndef _TEMP_NO_RENDERER_CORE_API_
@@ -63,8 +65,9 @@ void RayEngine::Initialize(IEngineLoop* engineLoop)
 	eng->Log("[4/4] Finishing...");
 	
 	// window->SetWindowVisibility(true);
-
+#ifndef _TEMP_NO_RENDERER_CORE_API_
 	_window = window;
+#endif
 }
 
 void RayEngine::Tick()
@@ -72,7 +75,9 @@ void RayEngine::Tick()
 	static f64 delta = 0;
 	auto __start = std::chrono::high_resolution_clock::now();
 	
+#ifndef _TEMP_NO_RENDERER_CORE_API_
 	static_cast<core::IPlatformWindow*>(_window)->Update();
+#endif
 	
 	//for debugging
 	bool bShouldClose = tempRenderer->ShouldClose(); //static_cast<core::IPlatformWindow*>(_window)->ShouldClose();
@@ -107,14 +112,14 @@ void RayEngine::Tick()
 
 RayEngine::~RayEngine()
 {
+#ifndef _TEMP_NO_RENDERER_CORE_API_
 	static_cast<core::IPlatformWindow*>(_window)->Destroy();
 	static_cast<core::IPlatformWindow*>(_window)->Shutdown();
-#ifndef _TEMP_NO_RENDERER_CORE_API_
 	_renderer->Shutdown();
 
 	delete _renderer;
-#endif
 	delete (core::IPlatformWindow*)_window;
+#endif
 }
 
 /************************************/
