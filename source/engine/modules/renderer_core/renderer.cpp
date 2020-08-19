@@ -31,6 +31,7 @@ namespace ray::renderer_core_api
 	{
 		IDXGIFactory4* dxgiFactory;
 		auto hr = CreateDXGIFactory2(0, IID_PPV_ARGS(&dxgiFactory));
+		(void)hr;
 		assert(hr == S_OK);
 		IDXGIAdapter1* adapter;
 		ID3D12Device* device;

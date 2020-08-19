@@ -14,7 +14,7 @@ namespace ray::core::sse
 {
 
     // A faster version of memcopy that uses SSE instructions.
-    void MemCopy(void* __restrict _Dest, const void* __restrict _Source, size_t NumQuadwords)
+    inline void MemCopy(void* __restrict _Dest, const void* __restrict _Source, size_t NumQuadwords)
     {
         assert(math::IsAligned(_Dest, 16));
         assert(math::IsAligned(_Source, 16));
@@ -93,7 +93,7 @@ namespace ray::core::sse
         _mm_sfence();
     }
 
-    void MemFill(void* __restrict _Dest, __m128 FillVector, size_t NumQuadwords)
+    inline void MemFill(void* __restrict _Dest, __m128 FillVector, size_t NumQuadwords)
     {
         assert(math::IsAligned(_Dest, 16));
 

@@ -185,6 +185,7 @@ namespace ray::renderer_core_api
 
 		const D3D12_RESOURCE_DESC& destDesc = dest.GetResource()->GetDesc();
 		const D3D12_RESOURCE_DESC& srcDesc = src.GetResource()->GetDesc();
+		(void)srcDesc;
 
 		assert(sliceIndex < destDesc.DepthOrArraySize&&
 			srcDesc.DepthOrArraySize == 1 &&
