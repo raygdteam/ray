@@ -180,7 +180,7 @@ void Level::LoadLevel()
 	SpawnActor(new TestActor1());
 	SpawnActor(new TestActor2());
 	
-	RayLevelBundle bundleFile = {
+	/*RayLevelBundle bundleFile = {
 		.Header = {
 			.Magic = 0xA0B1C2D3E4F50000ULL,
 			.Datatype = 32,
@@ -200,7 +200,7 @@ void Level::LoadLevel()
 	}
 	
 	bundle->Close();
-	delete bundle;
+	delete bundle;*/
 
 	/*IFile* bundle = ray::RayState()->FileSystem->OpenFile("../../test.bundle", Read);
 	FileArchive ar;
