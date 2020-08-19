@@ -11,6 +11,8 @@
 #include <engine/world/level.hpp>
 #include <chrono>
 
+#undef CreateWindow
+
 Renderer* tempRenderer = nullptr;
 Level* tempLevel = nullptr;
 u64 tempLastTime = 0;
@@ -51,18 +53,18 @@ void RayEngine::Initialize(IEngineLoop* engineLoop)
 	if (!res.IsSuccess()) __debugbreak();
 #endif
 
-	eng->Log("[3/4] Renderer init...");
+	/*eng->Log("[3/4] Renderer init...");
 	tempRenderer->Initialize();
-	tempLevel->LoadLevel();
+	tempLevel->LoadLevel();*/
 
 #ifndef _TEMP_NO_RENDERER_CORE_API_
 	_renderer = new IRenderer;
-	_renderer->Initialize(window, res.Data);
+	_renderer->Initialize(window);
 #endif
 
 	eng->Log("[4/4] Finishing...");
 	
-	// window->SetWindowVisibility(true);
+	window->SetWindowVisibility(true);
 
 	_window = window;
 }
@@ -75,7 +77,7 @@ void RayEngine::Tick()
 	static_cast<core::IPlatformWindow*>(_window)->Update();
 	
 	//for debugging
-	bool bShouldClose = tempRenderer->ShouldClose(); //static_cast<core::IPlatformWindow*>(_window)->ShouldClose();
+	bool bShouldClose = /*tempRenderer->ShouldClose(); */ static_cast<core::IPlatformWindow*>(_window)->ShouldClose();
 	if (bShouldClose)
 	{
 		ray::RequestEngineExit(true);

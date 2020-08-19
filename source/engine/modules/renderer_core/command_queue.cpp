@@ -41,7 +41,9 @@ namespace ray::renderer_core_api
 		static_cast<ID3D12GraphicsCommandList*>(list)->Close();
 
 		_commandQueue->ExecuteCommandLists(1, &list);
-
+		auto hr = _device->GetDeviceRemovedReason();
+		u32 code = static_cast<u32>(hr);
+		if(code == 0) {}
 		_commandQueue->Signal(_fence, _nextFenceValue);
 
 		_fenceMutex.Leave();
@@ -159,30 +161,30 @@ namespace ray::renderer_core_api
 		_copyQueue.Create(device);
 	}
 
-	void CommandListManager::CreateNewCommandList(D3D12_COMMAND_LIST_TYPE type, ID3D12CommandAllocator* allocator, ID3D12CommandList* list)
+	void CommandListManager::CreateNewCommandList(D3D12_COMMAND_LIST_TYPE type, ID3D12CommandAllocator** allocator, ID3D12GraphicsCommandList** list)
 	{
 		switch (type)
 		{
 		case D3D12_COMMAND_LIST_TYPE_DIRECT:
-			allocator = _graphicsQueue.RequestAllocator();
+			*allocator = _graphicsQueue.RequestAllocator();
 			break;
 		
 		case D3D12_COMMAND_LIST_TYPE_BUNDLE:
 			return;
 		
 		case D3D12_COMMAND_LIST_TYPE_COMPUTE:
-			allocator = _computeQueue.RequestAllocator();
+			*allocator = _computeQueue.RequestAllocator();
 			break;
 		
 		case D3D12_COMMAND_LIST_TYPE_COPY:
-			allocator = _copyQueue.RequestAllocator();
+			*allocator = _copyQueue.RequestAllocator();
 			break;
 		default:
-			allocator = _graphicsQueue.RequestAllocator();
+			*allocator = _graphicsQueue.RequestAllocator();
 
 		}
 
-		assert(_device->CreateCommandList(1, type, allocator, nullptr, IID_PPV_ARGS(&list)) == S_OK);
+		assert(_device->CreateCommandList(0, type, *allocator, nullptr, IID_PPV_ARGS(list)) == S_OK);
 	}
 
 	void CommandListManager::WaitForFence(u64 fenceValue)

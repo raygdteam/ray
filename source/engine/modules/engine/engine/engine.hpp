@@ -1,6 +1,6 @@
 #pragma once
 
-#define _TEMP_NO_RENDERER_CORE_API_
+//#define _TEMP_NO_RENDERER_CORE_API_
 
 #include "engine/engine/engine_def.hpp"
 

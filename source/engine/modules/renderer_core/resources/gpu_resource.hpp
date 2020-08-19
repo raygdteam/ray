@@ -2,10 +2,10 @@
 #include <d3d12.h>
 
 #include <core/core.hpp>
-#include "renderer_core/command_context.hpp"
 
 namespace ray::renderer_core_api
 {
+	class CommandContext;
 	class ComputeContext;
 	class GraphicsContext;
 }
