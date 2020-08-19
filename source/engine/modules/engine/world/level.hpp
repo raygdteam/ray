@@ -24,5 +24,9 @@ public:
 	void LoadLevel();
 	void Tick(f64 delta);
 
+
+	void Serialize(Archive&) override;
+	void Deserialize(Archive&) override;
+	
 	friend class Actor;
 };

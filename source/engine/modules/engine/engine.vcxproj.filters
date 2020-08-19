@@ -67,5 +67,8 @@
     <ClCompile Include="world\level_test.cpp">
       <Filter>world</Filter>
     </ClCompile>
+    <ClCompile Include="world\components\transform.cpp">
+      <Filter>world\components</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

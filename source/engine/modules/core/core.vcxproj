@@ -31,6 +31,7 @@
     <ClInclude Include="memory\new_delete_override.hpp" />
     <ClInclude Include="module\module.hpp" />
     <ClInclude Include="module\module_meta.hpp" />
+    <ClInclude Include="object\archive.hpp" />
     <ClInclude Include="object\object.hpp" />
     <ClInclude Include="object\object_db.hpp" />
     <ClInclude Include="threading\critical_section.hpp" />

@@ -15,12 +15,12 @@ public:
 		GetTransform()->Position.x = 250.f;
 		GetTransform()->Position.y = 10.f;
 	}
-	
+
 protected:
 	void BeginPlay() override
 	{
 	}
-	
+
 	void Tick(f64 delta) override
 	{
 		// std::cout << "delta " << delta << "; fps " << 1000.f / delta << "\n";
@@ -37,16 +37,27 @@ protected:
 		{
 			GetTransform()->Position.y -= 0.1f * delta;
 		}
-		
+
 		if (GetKeyState('S') & 0x8000)
 		{
 			GetTransform()->Position.y += 0.1f * delta;
 		}
 	}
-	
+
 	void OnDestroy() override
 	{
-		
+
+	}
+
+public:
+	void Serialize(Archive& ar) override
+	{
+		Super::Serialize(ar);
+	}
+
+	void Deserialize(Archive& ar) override
+	{
+		Super::Deserialize(ar);
 	}
 };
 
@@ -92,6 +103,17 @@ protected:
 	{
 
 	}
+	
+public:
+	void Serialize(Archive& ar) override
+	{
+		Actor::Serialize(ar);
+	}
+
+	void Deserialize(Archive& ar) override
+	{
+		Actor::Deserialize(ar);
+	}
 };
 
 #define RAY_ACTOR_DATATYPE 0x1
@@ -125,49 +147,67 @@ struct ActorBundleData
 	// other components? refl? manual serialization? constant size? alignment?
 };
 
+struct FileArchive : public Archive
+{
+	IFile* file = nullptr;
+	
+	void Read(void* buffer, u64 size) override
+	{
+		file->Read(buffer, size);
+	}
+	
+	void Write(void* buffer, u64 size) override
+	{
+		file->Write(buffer, size);
+	}
+};
+
 void Level::LoadLevel()
 {
-	/*IFile* bundle = ray::RayState()->FileSystem->OpenFile("../../test.bundle", Write);
-
-	Bundle bundleFile = {
-		.Header = {
-			.Magic = reinterpret_cast<u64>("RAY!"),
-			.Datatype = 32,
-			.Checksum = 0xf0f0f0f0f0f0f0f0,
-		}
-	};
-
-	auto written = bundle->Write<Bundle>(bundleFile);
-	(void)written;
+	/*SpawnActor(new TestActor1());
+	SpawnActor(new TestActor2());
 	
-	bundle->Close();
-	delete bundle;*/
-	/*
-	IFile* bundle2 = ray::RayState()->FileSystem->OpenFile("../../test.bundle", Read);
-
-	Bundle file2 = {};
-	bundle2->Read(file2);
-	
-	bundle2->Close();
-	delete bundle2;
-	*/
-
-	/*RayLevelBundle bundleFile = {
+	RayLevelBundle bundleFile = {
 		.Header = {
 			.Magic = 0xA0B1C2D3E4F50000ULL,
 			.Datatype = 32,
 			.Checksum = 0xf0f0f0f0f0f0f0f0,
 		},
-		.NumActors = 2
+		.NumActors = _actors.Size()
 	};
-	ActorBundleData actorData1 = {
-		// nicer way?
-		.Transform = Transform(FVector<2> {(f64)100.f, (f64)100.f})
-	};
-	ActorBundleData actorData2 = {
-		// nicer way?
-		.Transform = Transform(FVector<2> {(f64)500.f, (f64)100.f})
-	};*/
+
+	IFile* bundle = ray::RayState()->FileSystem->OpenFile("../../test.bundle", Write);
+	FileArchive ar;
+	ar.file = bundle;
+
+	bundle->Write(bundleFile);
+	for (Actor* actor : _actors)
+	{
+		actor->Serialize(ar);
+	}
+	
+	bundle->Close();
+	delete bundle;*/
+
+	IFile* bundle = ray::RayState()->FileSystem->OpenFile("../../test.bundle", Read);
+	FileArchive ar;
+	ar.file = bundle;
+
+	RayLevelBundle bundleFile = {};
+	bundle->Read(bundleFile);
+
+	_actors.clear();
+
+	for (u64 i = 0; i < bundleFile.NumActors; ++i)
+	{
+		// TODO: NotLikeThis!
+		TestActor1* actor = new TestActor1();
+		actor->Deserialize(ar);
+		SpawnActor(actor);
+	}
+	
+	bundle->Close();
+	delete bundle;
 
 	// verify header on load?
 	
@@ -210,43 +250,13 @@ void Level::LoadLevel()
 	bundle->Close();
 	delete bundle;*/
 
-	IFile* bundle = ray::RayState()->FileSystem->OpenFile("../../test.bundle", Read);
 	
-	RayLevelBundle bundleFile = {};
-	ActorBundleData actor1 = {};
-	ActorBundleData actor2 = {};
-	
-	/*
-	 * !!!!!!!!!!undefined behaviour!!!!!!!!!!!!!!!!!!
-	 */
-	bundle->Read(bundleFile);
-	bundle->Read(actor1);
-	bundle->Read(actor2);
-
-	bundle->Close();
-	delete bundle;
-
-	if ((bundleFile.Header.Magic != 0xA0B1C2D3E4F50000ULL) ||
-		(bundleFile.Header.Checksum != 0xf0f0f0f0f0f0f0f0) ||
-		(bundleFile.Header.Datatype != 32) ||
-		(bundleFile.NumActors != 2))
-	{
-		*(int*)nullptr = 0xDED;
-	}
-
-	TestActor1* actor_1 = new TestActor1();
-	actor_1->GetTransform()->Position = actor1.Transform.Position;
-	SpawnActor(actor_1);
-
-	TestActor2* actor_2 = new TestActor2();
-	actor_2->GetTransform()->Position = actor2.Transform.Position;
-	SpawnActor(actor_2);
 }
 
 void Level::Tick(f64 delta)
 {
-	for (u32 i = 0; i < _actors.Size(); ++i)
+	for (Actor* actor : _actors)
 	{
-		_actors[i]->Tick(delta);
+		actor->Tick(delta);
 	}
 }

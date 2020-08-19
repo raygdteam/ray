@@ -21,3 +21,23 @@ Transform* Actor::GetTransform()
 {
 	return GetComponent<Transform>();
 }
+
+void Actor::Serialize(Archive& ar)
+{
+	ar.Write<u64>(_components.Size());
+
+	// TODO: not like this!
+	GetTransform()->Serialize(ar);
+}
+
+void Actor::Deserialize(Archive& ar)
+{
+	u64 numComponents = 0;
+	ar.Read<u64>(numComponents);
+	_components.clear();
+	
+	// TODO: not like this!
+	Transform* transform = new Transform();
+	transform->Deserialize(ar);
+	_components.PushBack(transform);
+}
