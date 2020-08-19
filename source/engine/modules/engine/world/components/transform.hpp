@@ -3,12 +3,25 @@
 #include <engine/world/components/component_base.hpp>
 #include <core/math/vector.hpp>
 
-struct Transform : IComponent
+class Transform : public IComponent
 {
+	RAYOBJECT_BODY(Transform, IComponent);
+public:
 	FVector<2> Position;
 	// FVector<2> Scale;
+
+	Transform()
+		: Position(FVector<2> {0.0f, 0.0f})
+	{ }
+
+	Transform(const FVector<2>& position)
+		: Position(position)
+	{ }
 
 	void Init() override {}
 	void Tick() override {}
 	void OnDestroy() override {}
+
+	void Serialize(Archive&) override;
+	void Deserialize(Archive&) override;
 };

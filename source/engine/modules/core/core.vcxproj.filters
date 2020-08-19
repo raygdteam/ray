@@ -56,6 +56,9 @@
     <ClInclude Include="file_system\file.hpp">
       <Filter>file_system</Filter>
     </ClInclude>
+    <ClInclude Include="object\archive.hpp">
+      <Filter>object</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="core_entry_point.cpp" />

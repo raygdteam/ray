@@ -46,8 +46,8 @@ struct IEngine
 class RAY_ENGINE_API RayEngine : public IEngine
 {
 	IEngineLoop* _engineLoop;
-	void* _window = nullptr;
 #ifndef _TEMP_NO_RENDERER_CORE_API_
+	void* _window = nullptr;
 	IRenderer* _renderer = nullptr;
 #endif
 public:

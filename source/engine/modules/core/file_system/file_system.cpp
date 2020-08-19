@@ -59,14 +59,14 @@ public:
 		return ftell(_file);
 	}
 	
-	u64 Read(u8* buffer, u64 size) override
+	u64 Read(void* buffer, u64 size) override
 	{
-		return fread(buffer, sizeof(u8), size, _file);
+		return fread(buffer, size, 1, _file);
 	}
 	
-	u64 Write(u8* buffer, u64 size) override
+	u64 Write(void* buffer, u64 size) override
 	{
-		return fwrite(buffer, sizeof(u8), size, _file);
+		return fwrite(buffer, size, 1, _file);
 	}
 };
 

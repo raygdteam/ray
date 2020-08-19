@@ -8,7 +8,11 @@ namespace ray
 RAYOBJECT("engine://world/world")
 class World final : public RayObject
 {
-	RAYOBJECT_BODY(World);
+	RAYOBJECT_BODY(World, RayObject);
+
+public:
+	void Serialize(Archive&) override {}
+	void Deserialize(Archive&) override {}
 };
 
 }

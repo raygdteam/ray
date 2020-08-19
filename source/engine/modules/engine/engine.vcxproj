@@ -154,6 +154,7 @@
     <ClCompile Include="module_engine.cpp" />
     <ClCompile Include="state\state.cpp" />
     <ClCompile Include="world\actor.cpp" />
+    <ClCompile Include="world\components\transform.cpp" />
     <ClCompile Include="world\level.cpp" />
     <ClCompile Include="world\level_test.cpp" />
     <ClCompile Include="world\world.cpp" />
