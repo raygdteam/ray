@@ -2,7 +2,7 @@
 #include <core/memory/new_delete_override.hpp>
 #include <core/module/module.hpp>
 #include <engine/state/state.hpp>
-#include <core/object/object_db.hpp>
+#include <core/object/object.hpp>
 
 #include <engine/world/world.hpp>
 

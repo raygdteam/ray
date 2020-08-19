@@ -20,9 +20,6 @@
     <ClInclude Include="object\object.hpp">
       <Filter>object</Filter>
     </ClInclude>
-    <ClInclude Include="object\object_db.hpp">
-      <Filter>object</Filter>
-    </ClInclude>
     <ClInclude Include="memory\memory_debug.hpp">
       <Filter>memory</Filter>
     </ClInclude>
@@ -59,6 +56,9 @@
     <ClInclude Include="object\archive.hpp">
       <Filter>object</Filter>
     </ClInclude>
+    <ClInclude Include="object\type.hpp">
+      <Filter>object</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="core_entry_point.cpp" />
@@ -82,6 +82,9 @@
     </ClCompile>
     <ClCompile Include="debug\debug.cpp">
       <Filter>debug</Filter>
+    </ClCompile>
+    <ClCompile Include="extended_instuctions\sse\common.cpp">
+      <Filter>extended instructions\sse</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

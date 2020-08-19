@@ -1,3 +1,4 @@
+#pragma once
 #include <core/core.hpp>
 #include <core/math/common.hpp>
 
@@ -132,6 +133,8 @@ namespace ray::core::sse
         _mm_sfence();
     }
 
+	// We keep it in core separate so we won't have to enable SSE instructions per project
+    u32 RAY_CORE_API Crc32(u8* buffer, u64 len);
 }
 
 #endif // RAY_PLATFORM_WIN

@@ -1,4 +1,5 @@
 #include "actor.hpp"
+#include "core/extended_instuctions/sse/common.hpp"
 
 Actor::Actor()
 {
@@ -24,6 +25,7 @@ Transform* Actor::GetTransform()
 
 void Actor::Serialize(Archive& ar)
 {
+	ar.Write<u32>(ray::core::sse::Crc32((u8*)GetType()->Name, strlen(GetType()->Name)));
 	ar.Write<u64>(_components.Size());
 
 	// TODO: not like this!
@@ -41,3 +43,8 @@ void Actor::Deserialize(Archive& ar)
 	transform->Deserialize(ar);
 	_components.PushBack(transform);
 }
+
+RAYOBJECT_DESCRIPTION_BEGIN(Actor)
+	RAYOBJECT_DESCRIPTION_NAME("engine://world/Actor")
+RAYOBJECT_DESCRIPTION_END(Actor)
+

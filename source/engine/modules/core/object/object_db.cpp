@@ -1,26 +1,40 @@
 #include <core/core.hpp>
-#include <core/object/object_db.hpp>
+#include <core/object/object.hpp>
 #include <core/lib/array.hpp>
 
 #include <cstring>
 
-namespace ray
-{
-static Array<RayObjectMeta*>* gObjects = nullptr;
+
+static Array<Type*>* gObjects = nullptr;
 
 ObjectDb::ObjectDb()
 {
-	gObjects = new Array<RayObjectMeta*>();
+	if (gObjects == nullptr)
+	{
+		gObjects = new Array<Type*>();
+	}
 }
 
-RayObjectMeta* ObjectDb::GetObject(pcstr name)
+Type* ObjectDb::GetTypeByName(pcstr name)
 {
-	(void)name;
+	for (Type* type : *gObjects)
+	{
+		if (strcmp(type->Name, name) == 0)
+		{
+			return type;
+		}
+	}
+	
 	return nullptr;
 }
 
-void ObjectDb::RegisterObject(RayObjectMeta* meta)
+void ObjectDb::__Internal_RegisterObjectStatic(Type* type)
 {
-	(void)meta;
+	if (gObjects == nullptr)
+	{
+		gObjects = new Array<Type*>();
+	}
+	
+	gObjects->PushBack(type);
 }
-}
+

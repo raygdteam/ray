@@ -3,7 +3,7 @@
 
 class IComponent : RayObject
 {
-	RAYOBJECT_BODY(IComponent, RayObject);
+	// RAYOBJECT_BODY(IComponent, RayObject);
 	
 public:
 	virtual ~IComponent() = default;

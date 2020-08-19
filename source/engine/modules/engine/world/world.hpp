@@ -5,7 +5,6 @@
 
 namespace ray
 {
-RAYOBJECT("engine://world/world")
 class World final : public RayObject
 {
 	RAYOBJECT_BODY(World, RayObject);

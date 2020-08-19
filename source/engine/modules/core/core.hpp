@@ -101,6 +101,7 @@
 
 #pragma clang diagnostic ignored "-Winline-new-delete"
 #pragma clang diagnostic ignored "-Wunused-command-line-argument"
+#pragma clang diagnostic ignored "-Winvalid-offsetof" // for now
 #pragma clang diagnostic warning "-Wnull-dereference"
 #pragma clang diagnostic warning "-Wunused-parameter"
 

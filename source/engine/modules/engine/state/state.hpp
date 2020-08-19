@@ -3,12 +3,12 @@
 #include <engine/engine/engine_def.hpp>
 
 class RAY_CORE_API FileSystem;
+class RAY_CORE_API ObjectDb;
 
 namespace ray
 {
 // Core
 class RAY_CORE_API ModuleManager;
-class RAY_CORE_API ObjectDb;
 
 // Engine
 struct IEngine;

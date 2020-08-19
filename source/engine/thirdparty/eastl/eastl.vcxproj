@@ -263,6 +263,9 @@
     <ClCompile Include="impl\string.cpp" />
     <ClCompile Include="impl\thread_support.cpp" />
   </ItemGroup>
+  <ItemGroup>
+    <Natvis Include="eastl.natvis" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

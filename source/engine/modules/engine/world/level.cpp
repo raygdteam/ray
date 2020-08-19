@@ -21,3 +21,7 @@ void Level::Deserialize(Archive&)
 	
 }
 
+RAYOBJECT_DESCRIPTION_BEGIN(Level)
+	RAYOBJECT_DESCRIPTION_NAME("engine://world/Level")
+RAYOBJECT_DESCRIPTION_END(Level)
+

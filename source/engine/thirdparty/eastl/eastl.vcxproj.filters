@@ -402,4 +402,9 @@
       <Filter>impl</Filter>
     </ClCompile>
   </ItemGroup>
+  <ItemGroup>
+    <Natvis Include="eastl.natvis">
+      <Filter>inc</Filter>
+    </Natvis>
+  </ItemGroup>
 </Project>

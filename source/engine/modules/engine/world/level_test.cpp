@@ -4,16 +4,20 @@
 #include <engine/state/state.hpp>
 #include <core/file_system/file_system.hpp>
 
+#include <core/object/object.hpp>
+
 #include <engine/bundle/bundle_meta.hpp>
 
 class TestActor1 : public Actor
 {
 	RAYOBJECT_BODY(TestActor1, Actor);
+	u32 _test;
 public:
 	TestActor1()
 	{
 		GetTransform()->Position.x = 250.f;
 		GetTransform()->Position.y = 10.f;
+		_test = 0;
 	}
 
 protected:
@@ -63,6 +67,7 @@ public:
 
 class TestActor2 : public Actor
 {
+	RAYOBJECT_BODY(TestActor2, Actor);
 public:
 	TestActor2()
 	{
@@ -162,9 +167,17 @@ struct FileArchive : public Archive
 	}
 };
 
+RAYOBJECT_DESCRIPTION_BEGIN(TestActor1)
+	RAYOBJECT_DESCRIPTION_NAME("engine://world/level_test/TestActor1");
+RAYOBJECT_DESCRIPTION_END(TestActor1)
+
+RAYOBJECT_DESCRIPTION_BEGIN(TestActor2)
+RAYOBJECT_DESCRIPTION_NAME("engine://world/level_test/TestActor2");
+RAYOBJECT_DESCRIPTION_END(TestActor2)
+
 void Level::LoadLevel()
 {
-	/*SpawnActor(new TestActor1());
+	SpawnActor(new TestActor1());
 	SpawnActor(new TestActor2());
 	
 	RayLevelBundle bundleFile = {
@@ -187,9 +200,9 @@ void Level::LoadLevel()
 	}
 	
 	bundle->Close();
-	delete bundle;*/
+	delete bundle;
 
-	IFile* bundle = ray::RayState()->FileSystem->OpenFile("../../test.bundle", Read);
+	/*IFile* bundle = ray::RayState()->FileSystem->OpenFile("../../test.bundle", Read);
 	FileArchive ar;
 	ar.file = bundle;
 
@@ -207,9 +220,7 @@ void Level::LoadLevel()
 	}
 	
 	bundle->Close();
-	delete bundle;
-
-	// verify header on load?
+	delete bundle;*/
 	
 	/*
 	 * 00 00 F5 E4 D3 C2 B1 A0			Magic
@@ -234,23 +245,6 @@ void Level::LoadLevel()
 	 * 00 00 00 00 00 00 59 40 48 86 84 69 FD 7F 00 00 00 00 00 00 00 40 7F 40
 	 * 00 00 00 00 00 00 59 40
 	 */
-
-	/*
-	 * vtable? obj sys?
-	 */
-	
-	/*IFile* bundle = ray::RayState()->FileSystem->OpenFile("../../test.bundle", Write);
-
-	static_assert(sizeof(RayLevelBundle) == 32, "no");
-	
-	bundle->Write(bundleFile);
-	bundle->Write(actorData1);
-	bundle->Write(actorData2);
-	
-	bundle->Close();
-	delete bundle;*/
-
-	
 }
 
 void Level::Tick(f64 delta)
