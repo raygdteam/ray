@@ -20,6 +20,7 @@ public:
 	ObjectDb();
 
 	Type* GetTypeByName(pcstr name);
+	Type* GetTypeByCrc(u32 crc);
 
 	static void __Internal_RegisterObjectStatic(Type*);
 };
@@ -41,7 +42,10 @@ public:
 		if (type != nullptr) \
 			return type; \
 		type = new ::Type(); \
-		type->Fields.clear();
+		type->Fields.clear(); \
+
+#define RAYOBJECT_DESCRIPTION_CREATEABLE() type->Abstract = false; \
+		type->CreateFn = []() -> RayObject* { return new ObjectType(); }; 
 			
 #define RAYOBJECT_DESCRIPTION_NAME(name) type->Name = name;
 #define RAYOBJECT_DESCRIPTION_FIELD(name, ttype, etype) type->Fields.PushBack(FieldInfo { etype, offsetof(ObjectType, name), sizeof(ttype) });

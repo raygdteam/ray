@@ -3,6 +3,7 @@
 #include <core/lib/array.hpp>
 
 #include <cstring>
+#include "core/extended_instuctions/sse/common.hpp"
 
 
 static Array<Type*>* gObjects = nullptr;
@@ -28,12 +29,28 @@ Type* ObjectDb::GetTypeByName(pcstr name)
 	return nullptr;
 }
 
+Type* ObjectDb::GetTypeByCrc(u32 crc)
+{
+	for (Type* type : *gObjects)
+	{
+		if (type->NameCrc32 == crc)
+		{
+			return type;
+		}
+	}
+
+	return nullptr;
+}
+
 void ObjectDb::__Internal_RegisterObjectStatic(Type* type)
 {
 	if (gObjects == nullptr)
 	{
 		gObjects = new Array<Type*>();
 	}
+
+	if (type->NameCrc32 == 0)
+		type->NameCrc32 = ray::core::sse::Crc32((u8*)type->Name, strlen(type->Name));
 	
 	gObjects->PushBack(type);
 }

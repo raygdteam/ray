@@ -1,6 +1,9 @@
 #pragma once
 #include <core/core.hpp>
 #include <core/lib/array.hpp>
+#include <functional>
+
+struct RayObject;
 
 enum FieldType
 {
@@ -36,5 +39,14 @@ struct FieldInfo
 struct Type
 {
 	const char* Name;
+	u32 NameCrc32 = 0;
 	Array<FieldInfo> Fields;
+
+	bool Abstract = true;
+	std::function<RayObject* ()> CreateFn;
+
+	RayObject* CreateInstance()
+	{
+		return CreateFn();
+	}
 };

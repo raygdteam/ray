@@ -168,19 +168,43 @@ struct FileArchive : public Archive
 };
 
 RAYOBJECT_DESCRIPTION_BEGIN(TestActor1)
+	RAYOBJECT_DESCRIPTION_CREATEABLE();
 	RAYOBJECT_DESCRIPTION_NAME("engine://world/level_test/TestActor1");
 RAYOBJECT_DESCRIPTION_END(TestActor1)
 
 RAYOBJECT_DESCRIPTION_BEGIN(TestActor2)
-RAYOBJECT_DESCRIPTION_NAME("engine://world/level_test/TestActor2");
+	RAYOBJECT_DESCRIPTION_CREATEABLE();
+	RAYOBJECT_DESCRIPTION_NAME("engine://world/level_test/TestActor2");
 RAYOBJECT_DESCRIPTION_END(TestActor2)
 
 void Level::LoadLevel()
 {
-	SpawnActor(new TestActor1());
+	/*
+	 * 00 00 F5 E4 D3 C2 B1 A0			Magic
+	 * 20 FE FE FE FE FE FE FE			Datatype (whytf FE FE FE FE FE???)
+	 * F0 F0 F0 F0 F0 F0 F0 F0			Checksum
+	 * 02 00 00 00 00 00 00 00			NumActors
+	 *
+	 *	Actor #1
+	 * 
+	 * D0 22 24 C0						TestActor1 type CRC
+	 * 01 00 00 00 00 00 00 00			Actor component size
+	 * 00 00 00 00 00 40 6F 40			Transform.Position.x
+	 * 00 00 00 00 00 00 24 40			Transform.Position.y
+	 *
+	 *	Actor #2
+	 *
+	 * 24 D1 74 D3						TestActor2 type CRC			
+	 * 01 00 00 00 00 00 00 00			Actor component size
+	 * 00 00 00 00 00 40 7F 40			Transform.Position.x
+	 * 00 00 00 00 00 00 24 40			Transform.Position.y
+	 */
+
+	
+	/*SpawnActor(new TestActor1());
 	SpawnActor(new TestActor2());
 	
-	/*RayLevelBundle bundleFile = {
+	RayLevelBundle bundleFile = {
 		.Header = {
 			.Magic = 0xA0B1C2D3E4F50000ULL,
 			.Datatype = 32,
@@ -202,7 +226,7 @@ void Level::LoadLevel()
 	bundle->Close();
 	delete bundle;*/
 
-	/*IFile* bundle = ray::RayState()->FileSystem->OpenFile("../../test.bundle", Read);
+	IFile* bundle = ray::RayState()->FileSystem->OpenFile("../../test.bundle", Read);
 	FileArchive ar;
 	ar.file = bundle;
 
@@ -213,14 +237,33 @@ void Level::LoadLevel()
 
 	for (u64 i = 0; i < bundleFile.NumActors; ++i)
 	{
-		// TODO: NotLikeThis!
-		TestActor1* actor = new TestActor1();
+		u32 object = 0;
+		bundle->Read<u32>(object);
+
+		Type* objectType = ray::RayState()->ObjectDb->GetTypeByCrc(object);
+		if (objectType == nullptr || objectType->Abstract)
+		{
+			// TODO: fail
+		}
+
+		RayObject* objectInstance = objectType->CreateInstance();
+		Actor* actor = nullptr;
+
+		// If not actor then buntovat'
+		actor = dynamic_cast<Actor*>(objectInstance);
+		if (actor == nullptr)
+		{
+			// TODO: fail
+		}
+
+		// Pray to god we're right
 		actor->Deserialize(ar);
+
 		SpawnActor(actor);
 	}
 	
 	bundle->Close();
-	delete bundle;*/
+	delete bundle;
 	
 	/*
 	 * 00 00 F5 E4 D3 C2 B1 A0			Magic

@@ -1,7 +1,7 @@
 #pragma once
 #include <core/object/object.hpp>
 
-class IComponent : RayObject
+class IComponent : public RayObject
 {
 	// RAYOBJECT_BODY(IComponent, RayObject);
 	

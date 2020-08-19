@@ -39,11 +39,13 @@ void RayEngine::Initialize(IEngineLoop* engineLoop)
 	eng->Log("version %s.%s.%s [%s]", RAY_VERSION_MAJOR, RAY_VERSION_MINOR, RAY_VERSION_PATCH, RAY_VERSION_CODENAME);
 	eng->Log("built on \"%s\"", __TIMESTAMP__);
 
+#ifndef _TEMP_NO_RENDERER_CORE_API_
 	eng->Log("[1/4] Window init...");
 	ray::core::IPlatformWindow* window = core::IPlatformWindow::CreateInstance();
 	
 	window->Initialize();
 	window->CreateWindow("RAY_ENGINE");
+#endif
 
 	eng->Log("[2/4] Renderer load...");
 
@@ -51,12 +53,12 @@ void RayEngine::Initialize(IEngineLoop* engineLoop)
 	// Load renderer module
 	auto res = RayState()->ModuleManager->LoadModule("renderer_core");
 	if (!res.IsSuccess()) __debugbreak();
-#endif
-
-	/*eng->Log("[3/4] Renderer init...");
+#else // ^^^ directx ^^^ /// vvv  temp ogl   vvv
+	eng->Log("[3/4] Renderer init...");
 	tempRenderer->Initialize();
-	tempLevel->LoadLevel();*/
-
+	tempLevel->LoadLevel();
+#endif
+	
 #ifndef _TEMP_NO_RENDERER_CORE_API_
 	_renderer = new IRenderer;
 	_renderer->Initialize(window);
@@ -64,20 +66,25 @@ void RayEngine::Initialize(IEngineLoop* engineLoop)
 
 	eng->Log("[4/4] Finishing...");
 	
+#ifndef _TEMP_NO_RENDERER_CORE_API_
 	window->SetWindowVisibility(true);
-
 	_window = window;
+#endif
 }
 
 void RayEngine::Tick()
 {
 	static f64 delta = 0;
 	auto __start = std::chrono::high_resolution_clock::now();
-	
+#ifndef _TEMP_NO_RENDERER_CORE_API_
 	static_cast<core::IPlatformWindow*>(_window)->Update();
-	
+#endif
 	//for debugging
+#ifndef _TEMP_NO_RENDERER_CORE_API_
 	bool bShouldClose = /*tempRenderer->ShouldClose(); */ static_cast<core::IPlatformWindow*>(_window)->ShouldClose();
+#else // ^^^ IPlatformWindow ^^^ /// vvv renderer_null(glfw) window vvvv
+	bool bShouldClose = tempRenderer->ShouldClose();
+#endif
 	if (bShouldClose)
 	{
 		ray::RequestEngineExit(true);
@@ -109,14 +116,14 @@ void RayEngine::Tick()
 
 RayEngine::~RayEngine()
 {
+#ifndef _TEMP_NO_RENDERER_CORE_API_
 	static_cast<core::IPlatformWindow*>(_window)->Destroy();
 	static_cast<core::IPlatformWindow*>(_window)->Shutdown();
-#ifndef _TEMP_NO_RENDERER_CORE_API_
 	_renderer->Shutdown();
 
 	delete _renderer;
-#endif
 	delete (core::IPlatformWindow*)_window;
+#endif
 }
 
 /************************************/
