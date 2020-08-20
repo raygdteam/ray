@@ -29,6 +29,15 @@
     <ClInclude Include="world\components\component_base.hpp">
       <Filter>world\components</Filter>
     </ClInclude>
+    <ClInclude Include="resources\resource.hpp">
+      <Filter>resources</Filter>
+    </ClInclude>
+    <ClInclude Include="resources\resource_manager.hpp">
+      <Filter>resources</Filter>
+    </ClInclude>
+    <ClInclude Include="resources\resource_type.hpp">
+      <Filter>resources</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="engine">
@@ -46,7 +55,7 @@
     <Filter Include="world\components">
       <UniqueIdentifier>{d4acd06e-4e1a-47b4-b2a4-d8cee7add7c7}</UniqueIdentifier>
     </Filter>
-    <Filter Include="resman">
+    <Filter Include="resources">
       <UniqueIdentifier>{b15360a4-c703-48b0-ae43-ce46a48b822a}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
