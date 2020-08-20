@@ -10,6 +10,7 @@
 #include <renderer_null/renderer.hpp>
 #include <engine/world/level.hpp>
 #include <chrono>
+#include "core/debug/assert.hpp"
 
 Renderer* tempRenderer = nullptr;
 Level* tempLevel = nullptr;
@@ -31,6 +32,9 @@ RayEngine::RayEngine() : _engineLoop(nullptr)
 
 void RayEngine::Initialize(IEngineLoop* engineLoop)
 {
+	assert(1 > 5, eng);
+	assert(1 < 5, eng);
+
 	_engineLoop = engineLoop;
 
 	eng->Log("Initializing Ray engine");

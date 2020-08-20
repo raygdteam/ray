@@ -56,6 +56,9 @@
     <ClInclude Include="file_system\file.hpp">
       <Filter>file_system</Filter>
     </ClInclude>
+    <ClInclude Include="debug\assert.hpp">
+      <Filter>debug</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="core_entry_point.cpp" />

@@ -16,6 +16,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="core.hpp" />
+    <ClInclude Include="debug\assert.hpp" />
     <ClInclude Include="debug\debug.hpp" />
     <ClInclude Include="extended_instuctions\sse\common.hpp" />
     <ClInclude Include="file_system\file.hpp" />
