@@ -34,14 +34,14 @@ namespace ray::renderer_core_api::resources
 			, _transitioningState(static_cast<D3D12_RESOURCE_STATES>(-1))
 		{}
 
-		void Destroy() noexcept
+		virtual void Destroy() noexcept
 		{
 			_resource = nullptr;
 			_gpuVirtualAddress = 0;
 			if (_userAllocatedMemory == nullptr)
 			{
 				// TODO: VirtualFree
-				free(_userAllocatedMemory);
+				VirtualFree(_userAllocatedMemory, 0, MEM_RELEASE);
 				_userAllocatedMemory = nullptr;
 			}
 		}

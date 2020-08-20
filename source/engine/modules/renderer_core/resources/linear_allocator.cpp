@@ -2,7 +2,7 @@
 #include "../renderer.hpp"
 #include "../command_queue.hpp"
 #include <core/math/common.hpp>
-#include <cassert>
+#include <core/debug/assert.hpp>
 
 namespace ray::renderer_core_api
 {
@@ -12,8 +12,7 @@ namespace ray::renderer_core_api
 	{
 		_type = _sDefaultType;
 		_sDefaultType = static_cast<LinearAllocatorType>(_sDefaultType + 1);
-		assert(_sDefaultType <= eNumAllocatorTypes);
-		// TODO: ASSERT (_sDefaultType <= eNumAllocatorTypes)
+		check(_sDefaultType <= eNumAllocatorTypes);
 	}
 
 	LinearAllocatorPageManager LinearAllocator::_sPageManager[eNumAllocatorTypes];
@@ -140,18 +139,18 @@ namespace ray::renderer_core_api
 	DynAlloc LinearAllocator::Allocate(size_t size, size_t alignment)
 	{
 		const size_t alignmentMask = alignment - 1;
-		assert((alignment & alignmentMask) == 0);
+		check((alignment & alignmentMask) == 0);
 		 
-		const size_t alignmentSize = ray::core::math::AlignUpWithMask(size, alignmentMask);
+		const size_t alignedSize = ray::core::math::AlignUpWithMask(size, alignmentMask);
 
-		if (alignmentSize > _pageSize)
-			return AllocateLargePage(alignmentSize);
+		if (alignedSize > _pageSize)
+			return AllocateLargePage(alignedSize);
 
-		_currentOffset = ray::core::math::AlignUpWithMask(_currentOffset, alignment - 1);
+		_currentOffset = ray::core::math::AlignUp(_currentOffset, alignment);
 
-		if (alignmentSize + _currentOffset > _pageSize)
+		if (alignedSize + _currentOffset > _pageSize)
 		{
-			assert(_currentPage != nullptr);
+			check(_currentPage != nullptr);
 			_retiredPages.push_back(_currentPage);
 			_currentPage = nullptr;
 		}
@@ -162,11 +161,11 @@ namespace ray::renderer_core_api
 			_currentOffset = 0;
 		}
 
-		DynAlloc ret(*_currentPage, _currentOffset, alignmentSize);
+		DynAlloc ret(*_currentPage, _currentOffset, alignedSize);
 		ret.Data = (u8*)_currentPage->_cpuVirtualAddress + _currentOffset;
 		ret.GpuVirtualAddress = _currentPage->_gpuVirtualAddress + _currentOffset;
 
-		_currentOffset += alignmentSize;
+		_currentOffset += alignedSize;
 
 		return ret;
 	}

@@ -8,6 +8,12 @@ namespace ray::core::math
 		return (Type)(((size_t)(value + mask) & ~mask));
 	}
 
+	template<typename Type>
+	inline Type AlignUp(Type value, size_t alignment)
+	{
+		return AlignUpWithMask(value, alignment - 1);
+	}
+
 	template <typename T>
 	inline bool IsAligned(T value, size_t alignment)
 	{
