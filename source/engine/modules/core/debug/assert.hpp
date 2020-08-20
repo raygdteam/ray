@@ -12,4 +12,11 @@
 		Debug::__Internal_HandleAssertionFailure(#condition, __FILE__, __LINE__, msg); \
 	} \
 	} while(false);
+
+#define check(condition) do { \
+	if (!(condition)) { \
+		Debug::__Internal_HandleAssertionFailure(#condition, __FILE__, __LINE__, "<NO-MESSAGE>"); \
+	} \
+	} while(false);
+
 #endif

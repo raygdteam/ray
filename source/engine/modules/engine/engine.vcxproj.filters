@@ -46,6 +46,9 @@
     <Filter Include="world\components">
       <UniqueIdentifier>{d4acd06e-4e1a-47b4-b2a4-d8cee7add7c7}</UniqueIdentifier>
     </Filter>
+    <Filter Include="resman">
+      <UniqueIdentifier>{b15360a4-c703-48b0-ae43-ce46a48b822a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="engine\engine.cpp">

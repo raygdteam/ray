@@ -38,14 +38,11 @@
     <ClInclude Include="math\common.hpp">
       <Filter>math</Filter>
     </ClInclude>
-	<ClInclude Include="debug\assert.hpp">
-      <Filter>debug</Filter>
-	</ClInclude>
-    <ClInclude Include="debug\debug.hpp">
+    <ClInclude Include="debug\assert.hpp">
       <Filter>debug</Filter>
     </ClInclude>
-    <ClInclude Include="lib\old_array.hpp">
-      <Filter>lib</Filter>
+    <ClInclude Include="debug\debug.hpp">
+      <Filter>debug</Filter>
     </ClInclude>
     <ClInclude Include="lib\array.hpp">
       <Filter>lib</Filter>
@@ -61,6 +58,9 @@
     </ClInclude>
     <ClInclude Include="object\type.hpp">
       <Filter>object</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\queue.hpp">
+      <Filter>lib</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
