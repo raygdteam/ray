@@ -6,6 +6,7 @@
 #include <core/object/object.hpp>
 #include <core/module/module.hpp>
 #include <core/file_system/file_system.hpp>
+#include <core/debug/debug.hpp>
 
 
 namespace ray::launcher
@@ -19,6 +20,7 @@ void EngineLoop::PreInitialize()
 	state->ObjectDb = new ObjectDb();
 	state->ModuleManager = new ModuleManager();
 	state->FileSystem = new FileSystem();
+	state->Debug = new Debug();
 
 	/* 2. Load the engine module. This will register the objects we need. */
 	auto res = state->ModuleManager->LoadModule("engine");
@@ -45,6 +47,7 @@ EngineLoop::~EngineLoop()
 	delete state->FileSystem;
 	delete state->ModuleManager;
 	delete state->ObjectDb;
+	delete state->Debug;
 	
 	delete state;
 	delete _engine;

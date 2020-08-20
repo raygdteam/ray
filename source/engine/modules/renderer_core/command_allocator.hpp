@@ -1,6 +1,6 @@
 #pragma once
 #include <core/threading/critical_section.hpp>
-#include <vector>
+#include <core/lib/array.hpp>
 #include <queue>
 #include <d3d12.h>
 
@@ -23,7 +23,7 @@ public:
 private:
 	D3D12_COMMAND_LIST_TYPE _type;
 	ray::CriticalSection _allocatorMutex;
-	std::vector<ID3D12CommandAllocator*> _allocatorPool;
+	Array<ID3D12CommandAllocator*> _allocatorPool;
 	std::queue<std::pair<u64, ID3D12CommandAllocator*>> _readyAllocators;
 
 };

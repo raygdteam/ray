@@ -2,11 +2,11 @@
 #include <core/log/log.hpp>
 
 #include <csignal>
+#include <windows.h>
+#include <cstdio>
 
 static Logger* gLog = nullptr;
 
-namespace ray
-{
 void Debug::handleSignal(int sc)
 {
 	gLog->Log("-------------- CRT SIGNAL --------------");
@@ -31,7 +31,7 @@ void Debug::handleSignal(int sc)
 	gLog->Log("----------------------------------------");
 }
 
-bool Debug::Initialize()
+Debug::Debug()
 {
 	gLog = new Logger("debug");
 
@@ -39,7 +39,27 @@ bool Debug::Initialize()
 	signal(SIGILL, Debug::handleSignal); // illegal instruction
 	signal(SIGFPE, Debug::handleSignal); // FPU error
 	signal(SIGSEGV, Debug::handleSignal); // Segmentation fault
-
-	return true;
 }
+
+void Debug::__Internal_HandleAssertionFailure(pcstr expression, pcstr file, u16 line, pcstr message)
+{
+	gLog->Log("---------- ASSERTION FAILURE ----------");
+	gLog->Log("  Expression:       %s", expression);
+	gLog->Log("  Message:          %s", message);
+	gLog->Log("  File:             %s", file);
+	gLog->Log("  Line:             %i", line);
+	gLog->Log("---------------------------------------");
+
+	if (IsDebuggerPresent())
+	{
+		__debugbreak();
+	}
+
+	char msg[4096] = {};
+	sprintf(msg, "---------- ASSERTION FAILURE ----------\n  Expression:       %s\n  Message:          %s\n  File:             %s\n  Line:             %i\n---------------------------------------\nWould you like to terminate engine?",
+		expression, message, file, line);
+
+	u32 rc = MessageBoxA(nullptr, msg, "RAY_ENGINE - Assertion failure", MB_ICONERROR | MB_YESNO);
+	if (rc == IDYES)
+		ExitProcess(-1);
 }

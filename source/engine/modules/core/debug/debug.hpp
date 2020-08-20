@@ -1,16 +1,11 @@
 #pragma once
 #include <core/core.hpp>
 
-namespace ray
-{
-
 class RAY_CORE_API Debug
 {
 	static void handleSignal(int sc);
 public:
-	bool Initialize();
-
+	Debug();
+	static void __Internal_HandleAssertionFailure(pcstr expression, pcstr file, u16 line, pcstr message);
 	
 };
- 
-}

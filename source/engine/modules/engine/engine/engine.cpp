@@ -34,8 +34,8 @@ RayEngine::RayEngine() : _engineLoop(nullptr)
 
 void RayEngine::Initialize(IEngineLoop* engineLoop)
 {
-	assert(1 > 5, eng);
-	assert(1 < 5, eng);
+	assert(1 > 5, "true");
+	assert(1 < 5, "false");
 
 	_engineLoop = engineLoop;
 

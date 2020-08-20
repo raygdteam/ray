@@ -1,11 +1,15 @@
 #pragma once
+#include <core/core.hpp>
+#include <core/debug/debug.hpp>
 
-#include "core/log/log.hpp"
 
-#define stringize(argument) #argument
-
-#ifdef NDEBUG
-#define assert(condition, message)
+#ifdef RAY_RELEASE
+#define assert(condition, msg)
 #else
-#define assert(condition, logger) condition ? logger->Log("[%s] assertion succeeded '%s'", stringize(__LINE__), #condition) : logger->Log("[%s] assertion failed '%s'", stringize(__LINE__), #condition)
+#define STRINGIFY(argument) #argument
+#define assert(condition, msg) do { \
+	if (!(condition)) { \
+		Debug::__Internal_HandleAssertionFailure(#condition, __FILE__, __LINE__, msg); \
+	} \
+	} while(false);
 #endif

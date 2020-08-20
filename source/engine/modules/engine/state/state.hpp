@@ -4,6 +4,7 @@
 
 class RAY_CORE_API FileSystem;
 class RAY_CORE_API ObjectDb;
+class RAY_CORE_API Debug;
 
 namespace ray
 {
@@ -19,6 +20,7 @@ struct IRayState
 	ModuleManager* ModuleManager;
 	ObjectDb* ObjectDb;
 	FileSystem* FileSystem;
+	Debug* Debug;
 
 	/* engine */
 	IEngine* Engine;

@@ -53,7 +53,7 @@ namespace ray::renderer_core_api
 	void CommandAllocatorPool::Shutdown()
 	{
 		for (size_t i = 0; i < _allocatorPool.size(); i++)
-			delete _allocatorPool[i];
+			_allocatorPool[i]->Release();
 
 		_allocatorPool.clear();
 	}
