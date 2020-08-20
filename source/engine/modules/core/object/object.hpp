@@ -43,6 +43,7 @@ public:
 			return type; \
 		type = new ::Type(); \
 		type->Fields.clear(); \
+		type->Abstract = true;
 
 #define RAYOBJECT_DESCRIPTION_CREATEABLE() type->Abstract = false; \
 		type->CreateFn = []() -> RayObject* { return new ObjectType(); }; 

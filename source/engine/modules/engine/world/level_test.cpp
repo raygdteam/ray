@@ -11,13 +11,12 @@
 class TestActor1 : public Actor
 {
 	RAYOBJECT_BODY(TestActor1, Actor);
-	u32 _test;
+	
 public:
 	TestActor1()
 	{
 		GetTransform()->Position.x = 250.f;
 		GetTransform()->Position.y = 10.f;
-		_test = 0;
 	}
 
 protected:
