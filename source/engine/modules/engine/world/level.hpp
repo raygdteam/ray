@@ -6,14 +6,12 @@
 /**
  * Represents a collection of Actors and all necessary data for level to render.
  */
-RAYOBJECT("engine://world/level")
 class Level : public RayObject
 {
 	RAYOBJECT_BODY(Level, RayObject);
 
 	// Temp
 public:
-	PROPERTY(Serializable)
 	Array<Actor*> _actors;
 
 	Level();
@@ -24,5 +22,9 @@ public:
 	void LoadLevel();
 	void Tick(f64 delta);
 
+
+	void Serialize(Archive&) override;
+	void Deserialize(Archive&) override;
+	
 	friend class Actor;
 };

@@ -23,14 +23,15 @@ namespace ray::renderer_core_api
 			if (pair.first <= completedFenceValue)
 			{
 				ret = pair.second;
-				assert(ret->Reset());
+				if (ret->Reset() != S_OK)
+					return nullptr;
 				_readyAllocators.pop();
 			}
 		}
 
 		if (ret == nullptr)
 		{
-			if (!globals::gDevice->CreateCommandAllocator(_type, IID_PPV_ARGS(&ret)))
+			if (globals::gDevice->CreateCommandAllocator(_type, IID_PPV_ARGS(&ret)) != S_OK)
 				return nullptr;
 			_allocatorPool.push_back(ret);
 		}

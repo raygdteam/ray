@@ -21,7 +21,7 @@ namespace ray::renderer_core_api
 	{
 		_sContextManagerMutex.TryEnter();
 
-		auto& availableContexts = _sAvailableContexts[static_cast<u32>(type)];
+		auto& availableContexts = _sAvailableContexts[type];
 
 		CommandContext* ret = nullptr;
 
@@ -47,7 +47,7 @@ namespace ray::renderer_core_api
 
 	void ContextManager::FreeContext(CommandContext* context) noexcept
 	{
-		_sContextManagerMutex.TryEnter();
+		_sContextManagerMutex.Enter();
 
 		assert(context != nullptr);
 		_sAvailableContexts[static_cast<u32>(context->_type)].push(context);
@@ -145,7 +145,7 @@ namespace ray::renderer_core_api
 	
 	void CommandContext::Initialize()
 	{
-		globals::gCommandListManager.CreateNewCommandList(_type, _commandAllocator, _commandList);
+		globals::gCommandListManager.CreateNewCommandList(_type, &_commandAllocator, &_commandList);
 	}
 
 	void CommandContext::Reset()
@@ -153,7 +153,8 @@ namespace ray::renderer_core_api
 		assert(_commandList != nullptr && _commandAllocator == nullptr);
 		_commandAllocator = globals::gCommandListManager.GetQueue(_type).RequestAllocator();
 		_commandList->Reset(_commandAllocator, nullptr);
-
+		auto hr = globals::gDevice->GetDeviceRemovedReason();
+		if(hr == S_OK) {}
 		//TODO:
 	}
 
@@ -184,6 +185,7 @@ namespace ray::renderer_core_api
 
 		const D3D12_RESOURCE_DESC& destDesc = dest.GetResource()->GetDesc();
 		const D3D12_RESOURCE_DESC& srcDesc = src.GetResource()->GetDesc();
+		(void)srcDesc;
 
 		assert(sliceIndex < destDesc.DepthOrArraySize&&
 			srcDesc.DepthOrArraySize == 1 &&
@@ -220,7 +222,8 @@ namespace ray::renderer_core_api
 	void CommandContext::ReadbackTexture2D(resources::GpuResource& readbackBuffer, resources::PixelBuffer& srcBuffer)
 	{
 		D3D12_PLACED_SUBRESOURCE_FOOTPRINT placedSubresource;
-		globals::gDevice->GetCopyableFootprints(&(srcBuffer.GetResource()->GetDesc()), 0, 1, 0, &placedSubresource, nullptr, nullptr, nullptr);
+		auto desc = srcBuffer.GetResource()->GetDesc();
+		globals::gDevice->GetCopyableFootprints(&desc, 0, 1, 0, &placedSubresource, nullptr, nullptr, nullptr);
 
 		CommandContext& context = CommandContext::Begin();
 		context.TransitionResource(srcBuffer, D3D12_RESOURCE_STATE_COPY_SOURCE, true);
@@ -266,7 +269,7 @@ namespace ray::renderer_core_api
 	void CommandContext::TransitionResource(resources::GpuResource& dest, D3D12_RESOURCE_STATES newState, bool bFlushImmediate)
 	{
 		D3D12_RESOURCE_STATES oldState = dest._usageState;
-		if (newState == oldState)
+		if (newState != oldState)
 		{
 			assert(_numBarriersToFlush < 16);
 			D3D12_RESOURCE_BARRIER& barrier = _barriers[_numBarriersToFlush++];

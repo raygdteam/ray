@@ -3,7 +3,7 @@
 
 #include <engine/state/state.hpp>
 
-#include <core/object/object_db.hpp>
+#include <core/object/object.hpp>
 #include <core/module/module.hpp>
 #include <core/file_system/file_system.hpp>
 

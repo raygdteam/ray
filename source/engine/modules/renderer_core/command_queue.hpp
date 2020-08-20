@@ -86,7 +86,7 @@ public:
 	}
 
 	ID3D12CommandQueue* GetCommandQueue() { return _graphicsQueue._commandQueue; }
-	void CreateNewCommandList(D3D12_COMMAND_LIST_TYPE type, ID3D12CommandAllocator* allocator, ID3D12CommandList* list);
+	void CreateNewCommandList(D3D12_COMMAND_LIST_TYPE type, ID3D12CommandAllocator** allocator, ID3D12GraphicsCommandList** list);
 	bool IsFenceComplete(u64 fenceValue)
 	{
 		return GetQueue(static_cast<D3D12_COMMAND_LIST_TYPE>(fenceValue >> FENCE_SHIFT)).IsFenceComplete(fenceValue);

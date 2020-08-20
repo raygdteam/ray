@@ -12,6 +12,8 @@
 #include <chrono>
 #include "core/debug/assert.hpp"
 
+#undef CreateWindow
+
 Renderer* tempRenderer = nullptr;
 Level* tempLevel = nullptr;
 u64 tempLastTime = 0;
@@ -41,35 +43,35 @@ void RayEngine::Initialize(IEngineLoop* engineLoop)
 	eng->Log("version %s.%s.%s [%s]", RAY_VERSION_MAJOR, RAY_VERSION_MINOR, RAY_VERSION_PATCH, RAY_VERSION_CODENAME);
 	eng->Log("built on \"%s\"", __TIMESTAMP__);
 
-	eng->Log("[1/4] Window init...");
-	
 #ifndef _TEMP_NO_RENDERER_CORE_API_
+	eng->Log("[1/4] Window init...");
 	ray::core::IPlatformWindow* window = core::IPlatformWindow::CreateInstance();
 	
 	window->Initialize();
 	window->CreateWindow("RAY_ENGINE");
 #endif
+
 	eng->Log("[2/4] Renderer load...");
 
 #ifndef _TEMP_NO_RENDERER_CORE_API_
 	// Load renderer module
 	auto res = RayState()->ModuleManager->LoadModule("renderer_core");
 	if (!res.IsSuccess()) __debugbreak();
-#endif
-
+#else // ^^^ directx ^^^ /// vvv  temp ogl   vvv
 	eng->Log("[3/4] Renderer init...");
 	tempRenderer->Initialize();
 	tempLevel->LoadLevel();
-
+#endif
+	
 #ifndef _TEMP_NO_RENDERER_CORE_API_
 	_renderer = new IRenderer;
-	_renderer->Initialize(window, res.Data);
+	_renderer->Initialize(window);
 #endif
 
 	eng->Log("[4/4] Finishing...");
 	
-	// window->SetWindowVisibility(true);
 #ifndef _TEMP_NO_RENDERER_CORE_API_
+	window->SetWindowVisibility(true);
 	_window = window;
 #endif
 }
@@ -78,13 +80,15 @@ void RayEngine::Tick()
 {
 	static f64 delta = 0;
 	auto __start = std::chrono::high_resolution_clock::now();
-	
 #ifndef _TEMP_NO_RENDERER_CORE_API_
 	static_cast<core::IPlatformWindow*>(_window)->Update();
 #endif
-	
 	//for debugging
-	bool bShouldClose = tempRenderer->ShouldClose(); //static_cast<core::IPlatformWindow*>(_window)->ShouldClose();
+#ifndef _TEMP_NO_RENDERER_CORE_API_
+	bool bShouldClose = /*tempRenderer->ShouldClose(); */ static_cast<core::IPlatformWindow*>(_window)->ShouldClose();
+#else // ^^^ IPlatformWindow ^^^ /// vvv renderer_null(glfw) window vvvv
+	bool bShouldClose = tempRenderer->ShouldClose();
+#endif
 	if (bShouldClose)
 	{
 		ray::RequestEngineExit(true);

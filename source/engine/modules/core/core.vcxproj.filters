@@ -20,9 +20,6 @@
     <ClInclude Include="object\object.hpp">
       <Filter>object</Filter>
     </ClInclude>
-    <ClInclude Include="object\object_db.hpp">
-      <Filter>object</Filter>
-    </ClInclude>
     <ClInclude Include="memory\memory_debug.hpp">
       <Filter>memory</Filter>
     </ClInclude>
@@ -41,6 +38,9 @@
     <ClInclude Include="math\common.hpp">
       <Filter>math</Filter>
     </ClInclude>
+	<ClInclude Include="debug\assert.hpp">
+      <Filter>debug</Filter>
+	</ClInclude>
     <ClInclude Include="debug\debug.hpp">
       <Filter>debug</Filter>
     </ClInclude>
@@ -56,8 +56,11 @@
     <ClInclude Include="file_system\file.hpp">
       <Filter>file_system</Filter>
     </ClInclude>
-    <ClInclude Include="debug\assert.hpp">
-      <Filter>debug</Filter>
+    <ClInclude Include="object\archive.hpp">
+      <Filter>object</Filter>
+    </ClInclude>
+    <ClInclude Include="object\type.hpp">
+      <Filter>object</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -82,6 +85,9 @@
     </ClCompile>
     <ClCompile Include="debug\debug.cpp">
       <Filter>debug</Filter>
+    </ClCompile>
+    <ClCompile Include="extended_instuctions\sse\common.cpp">
+      <Filter>extended instructions\sse</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

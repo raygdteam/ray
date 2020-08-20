@@ -44,4 +44,7 @@ public:
 	virtual ~Actor();
 
 	Transform* GetTransform();
+
+	void Serialize(Archive&) override;
+	void Deserialize(Archive&) override;
 };

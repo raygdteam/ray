@@ -52,7 +52,7 @@ public:
     }
 
     template<typename T>
-    uint64_t Write(const T& value)
+    u64 Write(const T& value)
     {
         return (Write((void*)&value, sizeof(value)) == sizeof(value));
     }

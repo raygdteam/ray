@@ -1,5 +1,6 @@
 #pragma once
 #include "pixel_buffer.hpp"
+#include <cassert>
 
 namespace ray::renderer_core_api::resources
 {
