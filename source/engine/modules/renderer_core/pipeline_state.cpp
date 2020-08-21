@@ -36,13 +36,13 @@ namespace ray::renderer_core_api
 
 	void GraphicsPipeline::SetPrimitiveTopologyType(D3D12_PRIMITIVE_TOPOLOGY_TYPE topologyType)
 	{
-		assert(topologyType != D3D12_PRIMITIVE_TOPOLOGY_TYPE_UNDEFINED, "Can't draw with undefined topology")
+		ray_assert(topologyType != D3D12_PRIMITIVE_TOPOLOGY_TYPE_UNDEFINED, "Can't draw with undefined topology")
 		_pipelineDesc.PrimitiveTopologyType = topologyType;
 	}
 
 	void GraphicsPipeline::SetRenderTargetFormats(u32 numRTVs, const DXGI_FORMAT* rtvFormats, DXGI_FORMAT dsvFormat, u32 msaaCount, u32 msaaQuality)
 	{
-		assert(numRTVs == 0 || rtvFormats != nullptr, "null format array conflicts with non-zero length")
+		ray_assert(numRTVs == 0 || rtvFormats != nullptr, "null format array conflicts with non-zero length")
 		for (u32 i = 0; i < numRTVs; ++i)
 			_pipelineDesc.RTVFormats[i] = rtvFormats[i];
 		for (u32 i = numRTVs; i < _pipelineDesc.NumRenderTargets; ++i)
