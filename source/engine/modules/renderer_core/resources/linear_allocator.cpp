@@ -83,7 +83,12 @@ namespace ray::renderer_core_api
 		resourceDesc.Layout = D3D12_TEXTURE_LAYOUT_ROW_MAJOR;
 
 		D3D12_RESOURCE_STATES defaultState;
+
 		D3D12_HEAP_PROPERTIES heapProps;
+		heapProps.CPUPageProperty = D3D12_CPU_PAGE_PROPERTY_UNKNOWN;
+		heapProps.MemoryPoolPreference = D3D12_MEMORY_POOL_UNKNOWN;
+		heapProps.CreationNodeMask = 1;
+		heapProps.VisibleNodeMask = 1;
 
 		if (_type == eGpuExclusive)
 		{

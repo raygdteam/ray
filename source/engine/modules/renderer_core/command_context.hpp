@@ -5,7 +5,6 @@
 #include "resources/color_buffer.hpp"
 #include <core/threading/critical_section.hpp>
 #include <d3d12.h>
-#include <cassert>
 
 namespace ray::renderer_core_api
 {
@@ -194,6 +193,13 @@ namespace ray::renderer_core_api
 		void SetViewportAndScissor(u32 x, u32 y, u32 w, u32 h);
 		void SetBlendFactor(float r, float g, float b, float a);
 		void SetPrimitiveTopology(D3D12_PRIMITIVE_TOPOLOGY primitiveTopology);
+
+		void SetIndexBuffer(const D3D12_INDEX_BUFFER_VIEW& ibView);
+		void SetVertexBuffers(u32 startSlot, u32 count, const D3D12_VERTEX_BUFFER_VIEW* vbViews);
+		void SetVertexBuffer(u32 startSlot, const D3D12_VERTEX_BUFFER_VIEW& vbView) { SetVertexBuffers(startSlot, 1, &vbView); }
+		void SetDynamicVB(u32 startSlot, size_t numVertices, size_t vertexStride, const void* data);
+		void SetDynamicIB(size_t indexCount, const u32* data, bool b32Bit = false);
+		void SetDynamicSRV() {}
 
 		// TODO: 
 

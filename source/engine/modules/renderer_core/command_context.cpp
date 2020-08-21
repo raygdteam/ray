@@ -3,6 +3,7 @@
 #include "d3dx12.h"
 #include <core/extended_instuctions/sse/common.hpp>
 #include <core/math/common.hpp>
+#include <core/debug/assert.hpp>
 
 namespace sse = ray::core::sse;
 namespace math = ray::core::math;
@@ -38,8 +39,8 @@ namespace ray::renderer_core_api
 			availableContexts.pop();
 		}
 
-		assert(ret != nullptr);
-		assert(ret->_type == type);
+		check(ret != nullptr);
+		check(ret->_type == type);
 
 		_sContextManagerMutex.Leave();
 		return ret;
@@ -49,7 +50,7 @@ namespace ray::renderer_core_api
 	{
 		_sContextManagerMutex.Enter();
 
-		assert(context != nullptr);
+		check(context != nullptr);
 		_sAvailableContexts[static_cast<u32>(context->_type)].push(context);
 
 		_sContextManagerMutex.Leave();
@@ -80,7 +81,7 @@ namespace ray::renderer_core_api
 	{
 		FlushResourceBarriers();
 
-		assert(_commandAllocator != nullptr);
+		check(_commandAllocator != nullptr);
 
 		u64 fenceValue = globals::gCommandListManager.GetQueue(_type).ExecuteCommandList(_commandList);
 
@@ -98,7 +99,7 @@ namespace ray::renderer_core_api
 	{
 		FlushResourceBarriers();
 
-		assert(_commandAllocator != nullptr);
+		check(_commandAllocator != nullptr);
 
 		CommandQueue& queue = globals::gCommandListManager.GetQueue(_type);
 		u64 fenceValue = queue.ExecuteCommandList(_commandList);
@@ -150,7 +151,7 @@ namespace ray::renderer_core_api
 
 	void CommandContext::Reset()
 	{
-		assert(_commandList != nullptr && _commandAllocator == nullptr);
+		check(_commandList != nullptr && _commandAllocator == nullptr);
 		_commandAllocator = globals::gCommandListManager.GetQueue(_type).RequestAllocator();
 		_commandList->Reset(_commandAllocator, nullptr);
 		auto hr = globals::gDevice->GetDeviceRemovedReason();
@@ -187,7 +188,7 @@ namespace ray::renderer_core_api
 		const D3D12_RESOURCE_DESC& srcDesc = src.GetResource()->GetDesc();
 		(void)srcDesc;
 
-		assert(sliceIndex < destDesc.DepthOrArraySize&&
+		check(sliceIndex < destDesc.DepthOrArraySize&&
 			srcDesc.DepthOrArraySize == 1 &&
 			destDesc.Width == srcDesc.Width &&
 			destDesc.Height == srcDesc.Height &&
@@ -252,7 +253,7 @@ namespace ray::renderer_core_api
 
 	void CommandContext::WriteBuffer(resources::GpuResource& dest, size_t destOffset, const void* data, size_t numBytes)
 	{
-		assert(data != nullptr && math::IsAligned(numBytes, 16));
+		check(data != nullptr && math::IsAligned(numBytes, 16));
 		DynAlloc mem = _cpuLinearAllocator.Allocate(numBytes, 512);
 		sse::MemCopy(mem.Data, data, math::DivideByMultiple(numBytes, 16));
 		CopyBufferRegion(dest, destOffset, mem.Buffer, mem.Offset, numBytes);
@@ -271,7 +272,7 @@ namespace ray::renderer_core_api
 		D3D12_RESOURCE_STATES oldState = dest._usageState;
 		if (newState != oldState)
 		{
-			assert(_numBarriersToFlush < 16);
+			check(_numBarriersToFlush < 16);
 			D3D12_RESOURCE_BARRIER& barrier = _barriers[_numBarriersToFlush++];
 			barrier.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
 			barrier.Transition.StateAfter = newState;
@@ -304,7 +305,7 @@ namespace ray::renderer_core_api
 		auto oldState = dest._usageState;
 		if (oldState != newState)
 		{
-			assert(_numBarriersToFlush < 16);
+			check(_numBarriersToFlush < 16);
 			auto& barrier = _barriers[_numBarriersToFlush++];
 
 			barrier.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
@@ -431,7 +432,7 @@ namespace ray::renderer_core_api
 
 	void GraphicsContext::SetScissor(const D3D12_RECT& rect)
 	{
-		assert(rect.left < rect.right && rect.top < rect.bottom);
+		check(rect.left < rect.right && rect.top < rect.bottom);
 		_commandList->RSSetScissorRects(1, &rect);
 	}
 
@@ -443,7 +444,7 @@ namespace ray::renderer_core_api
 
 	void GraphicsContext::SetViewportAndScissor(const D3D12_VIEWPORT& viewport, const D3D12_RECT& rect)
 	{
-		assert(rect.left < rect.right&& rect.top < rect.bottom);
+		check(rect.left < rect.right&& rect.top < rect.bottom);
 		_commandList->RSSetViewports(1, &viewport);
 		_commandList->RSSetScissorRects(1, &rect);
 	}
@@ -467,6 +468,49 @@ namespace ray::renderer_core_api
 	{
 		_commandList->IASetPrimitiveTopology(primitiveTopology);
 	}
+
+	void GraphicsContext::SetIndexBuffer(const D3D12_INDEX_BUFFER_VIEW& ibView)
+	{
+		_commandList->IASetIndexBuffer(&ibView);
+	}
+
+	void GraphicsContext::SetVertexBuffers(u32 startSlot, u32 count, const D3D12_VERTEX_BUFFER_VIEW* vbViews)
+	{
+		_commandList->IASetVertexBuffers(startSlot, count, vbViews);
+	}
+
+	void GraphicsContext::SetDynamicVB(u32 startSlot, size_t numVertices, size_t vertexStride, const void* data)
+	{
+		check(data != nullptr && math::IsAligned(data, 16))
+		size_t bufferSize = math::AlignUp(numVertices * vertexStride, 16);
+
+		auto vb = _cpuLinearAllocator.Allocate(bufferSize);
+		sse::MemCopy(vb.Data, data, bufferSize >> 4);
+
+		D3D12_VERTEX_BUFFER_VIEW view;
+		view.BufferLocation = vb.GpuVirtualAddress;
+		view.SizeInBytes = static_cast<u32>(bufferSize);
+		view.StrideInBytes = static_cast<u32>(vertexStride);
+
+		_commandList->IASetVertexBuffers(startSlot, 1, &view);
+	}
+
+	void GraphicsContext::SetDynamicIB(size_t indexCount, const u32* data, bool b32Bit)
+	{
+		check(data != nullptr && math::IsAligned(data, 16))
+		
+		size_t bufferSize = math::AlignUp(indexCount * (b32Bit ? sizeof(u32) : sizeof(u16)), 16);
+		auto ib = _cpuLinearAllocator.Allocate(bufferSize);
+		sse::MemCopy(ib.Data, data, bufferSize >> 4);
+
+		D3D12_INDEX_BUFFER_VIEW view;
+		view.BufferLocation = ib.GpuVirtualAddress;
+		view.Format = b32Bit ? DXGI_FORMAT_R32_UINT : DXGI_FORMAT_R16_UINT;
+		view.SizeInBytes = bufferSize;
+
+		_commandList->IASetIndexBuffer(&view);
+	}
+
 
 
 }
