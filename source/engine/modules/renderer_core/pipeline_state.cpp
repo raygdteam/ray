@@ -66,6 +66,10 @@ namespace ray::renderer_core_api
 			_inputLayouts = nullptr;
 	}
 
+	void GraphicsPipeline::SetPrimitiveRestart(D3D12_INDEX_BUFFER_STRIP_CUT_VALUE ibProps)
+	{
+	}
+
 	void GraphicsPipeline::Finalize()
 	{
 		_pipelineDesc.pRootSignature = _rootSignature->GetRootSignature();

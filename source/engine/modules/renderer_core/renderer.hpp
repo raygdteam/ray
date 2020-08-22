@@ -7,7 +7,9 @@
 
 #include "ray_renderer_core_class_helper.hpp"
 #include "descriptor_heap.hpp"
-#include "resources/color_buffer.hpp"
+#include "resources/gpu_buffer.hpp"
+#include "root_signature.hpp"
+#include "pipeline_state.hpp"
 
 #include <vector>
 #include <core\module\module_meta.hpp>
@@ -40,34 +42,29 @@ namespace ray::renderer_core_api
 		return globals::gDescriptorAllocator[type].Allocate(count);
 	}
 
-	struct RAY_RENDERERCORE_API IRenderer final// : public Object
+	struct RAY_RENDERERCORE_API IRenderer final
 	{
-		IRenderer() {}
+		IRenderer()
+			: _swapChain(nullptr)
+		{}
 
 		void Initialize(ray::core::IPlatformWindow* window);
 		void Shutdown();
 
-		void BeginScene();
-		void EndScene();
-		void Execute();
+		void BeginScene(GraphicsContext& gfxContext);
+		void EndScene(GraphicsContext& gfxContext);
 
 		static bool IsReady() { return _sbReady; }
-
-	private:
-		void WaitForPreviousFrame(); //temporary
 
 
 	private:
 		static bool _sbReady;
 		IDXGISwapChain1* _swapChain;
-	 	static const u32 SWAP_CHAIN_BUFFER_COUNT = 3;
-		resources::ColorBuffer _displayPlane[SWAP_CHAIN_BUFFER_COUNT] =
-		{
-			resources::ColorBuffer(1.f, 0.f, 0.f, 1.f),
-			resources::ColorBuffer(1.f, 0.f, 0.f, 1.f),
-			resources::ColorBuffer(1.f, 0.f, 0.f, 1.f)
-		};
 		u32 _currentBuffer;
+		resources::GpuBuffer _vertexBuffer;
+		RootSignature _rootSignature;
+		GraphicsPipeline _pipeline;
+		D3D12_VERTEX_BUFFER_VIEW _vertexBufferView;
 
 	};
 

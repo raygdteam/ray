@@ -12,6 +12,8 @@
 #include <chrono>
 #include "core/debug/assert.hpp"
 
+#include <renderer_core/command_context.hpp>
+
 #undef CreateWindow
 
 Renderer* tempRenderer = nullptr;
@@ -34,9 +36,6 @@ RayEngine::RayEngine() : _engineLoop(nullptr)
 
 void RayEngine::Initialize(IEngineLoop* engineLoop)
 {
-	assert(1 > 5, "true");
-	assert(1 < 5, "false");
-
 	_engineLoop = engineLoop;
 
 	eng->Log("Initializing Ray engine");
@@ -96,12 +95,12 @@ void RayEngine::Tick()
 	}
 
 #ifndef _TEMP_NO_RENDERER_CORE_API_
-	_renderer->BeginScene();
+	GraphicsContext& gfxContext = GraphicsContext::Begin();
+
+	_renderer->BeginScene(gfxContext);
 
 	// renderer commands ...
-
-	_renderer->Execute();
-	_renderer->EndScene();
+	_renderer->EndScene(gfxContext);
 #else
 	tempLevel->Tick(delta);
 	tempRenderer->BeginFrame();

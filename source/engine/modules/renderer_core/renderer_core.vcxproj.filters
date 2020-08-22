@@ -28,6 +28,9 @@
       <Filter>resources</Filter>
     </ClInclude>
     <ClInclude Include="root_signature.hpp" />
+    <ClInclude Include="resources\buffer_manager.hpp">
+      <Filter>resources</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="renderer.cpp" />
@@ -51,6 +54,9 @@
     </ClCompile>
     <ClCompile Include="root_signature.cpp" />
     <ClCompile Include="pipeline_state.cpp" />
+    <ClCompile Include="resources\buffer_manager.cpp">
+      <Filter>resources</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="resources">
@@ -59,5 +65,9 @@
     <Filter Include="resources\memory">
       <UniqueIdentifier>{3b02b848-2e07-4835-b1dc-a32307628676}</UniqueIdentifier>
     </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="VertexShader.hlsl" />
+    <FxCompile Include="PixelShader.hlsl" />
   </ItemGroup>
 </Project>

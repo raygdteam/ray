@@ -106,8 +106,7 @@ namespace ray::renderer_core_api
 		}
 
 		ID3D12Resource* buffer = nullptr;
-		if (!globals::gDevice->CreateCommittedResource(&heapProps, D3D12_HEAP_FLAG_NONE, &resourceDesc, defaultState, nullptr, IID_PPV_ARGS(&buffer)))
-			return nullptr;
+		check(globals::gDevice->CreateCommittedResource(&heapProps, D3D12_HEAP_FLAG_NONE, &resourceDesc, defaultState, nullptr, IID_PPV_ARGS(&buffer)) == S_OK)
 
 		return new LinearAllocationPage(buffer, defaultState);
 

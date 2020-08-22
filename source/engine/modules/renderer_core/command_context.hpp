@@ -5,6 +5,13 @@
 #include "resources/color_buffer.hpp"
 #include <core/threading/critical_section.hpp>
 #include <d3d12.h>
+#include <core/core.hpp>
+
+#ifdef RAY_BUILD_RENDERER_CORE
+#define RAY_RENDERERCORE_API __declspec(dllexport)
+#else
+#define RAY_RENDERERCORE_API RAY_DLLIMPORT
+#endif
 
 namespace ray::renderer_core_api
 {
@@ -20,7 +27,7 @@ namespace ray::renderer_core_api
 	class ComputeContext;
 	class GraphicsContext;
 
-	class ContextManager
+	class RAY_RENDERERCORE_API ContextManager
 	{
 	public:
 		ContextManager() {}
@@ -140,6 +147,8 @@ namespace ray::renderer_core_api
 		ID3D12GraphicsCommandList* _commandList;
 		ID3D12CommandAllocator* _commandAllocator;
 		ID3D12PipelineState* _currentPipelineState;
+		ID3D12RootSignature* _graphicsRootSig;
+		ID3D12RootSignature* _computeRootSig;
 
 		LinearAllocator _cpuLinearAllocator;
 		LinearAllocator _gpuLinearAllocator;
@@ -154,7 +163,7 @@ namespace ray::renderer_core_api
 
 	};
 
-	class ComputeContext : public CommandContext
+	class RAY_RENDERERCORE_API ComputeContext : public CommandContext
 	{
 	public:
 		static ComputeContext& Begin(bool bAsync = false);
@@ -164,7 +173,7 @@ namespace ray::renderer_core_api
 
 	};
 
-	class GraphicsContext : public CommandContext
+	class RAY_RENDERERCORE_API GraphicsContext : public CommandContext
 	{
 	public:
 		static GraphicsContext& Begin()
@@ -178,6 +187,17 @@ namespace ray::renderer_core_api
 		void ClearDepth() {}
 		void ClearStencil() {}
 		void ClearDepthAndStencil() {}
+
+		void SetRootSignature(const RootSignature& rootSig)
+		{
+			if (rootSig.GetRootSignature() == _graphicsRootSig)
+				return;
+
+			_graphicsRootSig = rootSig.GetRootSignature();
+			_commandList->SetGraphicsRootSignature(_graphicsRootSig);
+
+			// TODO:
+		}
 
 		void SetRenderTargets(u32 numRTV, D3D12_CPU_DESCRIPTOR_HANDLE* rtv);
 		void SetRenderTargets(u32 numRtV, D3D12_CPU_DESCRIPTOR_HANDLE* rtv, D3D12_CPU_DESCRIPTOR_HANDLE dsv);
@@ -201,6 +221,10 @@ namespace ray::renderer_core_api
 		void SetDynamicIB(size_t indexCount, const u32* data, bool b32Bit = false);
 		void SetDynamicSRV() {}
 
+		void Draw(u32 vertexCount, u32 vertexStartOffset = 0);
+		void DrawIndexed(u32 indexCount, u32 startIndexLocation = 0, s32 baseVertexLocation = 0);
+		void DrawInstanced(u32 vertexCountPerInstance, u32 instanceCount, u32 startVertexLocation = 0, u32 startInstanceLocation = 0);
+		void DrawIndexedInstanced(u32 indexCountPerInstance, u32 instanceCount, u32 startIndexLocation, s32 baseVertexLocation, u32 startInstanceLocation);
 		// TODO: 
 
 	private:

@@ -34,6 +34,8 @@ namespace ray::renderer_core_api::resources
 			, _transitioningState(static_cast<D3D12_RESOURCE_STATES>(-1))
 		{}
 
+		virtual ~GpuResource() {}
+
 		virtual void Destroy() noexcept
 		{
 			_resource = nullptr;

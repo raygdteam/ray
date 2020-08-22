@@ -5,12 +5,17 @@
 namespace ray::renderer_core_api
 {
 	class CommandContext;
+	struct IRenderer;
+	struct Renderer2DData;
 }
 
 namespace ray::renderer_core_api::resources
 {
 	class GpuBuffer : public GpuResource
 	{
+		friend struct ray::renderer_core_api::IRenderer;
+		friend struct ray::renderer_core_api::Renderer2DData;
+
 	public:
 		virtual ~GpuBuffer() { Destroy(); }
 
@@ -51,7 +56,7 @@ namespace ray::renderer_core_api::resources
 			_uavHandle.ptr = static_cast<D3D12_GPU_VIRTUAL_ADDRESS>(-1);
 		}
 
-		virtual void CreateDerivedViews() = 0;
+		// virtual void CreateDerivedViews() = 0; TODO: StructuredBuffer and ByteAddressBuffer
 		D3D12_RESOURCE_DESC DescribeBuffer() const noexcept;
 
 		size_t _bufferSize;
@@ -61,6 +66,16 @@ namespace ray::renderer_core_api::resources
 
 		D3D12_CPU_DESCRIPTOR_HANDLE _srvHandle;
 		D3D12_CPU_DESCRIPTOR_HANDLE _uavHandle;
+
+	};
+
+	class StructuredBuffer : public GpuBuffer
+	{
+
+	};
+
+	class ByteAddressBuffer : public GpuBuffer
+	{
 
 	};
 }

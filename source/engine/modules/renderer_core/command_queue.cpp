@@ -20,7 +20,7 @@ namespace ray::renderer_core_api
 
 		_device = device;
 
-		D3D12_COMMAND_QUEUE_DESC desc;
+		D3D12_COMMAND_QUEUE_DESC desc = {};
 		desc.Type = _type;
 		desc.NodeMask = 1;
 		_device->CreateCommandQueue(&desc, IID_PPV_ARGS(&_commandQueue));

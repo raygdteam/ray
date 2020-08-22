@@ -90,6 +90,13 @@ namespace ray::renderer_core_api
 
 		_commandList->Reset(_commandAllocator, nullptr);
 
+		if (_graphicsRootSig)
+			_commandList->SetGraphicsRootSignature(_graphicsRootSig);
+		if (_computeRootSig)
+			_commandList->SetComputeRootSignature(_computeRootSig);
+		if (_currentPipelineState)
+			_commandList->SetPipelineState(_currentPipelineState);
+
 		// TODO: Set Pipeline state
 
 		return fenceValue;
@@ -123,9 +130,12 @@ namespace ray::renderer_core_api
 		, _commandList(nullptr)
 		, _commandAllocator(nullptr)
 		, _currentPipelineState(nullptr)
+		, _graphicsRootSig(nullptr)
+		, _computeRootSig(nullptr)
 		, _cpuLinearAllocator(LinearAllocatorType::eCpuWritable)
 		, _gpuLinearAllocator(LinearAllocatorType::eGpuExclusive)
 		, _numBarriersToFlush(0)
+
 		//TODO: 
 	{}
 
@@ -509,6 +519,30 @@ namespace ray::renderer_core_api
 		view.SizeInBytes = bufferSize;
 
 		_commandList->IASetIndexBuffer(&view);
+	}
+
+	void GraphicsContext::Draw(u32 vertexCount, u32 vertexStartOffset)
+	{
+		DrawInstanced(vertexCount, 1, vertexStartOffset);
+	}
+
+	void GraphicsContext::DrawIndexed(u32 indexCount, u32 startIndexLocation, s32 baseVertexLocation)
+	{
+		DrawIndexedInstanced(indexCount, 1, startIndexLocation, baseVertexLocation, 0);
+	}
+
+	void GraphicsContext::DrawInstanced(u32 vertexCountPerInstance, u32 instanceCount, u32 startVertexLocation, u32 startInstanceLocation)
+	{
+		FlushResourceBarriers();
+		// TODO: 
+		_commandList->DrawInstanced(vertexCountPerInstance, instanceCount, startVertexLocation, startInstanceLocation);
+	}
+
+	void GraphicsContext::DrawIndexedInstanced(u32 indexCountPerInstance, u32 instanceCount, u32 startIndexLocation, s32 baseVertexLocation, u32 startInstanceLocation)
+	{
+		FlushResourceBarriers();
+		// TODO: 
+		_commandList->DrawIndexedInstanced(indexCountPerInstance, instanceCount, startIndexLocation, baseVertexLocation, startInstanceLocation);
 	}
 
 

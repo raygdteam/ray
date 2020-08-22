@@ -32,7 +32,7 @@ namespace ray::renderer_core_api::resources
 
         _gpuVirtualAddress = _resource->GetGPUVirtualAddress();
 
-        CreateDerivedViews();
+        // CreateDerivedViews();
     }
 
     void GpuBuffer::CreatePlaces(ID3D12Heap* backingHeap, size_t heapOffset, u32 numElements, u32 elementSize, const void* initialData)
@@ -52,7 +52,7 @@ namespace ray::renderer_core_api::resources
 
         _gpuVirtualAddress = _resource->GetGPUVirtualAddress();
 
-        CreateDerivedViews();
+        // CreateDerivedViews();
     }
 
     D3D12_CPU_DESCRIPTOR_HANDLE GpuBuffer::CreateConstantBufferView(size_t offset, size_t size)
