@@ -62,6 +62,9 @@
     <ClInclude Include="lib\queue.hpp">
       <Filter>lib</Filter>
     </ClInclude>
+    <ClInclude Include="lib\format.hpp">
+      <Filter>lib</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="core_entry_point.cpp" />
@@ -88,6 +91,9 @@
     </ClCompile>
     <ClCompile Include="extended_instuctions\sse\common.cpp">
       <Filter>extended instructions\sse</Filter>
+    </ClCompile>
+    <ClCompile Include="lib\format.cpp">
+      <Filter>lib</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
