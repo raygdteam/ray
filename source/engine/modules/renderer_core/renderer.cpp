@@ -38,7 +38,7 @@ namespace ray::renderer_core_api
 		ID3D12Debug1* spDebugController1;
 		check(D3D12GetDebugInterface(IID_PPV_ARGS(&spDebugController0)) == S_OK)
 		check(spDebugController0->QueryInterface(IID_PPV_ARGS(&spDebugController1)) == S_OK);
-		spDebugController1->SetEnableGPUBasedValidation(true);
+		// spDebugController1->SetEnableGPUBasedValidation(true);
 		//auto hr = globals::gDevice->GetDeviceRemovedReason();
 		//u32 code = static_cast<u32>(hr);
 		spDebugController0->EnableDebugLayer();
@@ -105,9 +105,9 @@ namespace ray::renderer_core_api
 
 		Vertex data[3] =
 		{
-			{ 0.5f, -0.5f, 1.f },
-			{ 0.f, 0.5f, 1.f }, 
-			{ -0.5f, -0.5f, 1.f }
+			{ -0.25f, -0.25f, 0.f },
+			{ -0.25f, 0.25f, 0.f }, 
+			{ 0.25f, 0.25f, 0.f }
 		};
 
 		_vertexBuffer.Create(3, sizeof(Vertex), static_cast<const void*>(data));
@@ -116,7 +116,7 @@ namespace ray::renderer_core_api
 
 		ID3DBlob* vertexShader;
 		ID3DBlob* errorBuff;
-		hr = D3DCompileFromFile(L"D:\\Projects\\Ray Engine\\source\\engine\\modules\\renderer_core\\VertexShader.hlsl", nullptr, nullptr, "main", "vs_5_0",
+		hr = D3DCompileFromFile(L"..\\..\\source\\engine\\modules\\renderer_core\\VertexShader.hlsl", nullptr, nullptr, "main", "vs_5_0",
 			D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION, 0, &vertexShader, &errorBuff);
 		check(hr == S_OK)
 
@@ -125,7 +125,7 @@ namespace ray::renderer_core_api
 		vertexShaderBytecode.pShaderBytecode = vertexShader->GetBufferPointer();
 
 		ID3DBlob* pixelShader;
-		hr = D3DCompileFromFile(L"D:\\Projects\\Ray Engine\\source\\engine\\modules\\renderer_core\\PixelShader.hlsl", nullptr, nullptr, "main", "ps_5_0",
+		hr = D3DCompileFromFile(L"..\\..\\source\\engine\\modules\\renderer_core\\PixelShader.hlsl", nullptr, nullptr, "main", "ps_5_0",
 			D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION, 0, &pixelShader, &errorBuff);
 		check(hr == S_OK)
 
@@ -153,11 +153,14 @@ namespace ray::renderer_core_api
 
 	void IRenderer::BeginScene(GraphicsContext& gfxContext)
 	{
+		gfxContext.SetRootSignature(_rootSignature);
+		gfxContext.SetScissor(0, 0, 1280, 720);
+		gfxContext.SetViewport(0.f, 0.f, 1280.f, 720.f);
+		
 		gfxContext.TransitionResource(globals::gDisplayPlane[_currentBuffer], D3D12_RESOURCE_STATE_RENDER_TARGET, true);
 		gfxContext.SetRenderTarget(globals::gDisplayPlane[_currentBuffer].GetRTV());
 		gfxContext.ClearColor(globals::gDisplayPlane[_currentBuffer]);
-
-		gfxContext.SetRootSignature(_rootSignature);
+		
 		gfxContext.SetPipelineState(_pipeline);
 		gfxContext.SetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 		gfxContext.SetVertexBuffer(0, _vertexBufferView);

@@ -110,7 +110,10 @@ namespace ray::renderer_core_api
 			auto newPSO = pso.GetPSO();
 
 			if (_currentPipelineState == newPSO)
+			{
+				_commandList->SetPipelineState(_currentPipelineState);
 				return;
+			}
 
 			_commandList->SetPipelineState(newPSO);
 			_currentPipelineState = newPSO;
@@ -191,7 +194,10 @@ namespace ray::renderer_core_api
 		void SetRootSignature(const RootSignature& rootSig)
 		{
 			if (rootSig.GetRootSignature() == _graphicsRootSig)
+			{
+				_commandList->SetGraphicsRootSignature(_graphicsRootSig);
 				return;
+			}
 
 			_graphicsRootSig = rootSig.GetRootSignature();
 			_commandList->SetGraphicsRootSignature(_graphicsRootSig);
