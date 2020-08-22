@@ -8,12 +8,12 @@ struct FVector;
 template<>
 struct FVector<1>
 {
-	f64 x = 0;
+	f32 x = 0;
 
 	/**
 	 * Scalar multiplication
 	 */
-	FVector<1> CCFASTCALL Multiply(f64 scalar)
+	FVector<1> CCFASTCALL Multiply(f32 scalar)
 	{
 		return FVector<1> {
 			.x = this->x * scalar,
@@ -48,13 +48,13 @@ struct FVector<1>
 template<>
 struct FVector<2>
 {
-	f64 x = 0;
-	f64 y = 0;
+	f32 x = 0;
+	f32 y = 0;
 
 	/**
 	 * Scalar multiplication
 	 */
-	FVector<2> CCFASTCALL Multiply(f64 scalar)
+	FVector<2> CCFASTCALL Multiply(f32 scalar)
 	{
 		return FVector<2> {
 			.x = this->x * scalar,
@@ -92,14 +92,14 @@ struct FVector<2>
 template<>
 struct FVector<3>
 {
-	f64 x = 0;
-	f64 y = 0;
-	f64 z = 0;
+	f32 x = 0;
+	f32 y = 0;
+	f32 z = 0;
 
 	/**
 	 * Scalar multiplication
 	 */
-	FVector<3> Multiply(f64 scalar)
+	FVector<3> Multiply(f32 scalar)
 	{
 		return FVector<3> {
 			.x = this->x * scalar,
@@ -140,15 +140,15 @@ struct FVector<3>
 template<>
 struct FVector<4>
 {
-	f64 x = 0;
-	f64 y = 0;
-	f64 z = 0;
-	f64 w = 0;
+	f32 x = 0;
+	f32 y = 0;
+	f32 z = 0;
+	f32 w = 0;
 
 	/**
 	 * Scalar multiplication
 	 */
-	FVector<4> Multiply(f64 scalar)
+	FVector<4> Multiply(f32 scalar)
 	{
 		return FVector<4> {
 			.x = this->x * scalar,

@@ -58,7 +58,7 @@ namespace ray::renderer_core_api
 		_pipelineDesc.InputLayout.NumElements = numElements;
 		if (numElements > 0)
 		{
-			auto newElements = static_cast<D3D12_INPUT_ELEMENT_DESC*>(malloc(sizeof(D3D12_INPUT_ELEMENT_DESC) * numElements));
+			D3D12_INPUT_ELEMENT_DESC* newElements = new D3D12_INPUT_ELEMENT_DESC[numElements]; //static_cast<D3D12_INPUT_ELEMENT_DESC*>(malloc(sizeof(D3D12_INPUT_ELEMENT_DESC) * numElements));
 			memcpy(newElements, inputLayout, sizeof(D3D12_INPUT_ELEMENT_DESC) * numElements);
 			_inputLayouts.reset(static_cast<const D3D12_INPUT_ELEMENT_DESC*>(newElements));
 		}
