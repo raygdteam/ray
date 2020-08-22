@@ -7,7 +7,7 @@
 #define assert(condition, msg)
 #else
 #define STRINGIFY(argument) #argument
-#define assert(condition, msg) do { \
+#define ray_assert(condition, msg) do { \
 	if (!(condition)) { \
 		Debug::__Internal_HandleAssertionFailure(#condition, __FILE__, __LINE__, msg); \
 	} \

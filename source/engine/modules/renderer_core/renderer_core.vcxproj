@@ -155,6 +155,7 @@
     <ClInclude Include="resources\gpu_resource.hpp" />
     <ClInclude Include="resources\linear_allocator.hpp" />
     <ClInclude Include="resources\pixel_buffer.hpp" />
+    <ClInclude Include="root_signature.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="command_allocator.cpp" />
@@ -162,12 +163,14 @@
     <ClCompile Include="command_queue.cpp" />
     <ClCompile Include="descriptor_heap.cpp" />
     <ClCompile Include="module_renderer_core.cpp" />
+    <ClCompile Include="pipeline_state.cpp" />
     <ClCompile Include="renderer.cpp" />
     <ClCompile Include="renderer_2d.cpp" />
     <ClCompile Include="resources\color_buffer.cpp" />
     <ClCompile Include="resources\gpu_buffer.cpp" />
     <ClCompile Include="resources\linear_allocator.cpp" />
     <ClCompile Include="resources\pixel_buffer.cpp" />
+    <ClCompile Include="root_signature.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\thirdparty\eastl\eastl.vcxproj">
