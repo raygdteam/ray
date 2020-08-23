@@ -65,6 +65,9 @@
     <ClInclude Include="lib\format.hpp">
       <Filter>lib</Filter>
     </ClInclude>
+    <ClInclude Include="math\matrix.hpp">
+      <Filter>math</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="core_entry_point.cpp" />
