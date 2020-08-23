@@ -12,7 +12,7 @@ namespace ray::renderer_core_api
 
 	ID3D12CommandAllocator* CommandAllocatorPool::RequestAllocator(u64 completedFenceValue)
 	{
-		_allocatorMutex.TryEnter();
+		_allocatorMutex.Enter();
 
 		ID3D12CommandAllocator* ret = nullptr;
 
@@ -43,7 +43,7 @@ namespace ray::renderer_core_api
 
 	void CommandAllocatorPool::DiscardAllocator(ID3D12CommandAllocator* allocator, u64 fenceValue)
 	{
-		_allocatorMutex.TryEnter();
+		_allocatorMutex.Enter();
 
 		_readyAllocators.push(std::make_pair(fenceValue, allocator));
 	
