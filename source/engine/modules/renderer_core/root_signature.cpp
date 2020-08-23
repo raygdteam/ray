@@ -16,7 +16,7 @@ namespace ray::renderer_core_api
 
 		for (u32 i = 0; i < numParams; ++i)
 		{
-			_rootParameters.PushBack(new RootSignatureParameter());
+			_rootParameters.PushBack(RootSignatureParameter());
 		}
 	}
 

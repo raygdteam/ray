@@ -122,7 +122,7 @@ namespace ray::renderer_core_api
 
 	private:
 		ID3D12RootSignature* _rootSignature;
-		Array<RootSignatureParameter*> _rootParameters;
+		Array<RootSignatureParameter> _rootParameters;
 		Array<D3D12_STATIC_SAMPLER_DESC> _staticSampler;
 	};
 
