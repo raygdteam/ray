@@ -11,10 +11,21 @@ public:
 	CriticalSection();
 	~CriticalSection();
 
-	void Enter();
-	void TryEnter();
+	/**
+	 * Locks the mutex.
+	 */
+	void Enter() const;
 
-	void Leave();
+	/**
+	 * Attempts to enter mutex.
+	 * Returns false on failure.
+	 */
+	[[nodiscard]] bool TryEnter() const;
+
+	/**
+	 * Unlocks the mutex.
+	 */
+	void Leave() const;
 };
 
 }

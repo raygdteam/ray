@@ -19,17 +19,17 @@ CriticalSection::~CriticalSection()
 	krnlWin32DeleteCriticalSection(_data);
 }
 
-void CriticalSection::Enter()
+void CriticalSection::Enter() const
 {
 	krnlWin32EnterCriticalSection(_data);
 }
 
-void CriticalSection::TryEnter()
+bool CriticalSection::TryEnter() const
 {
-	krnlWin32TryEnterCriticalSection(_data);
+	return bool(krnlWin32TryEnterCriticalSection(_data));
 }
 
-void CriticalSection::Leave()
+void CriticalSection::Leave() const
 {
 	krnlWin32LeaveCriticalSection(_data);
 }

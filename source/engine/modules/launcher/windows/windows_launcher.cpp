@@ -64,6 +64,7 @@ u32 GuardedMain()
 #if !defined(RAY_RELEASE)
 	AllocConsole();
 	freopen_s((FILE**)stdout, "CONOUT$", "w", stdout);
+	DeleteMenu(GetSystemMenu(GetConsoleWindow(), false), SC_CLOSE, MF_BYCOMMAND);
 #endif
 	
 	return RayMain();

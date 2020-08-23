@@ -20,7 +20,7 @@ namespace ray::renderer_core_api
 
 	CommandContext* ContextManager::AllocateContext(D3D12_COMMAND_LIST_TYPE type) noexcept
 	{
-		_sContextManagerMutex.TryEnter();
+		_sContextManagerMutex.Enter();
 
 		auto& availableContexts = _sAvailableContexts[type];
 
