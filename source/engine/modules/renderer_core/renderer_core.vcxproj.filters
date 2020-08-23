@@ -31,6 +31,9 @@
     <ClInclude Include="resources\buffer_manager.hpp">
       <Filter>resources</Filter>
     </ClInclude>
+    <ClInclude Include="resources\depth_buffer.hpp">
+      <Filter>resources</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="renderer.cpp" />
@@ -55,6 +58,9 @@
     <ClCompile Include="root_signature.cpp" />
     <ClCompile Include="pipeline_state.cpp" />
     <ClCompile Include="resources\buffer_manager.cpp">
+      <Filter>resources</Filter>
+    </ClCompile>
+    <ClCompile Include="resources\depth_buffer.cpp">
       <Filter>resources</Filter>
     </ClCompile>
   </ItemGroup>

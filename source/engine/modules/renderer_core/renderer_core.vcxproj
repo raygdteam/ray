@@ -152,6 +152,7 @@
     <ClInclude Include="renderer_globals.hpp" />
     <ClInclude Include="resources\buffer_manager.hpp" />
     <ClInclude Include="resources\color_buffer.hpp" />
+    <ClInclude Include="resources\depth_buffer.hpp" />
     <ClInclude Include="resources\gpu_buffer.hpp" />
     <ClInclude Include="resources\gpu_resource.hpp" />
     <ClInclude Include="resources\linear_allocator.hpp" />
@@ -169,6 +170,7 @@
     <ClCompile Include="renderer_2d.cpp" />
     <ClCompile Include="resources\buffer_manager.cpp" />
     <ClCompile Include="resources\color_buffer.cpp" />
+    <ClCompile Include="resources\depth_buffer.cpp" />
     <ClCompile Include="resources\gpu_buffer.cpp" />
     <ClCompile Include="resources\linear_allocator.cpp" />
     <ClCompile Include="resources\pixel_buffer.cpp" />
