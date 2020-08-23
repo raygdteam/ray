@@ -115,11 +115,15 @@ namespace ray::renderer_core_api
 	public:
 		void Begin(u32 numParams, u32 numStaticSamplers);
 		void Finalize(D3D12_ROOT_SIGNATURE_FLAGS flags = D3D12_ROOT_SIGNATURE_FLAG_NONE);
+
+		void InitStaticSampler(u32 numStaticSampler, u32 shaderRegister, const D3D12_SAMPLER_DESC& samplerDesc, D3D12_SHADER_VISIBILITY visibility);
+		
 		ID3D12RootSignature* GetRootSignature() const noexcept { return _rootSignature; }
 
 	private:
 		ID3D12RootSignature* _rootSignature;
 		Array<RootSignatureParameter*> _rootParameters;
+		Array<D3D12_STATIC_SAMPLER_DESC> _staticSampler;
 	};
 
 }

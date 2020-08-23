@@ -29,8 +29,8 @@ namespace ray::renderer_core_api
 		CD3DX12_ROOT_SIGNATURE_DESC rootSignatureDesc = {};
 		rootSignatureDesc.NumParameters = u32(_rootParameters.Size());
 		rootSignatureDesc.pParameters = reinterpret_cast<D3D12_ROOT_PARAMETER*>(_rootParameters.data());
-		rootSignatureDesc.NumStaticSamplers = 0;
-		rootSignatureDesc.pStaticSamplers = nullptr;
+		rootSignatureDesc.NumStaticSamplers = _staticSampler.Size();
+		rootSignatureDesc.pStaticSamplers = _staticSampler.data();
 		rootSignatureDesc.Flags = flags;
 
 		ID3DBlob* signature = nullptr;
@@ -39,5 +39,25 @@ namespace ray::renderer_core_api
 
 		hr = globals::gDevice->CreateRootSignature(0, signature->GetBufferPointer(), signature->GetBufferSize(), IID_PPV_ARGS(&_rootSignature));
 		check(hr == S_OK)
+	}
+
+	void RootSignature::InitStaticSampler(u32 numStaticSampler, u32 shaderRegister, const D3D12_SAMPLER_DESC& samplerDesc, D3D12_SHADER_VISIBILITY visibility)
+	{
+		check(numStaticSampler <= _staticSampler.Size());
+		D3D12_STATIC_SAMPLER_DESC& staticSamplerDesc = _staticSampler[numStaticSampler];
+
+		staticSamplerDesc.Filter = samplerDesc.Filter;
+		staticSamplerDesc.AddressU = samplerDesc.AddressU;
+		staticSamplerDesc.AddressV = samplerDesc.AddressV;
+		staticSamplerDesc.AddressW = samplerDesc.AddressW;
+		staticSamplerDesc.MipLODBias = samplerDesc.MipLODBias;
+		staticSamplerDesc.MaxAnisotropy = samplerDesc.MaxAnisotropy;
+		staticSamplerDesc.ComparisonFunc = samplerDesc.ComparisonFunc;
+		staticSamplerDesc.BorderColor = D3D12_STATIC_BORDER_COLOR_OPAQUE_WHITE;
+		staticSamplerDesc.MinLOD = samplerDesc.MinLOD;
+		staticSamplerDesc.MaxLOD = samplerDesc.MaxLOD;
+		staticSamplerDesc.ShaderRegister = shaderRegister;
+		staticSamplerDesc.RegisterSpace = 0;
+		staticSamplerDesc.ShaderVisibility = visibility;
 	}
 }
