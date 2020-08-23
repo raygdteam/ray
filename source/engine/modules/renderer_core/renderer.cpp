@@ -98,19 +98,26 @@ namespace ray::renderer_core_api
 
 		struct Vertex
 		{
-			float x;
-			float y;
-			float z;
+			FVector<3> pos;
+			FVector<4> color;
 		};
 
-		Vertex data[3] =
+		Vertex data[4] =
 		{
-			{ -0.25f, -0.25f, 0.f },
-			{ -0.25f, 0.25f, 0.f }, 
-			{ 0.25f, 0.25f, 0.f }
+			{ -0.5f,  0.5f, 0.5f, 1.0f, 0.0f, 0.0f, 1.0f },
+			{  0.5f, -0.5f, 0.5f, 0.0f, 1.0f, 0.0f, 1.0f },
+			{ -0.5f, -0.5f, 0.5f, 0.0f, 0.0f, 1.0f, 1.0f },
+			{  0.5f,  0.5f, 0.5f, 1.0f, 0.0f, 1.0f, 1.0f }
 		};
 
-		_vertexBuffer.Create(3, sizeof(Vertex), static_cast<const void*>(data));
+		u32 indices[] =
+		{
+			0, 1, 2,
+			0, 3, 1
+		};
+
+		_vertexBuffer.Create(4, sizeof(Vertex), static_cast<const void*>(data));
+		_indexBuffer.Create(6, sizeof(u32), static_cast<const void*>(indices));
 		_rootSignature.Finalize(D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT);
 		_pipeline.SetRootSignature(_rootSignature);
 
@@ -138,9 +145,10 @@ namespace ray::renderer_core_api
 
 		D3D12_INPUT_ELEMENT_DESC inputLayout[] =
 		{
-			{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 }
+			{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
+			{ "COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 12, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 }
 		};
-		_pipeline.SetInputLayout(1, inputLayout);
+		_pipeline.SetInputLayout(2, inputLayout);
 		_pipeline.SetPrimitiveTopologyType(D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE);
 		_pipeline.SetRenderTargetFormat(DXGI_FORMAT_R8G8B8A8_UNORM, DXGI_FORMAT_UNKNOWN);
 		_pipeline.SetSampleMask(0xffffffff);
@@ -149,6 +157,7 @@ namespace ray::renderer_core_api
 		_pipeline.Finalize();
 
 		_vertexBufferView = _vertexBuffer.VertexBufferView(0);
+		_indexBufferView = _indexBuffer.IndexBufferView(0);
 }
 
 	void IRenderer::BeginScene(GraphicsContext& gfxContext)
@@ -163,8 +172,24 @@ namespace ray::renderer_core_api
 		
 		gfxContext.SetPipelineState(_pipeline);
 		gfxContext.SetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-		gfxContext.SetVertexBuffer(0, _vertexBufferView);
-		gfxContext.DrawInstanced(3, 1);
+
+		struct Vertex
+		{
+			FVector<3> pos;
+			FVector<4> color;
+		};
+
+		Vertex data[4] =
+		{
+			{ -0.5f,  0.5f, 0.5f, 1.0f, 0.0f, 0.0f, 1.0f },
+			{  0.5f, -0.5f, 0.5f, 0.0f, 1.0f, 0.0f, 1.0f },
+			{ -0.5f, -0.5f, 0.5f, 0.0f, 0.0f, 1.0f, 1.0f },
+			{  0.5f,  0.5f, 0.5f, 1.0f, 0.0f, 1.0f, 1.0f }
+		};
+		gfxContext.SetDynamicVB(0, 4, sizeof(Vertex), data);
+		//gfxContext.SetVertexBuffer(0, _vertexBufferView);
+		gfxContext.SetIndexBuffer(_indexBufferView);
+		gfxContext.DrawIndexedInstanced(_indexBuffer.GetElementCount(), 1, 0, 0, 0);
 		
 		gfxContext.TransitionResource(globals::gDisplayPlane[_currentBuffer], D3D12_RESOURCE_STATE_PRESENT);
 		gfxContext.Finish(true);
@@ -180,7 +205,12 @@ namespace ray::renderer_core_api
 
 	void IRenderer::Shutdown()
 	{
+		CommandContext::DestroyAllContexts();
+		globals::gCommandListManager.Shutdown();
+		DescriptorAllocator::DestroyAll();
+
 		_swapChain->Release();
+		_swapChain = nullptr;
 		for (size_t i = 0; i < globals::SWAP_CHAIN_BUFFER_COUNT; ++i)
 			globals::gDisplayPlane[i].Destroy();
 		

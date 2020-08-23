@@ -4,6 +4,9 @@
 
 namespace ray::renderer_core_api
 {
+	class GraphicsPipeline;
+	class RootSignature;
+
 	class Renderer2D
 	{
 	public:
@@ -13,10 +16,14 @@ namespace ray::renderer_core_api
 		static void Begin();
 		static void End();
 
-		static void DrawQuad(FVector<3> pos, FVector<4> color);
+		static void Shutdown();
+
+		static void DrawQuad(const FVector<3>& pos, const FVector<4>& color);
+		static void DrawQuad(const FVector<3>& pos, const FVector<2>& size, const FVector<4>& color);
 
 	private:
-
+		static GraphicsPipeline _2DPipeline;
+		static RootSignature _2DSignature;
 
 	private:
 		static void Flush();

@@ -30,4 +30,14 @@ public:
 	{
 		return this->capacity();
 	}
+
+	Type* GetData() const
+	{
+		return this->data();
+	}
+
+	Type& At(size_t index)
+	{
+		return this->at(index);
+	}
 };

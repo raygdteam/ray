@@ -18,7 +18,7 @@ public:
 	DescriptorAllocator(D3D12_DESCRIPTOR_HEAP_TYPE type) : _currentHeap(nullptr), _type(type) {}
 
 	D3D12_CPU_DESCRIPTOR_HANDLE Allocate(size_t count = 1);
-	void DestroyAll();
+	static void DestroyAll();
 
 private:
 	static const uint32_t sNumDescriptorsPerHeap = 256;
