@@ -1,7 +1,9 @@
-#pragma once
+﻿#pragma once
 #include <core/math/vector.hpp>
+#include <core/debug/assert.hpp>
+
 #include <initializer_list>
-#include "core/debug/assert.hpp"
+#include <intrin.h>
 
 // 'F' stands for 'fast'
 template<u8 M_Row, u8 N_Column>
@@ -128,6 +130,37 @@ struct FMatrix<4, 4>
 		};
 	}
 
+	FVector4 Transform(const FVector4& vec)
+	{
+		/* Любезно подсмотрено у UE4 */
+		const __m128* matrix = reinterpret_cast<const __m128*>(Row);
+		__m128 vector = _mm_load_ps(reinterpret_cast<const float*>(&vec));
+		__m128 tempX, tempY, tempZ, tempW;
+
+		#define MASK(a) ((a) | ((a)<<2) | ((a)<<4) | ((a)<<6))
+		
+		tempX = _mm_shuffle_ps(vector, vector, MASK(0));
+		tempY = _mm_shuffle_ps(vector, vector, MASK(1));
+		tempZ = _mm_shuffle_ps(vector, vector, MASK(2));
+		tempW = _mm_shuffle_ps(vector, vector, MASK(3));
+
+		#undef MASK
+
+		tempX = _mm_mul_ps(tempX, matrix[0]);
+		tempY = _mm_mul_ps(tempY, matrix[0]);
+		tempZ = _mm_mul_ps(tempZ, matrix[0]);
+		tempW = _mm_mul_ps(tempW, matrix[0]);
+
+		tempX = _mm_add_ps(tempX, tempY);
+		tempZ = _mm_add_ps(tempZ, tempW);
+		tempX = _mm_add_ps(tempX, tempZ);
+
+		FVector4 result;
+		_mm_store_ps(reinterpret_cast<float*>(&result), tempX);
+
+		return result;
+	}
+
 	static FMatrix<4, 4> Scale(f32 scalar) 
 	{
 		return FMatrix<4, 4> {
@@ -146,6 +179,12 @@ struct FMatrix<4, 4>
 			{ .x = 0.f,		.y = 0.f,		.z = scale.z,	.w = 0.f },
 			{ .x = 0.f,		.y = 0.f,		.z = 0.f,		.w = 1.f },
 		};
+	}
+
+	FVector4 operator[](u8 idx)
+	{
+		check(idx <= 4);
+		return Row[idx];
 	}
 
 	FMatrix<4, 4> operator+=(const FMatrix<4, 4>& param)
