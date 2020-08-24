@@ -98,7 +98,7 @@
     <ClCompile Include="lib\format.cpp">
       <Filter>lib</Filter>
     </ClCompile>
-    <ClCompile Include="math\common.cpp">
+    <ClCompile Include="math\math_common.cpp">
       <Filter>math</Filter>
     </ClCompile>
   </ItemGroup>

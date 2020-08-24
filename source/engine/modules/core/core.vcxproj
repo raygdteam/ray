@@ -47,7 +47,7 @@
     <ClCompile Include="lib\format.cpp" />
     <ClCompile Include="lib\thread.cpp" />
     <ClCompile Include="log\log.cpp" />
-    <ClCompile Include="math\common.cpp" />
+    <ClCompile Include="math\math_common.cpp" />
     <ClCompile Include="module\module.cpp" />
     <ClCompile Include="object\object_db.cpp" />
     <ClCompile Include="threading\critical_section.cpp" />
