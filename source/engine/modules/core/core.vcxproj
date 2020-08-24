@@ -47,6 +47,7 @@
     <ClCompile Include="lib\format.cpp" />
     <ClCompile Include="lib\thread.cpp" />
     <ClCompile Include="log\log.cpp" />
+    <ClCompile Include="math\common.cpp" />
     <ClCompile Include="module\module.cpp" />
     <ClCompile Include="object\object_db.cpp" />
     <ClCompile Include="threading\critical_section.cpp" />
@@ -138,7 +139,7 @@
       <AdditionalIncludeDirectories>$(SolutionDir)\source\engine\modules;$(SolutionDir)\source\engine\thirdparty</AdditionalIncludeDirectories>
       <TreatWarningAsError>true</TreatWarningAsError>
       <DiagnosticsFormat>Caret</DiagnosticsFormat>
-      <AdditionalOptions>-msse4.2 %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>-msse4.2 -msse %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -157,7 +158,7 @@
       <AdditionalIncludeDirectories>$(SolutionDir)\source\engine\modules;$(SolutionDir)\source\engine\thirdparty</AdditionalIncludeDirectories>
       <TreatWarningAsError>true</TreatWarningAsError>
       <DiagnosticsFormat>Caret</DiagnosticsFormat>
-      <AdditionalOptions>-msse4.2 %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>-msse4.2 -msse %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -182,7 +183,7 @@
       <TreatWarningAsError>true</TreatWarningAsError>
       <DiagnosticsFormat>Caret</DiagnosticsFormat>
       <Optimization>Full</Optimization>
-      <AdditionalOptions>-msse4.2 %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>-msse4.2 -msse %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>

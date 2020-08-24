@@ -1,4 +1,5 @@
 #pragma once
+#include <core/core.hpp>
 
 namespace ray::core::math
 {
@@ -25,4 +26,11 @@ namespace ray::core::math
 	{
 		return (T)((value + alignment - 1) / alignment);
 	}
+
+	f32 Sin(f32 val);
+	f32 Cos(f32 val);
+	f32 Tan(f32 val);
+
+	f32 Asin(f32 val);
+	f32 Acos(f32 val);
 }
