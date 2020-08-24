@@ -94,113 +94,115 @@ namespace ray::renderer_core_api
 			//displayPlane->Release();
 		}
 
-		_currentBuffer = 0;
+		globals::gCurrentBuffer = 0;
 
-		struct Vertex
-		{
-			FVector<3> pos;
-			FVector<4> color;
-		};
-
-		Vertex data[4] =
-		{
-			{ -0.5f,  0.5f, 0.5f, 1.0f, 0.0f, 0.0f, 1.0f },
-			{  0.5f, -0.5f, 0.5f, 0.0f, 1.0f, 0.0f, 1.0f },
-			{ -0.5f, -0.5f, 0.5f, 0.0f, 0.0f, 1.0f, 1.0f },
-			{  0.5f,  0.5f, 0.5f, 1.0f, 0.0f, 1.0f, 1.0f }
-		};
-
-		u32 indices[] =
-		{
-			0, 1, 2,
-			0, 3, 1
-		};
-
-		_vertexBuffer.Create(4, sizeof(Vertex), static_cast<const void*>(data));
-		_indexBuffer.Create(6, sizeof(u32), static_cast<const void*>(indices));
-		_rootSignature.Finalize(D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT);
-		_pipeline.SetRootSignature(_rootSignature);
-
-		ID3DBlob* vertexShader;
-		ID3DBlob* errorBuff;
-		hr = D3DCompileFromFile(L"..\\..\\source\\engine\\modules\\renderer_core\\VertexShader.hlsl", nullptr, nullptr, "main", "vs_5_0",
-			D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION, 0, &vertexShader, &errorBuff);
-		check(hr == S_OK)
-
-		D3D12_SHADER_BYTECODE vertexShaderBytecode = {};
-		vertexShaderBytecode.BytecodeLength = vertexShader->GetBufferSize();
-		vertexShaderBytecode.pShaderBytecode = vertexShader->GetBufferPointer();
-
-		ID3DBlob* pixelShader;
-		hr = D3DCompileFromFile(L"..\\..\\source\\engine\\modules\\renderer_core\\PixelShader.hlsl", nullptr, nullptr, "main", "ps_5_0",
-			D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION, 0, &pixelShader, &errorBuff);
-		check(hr == S_OK)
-
-		D3D12_SHADER_BYTECODE pixelShaderBytecode = {};
-		pixelShaderBytecode.BytecodeLength = pixelShader->GetBufferSize();
-		pixelShaderBytecode.pShaderBytecode = pixelShader->GetBufferPointer();
-
-		_pipeline.SetVertexShader(vertexShaderBytecode);
-		_pipeline.SetPixelShader(pixelShaderBytecode);
-
-		D3D12_INPUT_ELEMENT_DESC inputLayout[] =
-		{
-			{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
-			{ "COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 12, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 }
-		};
-		_pipeline.SetInputLayout(2, inputLayout);
-		_pipeline.SetPrimitiveTopologyType(D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE);
-		_pipeline.SetRenderTargetFormat(DXGI_FORMAT_R8G8B8A8_UNORM, DXGI_FORMAT_UNKNOWN);
-		_pipeline.SetSampleMask(0xffffffff);
-		_pipeline.SetRasterizerState(CD3DX12_RASTERIZER_DESC(D3D12_DEFAULT));
-		_pipeline.SetBlendState(CD3DX12_BLEND_DESC(D3D12_DEFAULT));
-		_pipeline.Finalize();
-
-		_vertexBufferView = _vertexBuffer.VertexBufferView(0);
-		_indexBufferView = _indexBuffer.IndexBufferView(0);
+//#pragma pack(push, 1)
+//		struct Vertex
+//		{
+//			FVector<3> pos;
+//			FVector<4> color;
+//		};
+//#pragma pack(pop)
+//
+//		Vertex data[4] =
+//		{
+//			{ -0.5f,  0.5f, 0.5f, 1.0f, 0.0f, 0.0f, 1.0f },
+//			{  0.5f, -0.5f, 0.5f, 0.0f, 1.0f, 0.0f, 1.0f },
+//			{ -0.5f, -0.5f, 0.5f, 0.0f, 0.0f, 1.0f, 1.0f },
+//			{  0.5f,  0.5f, 0.5f, 1.0f, 0.0f, 1.0f, 1.0f }
+//		};
+//
+//		u32 indices[] =
+//		{
+//			0, 1, 2,
+//			0, 3, 1
+//		};
+//
+//		_vertexBuffer.Create(4, sizeof(Vertex), static_cast<const void*>(data));
+//		_indexBuffer.Create(6, sizeof(u32), static_cast<const void*>(indices));
+//		_rootSignature.Finalize(D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT);
+//		_pipeline.SetRootSignature(_rootSignature);
+//
+//		ID3DBlob* vertexShader;
+//		ID3DBlob* errorBuff;
+//		hr = D3DCompileFromFile(L"..\\..\\source\\engine\\modules\\renderer_core\\VertexShader.hlsl", nullptr, nullptr, "main", "vs_5_0",
+//			D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION, 0, &vertexShader, &errorBuff);
+//		check(hr == S_OK)
+//
+//		D3D12_SHADER_BYTECODE vertexShaderBytecode = {};
+//		vertexShaderBytecode.BytecodeLength = vertexShader->GetBufferSize();
+//		vertexShaderBytecode.pShaderBytecode = vertexShader->GetBufferPointer();
+//
+//		ID3DBlob* pixelShader;
+//		hr = D3DCompileFromFile(L"..\\..\\source\\engine\\modules\\renderer_core\\PixelShader.hlsl", nullptr, nullptr, "main", "ps_5_0",
+//			D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION, 0, &pixelShader, &errorBuff);
+//		check(hr == S_OK)
+//
+//		D3D12_SHADER_BYTECODE pixelShaderBytecode = {};
+//		pixelShaderBytecode.BytecodeLength = pixelShader->GetBufferSize();
+//		pixelShaderBytecode.pShaderBytecode = pixelShader->GetBufferPointer();
+//
+//		_pipeline.SetVertexShader(vertexShaderBytecode);
+//		_pipeline.SetPixelShader(pixelShaderBytecode);
+//
+//		D3D12_INPUT_ELEMENT_DESC inputLayout[] =
+//		{
+//			{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
+//			{ "COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 12, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 }
+//		};
+//		_pipeline.SetInputLayout(2, inputLayout);
+//		_pipeline.SetPrimitiveTopologyType(D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE);
+//		_pipeline.SetRenderTargetFormat(DXGI_FORMAT_R8G8B8A8_UNORM, DXGI_FORMAT_UNKNOWN);
+//		_pipeline.SetSampleMask(0xffffffff);
+//		_pipeline.SetRasterizerState(CD3DX12_RASTERIZER_DESC(D3D12_DEFAULT));
+//		_pipeline.SetBlendState(CD3DX12_BLEND_DESC(D3D12_DEFAULT));
+//		_pipeline.Finalize();
+//
+//		_vertexBufferView = _vertexBuffer.VertexBufferView(0);
+//		_indexBufferView = _indexBuffer.IndexBufferView(0);
 }
 
 	void IRenderer::BeginScene(GraphicsContext& gfxContext)
 	{
-		gfxContext.SetRootSignature(_rootSignature);
+		/*gfxContext.SetRootSignature(_rootSignature);
 		gfxContext.SetScissor(0, 0, 1280, 720);
-		gfxContext.SetViewport(0.f, 0.f, 1280.f, 720.f);
+		gfxContext.SetViewport(0.f, 0.f, 1280.f, 720.f);*/
 		
-		gfxContext.TransitionResource(globals::gDisplayPlane[_currentBuffer], D3D12_RESOURCE_STATE_RENDER_TARGET, true);
-		gfxContext.SetRenderTarget(globals::gDisplayPlane[_currentBuffer].GetRTV());
-		gfxContext.ClearColor(globals::gDisplayPlane[_currentBuffer]);
+		gfxContext.TransitionResource(globals::gDisplayPlane[globals::gCurrentBuffer], D3D12_RESOURCE_STATE_RENDER_TARGET, true);
+		gfxContext.SetRenderTarget(globals::gDisplayPlane[globals::gCurrentBuffer].GetRTV());
+		gfxContext.ClearColor(globals::gDisplayPlane[globals::gCurrentBuffer]);
 		
-		gfxContext.SetPipelineState(_pipeline);
-		gfxContext.SetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+		//gfxContext.SetPipelineState(_pipeline);
+		//gfxContext.SetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
-		struct Vertex
-		{
-			FVector<3> pos;
-			FVector<4> color;
-		};
+		//struct Vertex
+		//{
+		//	FVector<3> pos;
+		//	FVector<4> color;
+		//};
 
-		Vertex data[4] =
-		{
-			{ -0.5f,  0.5f, 0.5f, 1.0f, 0.0f, 0.0f, 1.0f },
-			{  0.5f, -0.5f, 0.5f, 0.0f, 1.0f, 0.0f, 1.0f },
-			{ -0.5f, -0.5f, 0.5f, 0.0f, 0.0f, 1.0f, 1.0f },
-			{  0.5f,  0.5f, 0.5f, 1.0f, 0.0f, 1.0f, 1.0f }
-		};
-		gfxContext.SetDynamicVB(0, 4, sizeof(Vertex), data);
-		//gfxContext.SetVertexBuffer(0, _vertexBufferView);
-		gfxContext.SetIndexBuffer(_indexBufferView);
-		gfxContext.DrawIndexedInstanced(_indexBuffer.GetElementCount(), 1, 0, 0, 0);
+		//Vertex data[4] =
+		//{
+		//	{ -0.5f,  0.5f, 0.5f, 1.0f, 0.0f, 0.0f, 1.0f },
+		//	{  0.5f, -0.5f, 0.5f, 1.0f, 0.0f, 0.0f, 1.0f },
+		//	{ -0.5f, -0.5f, 0.5f, 1.0f, 0.0f, 0.0f, 1.0f },
+		//	{  0.5f,  0.5f, 0.5f, 1.0f, 0.0f, 0.0f, 1.0f }
+		//};
+		//gfxContext.SetDynamicVB(0, 4, sizeof(Vertex), data);
+		////gfxContext.SetVertexBuffer(0, _vertexBufferView);
+		//gfxContext.SetIndexBuffer(_indexBufferView);
+		//gfxContext.DrawIndexedInstanced(_indexBuffer.GetElementCount(), 1, 0, 0, 0);
 		
-		gfxContext.TransitionResource(globals::gDisplayPlane[_currentBuffer], D3D12_RESOURCE_STATE_PRESENT);
-		gfxContext.Finish(true);
-
-		_swapChain->Present(0, 0);
-		_currentBuffer = (_currentBuffer + 1) % globals::SWAP_CHAIN_BUFFER_COUNT;
+		
 	} 
 
 	void IRenderer::EndScene(GraphicsContext& gfxContext)
 	{
-		gfxContext.GetCommandList();
+		gfxContext.TransitionResource(globals::gDisplayPlane[globals::gCurrentBuffer], D3D12_RESOURCE_STATE_PRESENT);
+		gfxContext.Finish(true);
+
+		_swapChain->Present(0, 0);
+		globals::gCurrentBuffer = (globals::gCurrentBuffer + 1) % globals::SWAP_CHAIN_BUFFER_COUNT;
 	}
 
 	void IRenderer::Shutdown()

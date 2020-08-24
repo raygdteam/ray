@@ -2,16 +2,20 @@
 #include "ray_renderer_core_class_helper.hpp"
 #include <engine/state/state.hpp>
 #include <core/lib/array.hpp>
+#include <core/math/matrix.hpp>
 #include "resources/gpu_buffer.hpp"
 #include "pipeline_state.hpp"
 #include "root_signature.hpp"
 #include <d3dcompiler.h>
 #include "d3dx12.h"
 #include "command_context.hpp"
-#include <DirectXMath.h>
+#include "resources/buffer_manager.hpp"
 
 namespace ray::renderer_core_api
 {
+	RootSignature Renderer2D::_2DSignature;
+	GraphicsPipeline Renderer2D::_2DPipeline;
+
 	struct QuadVertex
 	{
 		FVector<3> Position;
@@ -48,9 +52,9 @@ namespace ray::renderer_core_api
 			quadIndices[i + 1] = offset + 1;
 			quadIndices[i + 2] = offset + 2;
 
-			quadIndices[i + 3] = offset + 2;
+			quadIndices[i + 3] = offset + 0;
 			quadIndices[i + 4] = offset + 3;
-			quadIndices[i + 5] = offset + 0;
+			quadIndices[i + 5] = offset + 1;
 
 			offset += 4;
 		}
@@ -61,10 +65,10 @@ namespace ray::renderer_core_api
 
 		sData.QuadVertexBufferBase = new QuadVertex[sData.MAX_QUADS];
 
-		sData.QuadVertexPositions[0] = { -0.5f, -0.5f, 0.0f };
-		sData.QuadVertexPositions[1] = { 0.5f, -0.5f, 0.0f };
-		sData.QuadVertexPositions[2] = { 0.5f,  0.5f, 0.0f };
-		sData.QuadVertexPositions[3] = { -0.5f,  0.5f, 0.0f };
+		sData.QuadVertexPositions[0] = { -0.5f,  0.5f, 0.5f };
+		sData.QuadVertexPositions[1] = { 0.5f, -0.5f, 0.5f };
+		sData.QuadVertexPositions[2] = { -0.5f, -0.5f, 0.5f };
+		sData.QuadVertexPositions[3] = { 0.5f,  0.5f, 0.5f };
 
 		_2DSignature.Finalize(D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT);
 		_2DPipeline.SetRootSignature(_2DSignature);
@@ -111,27 +115,40 @@ namespace ray::renderer_core_api
 		sData.QuadVertexBufferPtr = sData.QuadVertexBufferBase;
 	}
 
-	void Renderer2D::End()
+	void Renderer2D::End(GraphicsContext& gfxContext)
 	{
-		Flush();
+		Flush(gfxContext);
 	}
 
-	void Renderer2D::DrawQuad(const FVector<3>& pos, const FVector<2>& size, const FVector<4>& color)
+	void Renderer2D::DrawQuad(const FVector<3>& pos, const FVector<2>& size, const FVector<4>& color, GraphicsContext& gfxContext)
 	{
-		(void)size;
-		DrawQuad(pos, color);
+		auto mat = FMatrix4x4::Scale(FVector<3>{ size.x, size.y, 0.f });
+		auto position = mat.Transform(FVector<4>{ pos.x, pos.y, pos.z, 1.f });
+
+		DrawQuad(FVector<3>{ position.x, position.y, position.z }, color, gfxContext);
 	}
 
-	void Renderer2D::DrawQuad(const FVector<3>& pos, const FVector<4>& color)
+	void Renderer2D::DrawQuad(const FVector<3>& pos, const FVector<4>& color, GraphicsContext& gfxContext)
 	{
-		(void)pos;
-		(void)color;
+		constexpr size_t quadVertexCount = 4;
+
+		if (sData.QuadIndexCount >= sData.MAX_INDICES)
+			FlushAndReset(gfxContext);
+
+		for (size_t i = 0; i < quadVertexCount; i++)
+		{
+			auto vertexPos = sData.QuadVertexPositions[i];
+			FVector<3> newPosition = { pos.x * vertexPos.x, pos.y * vertexPos.y, pos.z * vertexPos.z };
+			sData.QuadVertexBufferPtr->Position = newPosition;
+			sData.QuadVertexBufferPtr->Color = color;
+			sData.QuadVertexBufferPtr++;
+		}
+
+		sData.QuadIndexCount += 6;
 	}
 
-	void Renderer2D::Flush()
+	void Renderer2D::Flush(GraphicsContext& gfxContext)
 	{
-		GraphicsContext& gfxContext = GraphicsContext::Begin();
-
 		// assuming that RTV is already transferred to D3D12_RESOURCE_STATE_RENDER_TARGET
 
 		gfxContext.SetRootSignature(_2DSignature);
@@ -144,14 +161,14 @@ namespace ray::renderer_core_api
 		size_t bufferSize = sData.QuadVertexBufferPtr - sData.QuadVertexBufferBase;
 		gfxContext.SetDynamicVB(0, bufferSize, sizeof(QuadVertex), sData.QuadVertexBufferBase);
 		gfxContext.SetIndexBuffer(sData.IndexBufferView);
-		gfxContext.DrawIndexedInstanced(sData.IndexBuffer.GetElementCount(), 1, 0, 0, 0);
+		gfxContext.DrawIndexedInstanced(sData.QuadIndexCount, 1, 0, 0, 0);
 
-		gfxContext.Finish();
+		gfxContext.Flush();
 	}
 
-	void Renderer2D::FlushAndReset()
+	void Renderer2D::FlushAndReset(GraphicsContext& gfxContext)
 	{
-		Flush();
+		Flush(gfxContext);
 		Begin();
 	}
 

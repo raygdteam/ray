@@ -3,6 +3,7 @@
 namespace ray::renderer_core_api::globals
 {
 	const u32 SWAP_CHAIN_BUFFER_COUNT = 3;
+	u32 gCurrentBuffer = 0;
 
 	resources::ColorBuffer gDisplayPlane[SWAP_CHAIN_BUFFER_COUNT] = 
 	{

@@ -187,7 +187,7 @@ struct FVector<4>
 
 		return product;
 	}
-} __attribute__((aligned(16)));
+} /*__attribute__((aligned(16)))*/;
 
 using FVector1 = FVector<1>;
 using FVector2 = FVector<2>;

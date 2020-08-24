@@ -13,6 +13,7 @@
 #include "core/debug/assert.hpp"
 
 #include <renderer_core/command_context.hpp>
+#include <renderer_core/renderer_2d.hpp>
 
 #undef CreateWindow
 
@@ -65,6 +66,7 @@ void RayEngine::Initialize(IEngineLoop* engineLoop)
 #ifndef _TEMP_NO_RENDERER_CORE_API_
 	_renderer = new IRenderer;
 	_renderer->Initialize(window);
+	Renderer2D::Initialize();
 #endif
 
 	eng->Log("[4/4] Finishing...");
@@ -98,6 +100,13 @@ void RayEngine::Tick()
 	GraphicsContext& gfxContext = GraphicsContext::Begin();
 
 	_renderer->BeginScene(gfxContext);
+
+	Renderer2D::Begin();
+
+	Renderer2D::DrawQuad({ 0.7f, 0.7f, 0.f }, { 1.f, 0.f, 1.f, 0.f }, gfxContext);
+	Renderer2D::DrawQuad({ 0.5f, 0.5f, 0.f }, { 0.f, 1.f, 1.f, 0.f }, gfxContext);
+
+	Renderer2D::End(gfxContext);
 
 	// renderer commands ...
 	_renderer->EndScene(gfxContext);

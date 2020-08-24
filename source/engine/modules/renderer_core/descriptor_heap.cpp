@@ -26,7 +26,7 @@ namespace ray::renderer_core_api
         return ret;
     }
 
-    static void DescriptorAllocator::DestroyAll()
+    void DescriptorAllocator::DestroyAll()
     {
         sDescriptorHeapPool.clear();
     }

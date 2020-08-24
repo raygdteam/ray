@@ -2,32 +2,39 @@
 
 #include <core/math/vector.hpp>
 
+#ifdef RAY_BUILD_RENDERER_CORE
+#define RAY_RENDERERCORE_API __declspec(dllexport)
+#else
+#define RAY_RENDERERCORE_API RAY_DLLIMPORT
+#endif
+
 namespace ray::renderer_core_api
 {
 	class GraphicsPipeline;
 	class RootSignature;
+	class GraphicsContext;
 
-	class Renderer2D
+	class RAY_RENDERERCORE_API Renderer2D
 	{
 	public:
 		~Renderer2D();
 
 		static void Initialize();
 		static void Begin();
-		static void End();
+		static void End(GraphicsContext& gfxContext);
 
 		static void Shutdown();
 
-		static void DrawQuad(const FVector<3>& pos, const FVector<4>& color);
-		static void DrawQuad(const FVector<3>& pos, const FVector<2>& size, const FVector<4>& color);
+		static void DrawQuad(const FVector<3>& pos, const FVector<4>& color, GraphicsContext& gfxContext);
+		static void DrawQuad(const FVector<3>& pos, const FVector<2>& size, const FVector<4>& color, GraphicsContext& gfxContext);
 
 	private:
 		static GraphicsPipeline _2DPipeline;
 		static RootSignature _2DSignature;
 
 	private:
-		static void Flush();
-		static void FlushAndReset();
+		static void Flush(GraphicsContext& gfxContext);
+		static void FlushAndReset(GraphicsContext& gfxContext);
 
 	};
 
