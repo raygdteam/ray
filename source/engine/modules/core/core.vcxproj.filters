@@ -68,6 +68,9 @@
     <ClInclude Include="math\matrix.hpp">
       <Filter>math</Filter>
     </ClInclude>
+    <ClInclude Include="lib\delegate.hpp">
+      <Filter>lib</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="core_entry_point.cpp" />
