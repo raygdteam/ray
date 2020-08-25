@@ -88,7 +88,7 @@ namespace ray::renderer_core_api
 			D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION, 0, &pixelShader, &errorBuff);
 		check(hr == S_OK)
 
-			D3D12_SHADER_BYTECODE pixelShaderBytecode = {};
+		D3D12_SHADER_BYTECODE pixelShaderBytecode = {};
 		pixelShaderBytecode.BytecodeLength = pixelShader->GetBufferSize();
 		pixelShaderBytecode.pShaderBytecode = pixelShader->GetBufferPointer();
 
@@ -138,7 +138,10 @@ namespace ray::renderer_core_api
 		for (size_t i = 0; i < quadVertexCount; i++)
 		{
 			auto vertexPos = sData.QuadVertexPositions[i];
-			FVector<3> newPosition = { pos.x * vertexPos.x, pos.y * vertexPos.y, pos.z * vertexPos.z };
+			FVector<3> newPosition = pos + vertexPos;
+			FVector<3> newPosition1 = { pos.x + vertexPos.x, pos.y + vertexPos.y, pos.z + vertexPos.z };
+			ray_assert(newPosition.x == newPosition1.x && newPosition.y == newPosition1.y && newPosition.z == newPosition1.z, "catastropic failure: instruction unclear: planet annihilated");
+			
 			sData.QuadVertexBufferPtr->Position = newPosition;
 			sData.QuadVertexBufferPtr->Color = color;
 			sData.QuadVertexBufferPtr++;

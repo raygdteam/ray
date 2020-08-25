@@ -77,6 +77,38 @@ void RayEngine::Initialize(IEngineLoop* engineLoop)
 #endif
 }
 
+struct PingPongFloat
+{
+	float Data = 0.0f;
+	float Step = 0.0001f;
+	float From = -1.0f;
+	float To = 1.0f;
+	bool Forward = true;
+	
+
+	float DoStep()
+	{
+		if (Forward)
+		{
+			if (Data >= To)
+			{
+				Forward = !Forward;
+				return Data;
+			}
+			Data += Step;
+			return Data;
+		}
+		
+		if (Data <= From)
+		{
+			Forward = !Forward;
+			return Data;
+		}
+		Data -= Step;
+		return Data;
+	}
+};
+
 void RayEngine::Tick()
 {
 	static f64 delta = 0;
@@ -101,10 +133,19 @@ void RayEngine::Tick()
 
 	_renderer->BeginScene(gfxContext);
 
+	static PingPongFloat flt1;
+	static PingPongFloat flt2;
+
+#pragma clang diagnostic ignored "-Wreorder-init-list"
+	static PingPongFloat clr1 {.From = 0.0f, .Step = 0.0025f };
+	static PingPongFloat clr2 { .From = 0.0f, .Step = 0.0025f };
+	static PingPongFloat clr3 { .From = 0.0f, .Step = 0.0025f };
+
 	Renderer2D::Begin();
 
-	Renderer2D::DrawQuad({ 0.7f, 0.7f, 0.f }, { 1.f, 0.f, 1.f, 0.f }, gfxContext);
-	Renderer2D::DrawQuad({ 0.5f, 0.5f, 0.f }, { 0.f, 1.f, 1.f, 0.f }, gfxContext);
+	Renderer2D::DrawQuad({ -flt1.DoStep(), flt2.DoStep(), 0.f }, { clr1.DoStep(), clr2.DoStep(), clr2.DoStep(), 0.f }, gfxContext);
+	Renderer2D::DrawQuad({ flt2.DoStep(), -flt2.DoStep(), 0.f }, { clr2.DoStep(), clr3.DoStep(), clr1.DoStep(), 0.f }, gfxContext);
+	// Renderer2D::DrawQuad({ 1.f, 1.f, 0.f }, { 1.f, 0.f, 1.f, 0.f }, gfxContext);
 
 	Renderer2D::End(gfxContext);
 

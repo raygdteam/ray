@@ -66,11 +66,11 @@ struct FVector<2>
 	 * Vector addition.
 	 * https://mathworld.wolfram.com/VectorAddition.html
 	 */
-	FVector<2> CCFASTCALL Add(const FVector<2>& vec)
+	FVector<2> CCFASTCALL Add(const FVector<2>& vec) const
 	{
 		return FVector<2> {
 			.x = this->x + vec.x,
-			.y = this->x + vec.y,
+			.y = this->y + vec.y,
 		};
 	}
 
@@ -86,6 +86,16 @@ struct FVector<2>
 		product += this->y * vec.y;
 
 		return product;
+	}
+
+	FVector<2> operator+(const FVector<2>& param) const
+	{
+		return Add(param);
+	}
+
+	FVector<2> operator+(FVector<2>& param) const
+	{
+		return Add(param);
 	}
 };
 
@@ -112,11 +122,11 @@ struct FVector<3>
 	 * Vector addition.
 	 * https://mathworld.wolfram.com/VectorAddition.html
 	 */
-	FVector<3> CCFASTCALL Add(const FVector<3>& vec)
+	FVector<3> CCFASTCALL Add(const FVector<3>& vec) const
 	{
 		return FVector<3> {
 			.x = this->x + vec.x,
-			.y = this->x + vec.y,
+			.y = this->y + vec.y,
 			.z = this->z + vec.z
 		};
 	}
@@ -134,6 +144,16 @@ struct FVector<3>
 		product += this->z * vec.z;
 
 		return product;
+	}
+
+	FVector<3> operator+(const FVector<3>& param) const
+	{
+		return Add(param);
+	}
+
+	FVector<3> operator+(FVector<3>& param) const 
+	{
+		return Add(param);
 	}
 };
 
@@ -162,11 +182,11 @@ struct FVector<4>
 	 * Vector addition.
 	 * https://mathworld.wolfram.com/VectorAddition.html
 	 */
-	FVector<4> CCFASTCALL Add(const FVector<4>& vec)
+	FVector<4> CCFASTCALL Add(const FVector<4>& vec) const
 	{
 		return FVector<4> {
 			.x = this->x + vec.x,
-			.y = this->x + vec.y,
+			.y = this->y + vec.y,
 			.z = this->z + vec.z,
 			.w = this->w + vec.w,
 		};
@@ -187,7 +207,17 @@ struct FVector<4>
 
 		return product;
 	}
-} /*__attribute__((aligned(16)))*/;
+
+	FVector<4> operator+(const FVector<4>& param) const
+	{
+		return Add(param);
+	}
+
+	FVector<4> operator+(FVector<4>& param) const
+	{
+		return Add(param);
+	}
+};
 
 using FVector1 = FVector<1>;
 using FVector2 = FVector<2>;

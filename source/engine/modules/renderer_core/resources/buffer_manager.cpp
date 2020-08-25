@@ -7,9 +7,9 @@ namespace ray::renderer_core_api::globals
 
 	resources::ColorBuffer gDisplayPlane[SWAP_CHAIN_BUFFER_COUNT] = 
 	{
-		resources::ColorBuffer(1.f, 0.f, 0.f, 1.f),
 		resources::ColorBuffer(1.f, 1.f, 0.f, 1.f),
-		resources::ColorBuffer(1.f, 0.f, 1.f, 1.f)
+		resources::ColorBuffer(1.f, 1.f, 0.f, 1.f),
+		resources::ColorBuffer(1.f, 1.f, 0.f, 1.f)
 	};
 	resources::ColorBuffer gSceneColorBuffer = resources::ColorBuffer(1.f, 1.f, 1.f, 1.f);
 }
