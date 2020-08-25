@@ -33,15 +33,22 @@ public:
 };
 
 void PlatformWindow::Initialize()
-{
-	WNDCLASS wc = {};
-	
-	wc.style = CS_HREDRAW | CS_VREDRAW | CS_OWNDC;
-	wc.hInstance = GetModuleHandleA(nullptr);
-	wc.lpszClassName = "RAY_ENGINE";
+{	
+	WNDCLASSEXA wc;
+	wc.cbSize = sizeof(WNDCLASSEX);
+	wc.style = CS_HREDRAW | CS_VREDRAW;
 	wc.lpfnWndProc = WndProc;
+	wc.cbClsExtra = 0;
+	wc.cbWndExtra = 0;
+	wc.hInstance = GetModuleHandle(nullptr);
+	wc.hIcon = LoadIcon(GetModuleHandle(nullptr), IDI_APPLICATION);
+	wc.hCursor = LoadCursor(nullptr, IDC_ARROW);
+	wc.hbrBackground = (HBRUSH)(COLOR_WINDOW + 1);
+	wc.lpszMenuName = nullptr;
+	wc.lpszClassName = "RAY_ENGINE";
+	wc.hIconSm = LoadIcon(GetModuleHandle(nullptr), IDI_APPLICATION);
 
-	RegisterClass(&wc);
+	RegisterClassExA(&wc);
 }
 
 bool PlatformWindow::CreateWindow(const char* name)
@@ -122,5 +129,5 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 	default:
 		return DefWindowProc(hwnd, msg, wParam, lParam);
 	}
-	return 0;
+	return DefWindowProc(hwnd, msg, wParam, lParam);
 }
