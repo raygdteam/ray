@@ -46,6 +46,7 @@ namespace ray::renderer_core_api
 		void SetBlendState(const D3D12_BLEND_DESC& blendDesc);
 		void SetRasterizerState(const D3D12_RASTERIZER_DESC& rasterizerDesc);
 		void SetDepthStencilState(const D3D12_DEPTH_STENCIL_DESC& depthStencilDesc);
+		void SetDSVFormat(DXGI_FORMAT format);
 		void SetSampleMask(u32 sampleMask);
 		void SetPrimitiveTopologyType(D3D12_PRIMITIVE_TOPOLOGY_TYPE topologyType);
 		void SetRenderTargetFormat(DXGI_FORMAT rtvFormat, DXGI_FORMAT dsvFormat, u32 msaaCount = 1, u32 msaaQuality = 0) { SetRenderTargetFormats(1, &rtvFormat, dsvFormat, msaaCount, msaaQuality); }

@@ -6,6 +6,7 @@
 #include <core/threading/critical_section.hpp>
 #include <d3d12.h>
 #include <core/core.hpp>
+#include "resources/depth_buffer.hpp"
 
 #ifdef RAY_BUILD_RENDERER_CORE
 #define RAY_RENDERERCORE_API __declspec(dllexport)
@@ -189,7 +190,7 @@ namespace ray::renderer_core_api
 		void ClearColor(resources::ColorBuffer& target);
 		void ClearDepth() {}
 		void ClearStencil() {}
-		void ClearDepthAndStencil() {}
+		void ClearDepthAndStencil(resources::DepthBuffer& target);
 
 		void SetRootSignature(const RootSignature& rootSig)
 		{

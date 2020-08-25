@@ -412,6 +412,11 @@ namespace ray::renderer_core_api
 		_commandList->ClearRenderTargetView(target.GetRTV(), color, 0, nullptr);
 	}
 
+	void GraphicsContext::ClearDepthAndStencil(resources::DepthBuffer& target)
+	{
+		_commandList->ClearDepthStencilView(target.GetDSV(), D3D12_CLEAR_FLAG_DEPTH, 1.f, 0, 0, nullptr);
+	}
+
 	void GraphicsContext::SetRenderTargets(u32 numRTV, D3D12_CPU_DESCRIPTOR_HANDLE* rtv)
 	{
 		_commandList->OMSetRenderTargets(numRTV, rtv, static_cast<BOOL>(false), nullptr);

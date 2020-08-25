@@ -29,6 +29,11 @@ namespace ray::renderer_core_api
 		_pipelineDesc.DepthStencilState = depthStencilDesc;
 	}
 
+	void GraphicsPipeline::SetDSVFormat(DXGI_FORMAT format)
+	{
+		_pipelineDesc.DSVFormat = format;
+	}
+
 	void GraphicsPipeline::SetSampleMask(u32 sampleMask)
 	{
 		_pipelineDesc.SampleMask = sampleMask;

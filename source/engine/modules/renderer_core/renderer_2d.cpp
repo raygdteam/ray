@@ -106,6 +106,11 @@ namespace ray::renderer_core_api
 		_2DPipeline.SetSampleMask(0xffffffff);
 		_2DPipeline.SetRasterizerState(CD3DX12_RASTERIZER_DESC(D3D12_DEFAULT));
 		_2DPipeline.SetBlendState(CD3DX12_BLEND_DESC(D3D12_DEFAULT));
+
+		globals::gDepthBuffer.Create(1280, 720, DXGI_FORMAT_D32_FLOAT);
+		_2DPipeline.SetDepthStencilState(CD3DX12_DEPTH_STENCIL_DESC(D3D12_DEFAULT));
+		_2DPipeline.SetDSVFormat(globals::gDepthBuffer.GetFormat());
+		
 		_2DPipeline.Finalize();
 	}
 
@@ -139,8 +144,8 @@ namespace ray::renderer_core_api
 		{
 			auto vertexPos = sData.QuadVertexPositions[i];
 			FVector<3> newPosition = pos + vertexPos;
-			FVector<3> newPosition1 = { pos.x + vertexPos.x, pos.y + vertexPos.y, pos.z + vertexPos.z };
-			ray_assert(newPosition.x == newPosition1.x && newPosition.y == newPosition1.y && newPosition.z == newPosition1.z, "catastropic failure: instruction unclear: planet annihilated");
+
+			newPosition.z = pos.z;
 			
 			sData.QuadVertexBufferPtr->Position = newPosition;
 			sData.QuadVertexBufferPtr->Color = color;

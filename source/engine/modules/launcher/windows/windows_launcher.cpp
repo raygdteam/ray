@@ -95,6 +95,12 @@ int __stdcall WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 {
 	u32 returnCode = 0;
 
+	/* If we are debugging then we don't need the SEH */
+	if (IsDebuggerPresent())
+	{
+		return GuardedMain();
+	}
+	
 	__try
 	{
 		returnCode = GuardedMain();

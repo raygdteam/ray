@@ -169,8 +169,10 @@ namespace ray::renderer_core_api
 		gfxContext.SetViewport(0.f, 0.f, 1280.f, 720.f);*/
 		
 		gfxContext.TransitionResource(globals::gDisplayPlane[globals::gCurrentBuffer], D3D12_RESOURCE_STATE_RENDER_TARGET, true);
-		gfxContext.SetRenderTarget(globals::gDisplayPlane[globals::gCurrentBuffer].GetRTV());
+		gfxContext.TransitionResource(globals::gDepthBuffer, D3D12_RESOURCE_STATE_DEPTH_WRITE, true);
+		gfxContext.SetRenderTarget(globals::gDisplayPlane[globals::gCurrentBuffer].GetRTV(), globals::gDepthBuffer.GetDSV());
 		gfxContext.ClearColor(globals::gDisplayPlane[globals::gCurrentBuffer]);
+		gfxContext.ClearDepthAndStencil(globals::gDepthBuffer);
 		
 		//gfxContext.SetPipelineState(_pipeline);
 		//gfxContext.SetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
@@ -198,6 +200,7 @@ namespace ray::renderer_core_api
 
 	void IRenderer::EndScene(GraphicsContext& gfxContext)
 	{
+		gfxContext.TransitionResource(globals::gDepthBuffer, D3D12_RESOURCE_STATE_DEPTH_READ, true);
 		gfxContext.TransitionResource(globals::gDisplayPlane[globals::gCurrentBuffer], D3D12_RESOURCE_STATE_PRESENT);
 		gfxContext.Finish(true);
 
