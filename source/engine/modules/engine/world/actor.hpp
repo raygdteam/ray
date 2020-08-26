@@ -18,13 +18,21 @@ class RAY_ENGINE_API Actor : public RayObject
 	RAYOBJECT_BODY(Actor, RayObject);
 	
 	friend class Level;
+	friend class World;
 	
 	Array<IComponent*> _components;
+	
 protected:
 	virtual void BeginPlay() = 0;
 	virtual void Tick(f64 delta) = 0;
 	virtual void OnDestroy() = 0;
 
+	virtual void MoveTo(FVector2 pos)
+	{
+		GetTransform()->Position = pos;
+	}
+	
+protected:
 	// I know. Terrible.
 	// WARNING: SLOW!
 	template <class Component>
@@ -38,7 +46,6 @@ protected:
 
 		return nullptr;
 	}
-
 public:
 	Actor();
 	virtual ~Actor();

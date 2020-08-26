@@ -127,6 +127,12 @@ void RayEngine::Tick()
 	Renderer2D::DrawQuad({ -flt1.DoStep(), flt2.DoStep(), depth ? 0.1f : 0.2f }, { clr1.DoStep(), clr2.DoStep(), clr2.DoStep(), 0.f }, gfxContext);
 	Renderer2D::DrawQuad({ flt2.DoStep(), -flt2.DoStep(), depth ? 0.2f : 0.1f }, { clr2.DoStep(), clr3.DoStep(), clr1.DoStep(), 0.f }, gfxContext);
 
+	Renderer2D::DrawQuad({ flt1.DoStep(), flt2.DoStep(), depth ? 0.1f : 0.2f }, { clr1.DoStep(), clr2.DoStep(), clr2.DoStep(), 0.f }, gfxContext);
+	Renderer2D::DrawQuad({ -flt2.DoStep(), flt2.DoStep(), depth ? 0.2f : 0.1f }, { clr2.DoStep(), clr3.DoStep(), clr1.DoStep(), 0.f }, gfxContext);
+
+	Renderer2D::DrawQuad({ flt1.DoStep(), -flt2.DoStep(), depth ? 0.1f : 0.2f }, { clr1.DoStep(), clr2.DoStep(), clr2.DoStep(), 0.f }, gfxContext);
+	Renderer2D::DrawQuad({ -flt2.DoStep(), flt2.DoStep(), depth ? 0.2f : 0.1f }, { clr2.DoStep(), clr3.DoStep(), clr1.DoStep(), 0.f }, gfxContext);
+
 	// Renderer2D::DrawQuad({ -flt1.DoStep(), flt2.DoStep(), 0.1f }, { 1.f, 0.f, 0.f, 0.f }, gfxContext);// red, closer to camera
 	// Renderer2D::DrawQuad({ flt2.DoStep(), -flt2.DoStep(), 0.5f }, { 0.f, 1.f, 0.f, 0.f }, gfxContext); // green, futher from camera
 

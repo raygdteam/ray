@@ -38,6 +38,12 @@
     <ClInclude Include="resources\resource_type.hpp">
       <Filter>resources</Filter>
     </ClInclude>
+    <ClInclude Include="world\components\camera_component.hpp">
+      <Filter>world\components</Filter>
+    </ClInclude>
+    <ClInclude Include="world\actors\camera_actor.hpp">
+      <Filter>world\actors</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="engine">
@@ -57,6 +63,9 @@
     </Filter>
     <Filter Include="resources">
       <UniqueIdentifier>{b15360a4-c703-48b0-ae43-ce46a48b822a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="world\actors">
+      <UniqueIdentifier>{000ec2e6-3609-4776-bb22-05bc4b07f08d}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -80,6 +89,12 @@
       <Filter>world</Filter>
     </ClCompile>
     <ClCompile Include="world\components\transform.cpp">
+      <Filter>world\components</Filter>
+    </ClCompile>
+    <ClCompile Include="world\components\component_base.cpp">
+      <Filter>world\components</Filter>
+    </ClCompile>
+    <ClCompile Include="world\components\camera_component.cpp">
       <Filter>world\components</Filter>
     </ClCompile>
   </ItemGroup>

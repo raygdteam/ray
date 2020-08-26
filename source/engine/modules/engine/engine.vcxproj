@@ -153,6 +153,8 @@
     <ClInclude Include="resources\resource_type.hpp" />
     <ClInclude Include="state\state.hpp" />
     <ClInclude Include="world\actor.hpp" />
+    <ClInclude Include="world\actors\camera_actor.hpp" />
+    <ClInclude Include="world\components\camera_component.hpp" />
     <ClInclude Include="world\components\component_base.hpp" />
     <ClInclude Include="world\components\transform.hpp" />
     <ClInclude Include="world\level.hpp" />
@@ -163,6 +165,8 @@
     <ClCompile Include="module_engine.cpp" />
     <ClCompile Include="state\state.cpp" />
     <ClCompile Include="world\actor.cpp" />
+    <ClCompile Include="world\components\camera_component.cpp" />
+    <ClCompile Include="world\components\component_base.cpp" />
     <ClCompile Include="world\components\transform.cpp" />
     <ClCompile Include="world\level.cpp" />
     <ClCompile Include="world\level_test.cpp" />
