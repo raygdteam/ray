@@ -1,12 +1,6 @@
 #pragma once
-
-// #define _TEMP_NO_RENDERER_CORE_API_
-
-#include "engine/engine/engine_def.hpp"
-
-#ifndef _TEMP_NO_RENDERER_CORE_API_
+#include <engine/engine/engine_def.hpp>
 #include <renderer_core/renderer.hpp>
-#endif
 
 // #include <renderer_core/renderer_commands.hpp>
 
@@ -46,10 +40,8 @@ struct IEngine
 class RAY_ENGINE_API RayEngine : public IEngine
 {
 	IEngineLoop* _engineLoop;
-#ifndef _TEMP_NO_RENDERER_CORE_API_
 	void* _window = nullptr;
 	IRenderer* _renderer = nullptr;
-#endif
 public:
 	RayEngine();
 	~RayEngine();
