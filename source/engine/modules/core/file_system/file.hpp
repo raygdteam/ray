@@ -42,13 +42,13 @@ public:
     virtual u64 Tell() = 0;
 
 	// NOTE: you must allocate the buffer.
-    virtual u64 Read(void* buffer, u64 size) = 0;
+    virtual u64 Read(u8* buffer, u64 size) = 0;
     virtual u64 Write(void* buffer, u64 size) = 0;
 
     template<typename T>
     bool Read(T& value)
     {
-        return (Read(&value, sizeof(value)) == sizeof(value));
+        return (Read((u8*)&value, sizeof(value)) == sizeof(value));
     }
 
     template<typename T>

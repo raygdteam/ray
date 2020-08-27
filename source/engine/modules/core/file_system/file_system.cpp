@@ -59,9 +59,9 @@ public:
 		return ftell(_file);
 	}
 	
-	u64 Read(void* buffer, u64 size) override
+	u64 Read(u8* buffer, u64 size) override
 	{
-		return fread(buffer, size, 1, _file);
+		return fread(buffer, 1, size, _file);
 	}
 	
 	u64 Write(void* buffer, u64 size) override
@@ -86,6 +86,9 @@ IFile* FileSystem::OpenFile(pcstr name, FileMode mode)
 		break;
 	case Append:
 		mode_ = "a";
+		break;
+	case ReadBinary:
+		mode_ = "rb";
 		break;
 	default:
 		// todo: unreachable code

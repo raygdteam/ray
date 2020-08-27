@@ -8,6 +8,7 @@
 #include <core/file_system/file_system.hpp>
 #include <core/debug/debug.hpp>
 
+#include <engine/resources/resource_manager.hpp>
 
 namespace ray::launcher
 {
@@ -21,6 +22,7 @@ void EngineLoop::PreInitialize()
 	state->ModuleManager = new ModuleManager();
 	state->FileSystem = new FileSystem();
 	state->Debug = new Debug();
+	state->ResourceManager = new ResourceManager();
 
 	/* 2. Load the engine module. This will register the objects we need. */
 	auto res = state->ModuleManager->LoadModule("engine");

@@ -71,6 +71,12 @@
     <ClInclude Include="lib\delegate.hpp">
       <Filter>lib</Filter>
     </ClInclude>
+    <ClInclude Include="lib\string.hpp">
+      <Filter>lib</Filter>
+    </ClInclude>
+    <ClInclude Include="object\file_archive.hpp">
+      <Filter>object</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="core_entry_point.cpp" />

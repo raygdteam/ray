@@ -1,7 +1,40 @@
 #pragma once
-#include <engine/engine/engine_def.hpp>
+#include <core/object/object.hpp>
+#include <core/math/vector.hpp>
 
-class RAY_ENGINE_API IResource
+#include <engine/engine/engine_def.hpp>
+#include <engine/resources/resource_type.hpp>
+
+class RAY_ENGINE_API IRResource : public RayObject
 {
+	RAYOBJECT_BODY(IRResource, RayObject);
+
+	friend class ResourceManager;
+protected:
+	virtual bool LoadFrom(IFile* path) = 0;
+public:
+	virtual ResourceType GetResourceType() const noexcept = 0;
 };
 
+class RTexture final : public IRResource
+{
+	RAYOBJECT_BODY(RTexture, IRResource);
+	
+	Array<FVector4> _data;
+	FVector2 _dimensions;
+	
+	friend class ResourceManager;
+
+protected:
+	RTexture();
+	bool LoadFrom(IFile* path) override;
+	
+public:
+	ResourceType GetResourceType() const noexcept override;
+	
+	const Array<FVector4>& GetData() const;
+	const FVector2& GetDimensions() const;
+
+	void Serialize(Archive&) override;
+	void Deserialize(Archive&) override;
+};

@@ -151,21 +151,6 @@ struct ActorBundleData
 	// other components? refl? manual serialization? constant size? alignment?
 };
 
-struct FileArchive : public Archive
-{
-	IFile* file = nullptr;
-	
-	void Read(void* buffer, u64 size) override
-	{
-		file->Read(buffer, size);
-	}
-	
-	void Write(void* buffer, u64 size) override
-	{
-		file->Write(buffer, size);
-	}
-};
-
 RAYOBJECT_DESCRIPTION_BEGIN(TestActor1)
 	RAYOBJECT_DESCRIPTION_CREATEABLE();
 	RAYOBJECT_DESCRIPTION_NAME("engine://world/level_test/TestActor1");

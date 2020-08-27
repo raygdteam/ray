@@ -151,6 +151,7 @@
     <ClInclude Include="resources\resource.hpp" />
     <ClInclude Include="resources\resource_manager.hpp" />
     <ClInclude Include="resources\resource_type.hpp" />
+    <ClInclude Include="resources\stb_image.h" />
     <ClInclude Include="state\state.hpp" />
     <ClInclude Include="world\actor.hpp" />
     <ClInclude Include="world\actors\camera_actor.hpp" />
@@ -163,8 +164,10 @@
   <ItemGroup>
     <ClCompile Include="engine\engine.cpp" />
     <ClCompile Include="module_engine.cpp" />
+    <ClCompile Include="resources\resource_manager.cpp" />
     <ClCompile Include="state\state.cpp" />
     <ClCompile Include="world\actor.cpp" />
+    <ClCompile Include="world\actors\camera_actor.cpp" />
     <ClCompile Include="world\components\camera_component.cpp" />
     <ClCompile Include="world\components\component_base.cpp" />
     <ClCompile Include="world\components\transform.cpp" />

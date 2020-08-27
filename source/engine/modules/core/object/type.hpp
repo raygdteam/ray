@@ -7,26 +7,26 @@ struct RayObject;
 
 enum FieldType
 {
-	U8 = 0x0,
-	U16,
-	U32,
-	U64,
+	eU8 = 0x0,
+	eU16,
+	eU32,
+	eU64,
 
-	S8,
-	S16,
-	S32,
-	S64,
+	eS8,
+	eS16,
+	eS32,
+	eS64,
 
-	F32,
-	F64,
+	eF32,
+	eF64,
 
-	Boolean,
-	String,
+	eBoolean,
+	eString,
 
-	Vector1,
-	Vector2,
-	Vector3,
-	Vector4,
+	eVector1,
+	eVector2,
+	eVector3,
+	eVector4,
 };
 
 struct FieldInfo

@@ -8,6 +8,7 @@ enum FileMode
     Write = 0x02,
     ReadWrite = Read | Write,
     Append = 0x04,
+	ReadBinary,
 };
 
 class RAY_CORE_API FileSystem

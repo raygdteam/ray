@@ -1,0 +1,271 @@
+#include <core/debug/assert.hpp>
+#include <core/file_system/file_system.hpp>
+#include <core/object/file_archive.hpp>
+#include <core/lib/string.hpp>
+#include <core/log/log.hpp>
+
+#include <engine/resources/resource.hpp>
+#include <engine/resources/resource_manager.hpp>
+#include <engine/state/state.hpp>
+
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wsign-compare"
+#define STB_IMAGE_IMPLEMENTATION
+#include "stb_image.h"
+#pragma clang diagnostic pop
+
+static Logger gDbgLog("resdbg");
+
+/* -------------------- RESOURCE BASE ------------------- */
+RAYOBJECT_DESCRIPTION_BEGIN(IRResource)
+RAYOBJECT_DESCRIPTION_NAME("engine://resources/IRResource")
+RAYOBJECT_DESCRIPTION_END(IRResource);
+
+
+/* ----------------------- TEXTURE ---------------------- */
+
+RTexture::RTexture()
+{
+	
+}
+
+bool RTexture::LoadFrom(IFile* path)
+{
+	u32 size = u32(path->Size());
+	u8* buffer = new u8[size];
+	path->Seek(0, Begin);
+	path->Read(buffer, size);
+
+	s32 x = 0;
+	s32 y = 0;
+	s32 channels = 0;
+
+	float* result = stbi_loadf_from_memory(buffer, size, &x, &y, &channels, 4);
+
+	if (result == nullptr)
+	{
+		delete[] buffer;
+		return false;
+	}
+
+	_dimensions.x = x;
+	_dimensions.y = y;
+
+	FVector4* vecResult = reinterpret_cast<FVector4*>(result);
+	
+	for (s32 i = 0; i < x * y; ++i)
+	{
+		_data.PushBack({.x = vecResult[i].x, .y = vecResult[i].y, .z = vecResult[i].z, .w = vecResult[i].w });
+	}
+
+	stbi_image_free(result);
+	delete[] buffer;
+	return true;
+}
+
+ResourceType RTexture::GetResourceType() const noexcept
+{
+	return ResourceType::eTexture;
+}
+
+const Array<FVector4>& RTexture::GetData() const
+{
+	return _data;
+}
+
+const FVector2& RTexture::GetDimensions() const
+{
+	return _dimensions;
+}
+
+void RTexture::Serialize(Archive& ar)
+{
+	
+}
+
+void RTexture::Deserialize(Archive& ar)
+{
+	
+}
+
+RAYOBJECT_DESCRIPTION_BEGIN(RTexture)
+RAYOBJECT_DESCRIPTION_NAME("engine://resources/Texture")
+RAYOBJECT_DESCRIPTION_END(RTexture);
+
+
+/* ------------------ RESOURCE MANAGER ------------------ */
+
+struct ResourceData
+{
+	String Name;
+	u16 ReferenceCount;
+	ResourceType Type;
+	IRResource* ResourceRef;
+};
+
+struct ResourceMapping
+{
+	String Path;
+	String Mapping;
+	bool IsEngineCoreResources;
+};
+
+ResourceManager::ResourceManager()
+{
+	_mapping.PushBack(ResourceMapping { .Path = String("../../engine/resources"), .Mapping = String("/engine/"), .IsEngineCoreResources = true });
+	// LoadResourceSync("/engine/tex.png", eTexture);
+}
+
+IRResource* ResourceManager::LoadResourceResolved(pcstr path, ResourceType type)
+{
+	check(type == eTexture);
+	
+	IFile* file = ray::RayState()->FileSystem->OpenFile(path, ReadBinary);
+	check(file != nullptr);
+	
+	RTexture* texture = new RTexture;
+	if (!texture->LoadFrom(file))
+	{
+		delete texture;
+
+		file->Close();
+		delete file;
+
+		return nullptr;
+	}
+	
+	file->Close();
+	delete file;
+	
+	return texture;
+}
+
+void ResourceManager::SetResourceDirectory(pcstr directory, pcstr mapping)
+{
+	/* BUG: assuming no dublicates */
+	/* BUG: assuming no concurrency */
+	
+	if (mapping != nullptr)
+	{
+		_mapping.PushBack(ResourceMapping{ .Path = String(directory), .Mapping = String(mapping), .IsEngineCoreResources = false });
+		return;
+	}
+
+	String path = {};
+	path += "resource_info.ray";
+	
+	IFile* info = ray::RayState()->FileSystem->OpenFile(path.c_str(), Read);
+	ray_assert(info != nullptr, "Invalid mapping");
+	ray_assert(info->Size() != 0, "Invalid mapping");
+
+	String mappingPath;
+	u64 size = info->Size() / sizeof(char);
+	mappingPath.resize(size);
+
+	// info->Read((void*)mappingPath.c_str(), size);
+	
+	info->Close();
+	delete info;
+
+	_mapping.PushBack(ResourceMapping{ .Path = String(directory), .Mapping = String(mapping), .IsEngineCoreResources = false });
+}
+
+IRResource* ResourceManager::LoadResourceSync(pcstr inName, ResourceType desiredType)
+{
+	/* BUG: assuming no concurrency */
+
+	check(inName != nullptr);
+	check(inName[0] == '/');
+
+	u32 mappingEnd = strchr(inName + 1, '/') - inName;
+	check(mappingEnd != 0);
+	check(mappingEnd <= 16);
+
+	char mappingRaw[17] = {};
+	for (u8 i = 0; i <= mappingEnd; ++i)
+	{
+		mappingRaw[i] = inName[i];
+	}
+
+	mappingRaw[mappingEnd + 1] = '\0';
+
+	String mapping(mappingRaw);
+	gDbgLog.Log("Mapping %s", mapping.c_str());
+
+	for (ResourceMapping& resourceMapping : _mapping)
+	{
+		if (resourceMapping.Mapping == mapping)
+		{
+			String resolvedPath(resourceMapping.Path);
+			resolvedPath += (inName + mappingEnd);
+			IRResource* resource = LoadResourceResolved(resolvedPath.c_str(), desiredType);
+
+			if (resource == nullptr)
+			{
+				/* shortcut */
+				check(false);
+			}
+
+			/* shortcut */
+			_resources.PushBack(ResourceData{
+				.Name = String(inName),
+				.ReferenceCount = 0xffff,
+				.Type = desiredType,
+				.ResourceRef = resource
+				});
+
+			return resource;
+		}
+	}
+	return nullptr;
+}
+
+void ResourceManager::LoadResource(pcstr inName, ResourceType desiredType, Function<void(IRResource*)> callback)
+{
+	/* BUG: assuming no concurrency */
+
+	//check(inName != nullptr);
+	//check(inName[0] == '/');
+
+	//u32 mappingEnd = strchr(inName + 1, '/') - inName;
+	//check(mappingEnd != 0);
+	//check(mappingEnd <= 16);
+
+	//char mappingRaw[17] = {};
+	//for (u8 i = 0; i < mappingEnd; ++i)
+	//{
+	//	mappingRaw[mappingEnd] = inName[mappingEnd];
+	//}
+
+	//mappingRaw[mappingEnd + 1] = '\0';
+
+	//String mapping(mappingRaw);
+	//gDbgLog.Log("Mapping %s", mapping.c_str());
+
+	//for (ResourceMapping& resourceMapping : _mapping)
+	//{
+	//	if (resourceMapping.Mapping == mapping)
+	//	{
+	//		String resolvedPath(resourceMapping.Path);
+	//		resolvedPath += (inName + mappingEnd);
+	//		IRResource* resource = LoadResourceResolved(resolvedPath.c_str(), desiredType);
+
+	//		if (resource == nullptr)
+	//		{
+	//			/* shortcut */
+	//			check(false);
+	//		}
+
+	//		/* shortcut */
+	//		_resources.PushBack(ResourceData {
+	//			.Name = String(inName),
+	//			.ReferenceCount = 0xffff,
+	//			.Type = desiredType,
+	//			.ResourceRef = resource
+	//		});
+
+	//		callback(resource);
+	//	}
+	//}
+}
+

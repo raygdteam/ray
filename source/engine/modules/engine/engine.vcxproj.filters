@@ -44,6 +44,9 @@
     <ClInclude Include="world\actors\camera_actor.hpp">
       <Filter>world\actors</Filter>
     </ClInclude>
+    <ClInclude Include="resources\stb_image.h">
+      <Filter>resources</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="engine">
@@ -96,6 +99,12 @@
     </ClCompile>
     <ClCompile Include="world\components\camera_component.cpp">
       <Filter>world\components</Filter>
+    </ClCompile>
+    <ClCompile Include="world\actors\camera_actor.cpp">
+      <Filter>world\actors</Filter>
+    </ClCompile>
+    <ClCompile Include="resources\resource_manager.cpp">
+      <Filter>resources</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

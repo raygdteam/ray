@@ -26,6 +26,7 @@
     <ClInclude Include="lib\format.hpp" />
     <ClInclude Include="lib\queue.hpp" />
     <ClInclude Include="lib\scoped_allocation.hpp" />
+    <ClInclude Include="lib\string.hpp" />
     <ClInclude Include="lib\thread.hpp" />
     <ClInclude Include="log\log.hpp" />
     <ClInclude Include="math\common.hpp" />
@@ -36,6 +37,7 @@
     <ClInclude Include="module\module.hpp" />
     <ClInclude Include="module\module_meta.hpp" />
     <ClInclude Include="object\archive.hpp" />
+    <ClInclude Include="object\file_archive.hpp" />
     <ClInclude Include="object\object.hpp" />
     <ClInclude Include="object\type.hpp" />
     <ClInclude Include="threading\critical_section.hpp" />

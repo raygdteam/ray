@@ -6,6 +6,8 @@ class RAY_CORE_API FileSystem;
 class RAY_CORE_API ObjectDb;
 class RAY_CORE_API Debug;
 
+class RAY_ENGINE_API ResourceManager;
+
 namespace ray
 {
 // Core
@@ -24,6 +26,7 @@ struct IRayState
 
 	/* engine */
 	IEngine* Engine;
+	ResourceManager* ResourceManager;
 };
 
 RAY_ENGINE_API IRayState* RayState();
