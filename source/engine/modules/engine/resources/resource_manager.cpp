@@ -1,8 +1,8 @@
 #include <core/debug/assert.hpp>
 #include <core/file_system/file_system.hpp>
 #include <core/object/file_archive.hpp>
-#include <core/lib/string.hpp>
 #include <core/log/log.hpp>
+#include <core/extended_instuctions/sse/common.hpp>
 
 #include <engine/resources/resource.hpp>
 #include <engine/resources/resource_manager.hpp>
@@ -80,12 +80,16 @@ const FVector2& RTexture::GetDimensions() const
 
 void RTexture::Serialize(Archive& ar)
 {
-	
+	ar.Write(_dimensions);
+	ar.Write((void*)_data.GetData(), _data.Size());
 }
 
 void RTexture::Deserialize(Archive& ar)
 {
-	
+	ar.Read(_dimensions);
+	u64 size = _dimensions.x * _dimensions.y;
+	_data.resize(size);
+	ar.Read((u8*)_data.GetData(), size);
 }
 
 RAYOBJECT_DESCRIPTION_BEGIN(RTexture)
@@ -112,13 +116,45 @@ struct ResourceMapping
 
 ResourceManager::ResourceManager()
 {
-	_mapping.PushBack(ResourceMapping { .Path = String("../../engine/resources"), .Mapping = String("/engine/"), .IsEngineCoreResources = true });
-	// LoadResourceSync("/engine/tex.png", eTexture);
+	_mapping.PushBack(ResourceMapping { 
+		.Path = String("../../engine/resources"),
+		.Mapping = String("/engine/"),
+		.IsEngineCoreResources = true
+	});
+	_dataCacheDirectory = String("../../engine/datacache");
+	LoadResourceSync("/engine/tex.png", eTexture);
 }
 
-IRResource* ResourceManager::LoadResourceResolved(pcstr path, ResourceType type)
+IRResource* ResourceManager::LoadResourceResolved(pcstr path, pcstr resorcePath, ResourceType type)
 {
 	check(type == eTexture);
+
+	/* check in data cache */
+	{
+		String dcPath = _dataCacheDirectory;
+		dcPath += "/";
+		
+		char crc32[32] = {};
+		sprintf_s(crc32, "%u", ray::core::sse::Crc32((u8*)resorcePath, strlen(resorcePath)));
+		dcPath.append(crc32);
+		dcPath.append(".bundle");
+		
+		IFile* dcFile = ray::RayState()->FileSystem->OpenFile(dcPath.c_str(), ReadBinary);
+
+		if (dcFile != nullptr)
+		{
+			FileArchive ar;
+			ar.file = dcFile;
+
+			RTexture* texture = new RTexture;
+
+			texture->Deserialize(ar);
+			
+			dcFile->Close();
+			delete dcFile;
+			return texture;
+		}
+	}
 	
 	IFile* file = ray::RayState()->FileSystem->OpenFile(path, ReadBinary);
 	check(file != nullptr);
@@ -136,6 +172,22 @@ IRResource* ResourceManager::LoadResourceResolved(pcstr path, ResourceType type)
 	
 	file->Close();
 	delete file;
+
+	/* Serialize into data cache */
+	String dcPath = _dataCacheDirectory;
+	dcPath += "/";
+	char crc32[32] = {};
+	sprintf_s(crc32, "%u", ray::core::sse::Crc32((u8*)resorcePath, strlen(resorcePath)));
+	dcPath.append(crc32);
+	dcPath.append(".bundle");
+	IFile* dcFile = ray::RayState()->FileSystem->OpenFile(dcPath.c_str(), WriteBinary);
+	FileArchive ar;
+	ar.file = dcFile;
+
+	texture->Serialize(ar);
+	
+	dcFile->Close();
+	delete dcFile;
 	
 	return texture;
 }
@@ -147,7 +199,7 @@ void ResourceManager::SetResourceDirectory(pcstr directory, pcstr mapping)
 	
 	if (mapping != nullptr)
 	{
-		_mapping.PushBack(ResourceMapping{ .Path = String(directory), .Mapping = String(mapping), .IsEngineCoreResources = false });
+		_mapping.PushBack(ResourceMapping { .Path = String(directory), .Mapping = String(mapping), .IsEngineCoreResources = false });
 		return;
 	}
 
@@ -167,13 +219,11 @@ void ResourceManager::SetResourceDirectory(pcstr directory, pcstr mapping)
 	info->Close();
 	delete info;
 
-	_mapping.PushBack(ResourceMapping{ .Path = String(directory), .Mapping = String(mapping), .IsEngineCoreResources = false });
+	_mapping.PushBack(ResourceMapping { .Path = String(directory), .Mapping = String(mapping), .IsEngineCoreResources = false });
 }
 
 IRResource* ResourceManager::LoadResourceSync(pcstr inName, ResourceType desiredType)
 {
-	/* BUG: assuming no concurrency */
-
 	check(inName != nullptr);
 	check(inName[0] == '/');
 
@@ -192,31 +242,45 @@ IRResource* ResourceManager::LoadResourceSync(pcstr inName, ResourceType desired
 	String mapping(mappingRaw);
 	gDbgLog.Log("Mapping %s", mapping.c_str());
 
+	_mutex.Enter();
+
+	for (ResourceData& resource : _resources)
+	{
+		if (resource.Type == desiredType && resource.Name == inName)
+		{
+			return resource.ResourceRef;
+		}
+	}
+
 	for (ResourceMapping& resourceMapping : _mapping)
 	{
 		if (resourceMapping.Mapping == mapping)
 		{
 			String resolvedPath(resourceMapping.Path);
 			resolvedPath += (inName + mappingEnd);
-			IRResource* resource = LoadResourceResolved(resolvedPath.c_str(), desiredType);
+			IRResource* resource = LoadResourceResolved(resolvedPath.c_str(), inName, desiredType);
 
 			if (resource == nullptr)
 			{
 				/* shortcut */
+				_mutex.Leave();
 				check(false);
 			}
 
 			/* shortcut */
-			_resources.PushBack(ResourceData{
+			_resources.PushBack(ResourceData {
 				.Name = String(inName),
 				.ReferenceCount = 0xffff,
 				.Type = desiredType,
 				.ResourceRef = resource
-				});
-
+			});
+			
+			_mutex.Leave();
 			return resource;
 		}
 	}
+	
+	_mutex.Leave();
 	return nullptr;
 }
 

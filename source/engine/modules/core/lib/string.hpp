@@ -80,6 +80,7 @@ public:
 		: basic_string<char>(sv, position, n, allocator)
 	{
 	}
+	
 };
 
 using string = String;

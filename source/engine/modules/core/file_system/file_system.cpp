@@ -90,6 +90,9 @@ IFile* FileSystem::OpenFile(pcstr name, FileMode mode)
 	case ReadBinary:
 		mode_ = "rb";
 		break;
+	case WriteBinary:
+		mode_ = "wb";
+		break;
 	default:
 		// todo: unreachable code
 		__debugbreak();
@@ -99,5 +102,10 @@ IFile* FileSystem::OpenFile(pcstr name, FileMode mode)
 	if (file == nullptr) return nullptr;
 	
 	return new NativeFile(file, mode);
+}
+
+void FileSystem::CreateAllDirectories(pcstr path)
+{
+	
 }
 

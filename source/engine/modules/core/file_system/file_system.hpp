@@ -8,6 +8,7 @@ enum FileMode
     Write = 0x02,
     ReadWrite = Read | Write,
     Append = 0x04,
+	WriteBinary,
 	ReadBinary,
 };
 
@@ -26,4 +27,9 @@ public:
 	 * NOTE: You must call IFile#Close and delete the instance yourself!!
 	 */
 	IFile* OpenFile(pcstr name, FileMode mode);
+
+	/**
+	 * Create all directories that is missing
+	 */
+	void CreateAllDirectories(pcstr path);
 };

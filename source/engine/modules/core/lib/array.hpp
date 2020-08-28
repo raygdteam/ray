@@ -31,7 +31,7 @@ public:
 		return this->capacity();
 	}
 
-	Type* GetData() const
+	const Type* GetData() const
 	{
 		return this->data();
 	}
