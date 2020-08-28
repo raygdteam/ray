@@ -28,19 +28,16 @@ namespace ray::core::math
 		return (T)((value + alignment - 1) / alignment);
 	}
 
-	template<typename type>
-	inline type pi()
+	inline f32 Pi()
 	{
-		/*check(std::numeric_limits<type>::is_iec559, "'pi' only accepts floating-point inputs");*/
-
-		return static_cast<type>(3.14159265358979323846264338327950288);
+		return 3.14159265358979323846264338327950288f;
 	}
-
-	inline double pi()
+	
+	inline f32 Radians(f32 degrees)
 	{
-		return 3.14159265358979323846264338327950288;
+		return degrees * 0.01745329251994329576923690768489f;
 	}
-
+	
 	f32 Sin(f32 val);
 	f32 Cos(f32 val);
 	f32 Tan(f32 val);
