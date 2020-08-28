@@ -201,3 +201,38 @@ struct FMatrix<4, 4>
 using FMatrix2 = FMatrix<2, 2>; using FMatrix2x2 = FMatrix<2, 2>;
 using FMatrix3 = FMatrix<3, 3>; using FMatrix3x3 = FMatrix<3, 3>;
 using FMatrix4 = FMatrix<4, 4>; using FMatrix4x4 = FMatrix<4, 4>;
+
+inline FMatrix4x4 Orthographic(f32 left, f32 right, f32 bottom, f32 top)
+{
+	return FMatrix<4, 4> 
+	{
+		FVector<4>
+		{
+			.x = 2.f / (right - left),
+			.y = 0.f,
+			.z = 0.f,
+			.w = 0.f,
+		},
+		FVector<4>
+		{
+			.x = 0.f,
+			.y = 2.f / (top - bottom),
+			.z = 0.f,
+			.w = 0.f,
+		},
+		FVector<4>
+		{
+			.x = 0.f,
+			.y = 0.f,
+			.z = -1.f,
+			.w = 0.f,
+		},
+		FVector<4>
+		{
+			.x = -(right + left) / (right - left),
+			.y = -(top + bottom) / (top - bottom),
+			.z = 0.f,
+			.w = 0.f,
+		},
+	};
+}
