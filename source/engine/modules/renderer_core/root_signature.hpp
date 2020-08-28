@@ -2,6 +2,7 @@
 #include <d3d12.h>
 #include <core/core.hpp>
 #include <core/lib/array.hpp>
+#include <core/debug/assert.hpp>
 
 namespace ray::renderer_core_api
 {
@@ -10,6 +11,15 @@ namespace ray::renderer_core_api
 		D3D12_ROOT_PARAMETER _parameter;
 	public:
 		RootSignatureParameter();
+		~RootSignatureParameter() { Clear(); }
+
+		void Clear()
+		{
+			if (_parameter.ParameterType == D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE)
+				delete[] _parameter.DescriptorTable.pDescriptorRanges;
+		
+			_parameter.ParameterType = static_cast<D3D12_ROOT_PARAMETER_TYPE>(UINT_MAX);
+		}
 
 		/**
 		 * Initialize as array of constant 32-bit values.
@@ -116,14 +126,22 @@ namespace ray::renderer_core_api
 		void Begin(u32 numParams, u32 numStaticSamplers);
 		void Finalize(D3D12_ROOT_SIGNATURE_FLAGS flags = D3D12_ROOT_SIGNATURE_FLAG_NONE);
 
-		void InitStaticSampler(u32 numStaticSampler, u32 shaderRegister, const D3D12_SAMPLER_DESC& samplerDesc, D3D12_SHADER_VISIBILITY visibility);
+		void InitStaticSampler(u32 shaderRegister, const D3D12_SAMPLER_DESC& samplerDesc, D3D12_SHADER_VISIBILITY visibility);
 		
 		ID3D12RootSignature* GetRootSignature() const noexcept { return _rootSignature; }
+
+		RootSignatureParameter& Slot(size_t index)
+		{
+			check(index < _rootParameters.Size());
+			return _rootParameters.At(index);
+		}
 
 	private:
 		ID3D12RootSignature* _rootSignature;
 		Array<RootSignatureParameter> _rootParameters;
 		Array<D3D12_STATIC_SAMPLER_DESC> _staticSampler;
+		size_t _numInitializedStaticSamplers;
+
 	};
 
 }
