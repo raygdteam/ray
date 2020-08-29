@@ -118,6 +118,15 @@ struct FVector<3>
 		};
 	}
 
+	FVector<3> CCFASTCALL Multiply(const FVector<3>& vec) const
+	{
+		return FVector<3> {
+			.x = this->x * vec.x,
+			.y = this->y * vec.y,
+			.z = this->z * vec.z,
+		};
+	}
+
 	/**
 	 * Vector addition.
 	 * https://mathworld.wolfram.com/VectorAddition.html
@@ -144,6 +153,16 @@ struct FVector<3>
 		product += this->z * vec.z;
 
 		return product;
+	}
+
+	FVector<3> operator*(const FVector<3>& param) const
+	{
+		return Multiply(param);
+	}
+
+	FVector<3> operator*(FVector<3>& param) const
+	{
+		return Multiply(param);
 	}
 
 	FVector<3> operator+(const FVector<3>& param) const
@@ -178,6 +197,16 @@ struct FVector<4>
 		};
 	}
 
+	FVector<4> CCFASTCALL Multiply(const FVector<4>& vec) const
+	{
+		return FVector<4> {
+			.x = this->x * vec.x,
+			.y = this->y * vec.y,
+			.z = this->z * vec.z,
+			.w = this->w * vec.w,
+		};
+	}
+
 	/**
 	 * Vector addition.
 	 * https://mathworld.wolfram.com/VectorAddition.html
@@ -189,6 +218,16 @@ struct FVector<4>
 			.y = this->y + vec.y,
 			.z = this->z + vec.z,
 			.w = this->w + vec.w,
+		};
+	}
+
+	FVector<4> CCFASTCALL Subtract(const FVector<4>& vec) const
+	{
+		return FVector<4> {
+			.x = this->x - vec.x,
+			.y = this->y - vec.y,
+			.z = this->z - vec.z,
+			.w = this->w - vec.w,
 		};
 	}
 
@@ -208,6 +247,16 @@ struct FVector<4>
 		return product;
 	}
 
+	FVector<4> operator*(const FVector<4>& param) const
+	{
+		return Multiply(param);
+	}
+
+	FVector<4> operator*(FVector<4>& param) const
+	{
+		return Multiply(param);
+	}
+
 	FVector<4> operator+(const FVector<4>& param) const
 	{
 		return Add(param);
@@ -217,9 +266,30 @@ struct FVector<4>
 	{
 		return Add(param);
 	}
+
+	FVector<4> operator-(const FVector<4>& param) const
+	{
+		return Subtract(param);
+	}
+
+	FVector<4> operator-(FVector<4>& param) const
+	{
+		return Subtract(param);
+	}
 };
 
 using FVector1 = FVector<1>;
 using FVector2 = FVector<2>;
 using FVector3 = FVector<3>;
 using FVector4 = FVector<4>;
+
+inline f32 Dot(FVector<3> a, FVector<3> b)
+{
+	FVector3 tmp(a * b);
+	return tmp.x + tmp.y + tmp.z;
+}
+
+FVector<3> Normalize(FVector<3> vector)
+{
+	return vector.Multiply(ray::core::math::InverseSqrt(Dot(vector, vector)));
+}
