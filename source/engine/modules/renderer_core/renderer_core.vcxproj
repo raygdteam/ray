@@ -158,6 +158,7 @@
     <ClInclude Include="resources\linear_allocator.hpp" />
     <ClInclude Include="resources\pixel_buffer.hpp" />
     <ClInclude Include="root_signature.hpp" />
+    <ClInclude Include="sampler_manager.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="command_allocator.cpp" />
@@ -175,6 +176,7 @@
     <ClCompile Include="resources\linear_allocator.cpp" />
     <ClCompile Include="resources\pixel_buffer.cpp" />
     <ClCompile Include="root_signature.cpp" />
+    <ClCompile Include="sampler_manager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\thirdparty\eastl\eastl.vcxproj">

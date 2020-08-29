@@ -34,6 +34,7 @@
     <ClInclude Include="resources\depth_buffer.hpp">
       <Filter>resources</Filter>
     </ClInclude>
+    <ClInclude Include="sampler_manager.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="renderer.cpp" />
@@ -63,6 +64,7 @@
     <ClCompile Include="resources\depth_buffer.cpp">
       <Filter>resources</Filter>
     </ClCompile>
+    <ClCompile Include="sampler_manager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="resources">
