@@ -112,6 +112,24 @@ struct FMatrix<4, 4>
 		}
 	}
 
+	FMatrix(FVector4 row0 = FVector4(), FVector4 row1 = FVector4(), FVector4 row2 = FVector4(), FVector4 row3 = FVector4())
+	{
+		Row[0] = row0;
+		Row[1] = row1;
+		Row[2] = row2;
+		Row[3] = row3;
+	}
+
+	static FMatrix Identity()
+	{
+		return FMatrix(
+			{ 1.f, 0.0f, 0.0f, 0.f },
+			{ 0.0f, 1.0f, 0.0f, 0.0f },
+			{ 0.f, 0.0f, 1.0f, 0.f },
+			{ 0.0f, 0.0f, 0.0f, 1.0f }
+		);
+	}
+
 	FMatrix<4, 4> Add(const FMatrix<4, 4>& param)
 	{
 		return FMatrix<4, 4> {
@@ -132,7 +150,41 @@ struct FMatrix<4, 4>
 		};
 	}
 
-	FMatrix<4, 4> Multiply(const FMatrix& param)
+	FMatrix<4, 4> Multiply(f32 scalar) const
+	{
+		// TODO: nice-ify
+		FVector<4> A[4] = { Row[0], Row[1], Row[2], Row[3] };
+		
+		return FMatrix<4, 4> {
+			{
+				(A[0].x * scalar),
+				(A[0].y * scalar),
+				(A[0].z * scalar),
+				(A[0].w * scalar)
+			},
+			{
+				(A[1].x * scalar),
+				(A[1].y * scalar),
+				(A[1].z * scalar),
+				(A[1].w * scalar)
+			},
+			{
+				(A[2].x * scalar),
+				(A[2].y * scalar),
+				(A[2].z * scalar),
+				(A[3].w * scalar)
+			},
+			{
+				(A[3].x * scalar),
+				(A[3].y * scalar),
+				(A[3].z * scalar),
+				(A[3].w * scalar)
+			},
+		};
+
+	}
+	
+	FMatrix<4, 4> Multiply(const FMatrix& param) const 
 	{
 		// TODO: nice-ify
 		FVector<4> A[4] = { Row[0], Row[1], Row[2], Row[3] };
@@ -166,13 +218,16 @@ struct FMatrix<4, 4>
 		};
 	}
 
-	FMatrix<4, 4>* Translate(FVector<3> const& vector)
+	FMatrix<4, 4> Translate(FVector<3> const& vector)
 	{
-		Row[3] = Row[0].Multiply(vector.x) + Row[1].Multiply(vector.y) + Row[2].Multiply(vector.z) + Row[3];
-		return this;
+		Row[3] = Row[0].Multiply(vector.x)
+			+ Row[1].Multiply(vector.y)
+			+ Row[2].Multiply(vector.z) + Row[3];
+
+		return FMatrix<4, 4>(*this);
 	}
 
-	FMatrix<4, 4> Inverse(FMatrix<4, 4> matrix)
+	static FMatrix<4, 4> Inverse(FMatrix<4, 4> matrix)
 	{
 		f32 coef00 = matrix.Row[2].z * matrix.Row[3].w - matrix.Row[3].z * matrix.Row[2].w;
 		f32 coef02 = matrix.Row[1].z * matrix.Row[3].w - matrix.Row[3].z * matrix.Row[1].w;
@@ -226,32 +281,167 @@ struct FMatrix<4, 4>
 
 		f32 oneOverDeterminant = 1.f / dot1;
 
-		return inverse.Scale(oneOverDeterminant);
+		return inverse.Multiply(oneOverDeterminant);
 	}
 
-	FMatrix<4, 4> Rotate(f32 angle, const FVector3& vector)
+	FMatrix<4, 4> Inverse()
 	{
-		f32 const c = ray::core::math::Cos(angle);
-		f32 const s = ray::core::math::Sin(angle);
+		FMatrix<4, 4> matrix = *this;
+		
+		f32 coef00 = matrix.Row[2].z * matrix.Row[3].w - matrix.Row[3].z * matrix.Row[2].w;
+		f32 coef02 = matrix.Row[1].z * matrix.Row[3].w - matrix.Row[3].z * matrix.Row[1].w;
+		f32 coef03 = matrix.Row[1].z * matrix.Row[2].w - matrix.Row[2].z * matrix.Row[1].w;
 
-		FVector<3> axis(Normalize(vector));
-		FVector<3> temp(axis.Multiply((1.f - c)));
+		f32 coef04 = matrix.Row[2].y * matrix.Row[3].w - matrix.Row[3].y * matrix.Row[2].w;
+		f32 coef06 = matrix.Row[1].y * matrix.Row[3].w - matrix.Row[3].y * matrix.Row[1].w;
+		f32 coef07 = matrix.Row[1].y * matrix.Row[2].w - matrix.Row[2].y * matrix.Row[1].w;
 
-		FMatrix<4, 4> rotate
-		{
-			FVector<4>{.x = c + temp.x * axis.x, .y = temp.x * axis.y + s * axis.z, .z = temp.x * axis.z - s * axis.y },
-			FVector<4>{.x = temp.y * axis.x - s * axis.z, .y = c + temp.y * axis.y , .z = temp.y * axis.z + s * axis.x },
-			FVector<4>{.x = temp.z * axis.x + s * axis.y, .y = temp.z * axis.y - s * axis.x, .z = c + temp.z * axis.z }
-		};
+		f32 coef08 = matrix.Row[2].y * matrix.Row[3].z - matrix.Row[3].y * matrix.Row[2].z;
+		f32 coef10 = matrix.Row[1].y * matrix.Row[3].z - matrix.Row[3].y * matrix.Row[1].z;
+		f32 coef11 = matrix.Row[1].y * matrix.Row[2].z - matrix.Row[2].y * matrix.Row[1].z;
 
-		return rotate;
+		f32 coef12 = matrix.Row[2].x * matrix.Row[3].w - matrix.Row[3].x * matrix.Row[2].w;
+		f32 coef14 = matrix.Row[1].x * matrix.Row[3].w - matrix.Row[3].x * matrix.Row[1].w;
+		f32 coef15 = matrix.Row[1].x * matrix.Row[2].w - matrix.Row[2].x * matrix.Row[1].w;
 
-		/*mat<4, 4, T, Q> Result;
-		Result[0] = m[0] * Rotate[0][0] + m[1] * Rotate[0][1] + m[2] * Rotate[0][2];
-		Result[1] = m[0] * Rotate[1][0] + m[1] * Rotate[1][1] + m[2] * Rotate[1][2];
-		Result[2] = m[0] * Rotate[2][0] + m[1] * Rotate[2][1] + m[2] * Rotate[2][2];
-		Result[3] = m[3];
-		return Result;*/
+		f32 coef16 = matrix.Row[2].x * matrix.Row[3].z - matrix.Row[3].x * matrix.Row[2].z;
+		f32 coef18 = matrix.Row[1].x * matrix.Row[3].z - matrix.Row[3].x * matrix.Row[1].z;
+		f32 coef19 = matrix.Row[1].x * matrix.Row[2].z - matrix.Row[2].x * matrix.Row[1].z;
+
+		f32 coef20 = matrix.Row[2].x * matrix.Row[3].y - matrix.Row[3].x * matrix.Row[2].y;
+		f32 coef22 = matrix.Row[1].x * matrix.Row[3].y - matrix.Row[3].x * matrix.Row[1].y;
+		f32 coef23 = matrix.Row[1].x * matrix.Row[2].y - matrix.Row[2].x * matrix.Row[1].y;
+
+		FVector<4> fac0{ .x = coef00, .y = coef00, .z = coef02, .w = coef03 };
+		FVector<4> fac1{ .x = coef04, .y = coef04, .z = coef06, .w = coef07 };
+		FVector<4> fac2{ .x = coef08, .y = coef08, .z = coef10, .w = coef11 };
+		FVector<4> fac3{ .x = coef12, .y = coef12, .z = coef14, .w = coef15 };
+		FVector<4> fac4{ .x = coef16, .y = coef16, .z = coef18, .w = coef19 };
+		FVector<4> fac5{ .x = coef20, .y = coef20, .z = coef22, .w = coef23 };
+
+		FVector<4> vec0{ .x = matrix.Row[1].x, .y = matrix.Row[0].x, .z = matrix.Row[0].x, .w = matrix.Row[0].x };
+		FVector<4> vec1{ .x = matrix.Row[1].y, .y = matrix.Row[0].y, .z = matrix.Row[0].y, .w = matrix.Row[0].y };
+		FVector<4> vec2{ .x = matrix.Row[1].z, .y = matrix.Row[0].z, .z = matrix.Row[0].z, .w = matrix.Row[0].z };
+		FVector<4> vec3{ .x = matrix.Row[1].w, .y = matrix.Row[0].w, .z = matrix.Row[0].w, .w = matrix.Row[0].w };
+
+		FVector<4> inv0{ vec1 * fac0 - vec2 * fac1 + vec3 * fac2 };
+		FVector<4> inv1{ vec0 * fac0 - vec2 * fac3 + vec3 * fac4 };
+		FVector<4> inv2{ vec0 * fac1 - vec1 * fac3 + vec3 * fac5 };
+		FVector<4> inv3{ vec0 * fac2 - vec1 * fac4 + vec2 * fac5 };
+
+		FVector<4> signA{ .x = 1.f, .y = -1.f, .z = 1.f, .w = -1.f };
+		FVector<4> signB{ .x = -1.f, .y = 1.f, .z = -1.f, .w = 1.f };
+		FMatrix<4, 4> inverse{ inv0 * signA, inv1 * signB, inv2 * signA, inv3 * signB };
+
+		FVector<4> row0{ .x = inverse.Row[0].x, .y = inverse.Row[1].x, .z = inverse.Row[2].x, .w = inverse.Row[3].x };
+
+		FVector<4> dot0(matrix.Row[0] * row0);
+		f32 dot1 = (dot0.x + dot0.y) + (dot0.z + dot0.w);
+
+		f32 oneOverDeterminant = 1.f / dot1;
+
+		return inverse.Multiply(oneOverDeterminant);
+	}
+
+	FMatrix<4, 4> operator=(const FMatrix<4, 4>& other)
+	{
+		if (this == &other)
+			return *this;
+		
+		return FMatrix<4, 4>(*this);
+	}
+
+	FMatrix<4, 4> operator=(FMatrix<4, 4>&& other) noexcept
+	{
+		if (this == &other)
+			return *this;
+		
+		return FMatrix<4, 4>(*this);
+	}
+
+	static FMatrix<4, 4> RotationX(f32 angle)
+	{
+		/* TODO: get rid of it */
+		using namespace ray::core::math;
+
+		/*
+		 *      X Rotation
+		 * 
+		 * [1,      0,       0, 0]
+		 * [0, cos(α), -sin(α), 0]
+		 * [0, sin(α),  cos(α), 0]
+		 * [0,      0,       0, 1]
+		 */
+		return FMatrix(
+			{ 1.0f, 0.0f, 0.0f, 0.0f },
+			{ 0.f, Cos(angle), -Sin(angle), 0.f },
+			{ 0.f, Sin(angle), Cos(angle), 0.f },
+			{ 0.0f, 0.0f, 0.0f, 1.0f }
+		);
+	}
+
+	static FMatrix<4, 4> RotationY(f32 angle)
+	{
+		/* TODO: get rid of it */
+		using namespace ray::core::math;
+
+		/*
+		 *      Y Rotation
+		 *
+		 * [ cos(α), 0, sin(α), 0]
+		 * [      0, 1,      0, 0]
+		 * [-sin(α), 0, cos(α), 0]
+		 * [      0, 0,      0, 1]
+		 */
+		return FMatrix(
+			{ Cos(angle), 0.0f, Sin(angle), 0.0f },
+			{ 0.f, 1, -Sin(angle), 0.f },
+			{ -Sin(angle), 0.0f, Cos(angle), 0.f },
+			{ 0.0f, 0.0f, 0.0f, 1.0f }
+		);
+	}
+
+	static FMatrix<4, 4> RotationZ(f32 angle)
+	{
+		/* TODO: get rid of it */
+		using namespace ray::core::math;
+
+		/*
+		 *      Z Rotation
+		 *
+		 * [cos(α), -sin(α), 0, 0]
+		 * [sin(α),  cos(α), 0, 0]
+		 * [      0,      0, 1, 0]
+		 * [      0,      0, 0, 1]
+		*/
+		return FMatrix(
+			{ Cos(angle), -Sin(angle), 0.0f, 0.0f },
+			{ Sin(angle), Cos(angle), 0.0f, 0.f },
+			{ 0.f, 0.0f, 1.0f, 0.f },
+			{ 0.0f, 0.0f, 0.0f, 1.0f }
+		);
+	}
+
+	static FMatrix<4, 4> Orthographic(f32 width, f32 height, float near, float far)
+	{
+		f32 w = 2 / width;
+		f32 h = 2 / height;
+		f32 a = 1.f / (far - near);
+		f32 b = -a * near;
+
+		/*
+		 * [ w, 0, 0, 0]
+		 * [ 0, h, 0, 0]
+		 * [ 0, 0, a, 0]
+		 * [ 0, 0, b, 1]
+		 */
+		
+		return FMatrix(
+			{ w, 0.0f, 0.0f, 0.f },
+			{ 0.0f, h, 0.0f, 0.0f },
+			{ 0.f, 0.0f, a, 0.f },
+			{ 0.0f, 0.0f, b, 1.0f }
+		);
 	}
 
 	FVector4 Transform(const FVector4& vec)
@@ -314,12 +504,39 @@ struct FMatrix<4, 4>
 	{
 		return Substract(param);
 	}
+
+	FMatrix<4, 4> operator*(const FMatrix<4, 4>& param) const
+	{
+		return Multiply(param);
+	}
+
+	FMatrix<4, 4> operator*(f32 param) const
+	{
+		return Multiply(param);
+	}
+
+	FMatrix(const FMatrix<4, 4>& other)
+	{
+		this->Row[0] = other.Row[0];
+		this->Row[1] = other.Row[1];
+		this->Row[2] = other.Row[2];
+		this->Row[3] = other.Row[3];
+	}
+
+	FMatrix(FMatrix<4, 4>&& other) noexcept
+	{
+		this->Row[0] = other.Row[0];
+		this->Row[1] = other.Row[1];
+		this->Row[2] = other.Row[2];
+		this->Row[3] = other.Row[3];
+	}
 };
 
 using FMatrix2 = FMatrix<2, 2>; using FMatrix2x2 = FMatrix<2, 2>;
 using FMatrix3 = FMatrix<3, 3>; using FMatrix3x3 = FMatrix<3, 3>;
 using FMatrix4 = FMatrix<4, 4>; using FMatrix4x4 = FMatrix<4, 4>;
 
+/*
 inline FMatrix4x4 Orthographic(f32 left, f32 right, f32 bottom, f32 top)
 {
 	return FMatrix<4, 4> 
@@ -354,3 +571,4 @@ inline FMatrix4x4 Orthographic(f32 left, f32 right, f32 bottom, f32 top)
 		},
 	};
 }
+*/

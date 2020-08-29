@@ -1,0 +1,15 @@
+#include "camera_actor.hpp"
+
+void CameraActor::UpdateMVP()
+{
+	Transform* transform = GetTransform();
+	FVector3 pos = FVector3 { transform->Position.x, transform->Position.y, 1.f };
+
+	FMatrix4 translation = FMatrix4x4::Identity().Translate(pos) * FMatrix4x4::Identity().RotationX(1.f);
+	
+	// TODO: assumes 1280x720
+	_projection = FMatrix4x4::Orthographic(1280, 720, .1f, 100.f);
+	_view = translation.Inverse();
+	_viewProjection = _projection * _view;
+}
+
