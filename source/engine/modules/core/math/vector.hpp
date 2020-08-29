@@ -118,6 +118,15 @@ struct FVector<3>
 		};
 	}
 
+	FVector<3> CCFASTCALL Multiply(const FVector<3>& vec) const
+	{
+		return FVector<3> {
+			.x = this->x * vec.x,
+			.y = this->y * vec.y,
+			.z = this->z * vec.z,
+		};
+	}
+
 	/**
 	 * Vector addition.
 	 * https://mathworld.wolfram.com/VectorAddition.html
@@ -144,6 +153,16 @@ struct FVector<3>
 		product += this->z * vec.z;
 
 		return product;
+	}
+
+	FVector<3> operator*(const FVector<3>& param) const
+	{
+		return Multiply(param);
+	}
+
+	FVector<3> operator*(FVector<3>& param) const
+	{
+		return Multiply(param);
 	}
 
 	FVector<3> operator+(const FVector<3>& param) const
@@ -263,3 +282,14 @@ using FVector1 = FVector<1>;
 using FVector2 = FVector<2>;
 using FVector3 = FVector<3>;
 using FVector4 = FVector<4>;
+
+FVector<3> Normalize(FVector<3> vector)
+{
+	return vector.Multiply(ray::core::math::InverseSqrt(Dot(vector, vector)));
+}
+
+inline static f32 Dot(FVector<3> a, FVector<3> b)
+{
+	FVector3 tmp(a * b);
+	return tmp.x + tmp.y + tmp.z;
+}

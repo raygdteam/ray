@@ -28,4 +28,9 @@ namespace ray::core::math
 	{
 		return acosf(val);
 	}
+
+	f32 InverseSqrt(f32 val)
+	{
+		return 1.f / sqrt(val);
+	}
 }

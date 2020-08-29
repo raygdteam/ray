@@ -5,6 +5,8 @@
 #include <initializer_list>
 #include <intrin.h>
 
+#include "common.hpp"
+
 // 'F' stands for 'fast'
 template<u8 M_Row, u8 N_Column>
 struct FMatrix;
@@ -160,28 +162,28 @@ struct FMatrix<4, 4>
 		f32 Coef22 = matrix[1].x * matrix[3].y - matrix[3].x * matrix[1].y;
 		f32 Coef23 = matrix[1].x * matrix[2].y - matrix[2].x * matrix[1].y;
 
-		FVector<4> Fac0{ .x = Coef00, .y = Coef00, .z = Coef02, .w = Coef03 };
-		FVector<4> Fac1{ .x = Coef04, .y = Coef04, .z = Coef06, .w = Coef07 };
-		FVector<4> Fac2{ .x = Coef08, .y = Coef08, .z = Coef10, .w = Coef11 };
-		FVector<4> Fac3{ .x = Coef12, .y = Coef12, .z = Coef14, .w = Coef15 };
-		FVector<4> Fac4{ .x = Coef16, .y = Coef16, .z = Coef18, .w = Coef19 };
-		FVector<4> Fac5{ .x = Coef20, .y = Coef20, .z = Coef22, .w = Coef23 };
+		FVector<4> Fac0 { .x = Coef00, .y = Coef00, .z = Coef02, .w = Coef03 };
+		FVector<4> Fac1 { .x = Coef04, .y = Coef04, .z = Coef06, .w = Coef07 };
+		FVector<4> Fac2 { .x = Coef08, .y = Coef08, .z = Coef10, .w = Coef11 };
+		FVector<4> Fac3 { .x = Coef12, .y = Coef12, .z = Coef14, .w = Coef15 };
+		FVector<4> Fac4 { .x = Coef16, .y = Coef16, .z = Coef18, .w = Coef19 };
+		FVector<4> Fac5 { .x = Coef20, .y = Coef20, .z = Coef22, .w = Coef23 };
 
-		FVector<4> Vec0{ .x = matrix[1].x, .y = matrix[0].x, .z = matrix[0].x, .w = matrix[0].x };
-		FVector<4> Vec1{ .x = matrix[1].y, .y = matrix[0].y, .z = matrix[0].y, .w = matrix[0].y };
-		FVector<4> Vec2{ .x = matrix[1].z, .y = matrix[0].z, .z = matrix[0].z, .w = matrix[0].z };
-		FVector<4> Vec3{ .x = matrix[1].w, .y = matrix[0].w, .z = matrix[0].w, .w = matrix[0].w };
+		FVector<4> Vec0 { .x = matrix[1].x, .y = matrix[0].x, .z = matrix[0].x, .w = matrix[0].x };
+		FVector<4> Vec1 { .x = matrix[1].y, .y = matrix[0].y, .z = matrix[0].y, .w = matrix[0].y };
+		FVector<4> Vec2 { .x = matrix[1].z, .y = matrix[0].z, .z = matrix[0].z, .w = matrix[0].z };
+		FVector<4> Vec3 { .x = matrix[1].w, .y = matrix[0].w, .z = matrix[0].w, .w = matrix[0].w };
 
-		FVector<4> Inv0{ Vec1 * Fac0 - Vec2 * Fac1 + Vec3 * Fac2 };
-		FVector<4> Inv1{ Vec0 * Fac0 - Vec2 * Fac3 + Vec3 * Fac4 };
-		FVector<4> Inv2{ Vec0 * Fac1 - Vec1 * Fac3 + Vec3 * Fac5 };
-		FVector<4> Inv3{ Vec0 * Fac2 - Vec1 * Fac4 + Vec2 * Fac5 };
+		FVector<4> Inv0 { Vec1 * Fac0 - Vec2 * Fac1 + Vec3 * Fac2 };
+		FVector<4> Inv1 { Vec0 * Fac0 - Vec2 * Fac3 + Vec3 * Fac4 };
+		FVector<4> Inv2 { Vec0 * Fac1 - Vec1 * Fac3 + Vec3 * Fac5 };
+		FVector<4> Inv3 { Vec0 * Fac2 - Vec1 * Fac4 + Vec2 * Fac5 };
 
-		FVector<4> SignA{ .x = 1.f, .y = -1.f, .z = 1.f, .w = -1.f };
-		FVector<4> SignB{ .x = -1.f, .y = 1.f, .z = -1.f, .w = 1.f };
-		FMatrix<4, 4> Inverse{ Inv0 * SignA, Inv1 * SignB, Inv2 * SignA, Inv3 * SignB };
+		FVector<4> SignA { .x = 1.f, .y = -1.f, .z = 1.f, .w = -1.f };
+		FVector<4> SignB { .x = -1.f, .y = 1.f, .z = -1.f, .w = 1.f };
+		FMatrix<4, 4> Inverse { Inv0 * SignA, Inv1 * SignB, Inv2 * SignA, Inv3 * SignB };
 
-		FVector<4> Row0{ .x = Inverse[0].x, .y = Inverse[1].x, .z = Inverse[2].x, .w = Inverse[3].x };
+		FVector<4> Row0 { .x = Inverse[0].x, .y = Inverse[1].x, .z = Inverse[2].x, .w = Inverse[3].x };
 
 		FVector<4> Dot0(matrix[0] * Row0);
 		f32 Dot1 = (Dot0.x + Dot0.y) + (Dot0.z + Dot0.w);
@@ -189,6 +191,29 @@ struct FMatrix<4, 4>
 		f32 OneOverDeterminant = 1.f / Dot1;
 
 		return Inverse.Scale(OneOverDeterminant);
+	}
+
+	FMatrix<4, 4> Rotate(f32 angle, const FVector3& vector)
+	{
+		f32 const c = ray::core::math::Cos(angle);
+		f32 const s = ray::core::math::Sin(angle);
+
+		FVector<3> axis(Normalize(vector));
+		FVector<3> temp(axis.Multiply((1.f - c)));
+
+		FMatrix<4, 4> Rotate
+		{
+			FVector<4>{.x = c + temp.x * axis.x, .y = temp.x * axis.y + s * axis.z, .z = temp.x * axis.z - s * axis.y },
+			FVector<4>{.x = temp.y * axis.x - s * axis.z, .y = c + temp.y * axis.y , .z = temp.y * axis.z + s * axis.x },
+			FVector<4>{.x = temp.z * axis.x + s * axis.y, .y = temp.z * axis.y - s * axis.x, .z = c + temp.z * axis.z }
+		};
+
+		/*mat<4, 4, T, Q> Result;
+		Result[0] = m[0] * Rotate[0][0] + m[1] * Rotate[0][1] + m[2] * Rotate[0][2];
+		Result[1] = m[0] * Rotate[1][0] + m[1] * Rotate[1][1] + m[2] * Rotate[1][2];
+		Result[2] = m[0] * Rotate[2][0] + m[1] * Rotate[2][1] + m[2] * Rotate[2][2];
+		Result[3] = m[3];
+		return Result;*/
 	}
 
 	FVector4 Transform(const FVector4& vec)

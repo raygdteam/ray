@@ -37,11 +37,13 @@ namespace ray::core::math
 	{
 		return degrees * 0.01745329251994329576923690768489f;
 	}
-	
+
 	f32 Sin(f32 val);
 	f32 Cos(f32 val);
 	f32 Tan(f32 val);
 
 	f32 Asin(f32 val);
 	f32 Acos(f32 val);
+
+	f32 InverseSqrt(f32 val);
 }
