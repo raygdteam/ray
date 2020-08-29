@@ -283,13 +283,13 @@ using FVector2 = FVector<2>;
 using FVector3 = FVector<3>;
 using FVector4 = FVector<4>;
 
-FVector<3> Normalize(FVector<3> vector)
-{
-	return vector.Multiply(ray::core::math::InverseSqrt(Dot(vector, vector)));
-}
-
-inline static f32 Dot(FVector<3> a, FVector<3> b)
+inline f32 Dot(FVector<3> a, FVector<3> b)
 {
 	FVector3 tmp(a * b);
 	return tmp.x + tmp.y + tmp.z;
+}
+
+FVector<3> Normalize(FVector<3> vector)
+{
+	return vector.Multiply(ray::core::math::InverseSqrt(Dot(vector, vector)));
 }

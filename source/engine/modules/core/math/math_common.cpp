@@ -31,6 +31,6 @@ namespace ray::core::math
 
 	f32 InverseSqrt(f32 val)
 	{
-		return 1.f / sqrt(val);
+		return 1.f / sqrtf(val);
 	}
 }
