@@ -1,8 +1,11 @@
 #include "descriptor_heap.hpp"
+#include <core/debug/assert.hpp>
 #include "renderer.hpp"
 
 namespace ray::renderer_core_api
 {
+    // ------------------------------- DESCRIPTOR ALLOCATOR ------------------------------- //
+
     std::vector<ID3D12DescriptorHeap*> DescriptorAllocator::sDescriptorHeapPool;
     ray::CriticalSection DescriptorAllocator::sAllocationMutex;
 
@@ -48,6 +51,40 @@ namespace ray::renderer_core_api
         sAllocationMutex.Leave();
 
         return heap;
+    }
+
+    // ------------------------------- USER DESCRIPTOR HEAP ------------------------------- //
+
+    void UserDescriptorHeap::Create()
+    {
+        auto hr = globals::gDevice->CreateDescriptorHeap(&_heapDesc, IID_PPV_ARGS(&_heap));
+        check(hr == S_OK)
+
+        _firstHandle = DescriptorHandle(_heap->GetCPUDescriptorHandleForHeapStart(), _heap->GetGPUDescriptorHandleForHeapStart());
+        _descriptorSize = globals::gDevice->GetDescriptorHandleIncrementSize(_heapDesc.Type);
+        _numFreeDescriptors = _heapDesc.NumDescriptors;
+        _nextFreeHandle = _firstHandle;
+    }
+
+    DescriptorHandle UserDescriptorHeap::Allocate(u32 count)
+    {
+        ray_assert(HasAvailableSpace(count), "Descriptor Heap out of space")
+        auto ret = _nextFreeHandle;
+        _nextFreeHandle += count * _descriptorSize;
+        return ret;
+    }
+
+    bool UserDescriptorHeap::ValidateHandle(const DescriptorHandle& handle) const noexcept
+    {
+        if (handle.GetCpuHandle().ptr < _firstHandle.GetCpuHandle().ptr ||
+            handle.GetCpuHandle().ptr >= _firstHandle.GetCpuHandle().ptr + _heapDesc.NumDescriptors * _descriptorSize)
+            return false;
+
+        if (handle.GetGpuHandle().ptr - _firstHandle.GetGpuHandle().ptr !=
+            handle.GetCpuHandle().ptr - _firstHandle.GetCpuHandle().ptr)
+            return false;
+
+        return true;
     }
 
 }

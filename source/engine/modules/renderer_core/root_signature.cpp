@@ -35,7 +35,7 @@ namespace ray::renderer_core_api
 		rootSignatureDesc.NumStaticSamplers = _numInitializedStaticSamplers;
 		rootSignatureDesc.pStaticSamplers = _staticSampler.data();
 		rootSignatureDesc.Flags = flags;
-
+ 
 		ID3DBlob* signature = nullptr;
 		auto hr = D3D12SerializeRootSignature(&rootSignatureDesc, D3D_ROOT_SIGNATURE_VERSION_1, &signature, nullptr);
 		check(hr == S_OK)
