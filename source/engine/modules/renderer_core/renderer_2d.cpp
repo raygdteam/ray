@@ -127,7 +127,7 @@ namespace ray::renderer_core_api
 
 	void Renderer2D::DrawQuad(const FVector<3>& pos, const FVector<2>& size, const FVector<4>& color, GraphicsContext& gfxContext)
 	{
-		auto mat = FMatrix4x4::Scale(FVector<3>{ size.x, size.y, 0.f });
+		auto mat = FMatrix4x4::Scale(FVector<3>{ size.x, size.y, 1.f });
 		auto position = mat.Transform(FVector<4>{ pos.x, pos.y, pos.z, 1.f });
 
 		DrawQuad(FVector<3>{ position.x, position.y, position.z }, color, gfxContext);

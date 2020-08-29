@@ -1,5 +1,6 @@
 #pragma once
 #include <core/core.hpp>
+#include <core/math/common.hpp>
 
 // 'F' stands for 'fast'
 template<u8 Rank>

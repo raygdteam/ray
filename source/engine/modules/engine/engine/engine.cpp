@@ -114,34 +114,34 @@ void RayEngine::Tick()
 
 #pragma clang diagnostic ignored "-Wreorder-init-list"
 
-	static PingPongFloat flt1;
-	static PingPongFloat flt2;
-	static bool depth = true;
+	//static PingPongFloat flt1;
+	//static PingPongFloat flt2;
+	//static bool depth = true;
 
-	static PingPongFloat clr1 {.From = 0.0f, .Step = 0.0025f };
-	static PingPongFloat clr2 { .From = 0.0f, .Step = 0.0025f };
-	static PingPongFloat clr3 { .From = 0.0f, .Step = 0.0025f };
+	//static PingPongFloat clr1 {.From = 0.0f, .Step = 0.0025f };
+	//static PingPongFloat clr2 { .From = 0.0f, .Step = 0.0025f };
+	//static PingPongFloat clr3 { .From = 0.0f, .Step = 0.0025f };
 
 	Renderer2D::Begin();
 
-	Renderer2D::DrawQuad({ -flt1.DoStep(), flt2.DoStep(), depth ? 0.1f : 0.2f }, { clr1.DoStep(), clr2.DoStep(), clr2.DoStep(), 0.f }, gfxContext);
-	Renderer2D::DrawQuad({ flt2.DoStep(), -flt2.DoStep(), depth ? 0.2f : 0.1f }, { clr2.DoStep(), clr3.DoStep(), clr1.DoStep(), 0.f }, gfxContext);
+	//Renderer2D::DrawQuad({ -flt1.DoStep(), flt2.DoStep(), depth ? 0.1f : 0.2f }, { clr1.DoStep(), clr2.DoStep(), clr2.DoStep(), 0.f }, gfxContext);
+	//Renderer2D::DrawQuad({ flt2.DoStep(), -flt2.DoStep(), depth ? 0.2f : 0.1f }, { clr2.DoStep(), clr3.DoStep(), clr1.DoStep(), 0.f }, gfxContext);
 
-	Renderer2D::DrawQuad({ flt1.DoStep(), flt2.DoStep(), depth ? 0.1f : 0.2f }, { clr1.DoStep(), clr2.DoStep(), clr2.DoStep(), 0.f }, gfxContext);
-	Renderer2D::DrawQuad({ -flt2.DoStep(), flt2.DoStep(), depth ? 0.2f : 0.1f }, { clr2.DoStep(), clr3.DoStep(), clr1.DoStep(), 0.f }, gfxContext);
+	//Renderer2D::DrawQuad({ flt1.DoStep(), flt2.DoStep(), depth ? 0.1f : 0.2f }, { clr1.DoStep(), clr2.DoStep(), clr2.DoStep(), 0.f }, gfxContext);
+	//Renderer2D::DrawQuad({ -flt2.DoStep(), flt2.DoStep(), depth ? 0.2f : 0.1f }, { clr2.DoStep(), clr3.DoStep(), clr1.DoStep(), 0.f }, gfxContext);
 
-	Renderer2D::DrawQuad({ flt1.DoStep(), -flt2.DoStep(), depth ? 0.1f : 0.2f }, { clr1.DoStep(), clr2.DoStep(), clr2.DoStep(), 0.f }, gfxContext);
-	Renderer2D::DrawQuad({ -flt2.DoStep(), flt2.DoStep(), depth ? 0.2f : 0.1f }, { clr2.DoStep(), clr3.DoStep(), clr1.DoStep(), 0.f }, gfxContext);
+	//Renderer2D::DrawQuad({ flt1.DoStep(), -flt2.DoStep(), depth ? 0.1f : 0.2f }, { clr1.DoStep(), clr2.DoStep(), clr2.DoStep(), 0.f }, gfxContext);
+	//Renderer2D::DrawQuad({ -flt2.DoStep(), flt2.DoStep(), depth ? 0.2f : 0.1f }, { clr2.DoStep(), clr3.DoStep(), clr1.DoStep(), 0.f }, gfxContext);
 
-	// Renderer2D::DrawQuad({ -flt1.DoStep(), flt2.DoStep(), 0.1f }, { 1.f, 0.f, 0.f, 0.f }, gfxContext);// red, closer to camera
-	// Renderer2D::DrawQuad({ flt2.DoStep(), -flt2.DoStep(), 0.5f }, { 0.f, 1.f, 0.f, 0.f }, gfxContext); // green, futher from camera
+	Renderer2D::DrawQuad({ .7f, .5f, 0.1f }, { 0.5f, 1.f }, { 1.f, 0.f, 0.f, 0.f }, gfxContext);// red, closer to camera
+	Renderer2D::DrawQuad({ .5f, .5f, 0.5f }, { 1.f, 0.5f }, { 0.f, 1.f, 0.f, 0.f }, gfxContext); // green, futher from camera
 
 	Renderer2D::End(gfxContext);
 
 	// renderer commands ...
 	_renderer->EndScene(gfxContext);
 
-	depth = !depth;
+	// depth = !depth;
 
 	/*tempLevel->Tick(delta);
 	tempRenderer->BeginFrame();

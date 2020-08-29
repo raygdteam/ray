@@ -107,26 +107,62 @@ struct FMatrix<4, 4>
 		check(list.size() <= 4);
 
 		for (u8 i = 0; i < list.size(); ++i)
+		{
 			Row[i] = list.begin()[i];
+		}
 	}
 
 	FMatrix<4, 4> Add(const FMatrix<4, 4>& param)
 	{
 		return FMatrix<4, 4> {
-			FVector<4> {.x = Row[0].x + param.Row[0].x, .y = Row[0].y + param.Row[0].y, .z = Row[0].z + param.Row[0].z, .w = Row[0].w + param.Row[0].w },
-				FVector<4> {.x = Row[1].x + param.Row[1].x, .y = Row[1].y + param.Row[1].y, .z = Row[1].z + param.Row[1].z, .w = Row[1].w + param.Row[1].w },
-				FVector<4> {.x = Row[2].x + param.Row[2].x, .y = Row[2].y + param.Row[2].y, .z = Row[2].z + param.Row[2].z, .w = Row[2].w + param.Row[2].w },
-				FVector<4> {.x = Row[3].x + param.Row[3].x, .y = Row[3].y + param.Row[3].y, .z = Row[3].z + param.Row[3].z, .w = Row[3].w + param.Row[3].w },
+			{ .x = Row[0].x + param.Row[0].x, .y = Row[0].y + param.Row[0].y, .z = Row[0].z + param.Row[0].z, .w = Row[0].w + param.Row[0].w },
+			{ .x = Row[1].x + param.Row[1].x, .y = Row[1].y + param.Row[1].y, .z = Row[1].z + param.Row[1].z, .w = Row[1].w + param.Row[1].w },
+			{ .x = Row[2].x + param.Row[2].x, .y = Row[2].y + param.Row[2].y, .z = Row[2].z + param.Row[2].z, .w = Row[2].w + param.Row[2].w },
+			{ .x = Row[3].x + param.Row[3].x, .y = Row[3].y + param.Row[3].y, .z = Row[3].z + param.Row[3].z, .w = Row[3].w + param.Row[3].w },
 		};
 	}
 
 	FMatrix<4, 4> Substract(const FMatrix<4, 4>& param)
 	{
 		return FMatrix<4, 4> {
-			FVector<4> {.x = Row[0].x - param.Row[0].x, .y = Row[0].y - param.Row[0].y, .z = Row[0].z - param.Row[0].z, .w = Row[0].w - param.Row[0].w },
-				FVector<4> {.x = Row[1].x - param.Row[1].x, .y = Row[1].y - param.Row[1].y, .z = Row[1].z - param.Row[1].z, .w = Row[1].w - param.Row[1].w },
-				FVector<4> {.x = Row[2].x - param.Row[2].x, .y = Row[2].y - param.Row[2].y, .z = Row[2].z - param.Row[2].z, .w = Row[2].w - param.Row[2].w },
-				FVector<4> {.x = Row[3].x - param.Row[3].x, .y = Row[3].y - param.Row[3].y, .z = Row[3].z - param.Row[3].z, .w = Row[3].w - param.Row[3].w },
+			{ .x = Row[0].x - param.Row[0].x, .y = Row[0].y - param.Row[0].y, .z = Row[0].z - param.Row[0].z, .w = Row[0].w - param.Row[0].w },
+			{ .x = Row[1].x - param.Row[1].x, .y = Row[1].y - param.Row[1].y, .z = Row[1].z - param.Row[1].z, .w = Row[1].w - param.Row[1].w },
+			{ .x = Row[2].x - param.Row[2].x, .y = Row[2].y - param.Row[2].y, .z = Row[2].z - param.Row[2].z, .w = Row[2].w - param.Row[2].w },
+			{ .x = Row[3].x - param.Row[3].x, .y = Row[3].y - param.Row[3].y, .z = Row[3].z - param.Row[3].z, .w = Row[3].w - param.Row[3].w },
+		};
+	}
+
+	FMatrix<4, 4> Multiply(const FMatrix& param)
+	{
+		// TODO: nice-ify
+		FVector<4> A[4] = { Row[0], Row[1], Row[2], Row[3] };
+		FVector<4> B[4] = { param.Row[0], param.Row[1], param.Row[2], param.Row[3] };
+
+		return FMatrix<4, 4> {
+			{
+				(A[0].x * B[0].x) + (A[0].y * B[1].x) + (A[0].z * B[2].x) + (A[0].w * B[3].x),
+				(A[1].x * B[0].x) + (A[1].y * B[1].x) + (A[1].z * B[2].x) + (A[1].w * B[3].x),
+				(A[2].x * B[0].x) + (A[2].y * B[1].x) + (A[2].z * B[2].x) + (A[2].w * B[3].x),
+				(A[3].x * B[0].x) + (A[3].y * B[1].x) + (A[3].z * B[2].x) + (A[3].w * B[3].x)
+			},
+			{
+				(A[0].x * B[0].y) + (A[0].y * B[1].y) + (A[0].z * B[2].y) + (A[0].w * B[3].y),
+				(A[1].x * B[0].y) + (A[1].y * B[1].y) + (A[1].z * B[2].y) + (A[1].w * B[3].y),
+				(A[2].x * B[0].y) + (A[2].y * B[1].y) + (A[2].z * B[2].y) + (A[2].w * B[3].y),
+				(A[3].x * B[0].y) + (A[3].y * B[1].y) + (A[3].z * B[2].y) + (A[3].w * B[3].y)
+			},
+			{
+				(A[0].x * B[0].z) + (A[0].y * B[1].z) + (A[0].z * B[2].z) + (A[0].w * B[3].z),
+				(A[1].x * B[0].z) + (A[1].y * B[1].z) + (A[1].z * B[2].z) + (A[1].w * B[3].z),
+				(A[2].x * B[0].z) + (A[2].y * B[1].z) + (A[2].z * B[2].z) + (A[2].w * B[3].z),
+				(A[3].x * B[0].z) + (A[3].y * B[1].z) + (A[3].z * B[2].z) + (A[3].w * B[3].z)
+			},
+			{
+				(A[0].x * B[0].w) + (A[0].y * B[1].w) + (A[0].z * B[2].w) + (A[0].w * B[3].w),
+				(A[1].x * B[0].w) + (A[1].y * B[1].w) + (A[1].z * B[2].w) + (A[1].w * B[3].w),
+				(A[2].x * B[0].w) + (A[2].y * B[1].w) + (A[2].z * B[2].w) + (A[2].w * B[3].w),
+				(A[3].x * B[0].w) + (A[3].y * B[1].w) + (A[3].z * B[2].w) + (A[3].w * B[3].w)
+			},
 		};
 	}
 
