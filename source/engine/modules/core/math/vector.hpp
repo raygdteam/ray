@@ -178,6 +178,16 @@ struct FVector<4>
 		};
 	}
 
+	FVector<4> CCFASTCALL Multiply(const FVector<4>& vec) const
+	{
+		return FVector<4> {
+			.x = this->x * vec.x,
+			.y = this->y * vec.y,
+			.z = this->z * vec.z,
+			.w = this->w * vec.w,
+		};
+	}
+
 	/**
 	 * Vector addition.
 	 * https://mathworld.wolfram.com/VectorAddition.html
@@ -189,6 +199,16 @@ struct FVector<4>
 			.y = this->y + vec.y,
 			.z = this->z + vec.z,
 			.w = this->w + vec.w,
+		};
+	}
+
+	FVector<4> CCFASTCALL Subtract(const FVector<4>& vec) const
+	{
+		return FVector<4> {
+			.x = this->x - vec.x,
+			.y = this->y - vec.y,
+			.z = this->z - vec.z,
+			.w = this->w - vec.w,
 		};
 	}
 
@@ -208,6 +228,16 @@ struct FVector<4>
 		return product;
 	}
 
+	FVector<4> operator*(const FVector<4>& param) const
+	{
+		return Multiply(param);
+	}
+
+	FVector<4> operator*(FVector<4>& param) const
+	{
+		return Multiply(param);
+	}
+
 	FVector<4> operator+(const FVector<4>& param) const
 	{
 		return Add(param);
@@ -216,6 +246,16 @@ struct FVector<4>
 	FVector<4> operator+(FVector<4>& param) const
 	{
 		return Add(param);
+	}
+
+	FVector<4> operator-(const FVector<4>& param) const
+	{
+		return Subtract(param);
+	}
+
+	FVector<4> operator-(FVector<4>& param) const
+	{
+		return Subtract(param);
 	}
 };
 
