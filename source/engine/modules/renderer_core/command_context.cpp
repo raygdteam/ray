@@ -521,6 +521,11 @@ namespace ray::renderer_core_api
 		_commandList->IASetIndexBuffer(&view);
 	}
 
+	void GraphicsContext::SetDescriptorTable(u32 rootIndex, D3D12_GPU_DESCRIPTOR_HANDLE handle)
+	{
+		_commandList->SetGraphicsRootDescriptorTable(rootIndex, handle);
+	}
+
 	void GraphicsContext::Draw(u32 vertexCount, u32 vertexStartOffset)
 	{
 		DrawInstanced(vertexCount, 1, vertexStartOffset);

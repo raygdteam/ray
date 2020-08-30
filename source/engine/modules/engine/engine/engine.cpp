@@ -5,6 +5,9 @@
 #include <core/log/log.hpp>
 #include <core/module/module.hpp>
 
+#include "engine/resources/resource.hpp"
+#include "engine/resources/resource_manager.hpp"
+
 // ALL OF THIS IS TEMP
 #include <engine/world/level.hpp>
 #include <chrono>
@@ -51,7 +54,8 @@ void RayEngine::Initialize(IEngineLoop* engineLoop)
 	
 	_renderer = new IRenderer;
 	_renderer->Initialize(window);
-	Renderer2D::Initialize();
+	RTexture* texture = dynamic_cast<RTexture*>(RayState()->ResourceManager->LoadResourceSync("/engine/resources/tex.png", ResourceType::eTexture));
+	Renderer2D::Initialize(*texture);
 
 	eng->Log("[4/4] Finishing...");
 	

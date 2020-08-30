@@ -228,6 +228,8 @@ namespace ray::renderer_core_api
 		void SetDynamicIB(size_t indexCount, const u32* data, bool b32Bit = false);
 		void SetDynamicSRV() {}
 
+		void SetDescriptorTable(u32 rootIndex, D3D12_GPU_DESCRIPTOR_HANDLE handle);
+
 		void Draw(u32 vertexCount, u32 vertexStartOffset = 0);
 		void DrawIndexed(u32 indexCount, u32 startIndexLocation = 0, s32 baseVertexLocation = 0);
 		void DrawInstanced(u32 vertexCountPerInstance, u32 instanceCount, u32 startVertexLocation = 0, u32 startInstanceLocation = 0);

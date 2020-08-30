@@ -8,18 +8,21 @@
 #define RAY_RENDERERCORE_API RAY_DLLIMPORT
 #endif
 
+class RTexture;
+
 namespace ray::renderer_core_api
 {
 	class GraphicsPipeline;
 	class RootSignature;
 	class GraphicsContext;
+	class UserDescriptorHeap;
 
 	class RAY_RENDERERCORE_API Renderer2D
 	{
 	public:
 		~Renderer2D();
 
-		static void Initialize();
+		static void Initialize(RTexture& texture);
 		static void Begin();
 		static void End(GraphicsContext& gfxContext);
 
@@ -31,6 +34,7 @@ namespace ray::renderer_core_api
 	private:
 		static GraphicsPipeline _2DPipeline;
 		static RootSignature _2DSignature;
+		static UserDescriptorHeap _descriptorHeap;
 
 	private:
 		static void Flush(GraphicsContext& gfxContext);

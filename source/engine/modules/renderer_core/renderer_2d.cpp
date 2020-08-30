@@ -10,16 +10,22 @@
 #include "d3dx12.h"
 #include "command_context.hpp"
 #include "resources/buffer_manager.hpp"
+#include "sampler_manager.hpp"
+#include "resources/texture.hpp"
+#include <engine/resources/resource.hpp>
+#include "descriptor_heap.hpp"
 
 namespace ray::renderer_core_api
 {
 	RootSignature Renderer2D::_2DSignature;
 	GraphicsPipeline Renderer2D::_2DPipeline;
+	UserDescriptorHeap Renderer2D::_descriptorHeap(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV, 1);
 
 	struct QuadVertex
 	{
 		FVector<3> Position;
-		FVector<4> Color;
+		//FVector<4> Color;
+		FVector<2> TexCoord;
 	};
 
 	struct Renderer2DData
@@ -31,6 +37,7 @@ namespace ray::renderer_core_api
 		static const u32 MAX_INDICES = MAX_QUADS * 6;
 
 		resources::GpuBuffer IndexBuffer;
+		resources::Texture TextureAtlas;
 		D3D12_INDEX_BUFFER_VIEW IndexBufferView;
 
 		u32 QuadIndexCount = 0;
@@ -42,7 +49,7 @@ namespace ray::renderer_core_api
 
 	static Renderer2DData sData;
 
-	void Renderer2D::Initialize()
+	void Renderer2D::Initialize(RTexture& texture)
 	{
 		u32* quadIndices = new uint32_t[sData.MAX_INDICES];
 		u32 offset = 0;
@@ -63,12 +70,22 @@ namespace ray::renderer_core_api
 		sData.IndexBufferView = sData.IndexBuffer.IndexBufferView(0);
 		delete[] quadIndices;
 
+		_descriptorHeap.Create();
+		auto srvHandle = _descriptorHeap.Allocate();
+
+		sData.TextureAtlas = resources::Texture(srvHandle.GetCpuHandle());
+		sData.TextureAtlas.Create(texture.GetDimensions().x, texture.GetDimensions().y, DXGI_FORMAT_R8G8B8A8_UNORM, texture.GetData().GetData());
+
 		sData.QuadVertexBufferBase = new QuadVertex[sData.MAX_QUADS];
 
-		sData.QuadVertexPositions[0] = { -0.5f,  0.5f, 0.5f };
-		sData.QuadVertexPositions[1] = { 0.5f, -0.5f, 0.5f };
-		sData.QuadVertexPositions[2] = { -0.5f, -0.5f, 0.5f };
-		sData.QuadVertexPositions[3] = { 0.5f,  0.5f, 0.5f };
+		sData.QuadVertexPositions[0] = { -0.5f,  0.5f, 0.5f }; // top left
+		sData.QuadVertexPositions[1] = { 0.5f, -0.5f, 0.5f }; // bottom right
+		sData.QuadVertexPositions[2] = { -0.5f, -0.5f, 0.5f }; // bottom left
+		sData.QuadVertexPositions[3] = { 0.5f,  0.5f, 0.5f }; // top right
+
+		SamplerDesc defaultSampler;
+		_2DSignature.InitStaticSampler(0, defaultSampler, D3D12_SHADER_VISIBILITY_PIXEL);
+		_2DSignature.Slot(0).InitAsDescriptorRange(0, D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 1, D3D12_SHADER_VISIBILITY_PIXEL);
 
 		_2DSignature.Finalize(D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT);
 		_2DPipeline.SetRootSignature(_2DSignature);
@@ -98,7 +115,7 @@ namespace ray::renderer_core_api
 		D3D12_INPUT_ELEMENT_DESC inputLayout[] =
 		{
 			{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
-			{ "COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 12, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 }
+			{ "TEXCOORD0", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 12, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 }
 		};
 		_2DPipeline.SetInputLayout(2, inputLayout);
 		_2DPipeline.SetPrimitiveTopologyType(D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE);
@@ -136,6 +153,13 @@ namespace ray::renderer_core_api
 	void Renderer2D::DrawQuad(const FVector<3>& pos, const FVector<4>& color, GraphicsContext& gfxContext)
 	{
 		constexpr size_t quadVertexCount = 4;
+		static FVector<2> texCoords[4] =
+		{
+			{ 0.f, 0.f },
+			{ 1.f, 1.f },
+			{ 0.f, 1.f },
+			{ 1.f, 0.f }
+		};
 
 		if (sData.QuadIndexCount >= sData.MAX_INDICES)
 			FlushAndReset(gfxContext);
@@ -148,7 +172,7 @@ namespace ray::renderer_core_api
 			newPosition.z = pos.z;
 			
 			sData.QuadVertexBufferPtr->Position = newPosition;
-			sData.QuadVertexBufferPtr->Color = color;
+			sData.QuadVertexBufferPtr->TexCoord = texCoords[i];
 			sData.QuadVertexBufferPtr++;
 		}
 
@@ -165,6 +189,9 @@ namespace ray::renderer_core_api
 
 		gfxContext.SetPipelineState(_2DPipeline);
 		gfxContext.SetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+
+		gfxContext.SetDescriptorHeap(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV, _descriptorHeap.GetHeapPointer());
+		gfxContext.SetDescriptorTable(0, _descriptorHeap.GetDescriptorAtOffset(0).GetGpuHandle());
 
 		size_t bufferSize = sData.QuadVertexBufferPtr - sData.QuadVertexBufferBase;
 		gfxContext.SetDynamicVB(0, bufferSize, sizeof(QuadVertex), sData.QuadVertexBufferBase);

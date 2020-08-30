@@ -1,6 +1,7 @@
 #pragma once
 #include <core/object/object.hpp>
 #include <core/math/vector.hpp>
+#include <core/file_system/file_system.hpp>
 
 #include <engine/engine/engine_def.hpp>
 #include <engine/resources/resource_type.hpp>

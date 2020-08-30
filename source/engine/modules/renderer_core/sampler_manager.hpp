@@ -10,17 +10,17 @@ namespace ray::renderer_core_api
     public:
         SamplerDesc()
         {
-            Filter = D3D12_FILTER_ANISOTROPIC;
-            AddressU = D3D12_TEXTURE_ADDRESS_MODE_WRAP;
-            AddressV = D3D12_TEXTURE_ADDRESS_MODE_WRAP;
-            AddressW = D3D12_TEXTURE_ADDRESS_MODE_WRAP;
+            Filter = D3D12_FILTER_MIN_MAG_MIP_POINT;
+            AddressU = D3D12_TEXTURE_ADDRESS_MODE_BORDER;
+            AddressV = D3D12_TEXTURE_ADDRESS_MODE_BORDER;
+            AddressW = D3D12_TEXTURE_ADDRESS_MODE_BORDER;
             MipLODBias = 0.0f;
-            MaxAnisotropy = 16;
-            ComparisonFunc = D3D12_COMPARISON_FUNC_LESS_EQUAL;
-            BorderColor[0] = 1.0f;
-            BorderColor[1] = 1.0f;
-            BorderColor[2] = 1.0f;
-            BorderColor[3] = 1.0f;
+            MaxAnisotropy = 0;
+            ComparisonFunc = D3D12_COMPARISON_FUNC_NEVER;
+            BorderColor[0] = D3D12_STATIC_BORDER_COLOR_TRANSPARENT_BLACK;
+            BorderColor[1] = D3D12_STATIC_BORDER_COLOR_TRANSPARENT_BLACK;
+            BorderColor[2] = D3D12_STATIC_BORDER_COLOR_TRANSPARENT_BLACK;
+            BorderColor[3] = D3D12_STATIC_BORDER_COLOR_TRANSPARENT_BLACK;
             MinLOD = 0.0f;
             MaxLOD = D3D12_FLOAT32_MAX;
         }
