@@ -27,7 +27,7 @@ namespace ray::core::log
 
 		void Log(const char* format)
 		{
-			const char* unnamed = format::format("[{}] {}", this->name, format);
+			const char* unnamed = format::format("[{}] {}\n", this->name, format);
 
 			printf("%s", unnamed);
 			OutputDebugStringA(unnamed);
