@@ -8,6 +8,9 @@
 #include <windows.h>
 #undef CreateSemaphore
 
+#include <editor/imgui/imgui_impl_win32.h>
+#include <editor/imgui/imgui_impl_vulkan.h>
+
 static Logger gLog("vulkan");
 
 bool IVkRenderer::InitInstance()
@@ -145,6 +148,9 @@ bool IVkRenderer::InitSurface(ray::core::IPlatformWindow* window)
 	{
 		return false;
 	}
+
+	VkBool32 supported = VK_FALSE;
+	vkGetPhysicalDeviceSurfaceSupportKHR(_physicalDevice, familyIndex, _surface, &supported);
 	
 	return true;
 }
@@ -177,7 +183,7 @@ bool IVkRenderer::InitSwapchain(ray::core::IPlatformWindow* window)
 		.pQueueFamilyIndices = &familyIndex,
 		.preTransform = VK_SURFACE_TRANSFORM_IDENTITY_BIT_KHR,
 		.compositeAlpha = VK_COMPOSITE_ALPHA_OPAQUE_BIT_KHR,
-		.presentMode = VK_PRESENT_MODE_FIFO_KHR,
+		.presentMode = /*VK_PRESENT_MODE_IMMEDIATE_KHR, */VK_PRESENT_MODE_FIFO_KHR,
 		.clipped = false,
 		.oldSwapchain = nullptr,
 	};
@@ -187,8 +193,28 @@ bool IVkRenderer::InitSwapchain(ray::core::IPlatformWindow* window)
 		return false;
 	}
 
-	u32 swapchainImageCount = 16;
+	u32 swapchainImageCount = 2;
+	vkGetSwapchainImagesKHR(_device, _swapchain, &swapchainImageCount, nullptr);
 	vkGetSwapchainImagesKHR(_device, _swapchain, &swapchainImageCount, _swapchainImages);
+
+	for (u32 i = 0; i < swapchainImageCount; ++i)
+	{
+		VkImageViewCreateInfo createInfo = {};
+		createInfo.sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
+		createInfo.image = _swapchainImages[i];
+		createInfo.viewType = VK_IMAGE_VIEW_TYPE_2D;
+		createInfo.format = surfaceFormat.format;
+		createInfo.subresourceRange.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+		createInfo.subresourceRange.levelCount = 1;
+		createInfo.subresourceRange.layerCount = 1;
+
+		VkImageView view = nullptr;
+		vkCreateImageView(_device, &createInfo, nullptr, &view);
+
+		_swapchainImageView[i] = view;
+	}
+	
+	_swapchainFormat = createInfo.imageFormat;
 	
 	return true;
 }
@@ -210,6 +236,26 @@ bool IVkRenderer::InitCommandPool()
 	return true;
 }
 
+bool IVkRenderer::InitFramebuffer()
+{
+	for (u8 i = 0; i < 2; ++i)
+	{
+		VkFramebufferCreateInfo createInfo = {};
+		createInfo.sType = VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO;
+		createInfo.renderPass = _renderPass;
+		createInfo.attachmentCount = 1;
+		createInfo.pAttachments = &_swapchainImageView[i];
+		createInfo.width = 1264;
+		createInfo.height = 681;
+		createInfo.layers = 1;
+
+		VkFramebuffer framebuffer = nullptr;
+		vkCreateFramebuffer(_device, &createInfo, nullptr, &framebuffer);
+		_framebuffer[i] = framebuffer;
+	}
+	return true;
+}
+
 VkSemaphore IVkRenderer::CreateSemaphore()
 {
 	VkSemaphoreCreateInfo createInfo = {
@@ -227,6 +273,57 @@ VkSemaphore IVkRenderer::CreateSemaphore()
 	return semaphore;
 }
 
+void IVkRenderer::TransitionResource(VkImage image, VkFormat format, VkImageLayout old, VkImageLayout newLayout)
+{
+	// Assuming _cmdBuf is valid
+	VkImageMemoryBarrier barrier = {
+		.sType = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER,
+		.pNext = nullptr,
+		.srcAccessMask = 0,
+		.dstAccessMask = 0,
+		.oldLayout = old,
+		.newLayout = newLayout,
+		.srcQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED,
+		.dstQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED,
+		.image = image,
+		.subresourceRange = {
+			.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT,
+			.baseMipLevel = 0,
+			.levelCount = 1,
+			.baseArrayLayer = 0,
+			.layerCount = 1
+		}
+	};
+
+	VkPipelineStageFlags sourceStage = VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT;
+	VkPipelineStageFlags destinationStage = VK_PIPELINE_STAGE_TRANSFER_BIT;
+
+	if (old == VK_IMAGE_LAYOUT_UNDEFINED && newLayout == VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL) {
+		barrier.srcAccessMask = 0;
+		barrier.dstAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
+
+		sourceStage = VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT;
+		destinationStage = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
+	}
+	else if (old == VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL && newLayout == VK_IMAGE_LAYOUT_PRESENT_SRC_KHR) {
+		barrier.srcAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
+		barrier.dstAccessMask = 0;
+
+		sourceStage = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
+		destinationStage = VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT;
+	}
+	else {
+		__debugbreak();
+	}
+
+	vkCmdPipelineBarrier(_cmdBuf, 
+		sourceStage, destinationStage, 
+		VK_DEPENDENCY_BY_REGION_BIT,
+		0, nullptr,
+		0, nullptr,
+		1, &barrier);
+}
+
 bool IVkRenderer::Initialize(ray::core::IPlatformWindow* window)
 {
 	gLog.Log(" -------------------- BEGIN VULKAN INIT --------------------");
@@ -235,11 +332,40 @@ bool IVkRenderer::Initialize(ray::core::IPlatformWindow* window)
 	if (!InitSurface(window)) return false;
 	if (!InitSwapchain(window)) return false;
 	if (!InitCommandPool()) return false;
+
+	ImGui::CreateContext();
+	ImGui_ImplWin32_Init(window->GetWindowHandleRaw());
+	
 	
 	_acqSemaphore = CreateSemaphore();
 	_relSemaphore = CreateSemaphore();
+
+	_renderPass = RenderPass::CreateRenderPass(_device, _swapchainFormat);
+	_pipeline = Pipeline::CreateGraphicsPipeline(_device, _renderPass,
+	                                             Shader::LoadShader(_device, "../../engine/resources/triangle.vert.spv"),
+	                                             Shader::LoadShader(_device, "../../engine/resources/triangle.frag.spv"),
+	                                             Pipeline::CreatePipelineLayout(_device));
+
+	InitFramebuffer();
 	
 	vkGetDeviceQueue(_device, familyIndex, 0, &_queue);
+
+	ImGui_ImplVulkan_InitInfo initInfo = {
+		.Instance = _instance,
+		.PhysicalDevice = _physicalDevice,
+		.Device = _device,
+		.QueueFamily = familyIndex,
+		.Queue = _queue,
+		.PipelineCache = nullptr,
+		.DescriptorPool = DescriptorPool::CreateDescriptorPool(_device),
+		.MinImageCount = 2,
+		.ImageCount = 2,
+		.MSAASamples = VkSampleCountFlagBits::VK_SAMPLE_COUNT_1_BIT,
+		.Allocator = nullptr,
+		.CheckVkResultFn = nullptr
+	};
+	ImGui_ImplVulkan_Init(&initInfo, _renderPass);
+	
 
 	VkCommandBufferAllocateInfo allocateInfo = {
 		.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO,
@@ -251,6 +377,35 @@ bool IVkRenderer::Initialize(ray::core::IPlatformWindow* window)
 
 	vkAllocateCommandBuffers(_device, &allocateInfo, &_cmdBuf);
 
+	// Upload fonts(imgui)
+	vkResetCommandPool(_device, _commandPool, 0);
+	VkCommandBufferBeginInfo beginInfo = {
+		.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO,
+		.pNext = nullptr,
+		.flags = VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT,
+		.pInheritanceInfo = nullptr
+	};
+
+	vkBeginCommandBuffer(_cmdBuf, &beginInfo);
+	ImGui_ImplVulkan_CreateFontsTexture(_cmdBuf);
+
+	vkEndCommandBuffer(_cmdBuf);
+	VkSubmitInfo submitInfo = {
+		.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO,
+		.pNext = nullptr,
+		.waitSemaphoreCount = 0,
+		.pWaitSemaphores = nullptr,
+		.pWaitDstStageMask = nullptr,
+		.commandBufferCount = 1,
+		.pCommandBuffers = &_cmdBuf,
+		.signalSemaphoreCount = 0,
+		.pSignalSemaphores = nullptr,
+	};
+	vkQueueSubmit(_queue, 1, &submitInfo, nullptr);
+	vkDeviceWaitIdle(_device);
+	
+	ImGui_ImplVulkan_DestroyFontUploadObjects();
+
 	gLog.Log(" --------------------- END VULKAN INIT ---------------------");
 	return true;
 }
@@ -258,7 +413,7 @@ bool IVkRenderer::Initialize(ray::core::IPlatformWindow* window)
 void IVkRenderer::BeginScene()
 {
 	vkAcquireNextImageKHR(_device, _swapchain, ~0ull, _acqSemaphore, nullptr, &_imageIdx);
-
+	
 	vkResetCommandPool(_device, _commandPool, 0);
 
 	VkCommandBufferBeginInfo beginInfo = {
@@ -270,21 +425,55 @@ void IVkRenderer::BeginScene()
 
 	vkBeginCommandBuffer(_cmdBuf, &beginInfo);
 
-	VkClearColorValue color = { {1, 0, 1, 1 } };
+	TransitionResource(_swapchainImages[_imageIdx], _swapchainFormat, VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL);
+	// ImGui_ImplVulkan_NewFrame(_cmdBuf);
 
-	VkImageSubresourceRange range = {
-		.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT,
-		.baseMipLevel = 0,
-		.levelCount = 1,
-		.baseArrayLayer = 0,
-		.layerCount = 1,
+	VkClearColorValue color = { { 48.f / 255.f, 10.f / 255.f, 36.f / 255.f, 1 }};
+	VkClearValue clearColor = { color };
+	
+	VkRenderPassBeginInfo passBeginInfo = {
+		.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO,
+		.pNext = nullptr,
+		.renderPass = _renderPass,
+		.framebuffer = _framebuffer[_imageIdx],
+		.renderArea = VkRect2D {
+			.extent = {
+				.width = 1264,
+				.height = 681
+			},
+		},
+		.clearValueCount = 1,
+		.pClearValues = &clearColor,
 	};
 
-	vkCmdClearColorImage(_cmdBuf, _swapchainImages[_imageIdx], VK_IMAGE_LAYOUT_GENERAL, &color, 1, &range);
+	vkCmdBeginRenderPass(_cmdBuf, &passBeginInfo, VK_SUBPASS_CONTENTS_INLINE);
+
+	VkViewport viewport = { 0, 0.f, 1264.f, 681.f, 0, 1 };
+	VkRect2D scissor = { {0, 0}, {uint32_t(1264), uint32_t(681)} };
+
+	vkCmdSetViewport(_cmdBuf, 0, 1, &viewport);
+	vkCmdSetScissor(_cmdBuf, 0, 1, &scissor);
+
+	/* NOTE: pipeline bind */
+	vkCmdBindPipeline(_cmdBuf, VK_PIPELINE_BIND_POINT_GRAPHICS, _pipeline);
+	vkCmdDraw(_cmdBuf, 3, 1, 0, 0);
+
+	ImGui_ImplWin32_NewFrame();
+	ImGui::NewFrame();
+	ImGui::ShowDemoWindow();
 }
 
 void IVkRenderer::EndScene()
 {
+	ImGui::EndFrame();
+	ImGui::Render();
+	ImDrawData* drawData = ImGui::GetDrawData();
+
+	ImGui_ImplVulkan_RenderDrawData(drawData, _cmdBuf);
+	vkCmdEndRenderPass(_cmdBuf);
+
+	TransitionResource(_swapchainImages[_imageIdx], _swapchainFormat, VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL, VK_IMAGE_LAYOUT_PRESENT_SRC_KHR);
+
 	vkEndCommandBuffer(_cmdBuf);
 
 	VkPipelineStageFlags submitStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
@@ -316,6 +505,5 @@ void IVkRenderer::EndScene()
 	vkQueuePresentKHR(_queue, &presentInfo);
 
 	vkDeviceWaitIdle(_device);
-
 }
 
