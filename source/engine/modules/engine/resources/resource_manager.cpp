@@ -14,7 +14,7 @@
 #include "stb_image.h"
 #pragma clang diagnostic pop
 
-static Logger gDbgLog("resdbg");
+static ray::core::log::logger gDbgLog("resdbg");
 
 /* -------------------- RESOURCE BASE ------------------- */
 RAYOBJECT_DESCRIPTION_BEGIN(IRResource)
@@ -135,7 +135,7 @@ IRResource* ResourceManager::LoadResourceResolved(pcstr path, pcstr resorcePath,
 		dcPath += "/";
 		
 		char crc32[32] = {};
-		sprintf_s(crc32, "%u", ray::core::sse::Crc32((u8*)resorcePath, strlen(resorcePath)));
+		sprintf_s(crc32, "{}", ray::core::sse::Crc32((u8*)resorcePath, strlen(resorcePath)));
 		dcPath.append(crc32);
 		dcPath.append(".bundle");
 		
@@ -177,7 +177,7 @@ IRResource* ResourceManager::LoadResourceResolved(pcstr path, pcstr resorcePath,
 	String dcPath = _dataCacheDirectory;
 	dcPath += "/";
 	char crc32[32] = {};
-	sprintf_s(crc32, "%u", ray::core::sse::Crc32((u8*)resorcePath, strlen(resorcePath)));
+	sprintf_s(crc32, "{}", ray::core::sse::Crc32((u8*)resorcePath, strlen(resorcePath)));
 	dcPath.append(crc32);
 	dcPath.append(".bundle");
 	IFile* dcFile = RayState()->FileSystem->OpenFile(dcPath.c_str(), WriteBinary);
@@ -240,7 +240,7 @@ IRResource* ResourceManager::LoadResourceSync(pcstr inName, ResourceType desired
 	mappingRaw[mappingEnd + 1] = '\0';
 
 	String mapping(mappingRaw);
-	gDbgLog.Log("Mapping %s", mapping.c_str());
+	gDbgLog.Log("Mapping {}", mapping.c_str());
 
 	_mutex.Enter();
 
@@ -304,7 +304,7 @@ void ResourceManager::LoadResource(pcstr inName, ResourceType desiredType, Funct
 	//mappingRaw[mappingEnd + 1] = '\0';
 
 	//String mapping(mappingRaw);
-	//gDbgLog.Log("Mapping %s", mapping.c_str());
+	//gDbgLog.Log("Mapping {}", mapping.c_str());
 
 	//for (ResourceMapping& resourceMapping : _mapping)
 	//{

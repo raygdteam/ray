@@ -163,9 +163,6 @@
     <ProjectReference Include="..\..\modules\renderer_core\renderer_core.vcxproj">
       <Project>{1575e148-c79e-402e-ac64-89e9f37b477b}</Project>
     </ProjectReference>
-    <ProjectReference Include="..\..\modules\renderer_null\renderer_null.vcxproj">
-      <Project>{23fefbde-e326-48b4-8643-0af478f9c3b0}</Project>
-    </ProjectReference>
     <ProjectReference Include="..\..\thirdparty\eastl\eastl.vcxproj">
       <Project>{34ff6296-b8e5-43b8-a8a1-b57163615e2a}</Project>
     </ProjectReference>

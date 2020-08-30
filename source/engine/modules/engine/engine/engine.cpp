@@ -21,11 +21,11 @@ u64 tempLastTime = 0;
 using namespace ray;
 using namespace ray::core;
 
-static Logger* eng;
+static log::logger* eng;
 
 RayEngine::RayEngine() : _engineLoop(nullptr)
 {
-	eng = new Logger("engine");
+	eng = new log::logger("engine");
 	tempLevel = new Level;
 }
 
@@ -34,8 +34,8 @@ void RayEngine::Initialize(IEngineLoop* engineLoop)
 	_engineLoop = engineLoop;
 
 	eng->Log("Initializing Ray engine");
-	eng->Log("version %s.%s.%s [%s]", RAY_VERSION_MAJOR, RAY_VERSION_MINOR, RAY_VERSION_PATCH, RAY_VERSION_CODENAME);
-	eng->Log("built on \"%s\"", __TIMESTAMP__);
+	eng->Log("version {}.{}.{} [{}]", RAY_VERSION_MAJOR, RAY_VERSION_MINOR, RAY_VERSION_PATCH, RAY_VERSION_CODENAME);
+	eng->Log("built on \"{}\"", __TIMESTAMP__);
 
 	eng->Log("[1/4] Window init...");
 	ray::core::IPlatformWindow* window = core::IPlatformWindow::CreateInstance();

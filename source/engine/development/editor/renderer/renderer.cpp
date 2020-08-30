@@ -8,7 +8,7 @@
 #include <windows.h>
 #undef CreateSemaphore
 
-static Logger gLog("vulkan");
+static ray::core::log::logger gLog("vulkan");
 
 bool IVkRenderer::InitInstance()
 {
@@ -77,7 +77,7 @@ bool IVkRenderer::InitDevice()
 
 		if (props.deviceType == VK_PHYSICAL_DEVICE_TYPE_DISCRETE_GPU)
 		{
-			gLog.Log("Picking discrete GPU: %s", props.deviceName);
+			gLog.Log("Picking discrete GPU: {}", props.deviceName);
 			_physicalDevice = physicalDevices[i];
 		}
 	}
@@ -87,7 +87,7 @@ bool IVkRenderer::InitDevice()
 		VkPhysicalDeviceProperties props;
 		vkGetPhysicalDeviceProperties(physicalDevices[0], &props);
 
-		gLog.Log("Picking fallback GPU: %s", props.deviceName);
+		gLog.Log("Picking fallback GPU: {}", props.deviceName);
 		_physicalDevice = physicalDevices[0];
 	}
 

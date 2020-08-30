@@ -92,7 +92,7 @@ GLFWbool _glfwIsValidContextConfig(const _GLFWctxconfig* ctxconfig)
             // For now, let everything else through
 
             _glfwInputError(GLFW_INVALID_VALUE,
-                            "Invalid OpenGL version %i.%i",
+                            "Invalid OpenGL version {}.{}",
                             ctxconfig->major, ctxconfig->minor);
             return GLFW_FALSE;
         }
@@ -140,7 +140,7 @@ GLFWbool _glfwIsValidContextConfig(const _GLFWctxconfig* ctxconfig)
             // For now, let everything else through
 
             _glfwInputError(GLFW_INVALID_VALUE,
-                            "Invalid OpenGL ES version %i.%i",
+                            "Invalid OpenGL ES version {}.{}",
                             ctxconfig->major, ctxconfig->minor);
             return GLFW_FALSE;
         }
@@ -404,7 +404,7 @@ GLFWbool _glfwRefreshContextAttribs(_GLFWwindow* window,
         }
     }
 
-    if (!sscanf(version, "%d.%d.%d",
+    if (!sscanf(version, "{}.{}.{}",
                 &window->context.major,
                 &window->context.minor,
                 &window->context.revision))
@@ -438,14 +438,14 @@ GLFWbool _glfwRefreshContextAttribs(_GLFWwindow* window,
         if (window->context.client == GLFW_OPENGL_API)
         {
             _glfwInputError(GLFW_VERSION_UNAVAILABLE,
-                            "Requested OpenGL version %i.%i, got version %i.%i",
+                            "Requested OpenGL version {}.{}, got version {}.{}",
                             ctxconfig->major, ctxconfig->minor,
                             window->context.major, window->context.minor);
         }
         else
         {
             _glfwInputError(GLFW_VERSION_UNAVAILABLE,
-                            "Requested OpenGL ES version %i.%i, got version %i.%i",
+                            "Requested OpenGL ES version {}.{}, got version {}.{}",
                             ctxconfig->major, ctxconfig->minor,
                             window->context.major, window->context.minor);
         }

@@ -2,9 +2,6 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <ClInclude Include="core.hpp" />
-    <ClInclude Include="log\log.hpp">
-      <Filter>log</Filter>
-    </ClInclude>
     <ClInclude Include="memory\new_delete_override.hpp">
       <Filter>memory</Filter>
     </ClInclude>
@@ -62,9 +59,6 @@
     <ClInclude Include="lib\queue.hpp">
       <Filter>lib</Filter>
     </ClInclude>
-    <ClInclude Include="lib\format.hpp">
-      <Filter>lib</Filter>
-    </ClInclude>
     <ClInclude Include="math\matrix.hpp">
       <Filter>math</Filter>
     </ClInclude>
@@ -77,12 +71,15 @@
     <ClInclude Include="object\file_archive.hpp">
       <Filter>object</Filter>
     </ClInclude>
+    <ClInclude Include="log\log.hpp">
+      <Filter>log</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\format.hpp">
+      <Filter>lib</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="core_entry_point.cpp" />
-    <ClCompile Include="log\log.cpp">
-      <Filter>log</Filter>
-    </ClCompile>
     <ClCompile Include="module\module.cpp">
       <Filter>module</Filter>
     </ClCompile>
@@ -103,9 +100,6 @@
     </ClCompile>
     <ClCompile Include="extended_instuctions\sse\common.cpp">
       <Filter>extended instructions\sse</Filter>
-    </ClCompile>
-    <ClCompile Include="lib\format.cpp">
-      <Filter>lib</Filter>
     </ClCompile>
     <ClCompile Include="math\math_common.cpp">
       <Filter>math</Filter>
