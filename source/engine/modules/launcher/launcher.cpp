@@ -10,17 +10,17 @@ static Logger* gLog;
 int RayMain()
 {
 	gLog = new Logger("launcher");
-	ray::launcher::EngineLoop engineLoop;
+	EngineLoop engineLoop;
 	engineLoop.PreInitialize();
 	engineLoop.Initialize();
 
-	if (ray::IsEngineExitRequested())
+	if (IsEngineExitRequested())
 	{
 		gLog->Log("engine early exit");
 		return 1;
 	}
 
-	while (!ray::IsEngineExitRequested())
+	while (!IsEngineExitRequested())
 		engineLoop.Tick();
 
 	return 0;

@@ -3,10 +3,11 @@
 #include <iostream>
 #include <engine/state/state.hpp>
 #include <core/file_system/file_system.hpp>
-
+#include <core/object/file_archive.hpp>
 #include <core/object/object.hpp>
 
 #include <engine/bundle/bundle_meta.hpp>
+
 
 class TestActor1 : public Actor
 {
@@ -210,7 +211,7 @@ void Level::LoadLevel()
 	bundle->Close();
 	delete bundle;*/
 
-	IFile* bundle = ray::RayState()->FileSystem->OpenFile("../../test.bundle", Read);
+	IFile* bundle = RayState()->FileSystem->OpenFile("../../test.bundle", Read);
 	FileArchive ar;
 	ar.file = bundle;
 
@@ -224,7 +225,7 @@ void Level::LoadLevel()
 		u32 object = 0;
 		bundle->Read<u32>(object);
 
-		Type* objectType = ray::RayState()->ObjectDb->GetTypeByCrc(object);
+		Type* objectType = RayState()->ObjectDb->GetTypeByCrc(object);
 		if (objectType == nullptr || objectType->Abstract)
 		{
 			// TODO: fail

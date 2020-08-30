@@ -8,8 +8,6 @@
 // TODO(dark): rewrite to kernel
 #include <Windows.h>
 
-namespace ray
-{
 struct ModuleDef
 {
 	IModule* Module;
@@ -104,5 +102,4 @@ void ModuleManager::__Internal_LoadModuleStatic(RayModuleEntryFn module)
 			return;
 		}
 	}
-}
 }

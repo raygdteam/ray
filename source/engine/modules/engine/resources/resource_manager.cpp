@@ -139,7 +139,7 @@ IRResource* ResourceManager::LoadResourceResolved(pcstr path, pcstr resorcePath,
 		dcPath.append(crc32);
 		dcPath.append(".bundle");
 		
-		IFile* dcFile = ray::RayState()->FileSystem->OpenFile(dcPath.c_str(), ReadBinary);
+		IFile* dcFile = RayState()->FileSystem->OpenFile(dcPath.c_str(), ReadBinary);
 
 		if (dcFile != nullptr)
 		{
@@ -156,7 +156,7 @@ IRResource* ResourceManager::LoadResourceResolved(pcstr path, pcstr resorcePath,
 		}
 	}
 	
-	IFile* file = ray::RayState()->FileSystem->OpenFile(path, ReadBinary);
+	IFile* file = RayState()->FileSystem->OpenFile(path, ReadBinary);
 	check(file != nullptr);
 	
 	RTexture* texture = new RTexture;
@@ -180,7 +180,7 @@ IRResource* ResourceManager::LoadResourceResolved(pcstr path, pcstr resorcePath,
 	sprintf_s(crc32, "%u", ray::core::sse::Crc32((u8*)resorcePath, strlen(resorcePath)));
 	dcPath.append(crc32);
 	dcPath.append(".bundle");
-	IFile* dcFile = ray::RayState()->FileSystem->OpenFile(dcPath.c_str(), WriteBinary);
+	IFile* dcFile = RayState()->FileSystem->OpenFile(dcPath.c_str(), WriteBinary);
 	FileArchive ar;
 	ar.file = dcFile;
 
@@ -206,7 +206,7 @@ void ResourceManager::SetResourceDirectory(pcstr directory, pcstr mapping)
 	String path = {};
 	path += "resource_info.ray";
 	
-	IFile* info = ray::RayState()->FileSystem->OpenFile(path.c_str(), Read);
+	IFile* info = RayState()->FileSystem->OpenFile(path.c_str(), Read);
 	ray_assert(info != nullptr, "Invalid mapping");
 	ray_assert(info->Size() != 0, "Invalid mapping");
 

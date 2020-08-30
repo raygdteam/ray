@@ -1,9 +1,6 @@
 #pragma once
 #include <engine/engine/engine.hpp>
 
-namespace ray::launcher
-{
-
 class EngineLoop : IEngineLoop
 {
 	IEngine* _engine;
@@ -17,5 +14,3 @@ public:
 
 	void Tick() override;
 };
-
-}

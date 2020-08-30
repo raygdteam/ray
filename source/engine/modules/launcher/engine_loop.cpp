@@ -10,9 +10,6 @@
 
 #include <engine/resources/resource_manager.hpp>
 
-namespace ray::launcher
-{
-	
 void EngineLoop::PreInitialize()
 {
 	/* 1. Initialize RayState and vital core components. */
@@ -53,6 +50,4 @@ EngineLoop::~EngineLoop()
 	
 	delete state;
 	delete _engine;
-}
-	
 }

@@ -104,7 +104,7 @@
       <PreprocessorDefinitions>_RELEASE;NDEBUG;RAY_BUILD_ENGINE</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpplatest</LanguageStandard>
-      <AdditionalIncludeDirectories>$(SolutionDir)\source\engine\modules;$(SolutionDir)\source\engine\thirdparty;$(SolutionDir)\source\engine\modules\engine</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)\source\engine\modules;$(SolutionDir)\source\engine\thirdparty;</AdditionalIncludeDirectories>
       <TreatWarningAsError>true</TreatWarningAsError>
       <DiagnosticsFormat>Caret</DiagnosticsFormat>
       <EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>

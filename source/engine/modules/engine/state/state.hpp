@@ -8,8 +8,6 @@ class RAY_CORE_API Debug;
 
 class RAY_ENGINE_API ResourceManager;
 
-namespace ray
-{
 // Core
 class RAY_CORE_API ModuleManager;
 
@@ -30,4 +28,3 @@ struct IRayState
 };
 
 RAY_ENGINE_API IRayState* RayState();
-}

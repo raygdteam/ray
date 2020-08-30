@@ -422,12 +422,12 @@ struct FMatrix<4, 4>
 		);
 	}
 
-	static FMatrix<4, 4> Orthographic(f32 width, f32 height, float near, float far)
+	static FMatrix<4, 4> Orthographic(f32 width, f32 height, float nearz, float farz)
 	{
 		f32 w = 2 / width;
 		f32 h = 2 / height;
-		f32 a = 1.f / (far - near);
-		f32 b = -a * near;
+		f32 a = 1.f / (farz - nearz);
+		f32 b = -a * nearz;
 
 		/*
 		 * [ w, 0, 0, 0]

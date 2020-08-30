@@ -8,9 +8,6 @@
 using namespace ray::renderer_core_api;
 #endif
 
-namespace ray
-{
-
 /**
  * Represents the engine loop object, where all the magic is being called.
  */
@@ -53,5 +50,3 @@ public:
 /** Request engine exit - be it normal exit or crash. */
 RAY_ENGINE_API bool IsEngineExitRequested() noexcept;
 RAY_ENGINE_API void RequestEngineExit(bool data);
-
-}

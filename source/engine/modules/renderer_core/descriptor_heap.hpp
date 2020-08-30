@@ -105,7 +105,7 @@ namespace ray::renderer_core_api
 		{
 			_heapDesc = D3D12_DESCRIPTOR_HEAP_DESC{
 				.Type = type,
-				.NumDescriptors = numDescriptors,
+				.NumDescriptors = u32(numDescriptors), // TODO: workaround
 				.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE,
 				.NodeMask = 1
 			};

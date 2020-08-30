@@ -1,8 +1,6 @@
 #include "state.hpp"
 #include <cstring>
 
-namespace ray
-{
 static IRayState* gState = nullptr;
 
 IRayState* RayState()
@@ -14,5 +12,4 @@ IRayState* RayState()
 	}
 
 	return gState;
-}
 }

@@ -19,10 +19,8 @@
 Level* tempLevel = nullptr;
 u64 tempLastTime = 0;
 
+using namespace ray;
 using namespace ray::core;
-
-namespace ray
-{
 
 static Logger* eng;
 
@@ -104,7 +102,7 @@ void RayEngine::Tick()
 	bool bShouldClose = static_cast<core::IPlatformWindow*>(_window)->ShouldClose();
 	if (bShouldClose)
 	{
-		ray::RequestEngineExit(true);
+		RequestEngineExit(true);
 		return;
 	}
 
@@ -181,7 +179,5 @@ void RequestEngineExit(bool data)
 {
 	gEngineExitRequested = data;
 }
-}
-
 
 // void _DllMainCRTStartup() {}
