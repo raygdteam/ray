@@ -169,19 +169,14 @@ namespace ray::renderer_core_api
 		//TODO:
 	}
 
-	void CommandContext::InitializeTexture(resources::GpuResource& dest, u32 numSubResources, const void* data, u64 rowPitch, u64 slicePitch)
+	void CommandContext::InitializeTexture(resources::GpuResource& dest, u32 numSubResources, D3D12_SUBRESOURCE_DATA* data)
 	{
 		u64 uploadBufferSize = GetRequiredIntermediateSize(dest.GetResource(), 0, numSubResources);
 		
 		CommandContext& context = CommandContext::Begin();
 		DynAlloc uploadBuffer = context.ReserveUploadMemory(uploadBufferSize);
 		
-		D3D12_SUBRESOURCE_DATA srcData;
-		srcData.pData = data;
-		srcData.RowPitch = rowPitch;
-		srcData.SlicePitch = slicePitch;
-		
-		UpdateSubresources(context._commandList, dest.GetResource(), uploadBuffer.Buffer.GetResource(), 0, 0, numSubResources, &srcData);
+		UpdateSubresources(context._commandList, dest.GetResource(), uploadBuffer.Buffer.GetResource(), 0, 0, numSubResources, data);
 		context.TransitionResource(dest, D3D12_RESOURCE_STATE_GENERIC_READ);
 
 		context.Finish(true);

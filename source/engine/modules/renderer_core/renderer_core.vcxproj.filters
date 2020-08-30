@@ -35,6 +35,9 @@
       <Filter>resources</Filter>
     </ClInclude>
     <ClInclude Include="sampler_manager.hpp" />
+    <ClInclude Include="resources\texture.hpp">
+      <Filter>resources</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="renderer.cpp" />
@@ -65,6 +68,9 @@
       <Filter>resources</Filter>
     </ClCompile>
     <ClCompile Include="sampler_manager.cpp" />
+    <ClCompile Include="resources\texture.cpp">
+      <Filter>resources</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="resources">
