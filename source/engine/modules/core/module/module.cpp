@@ -65,7 +65,7 @@ Result<IModule*, ModuleLoadError> ModuleManager::LoadModule(pcstr name)
 		HMODULE lib = nullptr;
 		char tmp[64];
 
-		sprintf_s(tmp, "{}.dll", name);
+		sprintf_s(tmp, "%s.dll", name);
 		lib = LoadLibraryA(tmp);
 		if (lib == nullptr)
 		{
