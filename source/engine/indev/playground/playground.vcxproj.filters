@@ -1,0 +1,32 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="dark\dark.cpp">
+      <Filter>dark</Filter>
+    </ClCompile>
+    <ClCompile Include="mykyta\mykyta.cpp">
+      <Filter>mykyta</Filter>
+    </ClCompile>
+    <ClCompile Include="nikita\nikita.cpp">
+      <Filter>nikita</Filter>
+    </ClCompile>
+    <ClCompile Include="seg_fault__\seg_fault__.cpp">
+      <Filter>seg_fault__</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="dark">
+      <UniqueIdentifier>{b0359845-58b9-4b48-af06-8f237c199a90}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="seg_fault__">
+      <UniqueIdentifier>{7d1088cb-776d-415d-b711-60f6687add54}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="nikita">
+      <UniqueIdentifier>{abea0699-453f-4a30-8b02-b8adbec2096d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="mykyta">
+      <UniqueIdentifier>{5d1d7363-89dd-4909-8f28-2468acbcaac8}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

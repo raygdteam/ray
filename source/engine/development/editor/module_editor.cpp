@@ -1,5 +1,7 @@
 #include <core/module/module.hpp>
 
+#include <editor/engine/engine_interface.hpp>
+
 class EditorModule : public IModule
 {
 public:
@@ -12,7 +14,8 @@ public:
 	
 	IModuleInterface* QueryModuleInterface() override
 	{
-		return nullptr;
+		static EditorInterface _interface;
+		return &_interface;
 	}
 };
 

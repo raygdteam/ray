@@ -1,3 +1,5 @@
+#define LAUNCH_EDITOR 1
+
 #include "engine_loop.hpp"
 #include <core/core.hpp>
 
@@ -10,6 +12,10 @@
 
 #include <engine/resources/resource_manager.hpp>
 
+#if LAUNCH_EDITOR
+#include <editor/engine/engine_interface.hpp>
+#endif
+
 void EngineLoop::PreInitialize()
 {
 	/* 1. Initialize RayState and vital core components. */
@@ -21,6 +27,7 @@ void EngineLoop::PreInitialize()
 	state->Debug = new Debug();
 	state->ResourceManager = new ResourceManager();
 
+#if !LAUNCH_EDITOR
 	/* 2. Load the engine module. This will register the objects we need. */
 	auto res = state->ModuleManager->LoadModule("engine");
 	RAY_ASSERT(res.IsSuccess(), "failed to load engine")
@@ -28,6 +35,14 @@ void EngineLoop::PreInitialize()
 	/* 2. Create the Engine class. */
 	_engine = new RayEngine();
 	state->Engine = _engine;
+#else
+	auto res = state->ModuleManager->LoadModule("editor");
+	RAY_ASSERT(res.IsSuccess(), "failed to load engine");
+
+	EditorInterface* editor = (EditorInterface*)res.Data->QueryModuleInterface();
+	_engine = editor->CreateEditorEngine();
+	state->Engine = _engine;
+#endif
 }
 
 void EngineLoop::Initialize()

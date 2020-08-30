@@ -1,0 +1,19 @@
+#pragma once
+#include <engine/engine/engine.hpp>
+#include <app_framework/base/platform_window.hpp>
+#include <editor/renderer/renderer.hpp>
+
+#ifdef RAY_BUILD_EDITOR
+#define EDITOR_API RAY_DLLEXPORTS
+#else
+#define EDITOR_API RAY_DLLIMPORT
+#endif
+
+class EDITOR_API EditorEngine : public IEngine
+{
+	ray::core::IPlatformWindow* _window = nullptr;
+	IVkRenderer* _renderer = nullptr;
+public:
+	void Initialize(IEngineLoop* engineLoop) override;
+	void Tick() override;
+};

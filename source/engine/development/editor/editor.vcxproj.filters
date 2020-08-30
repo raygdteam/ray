@@ -2,5 +2,42 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <ClCompile Include="module_editor.cpp" />
+    <ClCompile Include="renderer\renderer.cpp">
+      <Filter>renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="renderer\loader\volk.c">
+      <Filter>renderer\loader</Filter>
+    </ClCompile>
+    <ClCompile Include="engine\engine.cpp">
+      <Filter>engine</Filter>
+    </ClCompile>
+    <ClCompile Include="engine\engine_interface.cpp">
+      <Filter>engine</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="renderer">
+      <UniqueIdentifier>{e68f54fb-b358-45d7-b90f-e7ac275d0d25}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="renderer\loader">
+      <UniqueIdentifier>{d3e5554d-3a0c-4563-9496-da966b07bf38}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="engine">
+      <UniqueIdentifier>{852cca08-93de-4d07-a273-61d81a851c94}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="renderer\renderer.hpp">
+      <Filter>renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="renderer\loader\volk.h">
+      <Filter>renderer\loader</Filter>
+    </ClInclude>
+    <ClInclude Include="engine\engine.hpp">
+      <Filter>engine</Filter>
+    </ClInclude>
+    <ClInclude Include="engine\engine_interface.hpp">
+      <Filter>engine</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
