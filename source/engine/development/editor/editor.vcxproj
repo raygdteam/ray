@@ -79,13 +79,14 @@
     <ClCompile>
       <WarningLevel>Level4</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_DEBUG;RAY_BUILD_EDITOR;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;_DEBUG;RAY_BUILD_EDITOR;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>$(SolutionDir)\source\engine\modules;$(SolutionDir)\source\engine\thirdparty;$(SolutionDir)\source\engine\development</AdditionalIncludeDirectories>
       <TreatWarningAsError>true</TreatWarningAsError>
       <DiagnosticsFormat>Caret</DiagnosticsFormat>
       <LanguageStandard>stdcpplatest</LanguageStandard>
       <AdditionalOptions>-Wno-unused-command-line-argument %(AdditionalOptions)</AdditionalOptions>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -98,13 +99,14 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>NDEBUG;_RELEASE;RAY_BUILD_EDITOR;%(PreprocessorDefinitions);</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;NDEBUG;_RELEASE;RAY_BUILD_EDITOR;%(PreprocessorDefinitions);</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpplatest</LanguageStandard>
       <AdditionalIncludeDirectories>$(SolutionDir)\source\engine\modules;$(SolutionDir)\source\engine\thirdparty;$(SolutionDir)\source\engine\development</AdditionalIncludeDirectories>
       <TreatWarningAsError>true</TreatWarningAsError>
       <DiagnosticsFormat>Caret</DiagnosticsFormat>
       <AdditionalOptions>-Wno-unused-command-line-argument %(AdditionalOptions)</AdditionalOptions>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -119,13 +121,14 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>NDEBUG;_DEVELOPMENT;RAY_BUILD_EDITOR;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;NDEBUG;_DEVELOPMENT;RAY_BUILD_EDITOR;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>$(SolutionDir)\source\engine\modules;$(SolutionDir)\source\engine\thirdparty;$(SolutionDir)\source\engine\development</AdditionalIncludeDirectories>
       <TreatWarningAsError>true</TreatWarningAsError>
       <DiagnosticsFormat>Caret</DiagnosticsFormat>
       <LanguageStandard>stdcpplatest</LanguageStandard>
       <AdditionalOptions>-Wno-unused-command-line-argument %(AdditionalOptions)</AdditionalOptions>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -137,15 +140,55 @@
   <ItemGroup>
     <ClCompile Include="engine\engine.cpp" />
     <ClCompile Include="engine\engine_interface.cpp" />
+    <ClCompile Include="imgui\imgui.cpp">
+      <IncludeInUnityFile Condition="'$(Configuration)|$(Platform)'=='Development|x64'">true</IncludeInUnityFile>
+      <IncludeInUnityFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</IncludeInUnityFile>
+      <IncludeInUnityFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</IncludeInUnityFile>
+      <OrderInUnityFile Condition="'$(Configuration)|$(Platform)'=='Development|x64'">101</OrderInUnityFile>
+      <OrderInUnityFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">101</OrderInUnityFile>
+      <OrderInUnityFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">101</OrderInUnityFile>
+    </ClCompile>
+    <ClCompile Include="imgui\imgui_demo.cpp">
+      <IncludeInUnityFile Condition="'$(Configuration)|$(Platform)'=='Development|x64'">true</IncludeInUnityFile>
+      <IncludeInUnityFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</IncludeInUnityFile>
+      <IncludeInUnityFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</IncludeInUnityFile>
+    </ClCompile>
+    <ClCompile Include="imgui\imgui_draw.cpp">
+      <IncludeInUnityFile Condition="'$(Configuration)|$(Platform)'=='Development|x64'">true</IncludeInUnityFile>
+      <IncludeInUnityFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</IncludeInUnityFile>
+      <IncludeInUnityFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</IncludeInUnityFile>
+    </ClCompile>
+    <ClCompile Include="imgui\imgui_impl_vulkan.cpp" />
+    <ClCompile Include="imgui\imgui_impl_win32.cpp" />
+    <ClCompile Include="imgui\imgui_widgets.cpp">
+      <IncludeInUnityFile Condition="'$(Configuration)|$(Platform)'=='Development|x64'">true</IncludeInUnityFile>
+      <IncludeInUnityFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</IncludeInUnityFile>
+      <IncludeInUnityFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</IncludeInUnityFile>
+    </ClCompile>
     <ClCompile Include="module_editor.cpp" />
+    <ClCompile Include="renderer\descriptor_pool.cpp" />
     <ClCompile Include="renderer\loader\volk.c" />
+    <ClCompile Include="renderer\pipeline.cpp" />
     <ClCompile Include="renderer\renderer.cpp" />
+    <ClCompile Include="renderer\render_pass.cpp" />
+    <ClCompile Include="renderer\shader.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="engine\engine.hpp" />
     <ClInclude Include="engine\engine_interface.hpp" />
+    <ClInclude Include="imgui\imconfig.h" />
+    <ClInclude Include="imgui\imgui.h" />
+    <ClInclude Include="imgui\imgui_impl_vulkan.h" />
+    <ClInclude Include="imgui\imgui_impl_win32.h" />
+    <ClInclude Include="imgui\imgui_internal.h" />
+    <ClInclude Include="imgui\imstb_rectpack.h" />
+    <ClInclude Include="imgui\imstb_textedit.h" />
+    <ClInclude Include="imgui\imstb_truetype.h" />
+    <ClInclude Include="renderer\descriptor_pool.hpp" />
     <ClInclude Include="renderer\loader\volk.h" />
+    <ClInclude Include="renderer\pipeline.hpp" />
     <ClInclude Include="renderer\renderer.hpp" />
+    <ClInclude Include="renderer\shader.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\modules\app_framework\app_framework.vcxproj">
@@ -166,6 +209,9 @@
     <ProjectReference Include="..\..\thirdparty\mimalloc\mimalloc.vcxproj">
       <Project>{615c925d-85a3-4099-85bc-6bbb744c128e}</Project>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="renderer\render_pass.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

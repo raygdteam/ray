@@ -55,6 +55,9 @@
 
 #if defined (RAY_PLATFORM_WIN32) || defined (RAY_PLATFORM_WIN64)
 #define RAY_PLATFORM_WIN
+#ifndef _CRT_SECURE_NO_WARNINGS
+#define _CRT_SECURE_NO_WARNINGS
+#endif
 #endif 
 
 #ifdef __linux__
