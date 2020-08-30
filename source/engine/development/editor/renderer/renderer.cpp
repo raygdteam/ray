@@ -151,25 +151,32 @@ bool IVkRenderer::InitSurface(ray::core::IPlatformWindow* window)
 
 bool IVkRenderer::InitSwapchain(ray::core::IPlatformWindow* window)
 {
+	VkSurfaceCapabilitiesKHR capabilities = {};
+	vkGetPhysicalDeviceSurfaceCapabilitiesKHR(_physicalDevice, _surface, &capabilities);
+
+	VkSurfaceFormatKHR surfaceFormat = {};
+	u32 count = 1;
+	vkGetPhysicalDeviceSurfaceFormatsKHR(_physicalDevice, _surface, &count, &surfaceFormat);
+	
 	VkSwapchainCreateInfoKHR createInfo = {
 		.sType = VK_STRUCTURE_TYPE_SWAPCHAIN_CREATE_INFO_KHR,
 		.pNext = nullptr,
 		.flags = NULL,
 		.surface = _surface,
 		.minImageCount = 2,
-		.imageFormat = VK_FORMAT_R8G8B8A8_UNORM,
-		.imageColorSpace = VK_COLOR_SPACE_SRGB_NONLINEAR_KHR,
+		.imageFormat = surfaceFormat.format,
+		.imageColorSpace = surfaceFormat.colorSpace,
 		.imageExtent = {
-			.width = window->GetWidth(),
-			.height = window->GetHeight()
+			.width = capabilities.currentExtent.width,
+			.height = capabilities.currentExtent.height
 		},
 		.imageArrayLayers = 1,
 		.imageUsage = VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT, /* attachement to pipeline */
 		.imageSharingMode = VK_SHARING_MODE_EXCLUSIVE,
 		.queueFamilyIndexCount = 1,
 		.pQueueFamilyIndices = &familyIndex,
-		.preTransform = static_cast<VkSurfaceTransformFlagBitsKHR>(0),
-		.compositeAlpha = static_cast<VkCompositeAlphaFlagBitsKHR>(0),
+		.preTransform = VK_SURFACE_TRANSFORM_IDENTITY_BIT_KHR,
+		.compositeAlpha = VK_COMPOSITE_ALPHA_OPAQUE_BIT_KHR,
 		.presentMode = VK_PRESENT_MODE_FIFO_KHR,
 		.clipped = false,
 		.oldSwapchain = nullptr,
@@ -250,18 +257,18 @@ bool IVkRenderer::Initialize(ray::core::IPlatformWindow* window)
 
 void IVkRenderer::BeginScene()
 {
-	(vkAcquireNextImageKHR(_device, _swapchain, ~0ull, _acqSemaphore, nullptr, &_imageIdx));
+	vkAcquireNextImageKHR(_device, _swapchain, ~0ull, _acqSemaphore, nullptr, &_imageIdx);
 
-	(vkResetCommandPool(_device, _commandPool, 0));
+	vkResetCommandPool(_device, _commandPool, 0);
 
 	VkCommandBufferBeginInfo beginInfo = {
-		.sType = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO,
+		.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO,
 		.pNext = nullptr,
 		.flags = VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT,
 		.pInheritanceInfo = nullptr
 	};
 
-	(vkBeginCommandBuffer(_cmdBuf, &beginInfo));
+	vkBeginCommandBuffer(_cmdBuf, &beginInfo);
 
 	VkClearColorValue color = { {1, 0, 1, 1 } };
 
@@ -278,7 +285,7 @@ void IVkRenderer::BeginScene()
 
 void IVkRenderer::EndScene()
 {
-	(vkEndCommandBuffer(_cmdBuf));
+	vkEndCommandBuffer(_cmdBuf);
 
 	VkPipelineStageFlags submitStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
 
@@ -306,9 +313,9 @@ void IVkRenderer::EndScene()
 		.pImageIndices = &_imageIdx,
 		.pResults = nullptr
 	};
-	(vkQueuePresentKHR(_queue, &presentInfo));
+	vkQueuePresentKHR(_queue, &presentInfo);
 
-	(vkDeviceWaitIdle(_device));
+	vkDeviceWaitIdle(_device);
 
 }
 

@@ -17,6 +17,7 @@ void EditorEngine::Initialize(IEngineLoop* engineLoop)
 
 void EditorEngine::Tick()
 {
+	_window->Update();
 	if (_window->ShouldClose())
 	{
 		RequestEngineExit(true);
