@@ -14,7 +14,7 @@
 #include "stb_image.h"
 #pragma clang diagnostic pop
 
-static ray::core::log::logger gDbgLog("resdbg");
+static Logger gDbgLog("resdbg");
 
 /* -------------------- RESOURCE BASE ------------------- */
 RAYOBJECT_DESCRIPTION_BEGIN(IRResource)

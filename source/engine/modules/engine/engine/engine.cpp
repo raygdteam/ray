@@ -21,11 +21,11 @@ u64 tempLastTime = 0;
 using namespace ray;
 using namespace ray::core;
 
-static log::logger* eng;
+static Logger* eng;
 
 RayEngine::RayEngine() : _engineLoop(nullptr)
 {
-	eng = new log::logger("engine");
+	eng = new Logger("engine");
 	tempLevel = new Level;
 }
 

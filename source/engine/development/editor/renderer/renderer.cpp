@@ -8,7 +8,7 @@
 #include <windows.h>
 #undef CreateSemaphore
 
-static ray::core::log::logger gLog("vulkan");
+static Logger gLog("vulkan");
 
 bool IVkRenderer::InitInstance()
 {

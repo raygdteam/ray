@@ -5,11 +5,11 @@
 
 #include <core/memory/new_delete_override.hpp>
 
-static ray::core::log::logger* gLog;
+static Logger* gLog;
 
 int RayMain()
 {
-	gLog = new ray::core::log::logger("launcher");
+	gLog = new Logger("launcher");
 	EngineLoop engineLoop;
 	engineLoop.PreInitialize();
 	engineLoop.Initialize();

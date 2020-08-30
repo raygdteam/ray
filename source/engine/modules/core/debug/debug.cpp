@@ -5,7 +5,7 @@
 #include <windows.h>
 #include <cstdio>
 
-static ray::core::log::logger* gLog = nullptr;
+static Logger* gLog = nullptr;
 
 void Debug::handleSignal(int sc)
 {
@@ -33,7 +33,7 @@ void Debug::handleSignal(int sc)
 
 Debug::Debug()
 {
-	gLog = new ray::core::log::logger("debug");
+	gLog = new Logger("debug");
 	signal(SIGINT, Debug::handleSignal); // interrupt
 	signal(SIGILL, Debug::handleSignal); // illegal instruction
 	signal(SIGFPE, Debug::handleSignal); // FPU error

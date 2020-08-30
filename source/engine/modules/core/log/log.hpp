@@ -6,64 +6,64 @@
 #include <windows.h>
 #include <debugapi.h>
 
-namespace ray::core::log
+struct LogLevel
 {
-	struct level
+	const char* Name;
+	const char* Color;
+};
+
+LogLevel LogLevelWarning { .Name = "warning", .Color = "\033[33m" };
+LogLevel LogLevelError { .Name = "error", .Color = "\033[31m" };
+LogLevel LogLevelDebug { .Name = "debug", .Color = "\033[34m" };
+
+class Logger
+{
+	const char* name;
+
+public:
+	Logger(const char* name) : name(name) {}
+
+	void Log(const char* format)
 	{
-		const char* name;
-		const char* color;
-	};
+#ifndef RAY_RELEASE
+		const char* unnamed = Format("[{}] {}\n", this->name, format);
 
-	level warning { .name = "warning", .color = "\033[33m" };
-	level error { .name = "error", .color = "\033[31m" };
-	level debug { .name = "debug", .color = "\033[34m" };
+		printf("%s", unnamed);
+		OutputDebugStringA(unnamed);
+#endif
+	}
 
-	class logger
+	template<typename type>
+	void Log(const char* format, type argument)
 	{
-		const char* name;
+		this->Log(Format(format, argument));
+	}
 
-	public:
-		logger(const char* name) : name(name) {}
+	template<typename type, typename ... Arguments>
+	void Log(const char* format, type argument, Arguments ... arguments)
+	{
+		this->Log(Format(format, argument, arguments...));
+	}
 
-		void Log(const char* format)
-		{
-			const char* unnamed = format::format("[{}] {}\n", this->name, format);
+	void Log(LogLevel level, const char* format)
+	{
+		this->Log(Format("[{}{}\033[0m] {}", level.Color, level.Name, format));
+	}
 
-			printf("%s", unnamed);
-			OutputDebugStringA(unnamed);
-		}
+	template<typename type>
+	void Log(LogLevel level, const char* format, type argument)
+	{
+		this->Log(Format("[{}{}\033[0m] {}", level.Color, level.Name, Format(format, argument)));
+	}
 
-		template<typename type>
-		void Log(const char* format, type argument)
-		{
-			this->Log(format::format(format, argument));
-		}
+	template<typename type, typename ... Arguments>
+	void Log(LogLevel level, const char* format, type argument, Arguments ... arguments)
+	{
+		this->Log(Format("[{}{}\033[0m] {}", level.Color, level.Name, Format(format, argument, arguments...)));
+	}
+};
 
-		template<typename type, typename ... Arguments>
-		void Log(const char* format, type argument, Arguments ... arguments)
-		{
-			this->Log(format::format(format, argument, arguments...));
-		}
-
-		void Log(level level, const char* format)
-		{
-			this->Log(format::format("[{}{}\033[0m] {}", level.color, level.name, format));
-		}
-
-		template<typename type>
-		void Log(level level, const char* format, type argument)
-		{
-			this->Log(format::format("[{}{}\033[0m] {}", level.color, level.name, format::format(format, argument)));
-		}
-
-		template<typename type, typename ... Arguments>
-		void Log(level level, const char* format, type argument, Arguments ... arguments)
-		{
-			this->Log(format::format("[{}{}\033[0m] {}", level.color, level.name, format::format(format, argument, arguments...)));
-		}
-	};
-}
-
+/*
 #define LWarning(logger_, format_, ...) logger_.Log(ray::core::logger::warning, ray::core::format::format("[{}:{}:{}] [{}] {}", __builtin_FILE(), __builtin_LINE(), __builtin_COLUMN(), __builtin_FUNCTION(), ray::core::format::format(format_, __VA_ARGS__)));
 #define LError(logger_, format_, ...) logger_.Log(ray::core::logger::error, ray::core::format::format("[{}:{}:{}] [{}] {}", __builtin_FILE(), __builtin_LINE(), __builtin_COLUMN(), __builtin_FUNCTION(), ray::core::format::format(format_, __VA_ARGS__)));
 
@@ -74,3 +74,4 @@ namespace ray::core::log
 #endif
 
 #define LLog(logger_, format_, ...) logger_.Log(ray::core::format::format("[{}:{}:{}] [{}] {}", __builtin_FILE(), __builtin_LINE(), __builtin_COLUMN(), __builtin_FUNCTION(), ray::core::format::format(format_, __VA_ARGS__)));
+*/

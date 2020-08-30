@@ -3,181 +3,179 @@
 #include <string.h> /* strlen, strcpy */
 #include <stdio.h> /* snprintf */
 
-namespace ray::core::format
+
+char cformat(int)
 {
-	char cformat(int)
-	{
-		return 'i';
-	}
+	return 'i';
+}
 
-	char cformat(char)
-	{
-		return 'c';
-	}
+char cformat(char)
+{
+	return 'c';
+}
 
-	char cformat(const char*)
-	{
-		return 's';
-	}
+char cformat(const char*)
+{
+	return 's';
+}
 
-	template<typename type>
-	const char* bformat(const char* format, char* buffer, int& iteration, type argument)
+template<typename type>
+const char* bformat(const char* format, char* buffer, int& iteration, type argument)
+{
+	while (*format)
 	{
-		while (*format)
+		if (*format != '{')
 		{
-			if (*format != '{')
-			{
-				format++;
-				iteration++;
-				continue;
-			}
-			else
-				format++;
-
-			if (*format != '}')
-			{
-				format++;
-				iteration++;
-				continue;
-			}
-			else
-			{
-				buffer[iteration] = '%';
-				buffer[++iteration] = cformat(argument);
-
-				break;
-			}
+			format++;
+			iteration++;
+			continue;
 		}
+		else
+			format++;
 
-		return buffer;
-	}
-
-	template<typename type, typename ... types>
-	const char* bformat(const char* format, char* buffer, int& iteration, type argument, types ... arguments)
-	{
-		while (*format)
+		if (*format != '}')
 		{
-			if (*format != '{')
-			{
-				format++;
-				iteration++;
-				continue;
-			}
-			else
-				format++;
-
-			if (*format != '}')
-			{
-				format++;
-				iteration++;
-				continue;
-			}
-			else
-			{
-				buffer[iteration] = '%';
-				buffer[++iteration] = cformat(argument);
-
-				bformat(++format, buffer, ++iteration, arguments...);
-
-				break;
-			}
+			format++;
+			iteration++;
+			continue;
 		}
+		else
+		{
+			buffer[iteration] = '%';
+			buffer[++iteration] = cformat(argument);
 
-		return buffer;
+			break;
+		}
 	}
 
-	const char* format(const char* format)
+	return buffer;
+}
+
+template<typename type, typename ... types>
+const char* bformat(const char* format, char* buffer, int& iteration, type argument, types ... arguments)
+{
+	while (*format)
 	{
-		return format;
+		if (*format != '{')
+		{
+			format++;
+			iteration++;
+			continue;
+		}
+		else
+			format++;
+
+		if (*format != '}')
+		{
+			format++;
+			iteration++;
+			continue;
+		}
+		else
+		{
+			buffer[iteration] = '%';
+			buffer[++iteration] = cformat(argument);
+
+			bformat(++format, buffer, ++iteration, arguments...);
+
+			break;
+		}
 	}
 
-	template<typename type>
-	const char* format(const char* format, type argument)
-	{
-		char* buffer = new char[strlen(format)];
+	return buffer;
+}
+
+const char* format(const char* format)
+{
+	return format;
+}
+
+template<typename type>
+const char* Format(const char* format, type argument)
+{
+	char* buffer = new char[strlen(format)];
 
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
-		strcpy(buffer, format);
+	strcpy(buffer, format);
 #pragma clang diagnostic pop
 
-		for (auto iteration = 0; *format != '\0';)
+	for (auto iteration = 0; *format != '\0';)
+	{
+		if (*format != '{')
 		{
-			if (*format != '{')
-			{
-				format++;
-				iteration++;
-				continue;
-			}
-			else
-				format++;
-
-			if (*format != '}')
-			{
-				format++;
-				iteration++;
-				continue;
-			}
-			else
-			{
-				buffer[iteration] = '%';
-				buffer[++iteration] = cformat(argument);
-
-				break;
-			}
+			format++;
+			iteration++;
+			continue;
 		}
+		else
+			format++;
 
-		size_t size = snprintf(nullptr, 0, buffer, argument) + 1;
-		auto returnable_buffer = new char[size];
+		if (*format != '}')
+		{
+			format++;
+			iteration++;
+			continue;
+		}
+		else
+		{
+			buffer[iteration] = '%';
+			buffer[++iteration] = cformat(argument);
 
-		snprintf(returnable_buffer, size, buffer, argument);
-
-		return returnable_buffer;
+			break;
+		}
 	}
 
-	template<typename type, typename ... types>
-	const char* format(const char* format, type argument, types ... arguments)
-	{
-		char* buffer = new char[strlen(format)];
+	size_t size = snprintf(nullptr, 0, buffer, argument) + 1;
+	auto returnable_buffer = new char[size];
+
+	snprintf(returnable_buffer, size, buffer, argument);
+
+	return returnable_buffer;
+}
+
+template<typename type, typename ... types>
+const char* Format(const char* format, type argument, types ... arguments)
+{
+	char* buffer = new char[strlen(format)];
 
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
-		strcpy(buffer, format);
+	strcpy(buffer, format);
 #pragma clang diagnostic pop
 
-		for (auto iteration = 0; *format != '\0';)
+	for (auto iteration = 0; *format != '\0';)
+	{
+		if (*format != '{')
 		{
-			if (*format != '{')
-			{
-				format++;
-				iteration++;
-				continue;
-			}
-			else
-				format++;
-
-			if (*format != '}')
-			{
-				format++;
-				iteration++;
-				continue;
-			}
-			else
-			{
-				buffer[iteration] = '%';
-				buffer[++iteration] = cformat(argument);
-
-				bformat(++format, buffer, ++iteration, arguments...);
-
-				break;
-			}
+			format++;
+			iteration++;
+			continue;
 		}
+		else
+			format++;
 
-		size_t size = snprintf(nullptr, 0, buffer, argument, arguments ...) + 1;
-		auto returnable_buffer = new char[size];
+		if (*format != '}')
+		{
+			format++;
+			iteration++;
+			continue;
+		}
+		else
+		{
+			buffer[iteration] = '%';
+			buffer[++iteration] = cformat(argument);
 
-		snprintf(returnable_buffer, size, buffer, argument, arguments...);
+			bformat(++format, buffer, ++iteration, arguments...);
 
-		return returnable_buffer;
+			break;
+		}
 	}
+
+	size_t size = snprintf(nullptr, 0, buffer, argument, arguments ...) + 1;
+	auto returnable_buffer = new char[size];
+
+	snprintf(returnable_buffer, size, buffer, argument, arguments...);
+
+	return returnable_buffer;
 }
