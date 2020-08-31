@@ -93,7 +93,7 @@ const char* format(const char* format)
 template<typename type>
 const char* Format(const char* format, type argument)
 {
-	char* buffer = new char[strlen(format)];
+	char* buffer = new char[strlen(format) + 1];
 
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
@@ -139,7 +139,7 @@ const char* Format(const char* format, type argument)
 template<typename type, typename ... types>
 const char* Format(const char* format, type argument, types ... arguments)
 {
-	char* buffer = new char[strlen(format)];
+	char* buffer = new char[strlen(format) + 1];
 
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
