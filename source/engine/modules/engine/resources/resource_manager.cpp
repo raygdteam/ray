@@ -81,7 +81,7 @@ const FVector2& RTexture::GetDimensions() const
 void RTexture::Serialize(Archive& ar)
 {
 	ar.Write(_dimensions);
-	ar.Write((void*)_data.GetData(), _data.Size());
+	ar.Write((void*)_data.GetData(), _data.Size() * sizeof(FVector4));
 }
 
 void RTexture::Deserialize(Archive& ar)
@@ -89,7 +89,7 @@ void RTexture::Deserialize(Archive& ar)
 	ar.Read(_dimensions);
 	u64 size = _dimensions.x * _dimensions.y;
 	_data.resize(size);
-	ar.Read((u8*)_data.GetData(), size);
+	ar.Read((u8*)_data.GetData(), size * sizeof(FVector4));
 }
 
 RAYOBJECT_DESCRIPTION_BEGIN(RTexture)
@@ -122,7 +122,7 @@ ResourceManager::ResourceManager()
 		.IsEngineCoreResources = true
 	});
 	_dataCacheDirectory = String("../../engine/datacache");
-	LoadResourceSync("/engine/tex.png", eTexture);
+	//LoadResourceSync("/engine/tex.png", eTexture);
 }
 
 IRResource* ResourceManager::LoadResourceResolved(pcstr path, pcstr resorcePath, ResourceType type)

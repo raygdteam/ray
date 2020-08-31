@@ -1,7 +1,7 @@
 struct VertexOutput
 {
 	float4 pos : SV_POSITION;
-	float2 texcoord0 : TEXCOORD0;
+	float2 texcoord0 : TEXCOORD;
 };
 
 Texture2D TextureAtlas : register(t0);

@@ -17,7 +17,7 @@ public:
 	virtual ResourceType GetResourceType() const noexcept = 0;
 };
 
-class RTexture final : public IRResource
+class RAY_ENGINE_API RTexture final : public IRResource
 {
 	RAYOBJECT_BODY(RTexture, IRResource);
 	

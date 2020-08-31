@@ -131,6 +131,8 @@ const char* Format(const char* format, type argument)
 
 	snprintf(returnable_buffer, size, buffer, argument);
 
+	delete[] buffer;
+	
 	return returnable_buffer;
 }
 
@@ -176,6 +178,8 @@ const char* Format(const char* format, type argument, types ... arguments)
 	auto returnable_buffer = new char[size];
 
 	snprintf(returnable_buffer, size, buffer, argument, arguments...);
+
+	delete[] buffer;
 
 	return returnable_buffer;
 }

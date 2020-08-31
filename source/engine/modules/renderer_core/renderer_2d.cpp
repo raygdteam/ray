@@ -49,7 +49,7 @@ namespace ray::renderer_core_api
 
 	static Renderer2DData sData;
 
-	void Renderer2D::Initialize(RTexture& texture)
+	void Renderer2D::Initialize(void* texture, u32 width, u32 height)
 	{
 		u32* quadIndices = new uint32_t[sData.MAX_INDICES];
 		u32 offset = 0;
@@ -74,7 +74,7 @@ namespace ray::renderer_core_api
 		auto srvHandle = _descriptorHeap.Allocate();
 
 		sData.TextureAtlas = resources::Texture(srvHandle.GetCpuHandle());
-		sData.TextureAtlas.Create(texture.GetDimensions().x, texture.GetDimensions().y, DXGI_FORMAT_R8G8B8A8_UNORM, texture.GetData().GetData());
+		sData.TextureAtlas.Create(width, height, DXGI_FORMAT_R32G32B32A32_FLOAT, texture);
 
 		sData.QuadVertexBufferBase = new QuadVertex[sData.MAX_QUADS];
 
@@ -84,6 +84,7 @@ namespace ray::renderer_core_api
 		sData.QuadVertexPositions[3] = { 0.5f,  0.5f, 0.5f }; // top right
 
 		SamplerDesc defaultSampler;
+		_2DSignature.Begin(1, 1);
 		_2DSignature.InitStaticSampler(0, defaultSampler, D3D12_SHADER_VISIBILITY_PIXEL);
 		_2DSignature.Slot(0).InitAsDescriptorRange(0, D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 1, D3D12_SHADER_VISIBILITY_PIXEL);
 
@@ -115,7 +116,7 @@ namespace ray::renderer_core_api
 		D3D12_INPUT_ELEMENT_DESC inputLayout[] =
 		{
 			{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
-			{ "TEXCOORD0", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 12, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 }
+			{ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 12, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 }
 		};
 		_2DPipeline.SetInputLayout(2, inputLayout);
 		_2DPipeline.SetPrimitiveTopologyType(D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE);

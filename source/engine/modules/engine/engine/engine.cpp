@@ -40,13 +40,12 @@ void RayEngine::Initialize(IEngineLoop* engineLoop)
 	eng->Log("version {}.{}.{} [{}]", RAY_VERSION_MAJOR, RAY_VERSION_MINOR, RAY_VERSION_PATCH, RAY_VERSION_CODENAME);
 	eng->Log("built on \"{}\"", __TIMESTAMP__);
 
-	eng->Log("[1/4] Window init...");
 	ray::core::IPlatformWindow* window = core::IPlatformWindow::CreateInstance();
 	
 	window->Initialize();
 	window->CreateWindow("RAY_ENGINE");
 
-	eng->Log("[2/4] Renderer load...");
+	eng->Log("renderer load begin");
 
 	// Load renderer module
 	auto res = RayState()->ModuleManager->LoadModule("renderer_core");
@@ -54,10 +53,10 @@ void RayEngine::Initialize(IEngineLoop* engineLoop)
 	
 	_renderer = new IRenderer;
 	_renderer->Initialize(window);
-	RTexture* texture = dynamic_cast<RTexture*>(RayState()->ResourceManager->LoadResourceSync("/engine/resources/tex.png", ResourceType::eTexture));
-	Renderer2D::Initialize(*texture);
+	RTexture* texture = dynamic_cast<RTexture*>(RayState()->ResourceManager->LoadResourceSync("/engine/tex.png", ResourceType::eTexture));
+	Renderer2D::Initialize((void*)texture->GetData().GetData(), texture->GetDimensions().x, texture->GetDimensions().y);
 
-	eng->Log("[4/4] Finishing...");
+	eng->Log("renderer load end");
 	
 	window->SetWindowVisibility(true);
 	_window = window;
@@ -134,8 +133,8 @@ void RayEngine::Tick()
 	//Renderer2D::DrawQuad({ flt1.DoStep(), -flt2.DoStep(), depth ? 0.1f : 0.2f }, { clr1.DoStep(), clr2.DoStep(), clr2.DoStep(), 0.f }, gfxContext);
 	//Renderer2D::DrawQuad({ -flt2.DoStep(), flt2.DoStep(), depth ? 0.2f : 0.1f }, { clr2.DoStep(), clr3.DoStep(), clr1.DoStep(), 0.f }, gfxContext);
 
-	Renderer2D::DrawQuad({ .7f, .5f, 0.1f }, { 0.5f, 1.f }, { 1.f, 0.f, 0.f, 0.f }, gfxContext);// red, closer to camera
-	Renderer2D::DrawQuad({ .5f, .5f, 0.5f }, { 1.f, 0.5f }, { 0.f, 1.f, 0.f, 0.f }, gfxContext); // green, futher from camera
+	Renderer2D::DrawQuad({ .1f, .1f, 0.1f }, { 1.f, 0.f, 0.f, 0.f }, gfxContext);// red, closer to camera
+	Renderer2D::DrawQuad({ .5f, .5f, 0.5f }, { 0.f, 1.f, 0.f, 0.f }, gfxContext); // green, futher from camera
 
 	Renderer2D::End(gfxContext);
 

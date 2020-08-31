@@ -1,14 +1,12 @@
 #pragma once
-
 #include <core/math/vector.hpp>
+#include <engine/resources/resource_manager.hpp>
 
 #ifdef RAY_BUILD_RENDERER_CORE
 #define RAY_RENDERERCORE_API __declspec(dllexport)
 #else
 #define RAY_RENDERERCORE_API RAY_DLLIMPORT
 #endif
-
-class RTexture;
 
 namespace ray::renderer_core_api
 {
@@ -22,7 +20,7 @@ namespace ray::renderer_core_api
 	public:
 		~Renderer2D();
 
-		static void Initialize(RTexture& texture);
+		static void Initialize(void* texture, u32 width, u32 height);
 		static void Begin();
 		static void End(GraphicsContext& gfxContext);
 

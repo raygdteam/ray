@@ -125,8 +125,9 @@ namespace ray::renderer_core_api
 			if (heap != nullptr && _currentDescriptorHeaps[type] != heap)
 			{
 				_currentDescriptorHeaps[type] = heap;
-				BindDescriptorHeaps();
 			}
+			
+			BindDescriptorHeaps();
 		}
 
 		inline void SetDescriptorHeaps(size_t numHeaps, D3D12_DESCRIPTOR_HEAP_TYPE* types, ID3D12DescriptorHeap** heaps)

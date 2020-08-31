@@ -24,3 +24,7 @@ Game/intermediate
 !/bin/tools/Microsoft.VisualStudio.Setup.Configuration.Interop.dll
 !/bin/tools/Sharpmake.*.dll
 /.build
+
+/engine/resources/*.*
+/engine/resources/*.bundle
+!/engine/resources/.gitkeep

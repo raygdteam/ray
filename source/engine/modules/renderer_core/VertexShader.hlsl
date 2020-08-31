@@ -1,13 +1,13 @@
 struct VertexInput
 {
 	float3 pos : POSITION;
-	float2 texcoord0 : TEXCOORD0;
+	float2 texcoord0 : TEXCOORD;
 };
 
 struct VertexOutput
 {
-	float4 pos : POSITION;
-	float2 texcoord0 : TEXCOORD0;
+	float4 pos : SV_POSITION;
+	float2 texcoord0 : TEXCOORD;
 };
 
 VertexOutput main( VertexInput vertex )
