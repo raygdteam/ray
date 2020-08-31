@@ -129,6 +129,8 @@
       <LanguageStandard>stdcpplatest</LanguageStandard>
       <AdditionalOptions>-Wno-unused-command-line-argument %(AdditionalOptions)</AdditionalOptions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <Optimization>MaxSpeed</Optimization>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>

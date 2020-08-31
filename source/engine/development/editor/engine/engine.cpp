@@ -38,6 +38,25 @@ void EditorEngine::Tick()
 		
 		ImGui::EndMainMenuBar();
 	}
+	
+	bool data = false;
+	float dat = 0.0f;
+	int da = 0;
+	static const char* a[] = { "straight x one two", "molten metal" };
+	ImGui::Begin("Settings");
+
+	ImGui::Checkbox("This game allows you to hear", &data);
+	ImGui::SliderFloat("Watch", &dat, 0.f, 100.f);
+	ImGui::SliderFloat("MP3 tricks", &dat, 0.f, 100.f);
+	ImGui::SliderFloat("An electric motorcycle", &dat, 0.f, 100.f);
+
+	ImGui::Separator();
+	ImGui::Checkbox("The gears are drawing", &data);
+	ImGui::Combo("Congratulations to the department of mathematics", &da, a, 2);
+	
+	
+	ImGui::End();
+	
 	_renderer->EndScene();
 	
 	auto elapsed = std::chrono::high_resolution_clock::now() - __start;

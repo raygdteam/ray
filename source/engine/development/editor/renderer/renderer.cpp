@@ -30,7 +30,7 @@ bool IVkRenderer::InitInstance()
 		.apiVersion = VK_API_VERSION_1_2
 	};
 
-	const char* layerNames[] = { "VK_LAYER_KHRONOS_validation" };
+	//const char* layerNames[] = { "VK_LAYER_KHRONOS_validation" };
 	const char* extensionNames[] =
 	{
 		VK_KHR_SURFACE_EXTENSION_NAME,
@@ -43,8 +43,8 @@ bool IVkRenderer::InitInstance()
 		.flags = NULL,
 		.pApplicationInfo = &applicationInfo,
 
-		.enabledLayerCount = 1,
-		.ppEnabledLayerNames = &layerNames[0],
+		.enabledLayerCount = 0,
+		.ppEnabledLayerNames = nullptr, //&layerNames[0],
 
 		.enabledExtensionCount = 2,
 		.ppEnabledExtensionNames = extensionNames,
@@ -427,7 +427,7 @@ void IVkRenderer::BeginScene()
 {
 	ImGui_ImplWin32_NewFrame();
 	ImGui::NewFrame();
-	ImGui::ShowDemoWindow();
+	// ImGui::ShowDemoWindow();
 
 	vkDeviceWaitIdle(_device);
 
