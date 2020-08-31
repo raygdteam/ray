@@ -160,6 +160,8 @@ bool IVkRenderer::InitSwapchain(ray::core::IPlatformWindow* window)
 	VkSurfaceCapabilitiesKHR capabilities = {};
 	vkGetPhysicalDeviceSurfaceCapabilitiesKHR(_physicalDevice, _surface, &capabilities);
 
+	_viewport = capabilities.currentExtent;
+	
 	VkSurfaceFormatKHR surfaceFormat = {};
 	u32 count = 1;
 	vkGetPhysicalDeviceSurfaceFormatsKHR(_physicalDevice, _surface, &count, &surfaceFormat);
@@ -183,9 +185,9 @@ bool IVkRenderer::InitSwapchain(ray::core::IPlatformWindow* window)
 		.pQueueFamilyIndices = &familyIndex,
 		.preTransform = VK_SURFACE_TRANSFORM_IDENTITY_BIT_KHR,
 		.compositeAlpha = VK_COMPOSITE_ALPHA_OPAQUE_BIT_KHR,
-		.presentMode = /*VK_PRESENT_MODE_IMMEDIATE_KHR, */VK_PRESENT_MODE_FIFO_KHR,
+		.presentMode = VK_PRESENT_MODE_IMMEDIATE_KHR, /*VK_PRESENT_MODE_FIFO_KHR,*/
 		.clipped = false,
-		.oldSwapchain = nullptr,
+		.oldSwapchain = _swapchain,
 	};
 
 	if (VK_FAILED(vkCreateSwapchainKHR(_device, &createInfo, nullptr, &_swapchain)))
@@ -245,8 +247,8 @@ bool IVkRenderer::InitFramebuffer()
 		createInfo.renderPass = _renderPass;
 		createInfo.attachmentCount = 1;
 		createInfo.pAttachments = &_swapchainImageView[i];
-		createInfo.width = 1264;
-		createInfo.height = 681;
+		createInfo.width = _viewport.width;
+		createInfo.height = _viewport.height;
 		createInfo.layers = 1;
 
 		VkFramebuffer framebuffer = nullptr;
@@ -324,9 +326,18 @@ void IVkRenderer::TransitionResource(VkImage image, VkFormat format, VkImageLayo
 		1, &barrier);
 }
 
+extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
+static void ImguiCallback(void* hWnd, u32 msg, u64 wParam, s64 lParam)
+{
+	ImGui_ImplWin32_WndProcHandler((HWND)hWnd, msg, wParam, lParam);
+}
+
 bool IVkRenderer::Initialize(ray::core::IPlatformWindow* window)
 {
 	gLog.Log(" -------------------- BEGIN VULKAN INIT --------------------");
+
+	_window = window;
+	
 	if (!InitInstance()) return false;
 	if (!InitDevice()) return false;
 	if (!InitSurface(window)) return false;
@@ -406,12 +417,20 @@ bool IVkRenderer::Initialize(ray::core::IPlatformWindow* window)
 	
 	ImGui_ImplVulkan_DestroyFontUploadObjects();
 
+	window->RegisterEventCallback(ImguiCallback);
+
 	gLog.Log(" --------------------- END VULKAN INIT ---------------------");
 	return true;
 }
 
 void IVkRenderer::BeginScene()
 {
+	ImGui_ImplWin32_NewFrame();
+	ImGui::NewFrame();
+	ImGui::ShowDemoWindow();
+
+	vkDeviceWaitIdle(_device);
+
 	vkAcquireNextImageKHR(_device, _swapchain, ~0ull, _acqSemaphore, nullptr, &_imageIdx);
 	
 	vkResetCommandPool(_device, _commandPool, 0);
@@ -438,8 +457,8 @@ void IVkRenderer::BeginScene()
 		.framebuffer = _framebuffer[_imageIdx],
 		.renderArea = VkRect2D {
 			.extent = {
-				.width = 1264,
-				.height = 681
+				.width = _viewport.width,
+				.height = _viewport.height
 			},
 		},
 		.clearValueCount = 1,
@@ -448,8 +467,8 @@ void IVkRenderer::BeginScene()
 
 	vkCmdBeginRenderPass(_cmdBuf, &passBeginInfo, VK_SUBPASS_CONTENTS_INLINE);
 
-	VkViewport viewport = { 0, 0.f, 1264.f, 681.f, 0, 1 };
-	VkRect2D scissor = { {0, 0}, {uint32_t(1264), uint32_t(681)} };
+	VkViewport viewport = { 0, 0.f, float(_viewport.width), float(_viewport.height), 0, 1 };
+	VkRect2D scissor = { {0, 0}, {uint32_t(_viewport.width), uint32_t(_viewport.height)} };
 
 	vkCmdSetViewport(_cmdBuf, 0, 1, &viewport);
 	vkCmdSetScissor(_cmdBuf, 0, 1, &scissor);
@@ -457,10 +476,6 @@ void IVkRenderer::BeginScene()
 	/* NOTE: pipeline bind */
 	vkCmdBindPipeline(_cmdBuf, VK_PIPELINE_BIND_POINT_GRAPHICS, _pipeline);
 	vkCmdDraw(_cmdBuf, 3, 1, 0, 0);
-
-	ImGui_ImplWin32_NewFrame();
-	ImGui::NewFrame();
-	ImGui::ShowDemoWindow();
 }
 
 void IVkRenderer::EndScene()
@@ -502,8 +517,10 @@ void IVkRenderer::EndScene()
 		.pImageIndices = &_imageIdx,
 		.pResults = nullptr
 	};
-	vkQueuePresentKHR(_queue, &presentInfo);
-
-	vkDeviceWaitIdle(_device);
+	VkResult res = vkQueuePresentKHR(_queue, &presentInfo);
+	if (res == VK_ERROR_OUT_OF_DATE_KHR)
+	{
+		InitSwapchain(_window);
+		InitFramebuffer();
+	}
 }
-

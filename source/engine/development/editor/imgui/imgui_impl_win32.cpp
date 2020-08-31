@@ -237,11 +237,6 @@ void    ImGui_ImplWin32_NewFrame()
     // Update OS mouse position
     ImGui_ImplWin32_UpdateMousePos();
 
-	if (GetKeyState(WM_LBUTTONDOWN) & 0x8000 || GetKeyState(WM_LBUTTONDBLCLK) & 0x8000)
-	{
-        io.MouseDown[0] = true;
-	}
-
     // Update OS mouse cursor with the cursor requested by imgui
     ImGuiMouseCursor mouse_cursor = io.MouseDrawCursor ? ImGuiMouseCursor_None : ImGui::GetMouseCursor();
     if (g_LastMouseCursor != mouse_cursor)

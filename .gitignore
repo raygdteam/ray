@@ -25,6 +25,6 @@ Game/intermediate
 !/bin/tools/Sharpmake.*.dll
 /.build
 
-/engine/resources/*.*
-/engine/resources/*.bundle
-!/engine/resources/.gitkeep
+/engine/datacache/*.*
+/engine/datacache/*.bundle
+!/engine/datacache/.git_keep

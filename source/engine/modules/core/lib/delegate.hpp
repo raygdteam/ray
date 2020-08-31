@@ -25,26 +25,10 @@ public:
 	{
 		for (Fn handler : _handlers)
 		{
-			handler.operator()(args...);
+			if (handler != nullptr)
+			{
+				handler.operator()(args...);
+			}
 		}
 	}
 };
-
-
-
-void Test1(int, bool)
-{
-	
-}
-void Test2(int, bool)
-{
-
-}
-
-void test()
-{
-	MulticastDelegate<void(int, bool)> handler;
-	handler.Register(Test1);
-	handler.Register(Test2);
-	handler.Invoke(1, true);
-}

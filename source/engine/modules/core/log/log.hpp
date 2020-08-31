@@ -26,10 +26,12 @@ public:
 	void Log(const char* format)
 	{
 #ifndef RAY_RELEASE
-		const char* unnamed = Format("[{}] {}\n", this->name, format);
+		const char* buffer = Format("[{}] {}\n", this->name, format);
 
-		printf("%s", unnamed);
-		OutputDebugStringA(unnamed);
+		printf("%s", buffer);
+		OutputDebugStringA(buffer);
+
+		delete[] buffer;
 #endif
 	}
 

@@ -18,7 +18,7 @@ class PlatformWindow : public ray::core::IPlatformWindow
 	u16 _width = 1280;
 	u16 _height = 720;
 	bool _osRequestedClose = false;
-
+	MulticastDelegate<void(void*, u32, u64, s64)> _cb;
 public:
 	void Initialize() override;
 	bool CreateWindow(const char* name) override;
@@ -30,6 +30,8 @@ public:
 	u16 GetHeight() override;
 	void Destroy() override;
 	void Shutdown() override;
+	void RegisterEventCallback(Function<void(void*, u32, u64, s64)> callback) override;
+	void ProcessCallback(void* wnd, u32 msg, u64  param1, s64 param2);
 };
 
 void PlatformWindow::Initialize()
@@ -57,13 +59,14 @@ bool PlatformWindow::CreateWindow(const char* name)
 								_height, nullptr, nullptr, GetModuleHandleA(0), 0);
 
 	UpdateWindow(_windowHandle);
-
+	
 	return _windowHandle != nullptr;
 }
 
 void PlatformWindow::SetWindowVisibility(bool visible)
 {
 	ShowWindow(_windowHandle, visible ? SW_SHOW : SW_HIDE);
+	SetWindowLongPtrA(_windowHandle, GWLP_USERDATA, (LONG_PTR)this);
 }
 
 void PlatformWindow::Update()
@@ -115,8 +118,24 @@ ray::core::IPlatformWindow* ray::core::IPlatformWindow::CreateInstance()
 	return new PlatformWindow();
 }
 
+void PlatformWindow::RegisterEventCallback(Function<void(void*, u32, u64, s64)> callback)
+{
+	_cb.Register(callback);
+}
+
+void PlatformWindow::ProcessCallback(void* wnd, u32 msg, u64 param1, s64 param2)
+{
+	_cb.Invoke(_windowHandle, msg, param1, param2);
+}
+
 LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
+	PlatformWindow* window = reinterpret_cast<PlatformWindow*>(GetWindowLongPtrA(hwnd, GWLP_USERDATA));
+	if (window)
+	{
+		window->ProcessCallback(static_cast<void*>(hwnd), msg, wParam, lParam);
+	}
+	
 	switch (msg)
 	{
 	case WM_CLOSE:

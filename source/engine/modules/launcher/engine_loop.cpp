@@ -1,4 +1,4 @@
-#define LAUNCH_EDITOR 0
+#define LAUNCH_EDITOR 1
 
 #include "engine_loop.hpp"
 #include <core/core.hpp>

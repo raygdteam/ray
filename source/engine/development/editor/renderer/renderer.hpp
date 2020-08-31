@@ -15,6 +15,9 @@
 
 class IVkRenderer
 {
+	ray::core::IPlatformWindow* _window;
+	VkExtent2D _viewport = {};
+	
 	VkInstance _instance = nullptr;
 	VkPhysicalDevice _physicalDevice = nullptr;
 	VkDevice _device = nullptr;

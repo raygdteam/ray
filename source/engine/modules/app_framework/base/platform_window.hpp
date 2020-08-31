@@ -1,5 +1,7 @@
 #pragma once
+#include <core/lib/delegate.hpp>
 #include "app_framework/app_framework.hpp"
+
 
 #undef CreateWindow
 
@@ -52,6 +54,8 @@ public:
 	 *  HWND on Windows, for example.
 	 */
 	virtual void* GetWindowHandleRaw() = 0;
+
+	virtual void RegisterEventCallback(Function<void(void*, u32, u64, s64)> callback) = 0;
 
 	/**
 	*	Returns the window width
