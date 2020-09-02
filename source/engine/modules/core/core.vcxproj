@@ -34,6 +34,7 @@
     <ClInclude Include="math\vector.hpp" />
     <ClInclude Include="memory\memory_debug.hpp" />
     <ClInclude Include="memory\new_delete_override.hpp" />
+    <ClInclude Include="mm\memory_manager.hpp" />
     <ClInclude Include="module\module.hpp" />
     <ClInclude Include="module\module_meta.hpp" />
     <ClInclude Include="object\archive.hpp" />
@@ -49,6 +50,7 @@
     <ClCompile Include="file_system\file_system.cpp" />
     <ClCompile Include="lib\thread.cpp" />
     <ClCompile Include="math\math_common.cpp" />
+    <ClCompile Include="mm\memory_manager.cpp" />
     <ClCompile Include="module\module.cpp" />
     <ClCompile Include="object\object_db.cpp" />
     <ClCompile Include="threading\critical_section.cpp" />
@@ -66,6 +68,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="lib\result.hpp" />
+    <None Include="mm\allocator.hpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
