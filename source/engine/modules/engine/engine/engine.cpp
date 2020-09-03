@@ -162,7 +162,7 @@ void RayEngine::Tick()
 
 	Renderer2D::DrawQuad({ .1f, .1f, 0.1f }, lava, gfxContext);// red, closer to camera
 	Renderer2D::DrawQuad({ -0.3f, -0.4f, .3f }, water, gfxContext);
-	Renderer2D::DrawQuad({ .5f, .5f, 0.5f }, water, gfxContext); // green, futher from camera
+	Renderer2D::DrawQuad({ .0f, .0f, 0.0f }, water, gfxContext); // green, futher from camera
 
 	Renderer2D::End(gfxContext);
 

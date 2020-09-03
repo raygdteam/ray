@@ -18,7 +18,8 @@ struct VertexOutput
 VertexOutput main( VertexInput vertex )
 {
 	VertexOutput output;
-	output.pos = mul(float4(vertex.pos, 1.f), ViewProjMatrix);
+	// output.pos = mul(float4(vertex.pos, 1.f), ViewProjMatrix);
+	output.pos = float4(vertex.pos, 1.f);
 	output.texcoord0 = vertex.texcoord0;
 	return output;
 }
