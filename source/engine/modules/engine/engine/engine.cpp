@@ -53,7 +53,7 @@ void RayEngine::Initialize(IEngineLoop* engineLoop)
 	
 	_renderer = new IRenderer;
 	_renderer->Initialize(window);
-	RTexture* texture = dynamic_cast<RTexture*>(RayState()->ResourceManager->LoadResourceSync("/engine/tex.png", ResourceType::eTexture));
+	RTexture* texture = dynamic_cast<RTexture*>(RayState()->ResourceManager->LoadResourceSync("/engine/atlas2.png", ResourceType::eTexture));
 	Renderer2D::Initialize((void*)texture->GetData().GetData(), texture->GetDimensions().x, texture->GetDimensions().y);
 
 	eng->Log("renderer load end");
@@ -133,8 +133,29 @@ void RayEngine::Tick()
 	//Renderer2D::DrawQuad({ flt1.DoStep(), -flt2.DoStep(), depth ? 0.1f : 0.2f }, { clr1.DoStep(), clr2.DoStep(), clr2.DoStep(), 0.f }, gfxContext);
 	//Renderer2D::DrawQuad({ -flt2.DoStep(), flt2.DoStep(), depth ? 0.2f : 0.1f }, { clr2.DoStep(), clr3.DoStep(), clr1.DoStep(), 0.f }, gfxContext);
 
-	Renderer2D::DrawQuad({ .1f, .1f, 0.1f }, { 1.f, 0.f, 0.f, 0.f }, gfxContext);// red, closer to camera
-	Renderer2D::DrawQuad({ .5f, .5f, 0.5f }, { 0.f, 1.f, 0.f, 0.f }, gfxContext); // green, futher from camera
+	float step = static_cast<float>(1.f / 15.f);
+
+	static FVector<2> lava[4] =
+	{
+		{ 0.f, step },
+		{ 0.f, 0.f },
+		{ step, 0.f },
+		{ step, step }
+	}; 
+
+	static FVector<2> water[4] =
+	{
+		{ 0.f, step * 3 },
+		{ 0.f, step * 2 },
+		{ step, step * 2 },
+		{ step, step * 3 }
+	};
+
+	// calculated by calculator
+
+	Renderer2D::DrawQuad({ .1f, .1f, 0.1f }, lava, gfxContext);// red, closer to camera
+	Renderer2D::DrawQuad({ -0.3f, -0.4f, .3f }, water, gfxContext);
+	Renderer2D::DrawQuad({ .5f, .5f, 0.5f }, water, gfxContext); // green, futher from camera
 
 	Renderer2D::End(gfxContext);
 

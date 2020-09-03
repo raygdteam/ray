@@ -1,6 +1,6 @@
 #pragma once
 #include "gpu_resource.hpp"
-
+#include <d3d12.h>
 
 namespace ray::renderer_core_api::resources
 {

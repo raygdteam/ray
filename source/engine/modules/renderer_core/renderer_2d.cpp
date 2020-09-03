@@ -59,9 +59,9 @@ namespace ray::renderer_core_api
 			quadIndices[i + 1] = offset + 1;
 			quadIndices[i + 2] = offset + 2;
 
-			quadIndices[i + 3] = offset + 0;
+			quadIndices[i + 3] = offset + 2;
 			quadIndices[i + 4] = offset + 3;
-			quadIndices[i + 5] = offset + 1;
+			quadIndices[i + 5] = offset + 0;
 
 			offset += 4;
 		}
@@ -74,14 +74,14 @@ namespace ray::renderer_core_api
 		auto srvHandle = _descriptorHeap.Allocate();
 
 		sData.TextureAtlas = resources::Texture(srvHandle.GetCpuHandle());
-		sData.TextureAtlas.Create(width, height, DXGI_FORMAT_R32G32B32A32_FLOAT, texture);
+		sData.TextureAtlas.Create(width, height, DXGI_FORMAT_R32G32B32A32_UINT, texture);
 
 		sData.QuadVertexBufferBase = new QuadVertex[sData.MAX_QUADS];
 
-		sData.QuadVertexPositions[0] = { -0.5f,  0.5f, 0.5f }; // top left
-		sData.QuadVertexPositions[1] = { 0.5f, -0.5f, 0.5f }; // bottom right
-		sData.QuadVertexPositions[2] = { -0.5f, -0.5f, 0.5f }; // bottom left
-		sData.QuadVertexPositions[3] = { 0.5f,  0.5f, 0.5f }; // top right
+		sData.QuadVertexPositions[0] = { -0.5f, -0.5f, 0.5f }; // bottom left
+		sData.QuadVertexPositions[1] = { -0.5f,  0.5f, 0.5f }; // top left
+		sData.QuadVertexPositions[2] = { 0.5f,  0.5f, 0.5f }; // top right
+		sData.QuadVertexPositions[3] = { 0.5f, -0.5f, 0.5f }; // bottom right
 
 		SamplerDesc defaultSampler;
 		_2DSignature.Begin(1, 1);
@@ -143,24 +143,17 @@ namespace ray::renderer_core_api
 		Flush(gfxContext);
 	}
 
-	void Renderer2D::DrawQuad(const FVector<3>& pos, const FVector<2>& size, const FVector<4>& color, GraphicsContext& gfxContext)
+	void Renderer2D::DrawQuad(const FVector<3>& pos, const FVector<2>& size, FVector<2>* textureCoords, GraphicsContext& gfxContext)
 	{
 		auto mat = FMatrix4x4::Scale(FVector<3>{ size.x, size.y, 1.f });
 		auto position = mat.Transform(FVector<4>{ pos.x, pos.y, pos.z, 1.f });
 
-		DrawQuad(FVector<3>{ position.x, position.y, position.z }, color, gfxContext);
+		DrawQuad(FVector<3>{ position.x, position.y, position.z }, textureCoords, gfxContext);
 	}
 
-	void Renderer2D::DrawQuad(const FVector<3>& pos, const FVector<4>& color, GraphicsContext& gfxContext)
+	void Renderer2D::DrawQuad(const FVector<3>& pos, FVector<2>* textureCoords, GraphicsContext& gfxContext)
 	{
 		constexpr size_t quadVertexCount = 4;
-		static FVector<2> texCoords[4] =
-		{
-			{ 0.f, 0.f },
-			{ 1.f, 1.f },
-			{ 0.f, 1.f },
-			{ 1.f, 0.f }
-		};
 
 		if (sData.QuadIndexCount >= sData.MAX_INDICES)
 			FlushAndReset(gfxContext);
@@ -173,7 +166,7 @@ namespace ray::renderer_core_api
 			newPosition.z = pos.z;
 			
 			sData.QuadVertexBufferPtr->Position = newPosition;
-			sData.QuadVertexBufferPtr->TexCoord = texCoords[i];
+			sData.QuadVertexBufferPtr->TexCoord = textureCoords[i];
 			sData.QuadVertexBufferPtr++;
 		}
 
