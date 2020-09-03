@@ -114,10 +114,10 @@ struct FMatrix<4, 4>
 
 	FMatrix(FVector4 row0 = FVector4(), FVector4 row1 = FVector4(), FVector4 row2 = FVector4(), FVector4 row3 = FVector4())
 	{
-		Row[0] = row0;
-		Row[1] = row1;
-		Row[2] = row2;
-		Row[3] = row3;
+		Row[0] = FVector4 { .x = row0.x, .y = row0.y, .z = row0.z, .w = row0.w };
+		Row[1] = FVector4 { .x = row1.x, .y = row1.y, .z = row1.z, .w = row1.w };
+		Row[2] = FVector4 { .x = row2.x, .y = row2.y, .z = row2.z, .w = row2.w };
+		Row[3] = FVector4 { .x = row3.x, .y = row3.y, .z = row3.z, .w = row3.w };
 	}
 
 	static FMatrix Identity()
@@ -347,16 +347,26 @@ struct FMatrix<4, 4>
 	{
 		if (this == &other)
 			return *this;
+
+		this->Row[0] = other.Row[0];
+		this->Row[1] = other.Row[1];
+		this->Row[2] = other.Row[2];
+		this->Row[3] = other.Row[3];
 		
-		return FMatrix<4, 4>(*this);
+		return *this;
 	}
 
-	FMatrix<4, 4> operator=(FMatrix<4, 4>&& other) noexcept
+	FMatrix<4, 4>& operator=(FMatrix<4, 4>&& other) noexcept
 	{
 		if (this == &other)
 			return *this;
+
+		this->Row[0] = other.Row[0];
+		this->Row[1] = other.Row[1];
+		this->Row[2] = other.Row[2];
+		this->Row[3] = other.Row[3];
 		
-		return FMatrix<4, 4>(*this);
+		return *this;
 	}
 
 	static FMatrix<4, 4> RotationX(f32 angle)
@@ -435,13 +445,15 @@ struct FMatrix<4, 4>
 		 * [ 0, 0, a, 0]
 		 * [ 0, 0, b, 1]
 		 */
-		
-		return FMatrix(
+
+		FMatrix<4, 4> result = FMatrix(
 			{ w, 0.0f, 0.0f, 0.f },
 			{ 0.0f, h, 0.0f, 0.0f },
 			{ 0.f, 0.0f, a, 0.f },
 			{ 0.0f, 0.0f, b, 1.0f }
 		);
+		
+		return result;
 	}
 
 	FVector4 Transform(const FVector4& vec)

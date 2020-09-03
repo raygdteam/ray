@@ -19,6 +19,8 @@ protected:
 		UpdateMVP();
 	}
 public:
+	CameraActor();
+	
 	void BeginPlay() override {}
 	void Tick(f64) override {}
 	void OnDestroy() override {}

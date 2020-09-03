@@ -65,7 +65,7 @@ void RayEngine::Initialize(IEngineLoop* engineLoop)
 	window->SetWindowVisibility(true);
 	_window = window;
 
-	camera = new CameraActor;
+	camera = new CameraActor();
 	tempLevel->SpawnActor(camera);
 }
 

@@ -12,8 +12,13 @@ void CameraActor::UpdateMVP()
 	FMatrix4 translation = FMatrix4x4::Identity().Translate(pos) * FMatrix4x4::Identity().RotationX(1.f);
 	
 	// TODO: assumes 1280x720
-	_projection = FMatrix4x4::Orthographic(1280, 720, .1f, 100.f);
+	_projection = FMatrix4x4::Orthographic(1280, 720, .1f, 1.f);
 	_view = translation.Inverse();
 	_viewProjection = _projection * _view;
+}
+
+CameraActor::CameraActor()
+{
+	UpdateMVP();
 }
 
