@@ -228,6 +228,7 @@ namespace ray::renderer_core_api
 		void SetDynamicVB(u32 startSlot, size_t numVertices, size_t vertexStride, const void* data);
 		void SetDynamicIB(size_t indexCount, const u32* data, bool b32Bit = false);
 		void SetDynamicSRV() {}
+		void SetDynamicCBV(u32 rootIndex, size_t bufferSize, void* data);
 
 		void SetDescriptorTable(u32 rootIndex, D3D12_GPU_DESCRIPTOR_HANDLE handle);
 

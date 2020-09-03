@@ -8,6 +8,8 @@
 #include "engine/resources/resource.hpp"
 #include "engine/resources/resource_manager.hpp"
 
+#include "engine/world/actors/camera_actor.hpp"
+
 // ALL OF THIS IS TEMP
 #include <engine/world/level.hpp>
 #include <chrono>
@@ -31,6 +33,8 @@ RayEngine::RayEngine() : _engineLoop(nullptr)
 	eng = new Logger("engine");
 	tempLevel = new Level;
 }
+
+CameraActor* camera;
 
 void RayEngine::Initialize(IEngineLoop* engineLoop)
 {
@@ -60,6 +64,9 @@ void RayEngine::Initialize(IEngineLoop* engineLoop)
 	
 	window->SetWindowVisibility(true);
 	_window = window;
+
+	camera = new CameraActor;
+	tempLevel->SpawnActor(camera);
 }
 
 struct PingPongFloat
@@ -122,7 +129,7 @@ void RayEngine::Tick()
 	//static PingPongFloat clr2 { .From = 0.0f, .Step = 0.0025f };
 	//static PingPongFloat clr3 { .From = 0.0f, .Step = 0.0025f };
 
-	Renderer2D::Begin();
+	Renderer2D::Begin(*camera);
 
 	//Renderer2D::DrawQuad({ -flt1.DoStep(), flt2.DoStep(), depth ? 0.1f : 0.2f }, { clr1.DoStep(), clr2.DoStep(), clr2.DoStep(), 0.f }, gfxContext);
 	//Renderer2D::DrawQuad({ flt2.DoStep(), -flt2.DoStep(), depth ? 0.2f : 0.1f }, { clr2.DoStep(), clr3.DoStep(), clr1.DoStep(), 0.f }, gfxContext);
@@ -185,6 +192,7 @@ RayEngine::~RayEngine()
 	static_cast<core::IPlatformWindow*>(_window)->Shutdown();
 	_renderer->Shutdown();
 
+	delete camera;
 	delete _renderer;
 	delete (core::IPlatformWindow*)_window;
 #endif

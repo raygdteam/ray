@@ -7,6 +7,7 @@ namespace ray::renderer_core_api
 	class CommandContext;
 	struct IRenderer;
 	struct Renderer2DData;
+	class UserDescriptorHeap;
 }
 
 namespace ray::renderer_core_api::resources
@@ -23,7 +24,7 @@ namespace ray::renderer_core_api::resources
 		void CreatePlaces(ID3D12Heap* backingHeap, size_t heapOffset, u32 numElements, u32 elementSize, const void* initialData = nullptr);
 
 		D3D12_GPU_VIRTUAL_ADDRESS RootConstantBufferView() const noexcept { return _gpuVirtualAddress; }
-		D3D12_CPU_DESCRIPTOR_HANDLE CreateConstantBufferView(size_t offset, size_t size);
+		D3D12_CPU_DESCRIPTOR_HANDLE CreateConstantBufferView(UserDescriptorHeap& heap, size_t offset, size_t size);
 
 		D3D12_VERTEX_BUFFER_VIEW VertexBufferView(size_t offset, size_t size, u32 stride);
 		D3D12_VERTEX_BUFFER_VIEW VertexBufferView(u32 startIndex)

@@ -1,6 +1,7 @@
 #pragma once
 #include <core/math/vector.hpp>
 #include <engine/resources/resource_manager.hpp>
+#include <engine/world/actors/camera_actor.hpp>
 
 #ifdef RAY_BUILD_RENDERER_CORE
 #define RAY_RENDERERCORE_API __declspec(dllexport)
@@ -21,7 +22,7 @@ namespace ray::renderer_core_api
 		~Renderer2D();
 
 		static void Initialize(void* texture, u32 width, u32 height);
-		static void Begin();
+		static void Begin(CameraActor& camera);
 		static void End(GraphicsContext& gfxContext);
 
 		static void Shutdown();
@@ -35,6 +36,7 @@ namespace ray::renderer_core_api
 		static UserDescriptorHeap _descriptorHeap;
 
 	private:
+		static void Begin();
 		static void Flush(GraphicsContext& gfxContext);
 		static void FlushAndReset(GraphicsContext& gfxContext);
 

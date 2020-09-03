@@ -1,5 +1,9 @@
 #include "camera_actor.hpp"
 
+RAYOBJECT_DESCRIPTION_BEGIN(CameraActor)
+RAYOBJECT_DESCRIPTION_NAME("engine://camera")
+RAYOBJECT_DESCRIPTION_END(CameraActor)
+
 void CameraActor::UpdateMVP()
 {
 	Transform* transform = GetTransform();

@@ -19,6 +19,9 @@ protected:
 		UpdateMVP();
 	}
 public:
+	void BeginPlay() override {}
+	void Tick(f64) override {}
+	void OnDestroy() override {}
 
 	const FMatrix4x4& GetProjection() { return _projection; }
 	const FMatrix4x4& GetView() { return _view; }

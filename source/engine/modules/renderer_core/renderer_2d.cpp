@@ -21,6 +21,11 @@ namespace ray::renderer_core_api
 	GraphicsPipeline Renderer2D::_2DPipeline;
 	UserDescriptorHeap Renderer2D::_descriptorHeap(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV, 1);
 
+	struct ConstantBuffer
+	{
+		FMatrix4 ViewProjMatrix;
+	};
+
 	struct QuadVertex
 	{
 		FVector<3> Position;
@@ -45,6 +50,8 @@ namespace ray::renderer_core_api
 		QuadVertex* QuadVertexBufferPtr = nullptr;
 
 		FVector<3> QuadVertexPositions[4];
+
+		FMatrix4 ViewProjectionMatrix;
 	};
 
 	static Renderer2DData sData;
@@ -84,9 +91,10 @@ namespace ray::renderer_core_api
 		sData.QuadVertexPositions[3] = { 0.5f, -0.5f, 0.5f }; // bottom right
 
 		SamplerDesc defaultSampler;
-		_2DSignature.Begin(1, 1);
+		_2DSignature.Begin(2, 1);
 		_2DSignature.InitStaticSampler(0, defaultSampler, D3D12_SHADER_VISIBILITY_PIXEL);
 		_2DSignature.Slot(0).InitAsDescriptorRange(0, D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 1, D3D12_SHADER_VISIBILITY_PIXEL);
+		_2DSignature.Slot(1).InitAsConstantBuffer(0, D3D12_SHADER_VISIBILITY_VERTEX);
 
 		_2DSignature.Finalize(D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT);
 		_2DPipeline.SetRootSignature(_2DSignature);
@@ -130,6 +138,12 @@ namespace ray::renderer_core_api
 		_2DPipeline.SetDSVFormat(globals::gDepthBuffer.GetFormat());
 		
 		_2DPipeline.Finalize();
+	}
+
+	void Renderer2D::Begin(CameraActor& camera)
+	{
+		sData.ViewProjectionMatrix = camera.GetViewProjection();
+		Begin();
 	}
 
 	void Renderer2D::Begin()
@@ -184,8 +198,12 @@ namespace ray::renderer_core_api
 		gfxContext.SetPipelineState(_2DPipeline);
 		gfxContext.SetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
+		ConstantBuffer cb;
+		cb.ViewProjMatrix = sData.ViewProjectionMatrix;
+
 		gfxContext.SetDescriptorHeap(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV, _descriptorHeap.GetHeapPointer());
 		gfxContext.SetDescriptorTable(0, _descriptorHeap.GetDescriptorAtOffset(0).GetGpuHandle());
+		gfxContext.SetDynamicCBV(1, sizeof(cb), &cb);
 
 		size_t bufferSize = sData.QuadVertexBufferPtr - sData.QuadVertexBufferBase;
 		gfxContext.SetDynamicVB(0, bufferSize, sizeof(QuadVertex), sData.QuadVertexBufferBase);

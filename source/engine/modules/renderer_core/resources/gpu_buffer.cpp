@@ -1,6 +1,7 @@
 #include "gpu_buffer.hpp"
 #include "../command_context.hpp"
 #include "../renderer.hpp"
+#include "../descriptor_heap.hpp"
 #include <core/debug/assert.hpp>
 #include <core/math/common.hpp>
 
@@ -55,7 +56,7 @@ namespace ray::renderer_core_api::resources
         // CreateDerivedViews();
     }
 
-    D3D12_CPU_DESCRIPTOR_HANDLE GpuBuffer::CreateConstantBufferView(size_t offset, size_t size)
+    D3D12_CPU_DESCRIPTOR_HANDLE GpuBuffer::CreateConstantBufferView(UserDescriptorHeap& heap, size_t offset, size_t size)
     {
         check(size + offset <= _bufferSize)
 
@@ -65,10 +66,11 @@ namespace ray::renderer_core_api::resources
         desc.BufferLocation = _gpuVirtualAddress + offset;
         desc.SizeInBytes = size;
 
-        auto cbvHandle = AllocateDescriptor(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
-        globals::gDevice->CreateConstantBufferView(&desc, cbvHandle);
+        auto cbvHandle = heap.Allocate();
 
-        return cbvHandle;
+        globals::gDevice->CreateConstantBufferView(&desc, cbvHandle.GetCpuHandle());
+
+        return cbvHandle.GetCpuHandle();
     }
 
     D3D12_VERTEX_BUFFER_VIEW GpuBuffer::VertexBufferView(size_t offset, size_t size, u32 stride)

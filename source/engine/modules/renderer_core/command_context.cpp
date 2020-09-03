@@ -521,6 +521,14 @@ namespace ray::renderer_core_api
 		_commandList->IASetIndexBuffer(&view);
 	}
 
+	void GraphicsContext::SetDynamicCBV(u32 rootIndex, size_t bufferSize, void* data)
+	{
+		check(data != nullptr && math::IsAligned(data, 16))
+		auto mem = _cpuLinearAllocator.Allocate(bufferSize);
+		memcpy(mem.Data, data, bufferSize);
+		_commandList->SetGraphicsRootConstantBufferView(rootIndex, mem.GpuVirtualAddress);
+	}
+
 	void GraphicsContext::SetDescriptorTable(u32 rootIndex, D3D12_GPU_DESCRIPTOR_HANDLE handle)
 	{
 		_commandList->SetGraphicsRootDescriptorTable(rootIndex, handle);
