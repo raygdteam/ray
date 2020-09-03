@@ -85,10 +85,10 @@ namespace ray::renderer_core_api
 
 		sData.QuadVertexBufferBase = new QuadVertex[sData.MAX_QUADS];
 
-		sData.QuadVertexPositions[0] = { -0.5f, -0.5f, 0.5f }; // bottom left
-		sData.QuadVertexPositions[1] = { -0.5f,  0.5f, 0.5f }; // top left
-		sData.QuadVertexPositions[2] = { 0.5f,  0.5f, 0.5f }; // top right
-		sData.QuadVertexPositions[3] = { 0.5f, -0.5f, 0.5f }; // bottom right
+		sData.QuadVertexPositions[0] = { -100.5f, -100.5f, 0.5f }; // bottom left
+		sData.QuadVertexPositions[1] = { -100.5f,  100.5f, 0.5f }; // top left
+		sData.QuadVertexPositions[2] = { 100.5f,  100.5f, 0.5f }; // top right
+		sData.QuadVertexPositions[3] = { 100.5f, -100.5f, 0.5f }; // bottom right
 
 		SamplerDesc defaultSampler;
 		_2DSignature.Begin(2, 1);
@@ -157,15 +157,15 @@ namespace ray::renderer_core_api
 		Flush(gfxContext);
 	}
 
-	void Renderer2D::DrawQuad(const FVector<3>& pos, const FVector<2>& size, FVector<2>* textureCoords, GraphicsContext& gfxContext)
+	/*void Renderer2D::DrawQuad(const FVector<3>& pos, const FVector<2>& size, FVector<2>* textureCoords, GraphicsContext& gfxContext)
 	{
 		auto mat = FMatrix4x4::Scale(FVector<3>{ size.x, size.y, 1.f });
 		auto position = mat.Transform(FVector<4>{ pos.x, pos.y, pos.z, 1.f });
 
 		DrawQuad(FVector<3>{ position.x, position.y, position.z }, textureCoords, gfxContext);
-	}
+	}*/
 
-	void Renderer2D::DrawQuad(const FVector<3>& pos, FVector<2>* textureCoords, GraphicsContext& gfxContext)
+	void Renderer2D::DrawQuad(const FVector<3>& pos, const FVector<2>& size, FVector<2>* textureCoords, GraphicsContext& gfxContext)
 	{
 		constexpr size_t quadVertexCount = 4;
 
@@ -174,10 +174,13 @@ namespace ray::renderer_core_api
 
 		for (size_t i = 0; i < quadVertexCount; i++)
 		{
-			auto vertexPos = sData.QuadVertexPositions[i];
-			FVector<3> newPosition = pos + vertexPos;
+			FVector3 vertexPos = sData.QuadVertexPositions[i] * FVector3 {size.x, size.y, 1.f};
+			// vertexPos.z = .5f;
 
-			newPosition.z = pos.z;
+			/*FVector4 transformed = FMatrix4x4::Scale(1).Transform({ vertexPos.x, vertexPos.y, vertexPos.z, 1.f });
+			vertexPos = { transformed.x, transformed.y, transformed.z };*/
+
+			FVector3 newPosition = pos + vertexPos;
 			
 			sData.QuadVertexBufferPtr->Position = newPosition;
 			sData.QuadVertexBufferPtr->TexCoord = textureCoords[i];

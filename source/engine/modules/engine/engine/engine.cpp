@@ -127,7 +127,9 @@ void RayEngine::Tick()
 
 	//static PingPongFloat clr1 {.From = 0.0f, .Step = 0.0025f };
 	//static PingPongFloat clr2 { .From = 0.0f, .Step = 0.0025f };
-	//static PingPongFloat clr3 { .From = 0.0f, .Step = 0.0025f };
+	static PingPongFloat clr3 { .From = -2.0f, .Step = .001f, .To = 2.f };
+	clr3.Step = .001f * f32(delta);
+	camera->MoveTo({ clr3.DoStep(), 0.f });
 
 	Renderer2D::Begin(*camera);
 
@@ -160,9 +162,9 @@ void RayEngine::Tick()
 
 	// calculated by calculator
 
-	Renderer2D::DrawQuad({ .1f, .1f, 0.1f }, lava, gfxContext);// red, closer to camera
-	Renderer2D::DrawQuad({ -0.3f, -0.4f, .3f }, water, gfxContext);
-	Renderer2D::DrawQuad({ .0f, .0f, 0.0f }, water, gfxContext); // green, futher from camera
+	Renderer2D::DrawQuad({ 100.1f, -100.1f, 0.1f }, { 2.f, 1.f },  lava, gfxContext);// red, closer to camera
+	Renderer2D::DrawQuad({ -200.3f, 800.4f, .3f }, { 1.f, 3.f }, water, gfxContext);
+	//Renderer2D::DrawQuad({ 10.0f, 200.0f, 0.0f }, water, gfxContext); // green, futher from camera
 
 	Renderer2D::End(gfxContext);
 

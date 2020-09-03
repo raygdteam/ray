@@ -25,5 +25,6 @@ void __Playground_dark()
 	(void)res;
 
 	DirectX::XMMATRIX rres = MA * MB;
+	DirectX::XMMatrixTransformation
 	(void)rres;
 }

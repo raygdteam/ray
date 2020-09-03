@@ -5,6 +5,7 @@
 
 class CameraActor : public Actor
 {
+	friend class RayEngine;
 	RAYOBJECT_BODY(CameraActor, Actor);
 
 	FMatrix4x4 _projection;

@@ -7,7 +7,7 @@ RAYOBJECT_DESCRIPTION_END(CameraActor)
 void CameraActor::UpdateMVP()
 {
 	Transform* transform = GetTransform();
-	FVector3 pos = FVector3 { transform->Position.x, transform->Position.y, 0.f };
+	FVector3 pos = FVector3 { transform->Position.x, transform->Position.y, .0f};
 
 	FMatrix4 translation = FMatrix4x4::Identity().Translate(pos) * FMatrix4x4::Identity().RotationX(0.f);
 	
