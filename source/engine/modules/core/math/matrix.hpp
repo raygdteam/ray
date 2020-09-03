@@ -186,36 +186,50 @@ struct FMatrix<4, 4>
 	
 	FMatrix<4, 4> Multiply(const FMatrix& param) const 
 	{
-		// TODO: nice-ify
-		FVector<4> A[4] = { Row[0], Row[1], Row[2], Row[3] };
-		FVector<4> B[4] = { param.Row[0], param.Row[1], param.Row[2], param.Row[3] };
+		FMatrix<4, 4> result;
+		
+		float x = Row[0].x;
+		float y = Row[0].y;
+		float z = Row[0].z;
+		float w = Row[0].w;
+		
+		result.Row[0].x = (param.Row[0].x * x) + (param.Row[1].x * y) + (param.Row[2].x * z) + (param.Row[3].x * w);
+		result.Row[0].y = (param.Row[0].y * x) + (param.Row[1].y * y) + (param.Row[2].y * z) + (param.Row[3].y * w);
+		result.Row[0].z = (param.Row[0].z * x) + (param.Row[1].z * y) + (param.Row[2].z * z) + (param.Row[3].z * w);
+		result.Row[0].w = (param.Row[0].w * x) + (param.Row[1].w * y) + (param.Row[2].w * z) + (param.Row[3].w * w);
 
-		return FMatrix<4, 4> {
-			{
-				(A[0].x * B[0].x) + (A[0].y * B[1].x) + (A[0].z * B[2].x) + (A[0].w * B[3].x),
-				(A[1].x * B[0].x) + (A[1].y * B[1].x) + (A[1].z * B[2].x) + (A[1].w * B[3].x),
-				(A[2].x * B[0].x) + (A[2].y * B[1].x) + (A[2].z * B[2].x) + (A[2].w * B[3].x),
-				(A[3].x * B[0].x) + (A[3].y * B[1].x) + (A[3].z * B[2].x) + (A[3].w * B[3].x)
-			},
-			{
-				(A[0].x * B[0].y) + (A[0].y * B[1].y) + (A[0].z * B[2].y) + (A[0].w * B[3].y),
-				(A[1].x * B[0].y) + (A[1].y * B[1].y) + (A[1].z * B[2].y) + (A[1].w * B[3].y),
-				(A[2].x * B[0].y) + (A[2].y * B[1].y) + (A[2].z * B[2].y) + (A[2].w * B[3].y),
-				(A[3].x * B[0].y) + (A[3].y * B[1].y) + (A[3].z * B[2].y) + (A[3].w * B[3].y)
-			},
-			{
-				(A[0].x * B[0].z) + (A[0].y * B[1].z) + (A[0].z * B[2].z) + (A[0].w * B[3].z),
-				(A[1].x * B[0].z) + (A[1].y * B[1].z) + (A[1].z * B[2].z) + (A[1].w * B[3].z),
-				(A[2].x * B[0].z) + (A[2].y * B[1].z) + (A[2].z * B[2].z) + (A[2].w * B[3].z),
-				(A[3].x * B[0].z) + (A[3].y * B[1].z) + (A[3].z * B[2].z) + (A[3].w * B[3].z)
-			},
-			{
-				(A[0].x * B[0].w) + (A[0].y * B[1].w) + (A[0].z * B[2].w) + (A[0].w * B[3].w),
-				(A[1].x * B[0].w) + (A[1].y * B[1].w) + (A[1].z * B[2].w) + (A[1].w * B[3].w),
-				(A[2].x * B[0].w) + (A[2].y * B[1].w) + (A[2].z * B[2].w) + (A[2].w * B[3].w),
-				(A[3].x * B[0].w) + (A[3].y * B[1].w) + (A[3].z * B[2].w) + (A[3].w * B[3].w)
-			},
-		};
+		x = Row[1].x;
+		y = Row[1].y;
+		z = Row[1].z;
+		w = Row[1].w;
+		
+		result.Row[1].x = (param.Row[0].x * x) + (param.Row[1].x * y) + (param.Row[2].x * z) + (param.Row[3].x * w);
+		result.Row[1].y = (param.Row[0].y * x) + (param.Row[1].y * y) + (param.Row[2].y * z) + (param.Row[3].y * w);
+		result.Row[1].z = (param.Row[0].z * x) + (param.Row[1].z * y) + (param.Row[2].z * z) + (param.Row[3].z * w);
+		result.Row[1].w = (param.Row[0].w * x) + (param.Row[1].w * y) + (param.Row[2].w * z) + (param.Row[3].w * w);
+		
+		x = Row[2].x;
+		y = Row[2].y;
+		z = Row[2].z;
+		w = Row[2].w;
+		
+		result.Row[2].x = (param.Row[0].x * x) + (param.Row[1].x * y) + (param.Row[2].x * z) + (param.Row[3].x * w);
+		result.Row[2].y = (param.Row[0].y * x) + (param.Row[1].y * y) + (param.Row[2].y * z) + (param.Row[3].y * w);
+		result.Row[2].z = (param.Row[0].z * x) + (param.Row[1].z * y) + (param.Row[2].z * z) + (param.Row[3].z * w);
+		result.Row[2].w = (param.Row[0].w * x) + (param.Row[1].w * y) + (param.Row[2].w * z) + (param.Row[3].w * w);
+		
+		x = Row[3].x;
+		y = Row[3].y;
+		z = Row[3].z;
+		w = Row[3].w;
+		
+		result.Row[3].x = (param.Row[0].x * x) + (param.Row[1].x * y) + (param.Row[2].x * z) + (param.Row[3].x * w);
+		result.Row[3].y = (param.Row[0].y * x) + (param.Row[1].y * y) + (param.Row[2].y * z) + (param.Row[3].y * w);
+		result.Row[3].z = (param.Row[0].z * x) + (param.Row[1].z * y) + (param.Row[2].z * z) + (param.Row[3].z * w);
+		result.Row[3].w = (param.Row[0].w * x) + (param.Row[1].w * y) + (param.Row[2].w * z) + (param.Row[3].w * w);
+		
+		return result;
+
 	}
 
 	FMatrix<4, 4> Translate(FVector<3> const& vector)
