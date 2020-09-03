@@ -80,6 +80,9 @@
     <ClInclude Include="mm\memory_manager.hpp">
       <Filter>mm</Filter>
     </ClInclude>
+    <ClInclude Include="memory\allocator.hpp">
+      <Filter>memory</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="core_entry_point.cpp" />
@@ -109,6 +112,9 @@
     </ClCompile>
     <ClCompile Include="mm\memory_manager.cpp">
       <Filter>mm</Filter>
+    </ClCompile>
+    <ClCompile Include="memory\allocator.cpp">
+      <Filter>memory</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
