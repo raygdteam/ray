@@ -456,6 +456,16 @@ struct FMatrix<4, 4>
 		return result;
 	}
 
+	FMatrix<4, 4> Transpose()
+	{
+		return FMatrix<4, 4>(
+			{ Row[0].x, Row[1].x, Row[2].x, Row[3].x },
+			{ Row[0].y, Row[1].y, Row[2].y, Row[3].y },
+			{ Row[0].z, Row[1].z, Row[2].z, Row[3].z },
+			{ Row[0].w, Row[1].w, Row[2].w, Row[3].w }
+		);
+	}
+
 	FVector4 Transform(const FVector4& vec)
 	{
 		/* Любезно подсмотрено у UE4 */

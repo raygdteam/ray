@@ -199,7 +199,7 @@ namespace ray::renderer_core_api
 		gfxContext.SetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
 		ConstantBuffer cb;
-		cb.ViewProjMatrix = sData.ViewProjectionMatrix;
+		cb.ViewProjMatrix = sData.ViewProjectionMatrix.Transpose();
 
 		gfxContext.SetDescriptorHeap(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV, _descriptorHeap.GetHeapPointer());
 		gfxContext.SetDescriptorTable(0, _descriptorHeap.GetDescriptorAtOffset(0).GetGpuHandle());
