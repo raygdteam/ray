@@ -1,13 +1,21 @@
 #pragma once
 #include <core/object/object.hpp>
+#include <core/lib/array.hpp>
 #include <engine/world/components/transform.hpp>
 #include <engine/engine/engine_def.hpp>
-#include "core/lib/array.hpp"
+
+enum ActorTickStage : u8
+{
+	eEarlyTick = BIT(0),
+	ePrePhysicsUpdate = BYTE(1),
+	ePostPhysicsUpdate = BYTE(2),
+	eLateUpdate = BIT(3)
+};
 
 struct ActorTick
 {
-	bool Active : 1 = false;
-	
+	bool Active : 1;
+	ActorTickStage Stage : 1;
 };
 
 /**
@@ -18,11 +26,15 @@ class RAY_ENGINE_API Actor : public RayObject
 	RAYOBJECT_BODY(Actor, RayObject);
 	
 	friend class Level;
-	friend class World;
+	// friend class World;
 	
 	Array<IComponent*> _components;
 	
 protected:
+	ActorTick ATD;
+	
+	virtual void Awake() = 0;
+	
 	virtual void BeginPlay() = 0;
 	virtual void Tick(f64 delta) = 0;
 	virtual void OnDestroy() = 0;

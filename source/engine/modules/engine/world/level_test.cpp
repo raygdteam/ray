@@ -274,11 +274,3 @@ void Level::LoadLevel()
 	 * 00 00 00 00 00 00 59 40
 	 */
 }
-
-void Level::Tick(f64 delta)
-{
-	for (Actor* actor : _actors)
-	{
-		actor->Tick(delta);
-	}
-}

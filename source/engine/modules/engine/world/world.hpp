@@ -1,7 +1,10 @@
 #pragma once
+
+/*
 #include <core/object/object.hpp>
 #include <core/lib/array.hpp>
 #include <engine/world/actor.hpp>
+
 
 class World final : public RayObject
 {
@@ -11,3 +14,4 @@ public:
 	void Serialize(Archive&) override {}
 	void Deserialize(Archive&) override {}
 };
+*/
