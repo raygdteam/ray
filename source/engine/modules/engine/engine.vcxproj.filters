@@ -47,6 +47,12 @@
     <ClInclude Include="resources\stb_image.h">
       <Filter>resources</Filter>
     </ClInclude>
+    <ClInclude Include="ui\ui_common.hpp">
+      <Filter>ui</Filter>
+    </ClInclude>
+    <ClInclude Include="ui\ui_object.hpp">
+      <Filter>ui</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="engine">
@@ -69,6 +75,9 @@
     </Filter>
     <Filter Include="world\actors">
       <UniqueIdentifier>{000ec2e6-3609-4776-bb22-05bc4b07f08d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ui">
+      <UniqueIdentifier>{5c83332d-83bc-4519-b21a-0e9b9a4bb380}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

@@ -64,6 +64,7 @@
     <IntDir>$(SolutionDir).build\int\$(Configuration)\$(ProjectName)\</IntDir>
     <OutDir>$(SolutionDir).build\bin\</OutDir>
     <TargetName>$(ProjectName)</TargetName>
+    <CopyCppRuntimeToOutputDir>true</CopyCppRuntimeToOutputDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
@@ -153,6 +154,8 @@
     <ClInclude Include="resources\resource_type.hpp" />
     <ClInclude Include="resources\stb_image.h" />
     <ClInclude Include="state\state.hpp" />
+    <ClInclude Include="ui\ui_common.hpp" />
+    <ClInclude Include="ui\ui_object.hpp" />
     <ClInclude Include="world\actor.hpp" />
     <ClInclude Include="world\actors\camera_actor.hpp" />
     <ClInclude Include="world\components\camera_component.hpp" />

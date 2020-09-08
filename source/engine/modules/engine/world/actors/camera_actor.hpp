@@ -21,7 +21,8 @@ protected:
 	}
 public:
 	CameraActor();
-	
+
+	void Awake() override { ATD.Stage = ePrePhysicsUpdate; ATD.Active = true; }
 	void BeginPlay() override {}
 	void Tick(f64) override {}
 	void OnDestroy() override {}

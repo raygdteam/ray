@@ -7,15 +7,15 @@
 enum ActorTickStage : u8
 {
 	eEarlyTick = BIT(0),
-	ePrePhysicsUpdate = BYTE(1),
-	ePostPhysicsUpdate = BYTE(2),
+	ePrePhysicsUpdate = BIT(1),
+	ePostPhysicsUpdate = BIT(2),
 	eLateUpdate = BIT(3)
 };
 
 struct ActorTick
 {
-	bool Active : 1;
-	ActorTickStage Stage : 1;
+	bool Active;
+	ActorTickStage Stage;
 };
 
 /**

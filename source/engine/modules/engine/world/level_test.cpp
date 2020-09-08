@@ -1,3 +1,4 @@
+#if 0
 #include "level.hpp"
 #include <Windows.h>
 #include <iostream>
@@ -274,3 +275,4 @@ void Level::LoadLevel()
 	 * 00 00 00 00 00 00 59 40
 	 */
 }
+#endif
