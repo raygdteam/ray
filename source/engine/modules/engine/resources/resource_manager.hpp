@@ -11,7 +11,7 @@ struct ResourceMapping;
 
 class RAY_ENGINE_API ResourceManager
 {
-	ray::CriticalSection _mutex;
+	CriticalSection _mutex;
 	Array<ResourceData> _resources;
 	Array<ResourceMapping> _mapping;
 

@@ -40,7 +40,7 @@ namespace ray::renderer_core_api
 	private:
 		static std::vector<CommandContext*> _sContextPool[4];
 		static std::queue<CommandContext*> _sAvailableContexts[4];
-		static ray::CriticalSection _sContextManagerMutex;
+		static CriticalSection _sContextManagerMutex;
 	};
 
 	class CommandContext : public NonCopyable

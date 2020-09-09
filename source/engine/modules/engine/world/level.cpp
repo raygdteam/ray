@@ -1,10 +1,5 @@
 #include "level.hpp"
 
-struct ActorTickData
-{
-	ActorTick& Tick;
-	Actor* Actor;
-};
 
 Level::Level()
 {
@@ -22,23 +17,6 @@ void Level::SpawnActor(Actor* actor)
 	_actors.PushBack(actor);
 	RebuildATD();
 	actor->BeginPlay(); // ??
-}
-
-void Level::Tick(f64 delta)
-{
-	for (ActorTickData& tickData : _atd)
-	{
-		if (tickData.Tick.Stage & eEarlyTick)
-			tickData.Actor->Tick(delta);
-	}
-
-	/* ... */
-
-	for (ActorTickData& tickData : _atd)
-	{
-		if (tickData.Tick.Stage & eLateUpdate)
-			tickData.Actor->Tick(delta);
-	}
 }
 
 void Level::Serialize(Archive&)

@@ -98,7 +98,7 @@ namespace ray::renderer_core_api
 		std::queue<std::pair<u64, LinearAllocationPage*>> _deletionQueue;
 		std::queue<LinearAllocationPage*> _availablePages;
 
-		ray::CriticalSection _mutex;
+		CriticalSection _mutex;
 
 	};
 

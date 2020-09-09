@@ -3,14 +3,20 @@
 #include <core/lib/array.hpp>
 #include <engine/world/actor.hpp>
 
-// Internal use only.
-struct ActorTickData;
+struct ActorTickData
+{
+	ActorTick& Tick;
+	Actor* Actor;
+};
 
 /**
  * Represents a collection of Actors and all necessary data for level to render.
  */
 class Level final : public RayObject
 {
+	friend class World;
+	friend class Actor;
+	
 	RAYOBJECT_BODY(Level, RayObject);
 	Array<ActorTickData> _atd;
 
@@ -25,11 +31,7 @@ public:
 
 	// TEMPORARY
 	void LoadLevel();
-	void Tick(f64 delta);
-
 
 	void Serialize(Archive&) override;
 	void Deserialize(Archive&) override;
-	
-	friend class Actor;
 };

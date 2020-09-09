@@ -23,10 +23,10 @@ struct ActorTick
  */
 class RAY_ENGINE_API Actor : public RayObject
 {
-	RAYOBJECT_BODY(Actor, RayObject);
-	
 	friend class Level;
-	// friend class World;
+	friend class World;
+	
+	RAYOBJECT_BODY(Actor, RayObject);
 	
 	Array<IComponent*> _components;
 	

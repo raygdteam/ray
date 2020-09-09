@@ -43,8 +43,8 @@ private:
 	ID3D12Fence* _fence;
 	HANDLE _event;
 
-	ray::CriticalSection _fenceMutex;
-	ray::CriticalSection _eventMutex;
+	CriticalSection _fenceMutex;
+	CriticalSection _eventMutex;
 
 	ID3D12CommandQueue* _commandQueue;
 	D3D12_COMMAND_LIST_TYPE _type;

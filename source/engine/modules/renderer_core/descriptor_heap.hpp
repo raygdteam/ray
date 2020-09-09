@@ -24,7 +24,7 @@ namespace ray::renderer_core_api
 
 	private:
 		static const uint32_t sNumDescriptorsPerHeap = 256;
-		static ray::CriticalSection sAllocationMutex;
+		static CriticalSection sAllocationMutex;
 		static std::vector<ID3D12DescriptorHeap*> sDescriptorHeapPool;
 		static ID3D12DescriptorHeap* RequestNewHeap(D3D12_DESCRIPTOR_HEAP_TYPE Type);
 

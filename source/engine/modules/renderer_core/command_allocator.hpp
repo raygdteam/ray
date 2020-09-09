@@ -22,7 +22,7 @@ public:
 
 private:
 	D3D12_COMMAND_LIST_TYPE _type;
-	ray::CriticalSection _allocatorMutex;
+	CriticalSection _allocatorMutex;
 	Array<ID3D12CommandAllocator*> _allocatorPool;
 	std::queue<std::pair<u64, ID3D12CommandAllocator*>> _readyAllocators;
 

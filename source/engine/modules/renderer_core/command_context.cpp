@@ -14,7 +14,7 @@ namespace ray::renderer_core_api
 {
 	// ------------------------ CONTEXT MANAGER ------------------------ //
 
-	ray::CriticalSection ContextManager::_sContextManagerMutex;
+	CriticalSection ContextManager::_sContextManagerMutex;
 	std::vector<CommandContext*> ContextManager::_sContextPool[4];
 	std::queue<CommandContext*> ContextManager::_sAvailableContexts[4];
 

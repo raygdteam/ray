@@ -7,7 +7,7 @@ namespace ray::renderer_core_api
     // ------------------------------- DESCRIPTOR ALLOCATOR ------------------------------- //
 
     std::vector<ID3D12DescriptorHeap*> DescriptorAllocator::sDescriptorHeapPool;
-    ray::CriticalSection DescriptorAllocator::sAllocationMutex;
+    CriticalSection DescriptorAllocator::sAllocationMutex;
 
     D3D12_CPU_DESCRIPTOR_HANDLE DescriptorAllocator::Allocate(size_t count)
     {

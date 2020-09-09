@@ -6,8 +6,6 @@ extern "C"
 #include <kernel/kernel_win32_critical_section.h>
 }
 
-namespace ray
-{
 
 CriticalSection::CriticalSection() : _data(nullptr)
 {
@@ -32,5 +30,4 @@ bool CriticalSection::TryEnter() const
 void CriticalSection::Leave() const
 {
 	krnlWin32LeaveCriticalSection(_data);
-}
 }

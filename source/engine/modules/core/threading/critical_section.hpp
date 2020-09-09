@@ -1,9 +1,6 @@
 #pragma once
 #include <core/core.hpp>
 
-namespace ray
-{
-
 class RAY_CORE_API CriticalSection
 {
 	void* _data;
@@ -27,5 +24,3 @@ public:
 	 */
 	void Leave() const;
 };
-
-}
