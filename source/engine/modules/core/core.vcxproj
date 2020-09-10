@@ -42,6 +42,8 @@
     <ClInclude Include="object\file_archive.hpp" />
     <ClInclude Include="object\object.hpp" />
     <ClInclude Include="object\type.hpp" />
+    <ClInclude Include="os\miniwin.hpp" />
+    <ClInclude Include="threading\condition_variable.hpp" />
     <ClInclude Include="threading\critical_section.hpp" />
   </ItemGroup>
   <ItemGroup>
@@ -55,6 +57,10 @@
     <ClCompile Include="mm\memory_manager.cpp" />
     <ClCompile Include="module\module.cpp" />
     <ClCompile Include="object\object_db.cpp" />
+    <ClCompile Include="os\miniwin.cpp">
+      <IncludeInUnityFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</IncludeInUnityFile>
+    </ClCompile>
+    <ClCompile Include="threading\condition_variable.cpp" />
     <ClCompile Include="threading\critical_section.cpp" />
   </ItemGroup>
   <ItemGroup>

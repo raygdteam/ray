@@ -83,6 +83,12 @@
     <ClInclude Include="memory\allocator.hpp">
       <Filter>memory</Filter>
     </ClInclude>
+    <ClInclude Include="threading\condition_variable.hpp">
+      <Filter>threading</Filter>
+    </ClInclude>
+    <ClInclude Include="os\miniwin.hpp">
+      <Filter>os</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="core_entry_point.cpp" />
@@ -115,6 +121,12 @@
     </ClCompile>
     <ClCompile Include="memory\allocator.cpp">
       <Filter>memory</Filter>
+    </ClCompile>
+    <ClCompile Include="threading\condition_variable.cpp">
+      <Filter>threading</Filter>
+    </ClCompile>
+    <ClCompile Include="os\miniwin.cpp">
+      <Filter>os</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -156,6 +168,9 @@
     </Filter>
     <Filter Include="mm">
       <UniqueIdentifier>{0c69efe0-c0e0-447a-b5a3-2550473cbc85}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="os">
+      <UniqueIdentifier>{05a29463-fb89-4153-a633-4f05f4930ad9}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
