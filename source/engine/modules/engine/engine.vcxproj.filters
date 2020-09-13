@@ -53,6 +53,12 @@
     <ClInclude Include="ui\ui_object.hpp">
       <Filter>ui</Filter>
     </ClInclude>
+    <ClInclude Include="world\actors\static_quad_actor.hpp">
+      <Filter>world\actors</Filter>
+    </ClInclude>
+    <ClInclude Include="world\world_render_data.hpp">
+      <Filter>world</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="engine">
@@ -114,6 +120,9 @@
     </ClCompile>
     <ClCompile Include="resources\resource_manager.cpp">
       <Filter>resources</Filter>
+    </ClCompile>
+    <ClCompile Include="world\actors\static_quad_actor.cpp">
+      <Filter>world\actors</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

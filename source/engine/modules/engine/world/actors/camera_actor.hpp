@@ -3,7 +3,7 @@
 #include <core/math/vector.hpp>
 #include <core/math/matrix.hpp>
 
-class CameraActor : public Actor
+class RAY_ENGINE_API CameraActor : public Actor
 {
 	friend class RayEngine;
 	RAYOBJECT_BODY(CameraActor, Actor);

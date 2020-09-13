@@ -158,11 +158,13 @@
     <ClInclude Include="ui\ui_object.hpp" />
     <ClInclude Include="world\actor.hpp" />
     <ClInclude Include="world\actors\camera_actor.hpp" />
+    <ClInclude Include="world\actors\static_quad_actor.hpp" />
     <ClInclude Include="world\components\camera_component.hpp" />
     <ClInclude Include="world\components\component_base.hpp" />
     <ClInclude Include="world\components\transform.hpp" />
     <ClInclude Include="world\level.hpp" />
     <ClInclude Include="world\world.hpp" />
+    <ClInclude Include="world\world_render_data.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="engine\engine.cpp" />
@@ -171,6 +173,7 @@
     <ClCompile Include="state\state.cpp" />
     <ClCompile Include="world\actor.cpp" />
     <ClCompile Include="world\actors\camera_actor.cpp" />
+    <ClCompile Include="world\actors\static_quad_actor.cpp" />
     <ClCompile Include="world\components\camera_component.cpp" />
     <ClCompile Include="world\components\component_base.cpp" />
     <ClCompile Include="world\components\transform.cpp" />

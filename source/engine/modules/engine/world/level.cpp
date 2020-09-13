@@ -1,4 +1,5 @@
 #include "level.hpp"
+#include "actors/static_quad_actor.hpp"
 
 
 Level::Level()
@@ -17,6 +18,18 @@ void Level::SpawnActor(Actor* actor)
 	_actors.PushBack(actor);
 	RebuildATD();
 	actor->BeginPlay(); // ??
+}
+
+void Level::LoadTestLevel()
+{
+	StaticQuadActor* actor1 = new StaticQuadActor();
+	actor1->GetTransform()->Position = FVector2 { 100, 100 };
+	
+	StaticQuadActor* actor2 = new StaticQuadActor();
+	actor2->GetTransform()->Position = FVector2 { 500, 500 };
+
+	SpawnActor(actor1);
+	SpawnActor(actor2);
 }
 
 void Level::Serialize(Archive&)

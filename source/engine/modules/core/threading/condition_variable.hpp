@@ -8,15 +8,15 @@ public:
 	ConditionVariable();
 	
 	/** Signal all waiting threads */
-	void Signal();
+	void Signal() const;
 
 	/** Wait for this CV to become true */
-	void Wait();
+	void Wait() const;
 
 	/** Aliases */
-	void Wake()
+	void Wake() const
 	{ Signal(); }
 	
-	void WaitFor()
+	void WaitFor() const
 	{ Wait(); }
 };

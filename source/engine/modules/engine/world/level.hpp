@@ -2,11 +2,13 @@
 #include <core/object/object.hpp>
 #include <core/lib/array.hpp>
 #include <engine/world/actor.hpp>
+#include <engine/world/world_render_data.hpp>
 
-struct ActorTickData
+struct ActorData
 {
-	ActorTick& Tick;
 	Actor* Actor;
+	ActorTick& Tick;
+	PrimitiveSceneProxy* RenderData;
 };
 
 /**
@@ -14,23 +16,22 @@ struct ActorTickData
  */
 class Level final : public RayObject
 {
+	RAYOBJECT_BODY(Level, RayObject);
+	
 	friend class World;
 	friend class Actor;
-	
-	RAYOBJECT_BODY(Level, RayObject);
-	Array<ActorTickData> _atd;
+
+	Array<Actor*> _actors;
+	Array<ActorData> _atd;
 
 	void RebuildATD();
-	// Temp
 public:
-	Array<Actor*> _actors;
-
 	Level();
 
 	void SpawnActor(Actor* actor);
 
 	// TEMPORARY
-	void LoadLevel();
+	void LoadTestLevel();
 
 	void Serialize(Archive&) override;
 	void Deserialize(Archive&) override;

@@ -2,6 +2,8 @@
 
 #include <core/object/object.hpp>
 #include <core/lib/array.hpp>
+#include <core/threading/condition_variable.hpp>
+
 #include <engine/world/actor.hpp>
 
 // Internal use only.
@@ -24,9 +26,16 @@ class World final
 
 	/* Render the level. */
 	void Render();
+
+	void WorldTickThread();
+	void RenderingThread();
 public:
 	void Initialize();
 	void ScheduleLevelReload(UninitializedResourceRef level);
 	void Tick(f64 delta);
+
+	ConditionVariable ReadyToTick;
+	ConditionVariable WorldTickFinished;
+	ConditionVariable RenderingFinished;
 };
 
