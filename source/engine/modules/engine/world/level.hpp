@@ -8,7 +8,7 @@ struct ActorData
 {
 	Actor* Actor;
 	ActorTick& Tick;
-	PrimitiveSceneProxy* RenderData;
+	PrimitiveSceneProxy* SceneProxy;
 };
 
 /**

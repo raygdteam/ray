@@ -37,7 +37,7 @@ void World::Render()
 
 	// for (const ActorData& data : actorData)
 	// {
-	//		data.RenderData
+	//		data.SceneProxy.RenderData
 	//		...
 	// }
 }
