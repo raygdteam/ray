@@ -180,6 +180,7 @@
     <ClCompile Include="world\level.cpp" />
     <ClCompile Include="world\level_test.cpp" />
     <ClCompile Include="world\world.cpp" />
+    <ClCompile Include="world\world_renderer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\thirdparty\eastl\eastl.vcxproj">

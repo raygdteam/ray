@@ -30,19 +30,6 @@ void World::PhysicsUpdate()
 {
 }
 
-void World::Render()
-{
-	Level* level = _levelData->Level;
-	const ActorData* actorData = level->_atd.GetData();
-	(void)actorData;
-
-	// for (const ActorData& data : actorData)
-	// {
-	//		data.SceneProxy.RenderData
-	//		...
-	// }
-}
-
 void World::WorldTickThread()
 {
 	while (true)

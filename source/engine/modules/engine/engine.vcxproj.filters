@@ -124,5 +124,8 @@
     <ClCompile Include="world\actors\static_quad_actor.cpp">
       <Filter>world\actors</Filter>
     </ClCompile>
+    <ClCompile Include="world\world_renderer.cpp">
+      <Filter>world</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
