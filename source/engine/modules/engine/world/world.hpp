@@ -11,12 +11,15 @@ struct WorldLevelData;
 
 class World final
 {
+	/* Delta is calculated by Engine and passed in Tick. */
+	f64 _delta;
+	
 	/* Not an array since we only support one level at a time. */
 	WorldLevelData* _levelData = nullptr;
 
 	/* Functionality to support level reloads on beginning of next frame. */
-	bool _shouldLoadLevel = false;
-	UninitializedResourceRef _levelRef;
+	// bool _shouldLoadLevel = false;
+	// UninitializedResourceRef _levelRef;
 
 	/* Run tick at specified stage. */
 	void TickActors(ActorTickStage stage, f64 delta) const;
@@ -31,11 +34,12 @@ class World final
 	void RenderingThread();
 public:
 	void Initialize();
-	void ScheduleLevelReload(UninitializedResourceRef level);
+	// void ScheduleLevelReload(UninitializedResourceRef level);
 	void Tick(f64 delta);
 
 	ConditionVariable ReadyToTick;
 	ConditionVariable WorldTickFinished;
 	ConditionVariable RenderingFinished;
+	ConditionVariable TickFinished;
 };
 

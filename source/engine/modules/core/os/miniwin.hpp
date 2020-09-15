@@ -1,5 +1,8 @@
-#pragma once
+﻿#pragma once
 #include <core/core.hpp>
+
+// задолбали правда
+#undef CreateEvent
 
 class RAY_CORE_API WinApi
 {

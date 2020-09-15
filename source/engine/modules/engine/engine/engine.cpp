@@ -1,28 +1,28 @@
 #include "engine.hpp"
 #include <app_framework/base/platform_window.hpp>
+
 #include <core/lib/thread.hpp>
-#include "engine/state/state.hpp"
 #include <core/log/log.hpp>
 #include <core/module/module.hpp>
 
 #include <input/input.hpp>
 
-#include "engine/resources/resource.hpp"
-#include "engine/resources/resource_manager.hpp"
-
-#include "engine/world/actors/camera_actor.hpp"
-
-// ALL OF THIS IS TEMP
-#include <engine/world/level.hpp>
-#include <chrono>
-#include "core/debug/assert.hpp"
+#include <engine/state/state.hpp>
+#include <engine/resources/resource.hpp>
+#include <engine/resources/resource_manager.hpp>
 
 #include <renderer_core/command_context.hpp>
 #include <renderer_core/renderer_2d.hpp>
 
+// ALL OF THIS IS TEMP
+#include <chrono>
+#include "core/debug/assert.hpp"
+#include <engine/world/world.hpp>
+
+
 #undef CreateWindow
 
-Level* tempLevel = nullptr;
+static World* gWorld;
 u64 tempLastTime = 0;
 
 using namespace ray;
@@ -33,10 +33,7 @@ static Logger* eng;
 RayEngine::RayEngine() : _engineLoop(nullptr)
 {
 	eng = new Logger("engine");
-	tempLevel = new Level;
 }
-
-CameraActor* camera;
 
 void RayEngine::Initialize(IEngineLoop* engineLoop)
 {
@@ -63,6 +60,10 @@ void RayEngine::Initialize(IEngineLoop* engineLoop)
 	
 	_renderer = new IRenderer;
 	_renderer->Initialize(window);
+
+	gWorld = new World();
+	gWorld->Initialize();
+	
 	RTexture* texture = dynamic_cast<RTexture*>(RayState()->ResourceManager->LoadResourceSync("/engine/atlas2.png", ResourceType::eTexture));
 	Renderer2D::Initialize((void*)texture->GetData().GetData(), texture->GetDimensions().x, texture->GetDimensions().y);
 
@@ -70,42 +71,7 @@ void RayEngine::Initialize(IEngineLoop* engineLoop)
 	
 	window->SetWindowVisibility(true);
 	_window = window;
-
-	camera = new CameraActor();
-	tempLevel->SpawnActor(camera);
 }
-
-struct PingPongFloat
-{
-	float Data = 0.0f;
-	float Step = 0.0001f;
-	float From = -1.0f;
-	float To = 1.0f;
-	bool Forward = true;
-	
-
-	float DoStep()
-	{
-		if (Forward)
-		{
-			if (Data >= To)
-			{
-				Forward = !Forward;
-				return Data;
-			}
-			Data += Step;
-			return Data;
-		}
-		
-		if (Data <= From)
-		{
-			Forward = !Forward;
-			return Data;
-		}
-		Data -= Step;
-		return Data;
-	}
-};
 
 void RayEngine::Tick()
 {
@@ -113,7 +79,6 @@ void RayEngine::Tick()
 	auto __start = std::chrono::high_resolution_clock::now();
 	
 	static_cast<core::IPlatformWindow*>(_window)->Update();
-	//for debugging
 	bool bShouldClose = static_cast<core::IPlatformWindow*>(_window)->ShouldClose();
 	if (bShouldClose)
 	{
@@ -121,74 +86,8 @@ void RayEngine::Tick()
 		return;
 	}
 
-	GraphicsContext& gfxContext = GraphicsContext::Begin();
+	gWorld->Tick(delta);
 
-	_renderer->BeginScene(gfxContext);
-
-#pragma clang diagnostic ignored "-Wreorder-init-list"
-
-	//static PingPongFloat flt1;
-	//static PingPongFloat flt2;
-	//static bool depth = true;
-
-	//static PingPongFloat clr1 {.From = 0.0f, .Step = 0.0025f };
-	//static PingPongFloat clr2 { .From = 0.0f, .Step = 0.0025f };
-	static PingPongFloat clr3 { .From = -2.0f, .Step = .001f, .To = 2.f };
-	clr3.Step = .001f * f32(delta);
-	camera->MoveTo({ clr3.DoStep(), 0.f });
-
-	Renderer2D::Begin(*camera);
-
-	//Renderer2D::DrawQuad({ -flt1.DoStep(), flt2.DoStep(), depth ? 0.1f : 0.2f }, { clr1.DoStep(), clr2.DoStep(), clr2.DoStep(), 0.f }, gfxContext);
-	//Renderer2D::DrawQuad({ flt2.DoStep(), -flt2.DoStep(), depth ? 0.2f : 0.1f }, { clr2.DoStep(), clr3.DoStep(), clr1.DoStep(), 0.f }, gfxContext);
-
-	//Renderer2D::DrawQuad({ flt1.DoStep(), flt2.DoStep(), depth ? 0.1f : 0.2f }, { clr1.DoStep(), clr2.DoStep(), clr2.DoStep(), 0.f }, gfxContext);
-	//Renderer2D::DrawQuad({ -flt2.DoStep(), flt2.DoStep(), depth ? 0.2f : 0.1f }, { clr2.DoStep(), clr3.DoStep(), clr1.DoStep(), 0.f }, gfxContext);
-
-	//Renderer2D::DrawQuad({ flt1.DoStep(), -flt2.DoStep(), depth ? 0.1f : 0.2f }, { clr1.DoStep(), clr2.DoStep(), clr2.DoStep(), 0.f }, gfxContext);
-	//Renderer2D::DrawQuad({ -flt2.DoStep(), flt2.DoStep(), depth ? 0.2f : 0.1f }, { clr2.DoStep(), clr3.DoStep(), clr1.DoStep(), 0.f }, gfxContext);
-
-	float step = static_cast<float>(1.f / 15.f);
-
-	static FVector<2> lava[4] =
-	{
-		{ 0.f, step },
-		{ 0.f, 0.f },
-		{ step, 0.f },
-		{ step, step }
-	}; 
-
-	static FVector<2> water[4] =
-	{
-		{ 0.f, step * 3 },
-		{ 0.f, step * 2 },
-		{ step, step * 2 },
-		{ step, step * 3 }
-	};
-
-	// calculated by calculator
-
-	Renderer2D::DrawQuad({ 100.1f, -100.1f, 0.1f }, { 2.f, 1.f },  lava, gfxContext);// red, closer to camera
-	Renderer2D::DrawQuad({ -200.3f, 800.4f, .3f }, { 1.f, 3.f }, water, gfxContext);
-	//Renderer2D::DrawQuad({ 10.0f, 200.0f, 0.0f }, water, gfxContext); // green, futher from camera
-
-	Renderer2D::End(gfxContext);
-
-	// renderer commands ...
-	_renderer->EndScene(gfxContext);
-
-	// depth = !depth;
-
-	/*tempLevel->Tick(delta);
-	tempRenderer->BeginFrame();
-	for (u32 i = 0; i < tempLevel->_actors.Size(); ++i)
-	{
-		Actor* actor = tempLevel->_actors[i];
-		Transform* transform = actor->GetTransform();
-		
-		tempRenderer->DrawRect(transform->Position.x, transform->Position.y, 100, 100, {1.0f, 1.0f, 1.0f});
-	}
-	tempRenderer->EndFrame();*/
 	auto elapsed = std::chrono::high_resolution_clock::now() - __start;
 	delta = std::chrono::duration_cast<std::chrono::microseconds>(elapsed).count() / 1000.f;
 }
@@ -199,7 +98,6 @@ RayEngine::~RayEngine()
 	static_cast<core::IPlatformWindow*>(_window)->Shutdown();
 	_renderer->Shutdown();
 
-	delete camera;
 	delete _renderer;
 	delete RayState()->Input;
 	delete (core::IPlatformWindow*)_window;
