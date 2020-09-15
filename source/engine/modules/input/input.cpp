@@ -4,26 +4,22 @@
 
 #include <windows.h>
 
-namespace Ray
+Input::Input()
 {
-	Input::Input()
+	POINT mousePos = {};
+
+	GetCursorPos(&mousePos);
+
+	this->_mouse.Coordinates.x = mousePos.x;
+	this->_mouse.Coordinates.y = mousePos.y;
+}
+
+void Input::Update(u16 x, u16 y)
+{
+	if (this->_mouse.Coordinates.x != x || this->_mouse.Coordinates.y != y)
 	{
-		POINT unnamed;
-
-		GetCursorPos(&unnamed);
-
-		this->mouse.coordinates.x = unnamed.x;
-		this->mouse.coordinates.x = unnamed.y;
-
-	}
-
-	void Input::Update(u16& x, u16& y)
-	{
-		if (this->mouse.coordinates.x != x || this->mouse.coordinates.y != y)
-		{
-			this->mouse.coordinates.x = x;
-			this->mouse.coordinates.y = y;
-		}
+		this->_mouse.Coordinates.x = x;
+		this->_mouse.Coordinates.y = y;
 	}
 }
 

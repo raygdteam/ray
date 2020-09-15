@@ -5,6 +5,8 @@
 #include <core/log/log.hpp>
 #include <core/module/module.hpp>
 
+#include <input/input.hpp>
+
 #include "engine/resources/resource.hpp"
 #include "engine/resources/resource_manager.hpp"
 
@@ -40,6 +42,8 @@ void RayEngine::Initialize(IEngineLoop* engineLoop)
 {
 	_engineLoop = engineLoop;
 
+	IRayState* state = RayState();
+
 	eng->Log("Initializing Ray engine");
 	eng->Log("version {}.{}.{} [{}]", RAY_VERSION_MAJOR, RAY_VERSION_MINOR, RAY_VERSION_PATCH, RAY_VERSION_CODENAME);
 	eng->Log("built on \"{}\"", __TIMESTAMP__);
@@ -48,6 +52,8 @@ void RayEngine::Initialize(IEngineLoop* engineLoop)
 	
 	window->Initialize();
 	window->CreateWindow("RAY_ENGINE");
+
+	state->Input = new Input();
 
 	eng->Log("renderer load begin");
 
@@ -189,15 +195,14 @@ void RayEngine::Tick()
 
 RayEngine::~RayEngine()
 {
-#ifndef _TEMP_NO_RENDERER_CORE_API_
 	static_cast<core::IPlatformWindow*>(_window)->Destroy();
 	static_cast<core::IPlatformWindow*>(_window)->Shutdown();
 	_renderer->Shutdown();
 
 	delete camera;
 	delete _renderer;
+	delete RayState()->Input;
 	delete (core::IPlatformWindow*)_window;
-#endif
 }
 
 /************************************/

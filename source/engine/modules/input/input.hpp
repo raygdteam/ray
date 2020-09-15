@@ -1,32 +1,19 @@
 #pragma once
-
 #include <core/core.hpp>
+#include <input/input_def.hpp>
 
-#ifdef RAY_BUILD_INPUT
-#define RAY_INPUT_API RAY_DLLEXPORTS
-#else
-#define RAY_INPUT_API RAY_DLLIMPORT
-#endif
-
-namespace Ray
+class RAY_INPUT_API Input
 {
-	void RAY_INPUT_API Initialize();
-
-	class RAY_INPUT_API Input
+	struct
 	{
-	public:
-		Input();
-
-		void Update(u16& x, u16& y);
-
-	private:
 		struct
 		{
-			struct
-			{
-				u16 x = 0;
-				u16 y = 0;
-			} coordinates;
-		} mouse;
-	};
-}
+			u16 x = 0;
+			u16 y = 0;
+		} Coordinates;
+	} _mouse;
+public:
+	Input();
+
+	void Update(u16 x, u16 y);
+};
