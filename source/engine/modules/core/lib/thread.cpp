@@ -26,6 +26,11 @@ void IThread::Join()
 	krnlJoinThread(_rawHandle);
 }
 
+void IThread::Name(const char* const name)
+{
+	krnlSetThreadName(name);
+}
+
 struct ILambdaThread : IThread
 {
 	ILambdaThread(std::function<void()> fn)

@@ -5,9 +5,19 @@
 #include <core/threading/condition_variable.hpp>
 
 #include <engine/world/actor.hpp>
+#include <engine/world/actors/camera_actor.hpp>
+#include <renderer_core/renderer.hpp>
+
+using namespace ray::renderer_core_api;
 
 // Internal use only.
-struct WorldLevelData;
+struct WorldLevelData
+{
+	Level* Level;
+	/* for level streaming
+	 * FVector3 Position;
+	 */
+};
 
 class World final
 {
@@ -16,6 +26,10 @@ class World final
 	
 	/* Not an array since we only support one level at a time. */
 	WorldLevelData* _levelData = nullptr;
+
+	CameraActor* _primaryCameraActor = nullptr;
+
+	IRenderer* _renderer = nullptr;
 
 	/* Functionality to support level reloads on beginning of next frame. */
 	// bool _shouldLoadLevel = false;
@@ -30,12 +44,16 @@ class World final
 	/* Render the level. */
 	void Render();
 
+	void RendererInitialize();
+
 	void WorldTickThread();
 	void RenderingThread();
 public:
 	void Initialize();
 	// void ScheduleLevelReload(UninitializedResourceRef level);
 	void Tick(f64 delta);
+
+	void SetPrimaryCamera(CameraActor* camera);
 
 	ConditionVariable ReadyToTick;
 	ConditionVariable WorldTickFinished;

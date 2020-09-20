@@ -12,6 +12,7 @@ public:
 	void Start();
 
 	void Join();
+	static void Name(const char* const name);
 	
 	static IThread* Start(const std::function<void()>& fn);
 };

@@ -7,14 +7,6 @@
 #include <engine/resources/resource_manager.hpp>
 #include <engine/state/state.hpp>
 
-struct WorldLevelData
-{
-	Level* Level;
-	/* for level streaming
-	 * FVector3 Position;
-	 */
-};
-
 void World::TickActors(ActorTickStage stage, f64 delta) const
 {
 	Level* level = _levelData->Level;
@@ -32,6 +24,7 @@ void World::PhysicsUpdate()
 
 void World::WorldTickThread()
 {
+	IThread::Name("World tick Primary thread");
 	while (true)
 	{
 		ReadyToTick.Wait(); // Wait for IEngine command to begin ticking
@@ -43,6 +36,7 @@ void World::WorldTickThread()
 
 void World::RenderingThread()
 {
+	IThread::Name("Renderer primary thread");
 	while (true)
 	{
 		WorldTickFinished.Wait();
@@ -57,7 +51,11 @@ void World::Initialize()
 	// load level
 	_levelData = new WorldLevelData;
 	_levelData->Level = new Level();
+	_levelData->Level->_owningWorld = this;
 	_levelData->Level->LoadTestLevel();
+
+	/* BUG: assuming no server build */
+	RendererInitialize();
 	
 	IThread::Start([this] { this->WorldTickThread(); })->Start();
 	IThread::Start([this] { this->RenderingThread(); })->Start();
@@ -89,5 +87,11 @@ void World::Tick(f64 delta)
 	}
 
 	ReadyToTick.Signal();
+}
+
+void World::SetPrimaryCamera(CameraActor* camera)
+{
+	// BUG: assuming no concurrency
+	_primaryCameraActor = camera;
 }
 

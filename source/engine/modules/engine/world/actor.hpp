@@ -12,6 +12,11 @@ enum ActorTickStage : u8
 	eLateUpdate = BIT(3)
 };
 
+enum MovementType : u8
+{
+	eStatic,
+};
+
 struct ActorTick
 {
 	bool Active;
@@ -27,7 +32,8 @@ class RAY_ENGINE_API Actor : public RayObject
 	friend class World;
 	
 	RAYOBJECT_BODY(Actor, RayObject);
-	
+
+	MovementType _movementType;
 	Array<IComponent*> _components;
 	
 protected:

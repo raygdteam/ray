@@ -24,6 +24,8 @@ class Level final : public RayObject
 	Array<Actor*> _actors;
 	Array<ActorData> _atd;
 
+	World* _owningWorld = nullptr;
+
 	void RebuildATD();
 public:
 	Level();

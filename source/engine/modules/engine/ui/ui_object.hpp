@@ -1,15 +1,8 @@
 #pragma once
 #include <core/core.hpp>
-
-using UIObjectId = u64;
-constexpr UIObjectId NullUIObject = (UIObjectId)-1;
+#include <core/lib/array.hpp>
 
 class IUIObject
 {
-	UIObjectId _id = NullUIObject;
-public:
-	UIObjectId GetId()
-	{ return _id; }
-protected:
-	/* state... */
+	Array<IUIObject*> _subobjects;
 };

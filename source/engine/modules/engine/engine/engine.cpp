@@ -50,22 +50,20 @@ void RayEngine::Initialize(IEngineLoop* engineLoop)
 	window->Initialize();
 	window->CreateWindow("RAY_ENGINE");
 
-	state->Input = new Input();
-
 	eng->Log("renderer load begin");
 
 	// Load renderer module
-	auto res = RayState()->ModuleManager->LoadModule("renderer_core");
-	if (!res.IsSuccess()) __debugbreak();
-	
-	_renderer = new IRenderer;
-	_renderer->Initialize(window);
+	//auto res = RayState()->ModuleManager->LoadModule("renderer_core");
+	//if (!res.IsSuccess()) __debugbreak();
+	//
+	//_renderer = new IRenderer;
+	//_renderer->Initialize(window);
 
-	gWorld = new World();
-	gWorld->Initialize();
-	
-	RTexture* texture = dynamic_cast<RTexture*>(RayState()->ResourceManager->LoadResourceSync("/engine/atlas2.png", ResourceType::eTexture));
-	Renderer2D::Initialize((void*)texture->GetData().GetData(), texture->GetDimensions().x, texture->GetDimensions().y);
+	//gWorld = new World();
+	//gWorld->Initialize();
+	//
+	//RTexture* texture = dynamic_cast<RTexture*>(RayState()->ResourceManager->LoadResourceSync("/engine/atlas2.png", ResourceType::eTexture));
+	//Renderer2D::Initialize((void*)texture->GetData().GetData(), texture->GetDimensions().x, texture->GetDimensions().y);
 
 	eng->Log("renderer load end");
 	
@@ -96,9 +94,9 @@ RayEngine::~RayEngine()
 {
 	static_cast<core::IPlatformWindow*>(_window)->Destroy();
 	static_cast<core::IPlatformWindow*>(_window)->Shutdown();
-	_renderer->Shutdown();
+	//_renderer->Shutdown();
 
-	delete _renderer;
+	//delete _renderer;
 	delete RayState()->Input;
 	delete (core::IPlatformWindow*)_window;
 }

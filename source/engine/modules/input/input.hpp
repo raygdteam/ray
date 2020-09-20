@@ -1,6 +1,13 @@
 #pragma once
 #include <core/core.hpp>
+#include <core/lib/delegate.hpp>
 #include <input/input_def.hpp>
+
+struct InputDelta
+{
+	u32 DeltaX;
+	u32 DeltaY;
+};
 
 class RAY_INPUT_API Input
 {

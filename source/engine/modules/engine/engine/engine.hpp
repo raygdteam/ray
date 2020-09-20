@@ -38,7 +38,6 @@ class RAY_ENGINE_API RayEngine : public IEngine
 {
 	IEngineLoop* _engineLoop;
 	void* _window = nullptr;
-	IRenderer* _renderer = nullptr;
 public:
 	RayEngine();
 	~RayEngine();
