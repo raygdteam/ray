@@ -39,7 +39,7 @@ void RayEngine::Initialize(IEngineLoop* engineLoop)
 {
 	_engineLoop = engineLoop;
 
-	IRayState* state = RayState();
+	// IRayState* state = RayState();
 
 	eng->Log("Initializing Ray engine");
 	eng->Log("version {}.{}.{} [{}]", RAY_VERSION_MAJOR, RAY_VERSION_MINOR, RAY_VERSION_PATCH, RAY_VERSION_CODENAME);

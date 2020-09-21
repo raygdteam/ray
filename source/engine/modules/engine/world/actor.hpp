@@ -69,6 +69,8 @@ public:
 	virtual ~Actor();
 
 	Transform* GetTransform();
+	MovementType GetMovementType()
+	{ return _movementType; }
 
 	void Serialize(Archive&) override;
 	void Deserialize(Archive&) override;
