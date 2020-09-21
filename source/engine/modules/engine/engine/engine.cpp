@@ -59,8 +59,8 @@ void RayEngine::Initialize(IEngineLoop* engineLoop)
 	//_renderer = new IRenderer;
 	//_renderer->Initialize(window);
 
-	//gWorld = new World();
-	//gWorld->Initialize();
+	gWorld = new World();
+	gWorld->Initialize();
 	//
 	//RTexture* texture = dynamic_cast<RTexture*>(RayState()->ResourceManager->LoadResourceSync("/engine/atlas2.png", ResourceType::eTexture));
 	//Renderer2D::Initialize((void*)texture->GetData().GetData(), texture->GetDimensions().x, texture->GetDimensions().y);
