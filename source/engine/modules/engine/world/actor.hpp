@@ -15,6 +15,7 @@ enum ActorTickStage : u8
 enum MovementType : u8
 {
 	eStatic,
+	eDynamic,
 };
 
 struct ActorTick
@@ -47,6 +48,7 @@ protected:
 
 	virtual void MoveTo(FVector2 pos)
 	{
+		if (_movementType == eStatic) return;
 		GetTransform()->Position = pos;
 	}
 	
