@@ -7,11 +7,11 @@
 namespace input
 {
 	bool RAY_INPUT_API initialize();
-	void __declspec(dllexport) update(long x, long y);
+	void RAY_INPUT_API update(long x, long y);
 
 	namespace mouse
 	{
-		long __declspec(dllexport) x();
-		long __declspec(dllexport) y();
+		long RAY_INPUT_API x();
+		long RAY_INPUT_API y();
 	}
 }
