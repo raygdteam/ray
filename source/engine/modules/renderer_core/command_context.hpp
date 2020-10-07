@@ -43,7 +43,7 @@ namespace ray::renderer_core_api
 		static CriticalSection _sContextManagerMutex;
 	};
 
-	class CommandContext : public NonCopyable
+	class RAY_RENDERERCORE_API CommandContext : public NonCopyable
 	{
 		friend class ContextManager;
 

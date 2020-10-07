@@ -15,7 +15,7 @@ void World::Render()
 	const ActorData* actorData = level->_atd.GetData();
 	(void)actorData;
 
-	//GraphicsContext& ctx = GraphicsContext::Begin();
+	//  GraphicsContext& ctx = GraphicsContext::Begin();
 	//_renderer->BeginScene(ctx);
 	//Renderer2D::Begin(*_primaryCameraActor);
 
@@ -25,7 +25,7 @@ void World::Render()
 	//		...
 	// }
 
-	//Renderer2D::End(ctx);
+	// Renderer2D::End(ctx);
 	//_renderer->EndScene(ctx);
 	//ctx.Finish(true);
 }
