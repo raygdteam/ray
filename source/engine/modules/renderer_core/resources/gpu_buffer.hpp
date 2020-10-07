@@ -7,6 +7,7 @@ namespace ray::renderer_core_api
 	class CommandContext;
 	struct IRenderer;
 	struct Renderer2DData;
+	struct BuddyBlock;
 	class UserDescriptorHeap;
 }
 
@@ -16,6 +17,7 @@ namespace ray::renderer_core_api::resources
 	{
 		friend struct ray::renderer_core_api::IRenderer;
 		friend struct ray::renderer_core_api::Renderer2DData;
+		friend struct ray::renderer_core_api::BuddyBlock;
 
 	public:
 		virtual ~GpuBuffer() { Destroy(); }

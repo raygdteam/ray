@@ -44,12 +44,12 @@ class World final
 	/* Render the level. */
 	void Render();
 
-	void RendererInitialize();
+	void RendererInitialize(ray::core::IPlatformWindow* window);
 
 	void WorldTickThread();
 	void RenderingThread();
 public:
-	void Initialize();
+	void Initialize(ray::core::IPlatformWindow* window);
 	// void ScheduleLevelReload(UninitializedResourceRef level);
 	void Tick(f64 delta);
 

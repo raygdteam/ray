@@ -46,7 +46,7 @@ void World::RenderingThread()
 	}
 }
 
-void World::Initialize()
+void World::Initialize(ray::core::IPlatformWindow* window)
 {
 	// load level
 	_levelData = new WorldLevelData;
@@ -55,7 +55,7 @@ void World::Initialize()
 	_levelData->Level->LoadTestLevel();
 
 	/* BUG: assuming no server build */
-	RendererInitialize();
+	RendererInitialize(window);
 	
 	IThread::Start([this] { this->WorldTickThread(); })->Start();
 	IThread::Start([this] { this->RenderingThread(); })->Start();

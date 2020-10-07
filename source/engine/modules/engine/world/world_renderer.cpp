@@ -1,3 +1,5 @@
+#include <app_framework/base/platform_window.hpp>
+
 #include <engine/world/world.hpp>
 #include <engine/world/level.hpp>
 
@@ -13,9 +15,9 @@ void World::Render()
 	const ActorData* actorData = level->_atd.GetData();
 	(void)actorData;
 
-	GraphicsContext& ctx = GraphicsContext::Begin();
-	_renderer->BeginScene(ctx);
-	Renderer2D::Begin(*_primaryCameraActor);
+	//GraphicsContext& ctx = GraphicsContext::Begin();
+	//_renderer->BeginScene(ctx);
+	//Renderer2D::Begin(*_primaryCameraActor);
 
 	// for (const ActorData& data : actorData)
 	// {
@@ -23,14 +25,14 @@ void World::Render()
 	//		...
 	// }
 
-	Renderer2D::End(ctx);
-	_renderer->EndScene(ctx);
-	// ctx.Finish(true);
+	//Renderer2D::End(ctx);
+	//_renderer->EndScene(ctx);
+	//ctx.Finish(true);
 }
 
-void World::RendererInitialize()
+void World::RendererInitialize(ray::core::IPlatformWindow* window)
 {
 	_renderer = new IRenderer;
-	_renderer->Initialize(nullptr);
-	Renderer2D::Initialize({}, {}, {});
+	_renderer->Initialize(window);
+	//Renderer2D::Initialize({}, {}, {});
 }
