@@ -16,7 +16,6 @@ bool gIsClosed = false;
 class PlatformWindow : public ray::core::IPlatformWindow
 {
 	HWND _windowHandle = nullptr;
-	MSG _currentMsg;
 	MSG _lastMsg;
 	u16 _width = 1280;
 	u16 _height = 720;
@@ -74,15 +73,16 @@ void PlatformWindow::SetWindowVisibility(bool visible)
 
 void PlatformWindow::Update()
 {
-	if (PeekMessage(&this->_currentMsg, this->_windowHandle, 0, 0, PM_REMOVE))
+	MSG msg;
+	if (PeekMessage(&msg, this->_windowHandle, 0, 0, PM_REMOVE))
 	{
-		TranslateMessage(&this->_currentMsg);
-		DispatchMessage(&this->_currentMsg);
+		TranslateMessage(&msg);
+		DispatchMessage(&msg);
 		if (gIsClosed)
-			this->_currentMsg.message = WM_CLOSE;
-		this->_lastMsg = this->_currentMsg;
+			msg.message = WM_CLOSE;
+		this->_lastMsg = msg;
 
-		if (this->_currentMsg.message == WM_CLOSE || this->_currentMsg.message == WM_DESTROY)
+		if (msg.message == WM_CLOSE || msg.message == WM_DESTROY)
 			_osRequestedClose = true;
 	}
 }
