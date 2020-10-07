@@ -6,6 +6,8 @@
 #include <windows.h>
 #include <functional>
 
+#include <input/input.hpp>
+
 #undef CreateWindow
 
 LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
@@ -14,6 +16,7 @@ bool gIsClosed = false;
 class PlatformWindow : public ray::core::IPlatformWindow
 {
 	HWND _windowHandle = nullptr;
+	MSG _currentMsg;
 	MSG _lastMsg;
 	u16 _width = 1280;
 	u16 _height = 720;
@@ -59,7 +62,7 @@ bool PlatformWindow::CreateWindow(const char* name)
 								_height, nullptr, nullptr, GetModuleHandleA(0), 0);
 
 	UpdateWindow(_windowHandle);
-	
+
 	return _windowHandle != nullptr;
 }
 
@@ -71,16 +74,15 @@ void PlatformWindow::SetWindowVisibility(bool visible)
 
 void PlatformWindow::Update()
 {
-	MSG msg;
-	if (PeekMessage(&msg, _windowHandle, 0,0,PM_REMOVE))
+	if (PeekMessage(&this->_currentMsg, this->_windowHandle, 0, 0, PM_REMOVE))
 	{
-		TranslateMessage(&msg);
-		DispatchMessage(&msg);
+		TranslateMessage(&this->_currentMsg);
+		DispatchMessage(&this->_currentMsg);
 		if (gIsClosed)
-			msg.message = WM_CLOSE;
-		_lastMsg = msg;
+			this->_currentMsg.message = WM_CLOSE;
+		this->_lastMsg = this->_currentMsg;
 
-		if (msg.message == WM_CLOSE || msg.message == WM_DESTROY)
+		if (this->_currentMsg.message == WM_CLOSE || this->_currentMsg.message == WM_DESTROY)
 			_osRequestedClose = true;
 	}
 }
@@ -135,7 +137,7 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 	{
 		window->ProcessCallback(static_cast<void*>(hwnd), msg, wParam, lParam);
 	}
-	
+
 	switch (msg)
 	{
 	case WM_CLOSE:
@@ -145,7 +147,7 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 	/*case WM_DESTROY:
 		PostQuitMessage(0);
 		break;*/
-	/*case WM_INPUT:
+	case WM_INPUT:
 	{
 		UINT dwSize;
 
@@ -156,22 +158,22 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 		if (lpb == NULL)
 			return 0;
 
-		if (GetRawInputData((HRAWINPUT)msg.lParam, RID_INPUT, lpb, &dwSize, sizeof(RAWINPUTHEADER)) != dwSize)
+		if (GetRawInputData((HRAWINPUT)lParam, RID_INPUT, lpb, &dwSize, sizeof(RAWINPUTHEADER)) != dwSize)
 			OutputDebugString("GetRawInputData does not return correct size !\n");
 
 		RAWINPUT* raw = (RAWINPUT*)lpb;
 
-		if (raw->header.dwType == RIM_TYPEKEYBOARD)
+		/*if (raw->header.dwType == RIM_TYPEKEYBOARD)
 			raw->data.keyboard.MakeCode, raw->data.keyboard.Flags, raw->data.keyboard.Reserved, raw->data.keyboard.ExtraInformation, raw->data.keyboard.Message, raw->data.keyboard.VKey;
 		else if (raw->header.dwType == RIM_TYPEMOUSE)
-			raw->data.mouse.usFlags, raw->data.mouse.ulButtons, raw->data.mouse.usButtonFlags, raw->data.mouse.usButtonData, raw->data.mouse.ulRawButtons, raw->data.mouse.lLastX, raw->data.mouse.lLastY, raw->data.mouse.ulExtraInformation;
+			raw->data.mouse.usFlags, raw->data.mouse.ulButtons, raw->data.mouse.usButtonFlags, raw->data.mouse.usButtonData, raw->data.mouse.ulRawButtons, raw->data.mouse.lLastX, raw->data.mouse.lLastY, raw->data.mouse.ulExtraInformation;*/
 
 		if (raw->header.dwType == RIM_TYPEMOUSE)
-			raw->data.mouse.lLastX, raw->data.mouse.lLastY;
+			input::update(raw->data.mouse.lLastX, raw->data.mouse.lLastY);
 
 		delete[] lpb;
 		break;
-	}*/
+	}
 	default:
 		return DefWindowProc(hwnd, msg, wParam, lParam);
 	}

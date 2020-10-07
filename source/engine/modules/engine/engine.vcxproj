@@ -154,6 +154,7 @@
     <ClInclude Include="resources\resource_type.hpp" />
     <ClInclude Include="resources\stb_image.h" />
     <ClInclude Include="state\state.hpp" />
+    <ClInclude Include="ui\button.hpp" />
     <ClInclude Include="ui\ui_common.hpp" />
     <ClInclude Include="ui\ui_object.hpp" />
     <ClInclude Include="world\actor.hpp" />

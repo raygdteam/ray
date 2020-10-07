@@ -59,6 +59,9 @@
     <ClInclude Include="world\world_render_data.hpp">
       <Filter>world</Filter>
     </ClInclude>
+    <ClInclude Include="ui\button.hpp">
+      <Filter>ui</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="engine">

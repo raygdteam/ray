@@ -4,22 +4,52 @@
 
 #include <windows.h>
 
-Input::Input()
+#include <iostream>
+
+POINT coordinates = {};
+
+namespace input
 {
-	POINT mousePos = {};
-
-	GetCursorPos(&mousePos);
-
-	this->_mouse.Coordinates.x = mousePos.x;
-	this->_mouse.Coordinates.y = mousePos.y;
-}
-
-void Input::Update(u16 x, u16 y)
-{
-	if (this->_mouse.Coordinates.x != x || this->_mouse.Coordinates.y != y)
+	bool initialize()
 	{
-		this->_mouse.Coordinates.x = x;
-		this->_mouse.Coordinates.y = y;
+		RAWINPUTDEVICE RID[2];
+
+		RID[0].usUsagePage = 0x01;
+		RID[0].usUsage = 0x02;
+		RID[0].dwFlags = RIDEV_NOLEGACY;
+		RID[0].hwndTarget = 0;
+
+		RID[1].usUsagePage = 0x01;
+		RID[1].usUsage = 0x06;
+		RID[1].dwFlags = RIDEV_NOLEGACY;
+		RID[1].hwndTarget = 0;
+
+		GetCursorPos(&coordinates);
+
+		std::cout << coordinates.x << " " << coordinates.y << std::endl;
+
+		return RegisterRawInputDevices(RID, 2, sizeof(RID[0]));
+	}
+
+	void update(long x, long y)
+	{
+		coordinates.x += x;
+		coordinates.y += y;
+		
+		std::cout << coordinates.x << " " << coordinates.y << std::endl;
+	}
+
+	namespace mouse
+	{
+		long x()
+		{
+			return coordinates.x;
+		}
+
+		long y()
+		{
+			return coordinates.y;
+		}
 	}
 }
 

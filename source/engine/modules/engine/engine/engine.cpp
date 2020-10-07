@@ -69,6 +69,8 @@ void RayEngine::Initialize(IEngineLoop* engineLoop)
 	
 	window->SetWindowVisibility(true);
 	_window = window;
+
+	input::initialize();
 }
 
 void RayEngine::Tick()
@@ -97,7 +99,6 @@ RayEngine::~RayEngine()
 	//_renderer->Shutdown();
 
 	//delete _renderer;
-	delete RayState()->Input;
 	delete (core::IPlatformWindow*)_window;
 }
 

@@ -175,6 +175,9 @@
     <ProjectReference Include="..\..\thirdparty\mimalloc\mimalloc.vcxproj">
       <Project>{615c925d-85a3-4099-85bc-6bbb744c128e}</Project>
     </ProjectReference>
+    <ProjectReference Include="..\input\input.vcxproj">
+      <Project>{a0c4e72f-34fb-4871-9c79-cd18b7743e2f}</Project>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

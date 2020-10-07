@@ -1,26 +1,17 @@
 #pragma once
+
 #include <core/core.hpp>
-#include <core/lib/delegate.hpp>
-#include <input/input_def.hpp>
 
-struct InputDelta
-{
-	u32 DeltaX;
-	u32 DeltaY;
-};
+#include "input_def.hpp"
 
-class RAY_INPUT_API Input
+namespace input
 {
-	struct
+	bool RAY_INPUT_API initialize();
+	void __declspec(dllexport) update(long x, long y);
+
+	namespace mouse
 	{
-		struct
-		{
-			u16 x = 0;
-			u16 y = 0;
-		} Coordinates;
-	} _mouse;
-public:
-	Input();
-
-	void Update(u16 x, u16 y);
-};
+		long __declspec(dllexport) x();
+		long __declspec(dllexport) y();
+	}
+}

@@ -9,9 +9,6 @@ class RAY_CORE_API ObjectDb;
 class RAY_CORE_API Debug;
 class RAY_CORE_API ModuleManager;
 
-// Input
-class RAY_INPUT_API Input;
-
 // Engine
 struct IEngine;
 class RAY_ENGINE_API ResourceManager;
@@ -23,9 +20,6 @@ struct IRayState
 	ObjectDb* ObjectDb;
 	FileSystem* FileSystem;
 	Debug* Debug;
-
-	/* input */
-	Input* Input;
 
 	/* engine */
 	IEngine* Engine;
