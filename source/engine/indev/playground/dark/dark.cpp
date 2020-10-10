@@ -24,7 +24,7 @@ void __Playground_dark()
 	FMatrix4 res = A * B;
 	(void)res;
 
-	DirectX::XMMATRIX rres = MA * MB;
-	DirectX::XMMatrixTransformation
-	(void)rres;
+	//DirectX::XMMATRIX rres = MA * MB;
+	//DirectX::XMMatrixTransformation
+	//(void)rres;
 }
