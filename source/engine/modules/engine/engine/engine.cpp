@@ -8,8 +8,8 @@
 #include <input/input.hpp>
 
 #include <engine/state/state.hpp>
-#include <engine/resources/resource.hpp>
-#include <engine/resources/resource_manager.hpp>
+#include <resources/resource.hpp>
+#include <resources/resource_manager.hpp>
 
 #include <renderer_core/command_context.hpp>
 #include <renderer_core/renderer_2d.hpp>

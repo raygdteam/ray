@@ -10,7 +10,7 @@
 #include <core/file_system/file_system.hpp>
 #include <core/debug/debug.hpp>
 
-#include <engine/resources/resource_manager.hpp>
+#include <resources/resource_manager.hpp>
 
 #if LAUNCH_EDITOR
 #include <editor/engine/engine_interface.hpp>
@@ -25,7 +25,7 @@ void EngineLoop::PreInitialize()
 	state->ModuleManager = new ModuleManager();
 	state->FileSystem = new FileSystem();
 	state->Debug = new Debug();
-	state->ResourceManager = new ResourceManager();
+	state->ResourceManager = new ResourceManager(state);
 
 #if !LAUNCH_EDITOR
 	/* 2. Load the engine module. This will register the objects we need. */

@@ -46,6 +46,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "editor", "source\engine\dev
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "playground", "source\engine\indev\playground\playground.vcxproj", "{D376B832-A7DC-4703-9B80-1EA261C43F43}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "resources", "source\engine\modules\resources\resources.vcxproj", "{DC6D5790-BD21-4DBA-B811-3F28F4E5689B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -134,6 +136,12 @@ Global
 		{D376B832-A7DC-4703-9B80-1EA261C43F43}.Development|x64.Build.0 = Development|x64
 		{D376B832-A7DC-4703-9B80-1EA261C43F43}.Release|x64.ActiveCfg = Release|x64
 		{D376B832-A7DC-4703-9B80-1EA261C43F43}.Release|x64.Build.0 = Release|x64
+		{DC6D5790-BD21-4DBA-B811-3F28F4E5689B}.Debug|x64.ActiveCfg = Debug|x64
+		{DC6D5790-BD21-4DBA-B811-3F28F4E5689B}.Debug|x64.Build.0 = Debug|x64
+		{DC6D5790-BD21-4DBA-B811-3F28F4E5689B}.Development|x64.ActiveCfg = Development|x64
+		{DC6D5790-BD21-4DBA-B811-3F28F4E5689B}.Development|x64.Build.0 = Development|x64
+		{DC6D5790-BD21-4DBA-B811-3F28F4E5689B}.Release|x64.ActiveCfg = Release|x64
+		{DC6D5790-BD21-4DBA-B811-3F28F4E5689B}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -158,6 +166,7 @@ Global
 		{7CD1DC96-3C10-41B7-8546-960766F59BD2} = {78108E38-C75D-497D-BF3A-3054DED90B32}
 		{65FE7B51-D7DE-4186-A270-DA554D08B58D} = {7CD1DC96-3C10-41B7-8546-960766F59BD2}
 		{D376B832-A7DC-4703-9B80-1EA261C43F43} = {DAF59CAE-37A7-4EF2-A794-D0184587E5DD}
+		{DC6D5790-BD21-4DBA-B811-3F28F4E5689B} = {DF3EE222-3019-400F-B5E1-CE877D5B042C}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {D76C9034-44D0-4436-B2B4-7BEF777F9FDD}

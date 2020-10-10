@@ -29,23 +29,11 @@
     <ClInclude Include="world\components\component_base.hpp">
       <Filter>world\components</Filter>
     </ClInclude>
-    <ClInclude Include="resources\resource.hpp">
-      <Filter>resources</Filter>
-    </ClInclude>
-    <ClInclude Include="resources\resource_manager.hpp">
-      <Filter>resources</Filter>
-    </ClInclude>
-    <ClInclude Include="resources\resource_type.hpp">
-      <Filter>resources</Filter>
-    </ClInclude>
     <ClInclude Include="world\components\camera_component.hpp">
       <Filter>world\components</Filter>
     </ClInclude>
     <ClInclude Include="world\actors\camera_actor.hpp">
       <Filter>world\actors</Filter>
-    </ClInclude>
-    <ClInclude Include="resources\stb_image.h">
-      <Filter>resources</Filter>
     </ClInclude>
     <ClInclude Include="ui\ui_common.hpp">
       <Filter>ui</Filter>
@@ -78,9 +66,6 @@
     </Filter>
     <Filter Include="world\components">
       <UniqueIdentifier>{d4acd06e-4e1a-47b4-b2a4-d8cee7add7c7}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="resources">
-      <UniqueIdentifier>{b15360a4-c703-48b0-ae43-ce46a48b822a}</UniqueIdentifier>
     </Filter>
     <Filter Include="world\actors">
       <UniqueIdentifier>{000ec2e6-3609-4776-bb22-05bc4b07f08d}</UniqueIdentifier>
@@ -120,9 +105,6 @@
     </ClCompile>
     <ClCompile Include="world\actors\camera_actor.cpp">
       <Filter>world\actors</Filter>
-    </ClCompile>
-    <ClCompile Include="resources\resource_manager.cpp">
-      <Filter>resources</Filter>
     </ClCompile>
     <ClCompile Include="world\actors\static_quad_actor.cpp">
       <Filter>world\actors</Filter>

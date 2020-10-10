@@ -2,6 +2,7 @@
 #include <core/core.hpp>
 #include <engine/engine/engine_def.hpp>
 #include <input/input_def.hpp>
+#include <resources/resource_def.hpp>
 
 // Core
 class RAY_CORE_API FileSystem;
@@ -11,7 +12,7 @@ class RAY_CORE_API ModuleManager;
 
 // Engine
 struct IEngine;
-class RAY_ENGINE_API ResourceManager;
+class RAY_RESOURCES_API ResourceManager;
 
 struct IRayState
 {

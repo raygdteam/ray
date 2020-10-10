@@ -1,6 +1,6 @@
 #pragma once
 #include <core/math/vector.hpp>
-#include <engine/resources/resource_manager.hpp>
+#include <resources/resource_manager.hpp>
 #include <engine/world/actors/camera_actor.hpp>
 
 #ifdef RAY_BUILD_RENDERER_CORE

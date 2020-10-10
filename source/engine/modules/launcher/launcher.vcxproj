@@ -161,6 +161,9 @@
     <ProjectReference Include="..\kernel\kernel.vcxproj">
       <Project>{481e9d9e-4af6-4693-96ab-660b91dd8b57}</Project>
     </ProjectReference>
+    <ProjectReference Include="..\resources\resources.vcxproj">
+      <Project>{dc6d5790-bd21-4dba-b811-3f28f4e5689b}</Project>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="windows\resource.rc">

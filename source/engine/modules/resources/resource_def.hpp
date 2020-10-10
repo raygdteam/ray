@@ -1,0 +1,7 @@
+#pragma once
+
+#ifdef RAY_BUILD_RESOURCES
+#define RAY_RESOURCES_API RAY_DLLEXPORTS
+#else
+#define RAY_RESOURCES_API RAY_DLLIMPORT
+#endif

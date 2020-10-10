@@ -4,9 +4,10 @@
 #include <core/file_system/file_system.hpp>
 
 #include <engine/engine/engine_def.hpp>
-#include <engine/resources/resource_type.hpp>
+#include <resources/resource_def.hpp>
+#include <resources/resource_type.hpp>
 
-class RAY_ENGINE_API IRResource : public RayObject
+class RAY_RESOURCES_API IRResource : public RayObject
 {
 	RAYOBJECT_BODY(IRResource, RayObject);
 
@@ -17,7 +18,7 @@ public:
 	virtual ResourceType GetResourceType() const noexcept = 0;
 };
 
-class RAY_ENGINE_API RTexture final : public IRResource
+class RAY_RESOURCES_API RTexture final : public IRResource
 {
 	RAYOBJECT_BODY(RTexture, IRResource);
 	

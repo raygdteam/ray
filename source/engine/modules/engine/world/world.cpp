@@ -4,7 +4,7 @@
 #include <core/lib/thread.hpp>
 
 #include <engine/world/level.hpp>
-#include <engine/resources/resource_manager.hpp>
+#include <resources/resource_manager.hpp>
 #include <engine/state/state.hpp>
 
 void World::TickActors(ActorTickStage stage, f64 delta) const

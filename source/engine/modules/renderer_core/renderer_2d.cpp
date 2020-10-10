@@ -12,7 +12,7 @@
 #include "resources/buffer_manager.hpp"
 #include "sampler_manager.hpp"
 #include "resources/texture.hpp"
-#include <engine/resources/resource.hpp>
+#include <resources/resource.hpp>
 #include "descriptor_heap.hpp"
 
 namespace ray::renderer_core_api
