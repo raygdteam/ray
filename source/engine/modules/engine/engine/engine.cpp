@@ -70,7 +70,7 @@ void RayEngine::Initialize(IEngineLoop* engineLoop)
 	window->SetWindowVisibility(true);
 	_window = window;
 
-	input::initialize();
+	// input::initialize();
 }
 
 void RayEngine::Tick()

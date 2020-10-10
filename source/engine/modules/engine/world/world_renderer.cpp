@@ -41,11 +41,15 @@ void World::Render()
 
 	Renderer2D::Begin(*_primaryCameraActor);
 
-	Renderer2D::DrawQuad({ 50.1f, 60.1f, .1f }, { 1.f, 1.f }, lava, ctx);// red, closer to camera
+	static bool BLACK_PAPER_MOON = false;
+
+	Renderer2D::DrawQuad({ BLACK_PAPER_MOON ? 50.1f : -50.1f, 60.1f, .1f }, { 1.f, 1.f }, lava, ctx);// red, closer to camera
 	Renderer2D::DrawQuad({ -0.1f, -0.1f, .1f }, { 1.f, 1.f }, water, ctx);
 	Renderer2D::DrawQuad({ -100.5f, .5f, 0.1f }, { 1.f, 1.f }, water, ctx); // green, futher from camera
 
 	Renderer2D::End(ctx);
+
+	BLACK_PAPER_MOON = !BLACK_PAPER_MOON;
 	//
 
 	// for (const ActorData& data : actorData)

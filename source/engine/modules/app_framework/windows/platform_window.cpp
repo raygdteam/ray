@@ -6,8 +6,6 @@
 #include <windows.h>
 #include <functional>
 
-#include <input/input.hpp>
-
 #undef CreateWindow
 
 LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
@@ -73,7 +71,7 @@ void PlatformWindow::SetWindowVisibility(bool visible)
 
 void PlatformWindow::Update()
 {
-	MSG msg;
+	MSG msg = {};
 	if (PeekMessage(&msg, this->_windowHandle, 0, 0, PM_REMOVE))
 	{
 		TranslateMessage(&msg);
@@ -147,33 +145,6 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 	/*case WM_DESTROY:
 		PostQuitMessage(0);
 		break;*/
-	case WM_INPUT:
-	{
-		UINT dwSize;
-
-		GetRawInputData((HRAWINPUT)lParam, RID_INPUT, NULL, &dwSize, sizeof(RAWINPUTHEADER));
-
-		LPBYTE lpb = new BYTE[dwSize];
-
-		if (lpb == NULL)
-			return 0;
-
-		if (GetRawInputData((HRAWINPUT)lParam, RID_INPUT, lpb, &dwSize, sizeof(RAWINPUTHEADER)) != dwSize)
-			OutputDebugString("GetRawInputData does not return correct size !\n");
-
-		RAWINPUT* raw = (RAWINPUT*)lpb;
-
-		/*if (raw->header.dwType == RIM_TYPEKEYBOARD)
-			raw->data.keyboard.MakeCode, raw->data.keyboard.Flags, raw->data.keyboard.Reserved, raw->data.keyboard.ExtraInformation, raw->data.keyboard.Message, raw->data.keyboard.VKey;
-		else if (raw->header.dwType == RIM_TYPEMOUSE)
-			raw->data.mouse.usFlags, raw->data.mouse.ulButtons, raw->data.mouse.usButtonFlags, raw->data.mouse.usButtonData, raw->data.mouse.ulRawButtons, raw->data.mouse.lLastX, raw->data.mouse.lLastY, raw->data.mouse.ulExtraInformation;*/
-
-		if (raw->header.dwType == RIM_TYPEMOUSE)
-			input::update(raw->data.mouse.lLastX, raw->data.mouse.lLastY);
-
-		delete[] lpb;
-		break;
-	}
 	default:
 		return DefWindowProc(hwnd, msg, wParam, lParam);
 	}
