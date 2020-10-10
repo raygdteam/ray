@@ -2,6 +2,7 @@
 
 #include <engine/world/world.hpp>
 #include <engine/world/level.hpp>
+#include <engine/state/state.hpp>
 
 #include <renderer_core/renderer.hpp>
 #include <renderer_core/renderer_2d.hpp>
@@ -17,7 +18,35 @@ void World::Render()
 
 	GraphicsContext& ctx = GraphicsContext::Begin();
 	_renderer->BeginScene(ctx);
-	//Renderer2D::Begin(*_primaryCameraActor);
+
+	float step = static_cast<float>(1.f / 15.f);
+
+	static FVector<2> lava[4] =
+	{
+		{ 0.f, step },
+		{ 0.f, 0.f },
+		{ step, 0.f },
+		{ step, step }
+	};
+
+	static FVector<2> water[4] =
+	{
+		{ 0.f, step * 3 },
+		{ 0.f, step * 2 },
+		{ step, step * 2 },
+		{ step, step * 3 }
+	};
+
+	// calculated by calculator
+
+	Renderer2D::Begin(*_primaryCameraActor);
+
+	Renderer2D::DrawQuad({ 50.1f, 60.1f, .1f }, { 1.f, 1.f }, lava, ctx);// red, closer to camera
+	Renderer2D::DrawQuad({ -0.1f, -0.1f, .1f }, { 1.f, 1.f }, water, ctx);
+	Renderer2D::DrawQuad({ -100.5f, .5f, 0.1f }, { 1.f, 1.f }, water, ctx); // green, futher from camera
+
+	Renderer2D::End(ctx);
+	//
 
 	// for (const ActorData& data : actorData)
 	// {
@@ -31,7 +60,10 @@ void World::Render()
 
 void World::RendererInitialize(ray::core::IPlatformWindow* window)
 {
+	_primaryCameraActor = new CameraActor();
 	_renderer = new IRenderer;
 	_renderer->Initialize(window);
+	RTexture* texture = dynamic_cast<RTexture*>(RayState()->ResourceManager->LoadResourceSync("/engine/atlas2.png", ResourceType::eTexture));
+	Renderer2D::Initialize((void*)texture->GetData().GetData(), texture->GetDimensions().x, texture->GetDimensions().y);
 	//Renderer2D::Initialize({}, {}, {});
 }
