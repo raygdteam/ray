@@ -35,12 +35,6 @@
     <ClInclude Include="world\actors\camera_actor.hpp">
       <Filter>world\actors</Filter>
     </ClInclude>
-    <ClInclude Include="ui\ui_common.hpp">
-      <Filter>ui</Filter>
-    </ClInclude>
-    <ClInclude Include="ui\ui_object.hpp">
-      <Filter>ui</Filter>
-    </ClInclude>
     <ClInclude Include="world\actors\static_quad_actor.hpp">
       <Filter>world\actors</Filter>
     </ClInclude>
@@ -48,6 +42,9 @@
       <Filter>world</Filter>
     </ClInclude>
     <ClInclude Include="ui\button.hpp">
+      <Filter>ui</Filter>
+    </ClInclude>
+    <ClInclude Include="ui\object.hpp">
       <Filter>ui</Filter>
     </ClInclude>
   </ItemGroup>
@@ -112,5 +109,6 @@
     <ClCompile Include="world\world_renderer.cpp">
       <Filter>world</Filter>
     </ClCompile>
+    <ClCompile Include="ui\button.cpp" />
   </ItemGroup>
 </Project>
