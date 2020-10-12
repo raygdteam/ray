@@ -4,8 +4,11 @@
 #include <core/lib/thread.hpp>
 
 #include <engine/world/level.hpp>
-#include <resources/resource_manager.hpp>
 #include <engine/state/state.hpp>
+#include <engine/bundle/bundle_meta.hpp>
+
+#include <resources/resource_manager.hpp>
+#include "actors/static_quad_actor.hpp"
 
 void World::TickActors(ActorTickStage stage, f64 delta) const
 {
@@ -51,13 +54,29 @@ void World::RenderingThread()
 	}
 }
 
-void World::Initialize(ray::core::IPlatformWindow* window)
+void World::LoadLevel(pcstr name)
 {
-	// load level
 	_levelData = new WorldLevelData;
 	_levelData->Level = new Level();
 	_levelData->Level->_owningWorld = this;
-	_levelData->Level->LoadTestLevel();
+	// _levelData->Level->LoadTestLevel();
+	
+	(void)name;
+
+	decltype(StaticQuadActor())* actor1 = new StaticQuadActor();
+	decltype(StaticQuadActor())* actor2 = new StaticQuadActor();
+
+	actor1->GetTransform()->Position = FVector2 { 100.f, 100.f };
+	actor2->GetTransform()->Position = FVector2 { 100.f, 100.f }.Multiply(10.f);
+	
+	_levelData->Level->SpawnActor(actor1);
+	_levelData->Level->SpawnActor(actor2);
+}
+
+void World::Initialize(ray::core::IPlatformWindow* window)
+{
+	// load level
+	LoadLevel("\0");
 
 	/* BUG: assuming no server build */
 	RendererInitialize(window);

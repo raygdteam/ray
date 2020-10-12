@@ -2,7 +2,7 @@
 
 StaticQuadActor::StaticQuadActor()
 {
-	
+	Material.TextureName = "/engine/tex.png";
 }
 
 void StaticQuadActor::Awake()

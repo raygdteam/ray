@@ -1,5 +1,7 @@
 #include "level.hpp"
 #include "actors/static_quad_actor.hpp"
+#include "engine/state/state.hpp"
+#include "resources/resource_manager.hpp"
 
 
 Level::Level()
@@ -7,16 +9,24 @@ Level::Level()
 	
 }
 
-void Level::RebuildATD()
-{
-	(void)false;
-}
-
 void Level::SpawnActor(Actor* actor)
 {
 	actor->Awake(); // ??
 	_actors.PushBack(actor);
-	RebuildATD();
+
+	StaticQuadActor* sqActor = dynamic_cast<StaticQuadActor*>(actor);
+
+	RTexture* texture = dynamic_cast<RTexture*>(RayState()->ResourceManager->LoadResourceSync(sqActor->Material.TextureName, eTexture));
+
+	if (texture == nullptr) *(u64*)0xFFFFFFFFFFFFFFFF = 0xDED;
+	
+	// TODO: memory leak and error
+	StaticQuadSceneProxy* proxy = new StaticQuadSceneProxy;
+	proxy->RenderData = new StaticQuadRenderData;
+	proxy->RenderData->TextureId = texture->GetId();
+	proxy->Transform = sqActor->GetTransform();
+	_atd.PushBack(ActorData { actor, actor->ATD, proxy});
+	
 	actor->BeginPlay(); // ??
 }
 
@@ -34,7 +44,6 @@ void Level::LoadTestLevel()
 
 void Level::Serialize(Archive&)
 {
-	RebuildATD();
 }
 
 void Level::Deserialize(Archive&)

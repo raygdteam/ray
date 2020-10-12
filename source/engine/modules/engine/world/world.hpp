@@ -48,9 +48,10 @@ class World final
 
 	void WorldTickThread();
 	void RenderingThread();
+
+	void LoadLevel(pcstr name);
 public:
 	void Initialize(ray::core::IPlatformWindow* window);
-	// void ScheduleLevelReload(UninitializedResourceRef level);
 	void Tick(f64 delta);
 
 	void SetPrimaryCamera(CameraActor* camera);

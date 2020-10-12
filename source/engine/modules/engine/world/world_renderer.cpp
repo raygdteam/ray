@@ -16,6 +16,9 @@ void World::Render()
 	const ActorData* actorData = level->_atd.GetData();
 	(void)actorData;
 
+	StaticQuadSceneProxy* proxy = static_cast<StaticQuadSceneProxy*>(actorData->SceneProxy);
+	(void)proxy;
+	
 	GraphicsContext& ctx = GraphicsContext::Begin();
 	_renderer->BeginScene(ctx);
 

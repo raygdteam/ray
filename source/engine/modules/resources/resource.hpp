@@ -13,9 +13,14 @@ class RAY_RESOURCES_API IRResource : public RayObject
 
 	friend class ResourceManager;
 protected:
+	u64 _id;
+	
 	virtual bool LoadFrom(IFile* path) = 0;
 public:
 	virtual ResourceType GetResourceType() const noexcept = 0;
+	
+	u64 GetId()
+	{ return _id; }
 };
 
 class RAY_RESOURCES_API RTexture final : public IRResource

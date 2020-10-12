@@ -6,13 +6,16 @@ struct RenderData
 {};
 
 struct StaticQuadRenderData : RenderData
-{};
+{
+	u64 TextureId;
+};
 
 // ------------- SCENE PROXY ------------
 struct PrimitiveSceneProxy
-{
-	RenderData* RenderData;
-};
+{};
 
 struct StaticQuadSceneProxy : PrimitiveSceneProxy
-{};
+{
+	StaticQuadRenderData* RenderData;
+	Transform* Transform;
+};

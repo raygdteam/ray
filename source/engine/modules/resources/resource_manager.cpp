@@ -21,12 +21,13 @@ RAYOBJECT_DESCRIPTION_BEGIN(IRResource)
 RAYOBJECT_DESCRIPTION_NAME("engine://resources/IRResource")
 RAYOBJECT_DESCRIPTION_END(IRResource);
 
+static u64 gLastId = 0;
 
 /* ----------------------- TEXTURE ---------------------- */
 
 RTexture::RTexture()
 {
-	
+	_id = gLastId++;
 }
 
 bool RTexture::LoadFrom(IFile* path)

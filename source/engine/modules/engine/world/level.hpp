@@ -7,7 +7,7 @@
 struct ActorData
 {
 	Actor* Actor;
-	ActorTick& Tick;
+	ActorTick Tick;
 	PrimitiveSceneProxy* SceneProxy;
 };
 
@@ -25,8 +25,6 @@ class Level final : public RayObject
 	Array<ActorData> _atd;
 
 	World* _owningWorld = nullptr;
-
-	void RebuildATD();
 public:
 	Level();
 
