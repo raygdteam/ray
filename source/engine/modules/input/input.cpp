@@ -4,11 +4,40 @@
 
 #include <windows.h>
 
-#include <iostream>
-
 POINT coordinates = {};
 
+#include <iostream>
+
 namespace input
+{
+	bool initialize()
+	{
+		return GetCursorPos(&coordinates);
+	}
+
+	void update(long x, long y)
+	{
+		coordinates.x = x;
+		coordinates.y = y;
+	}
+
+	namespace mouse
+	{
+		long x()
+		{
+			return coordinates.x;
+		}
+
+		long y()
+		{
+			return coordinates.y;
+		}
+	}
+}
+
+POINT raw_coordinates = {};
+
+namespace raw_input
 {
 	bool initialize()
 	{
@@ -24,31 +53,27 @@ namespace input
 		RID[1].dwFlags = RIDEV_NOLEGACY;
 		RID[1].hwndTarget = 0;
 
-		GetCursorPos(&coordinates);
-
-		std::cout << coordinates.x << " " << coordinates.y << std::endl;
+		GetCursorPos(&raw_coordinates);
 
 		return RegisterRawInputDevices(RID, 2, sizeof(RID[0]));
 	}
 
 	void update(long x, long y)
 	{
-		coordinates.x += x;
-		coordinates.y += y;
-		
-		std::cout << coordinates.x << " " << coordinates.y << std::endl;
+		raw_coordinates.x += x;
+		raw_coordinates.y += y;
 	}
 
 	namespace mouse
 	{
 		long x()
 		{
-			return coordinates.x;
+			return raw_coordinates.x;
 		}
 
 		long y()
 		{
-			return coordinates.y;
+			return raw_coordinates.y;
 		}
 	}
 }
