@@ -10,6 +10,7 @@
 #include "resources/gpu_buffer.hpp"
 #include "root_signature.hpp"
 #include "pipeline_state.hpp"
+#include "resources/texture_manager.hpp"
 
 #include <vector>
 #include <core\module\module_meta.hpp>

@@ -93,7 +93,7 @@ namespace ray::renderer_core_api
 			globals::gDisplayPlane[i].CreateFromSwapChain(displayPlane);
 			//displayPlane->Release();
 		}
-
+		
 		globals::gCurrentBuffer = 0;
 		globals::gDepthBuffer.Create(globals::gDisplayPlane->GetWidth(), globals::gDisplayPlane->GetHeight(), DXGI_FORMAT_D32_FLOAT);
 }

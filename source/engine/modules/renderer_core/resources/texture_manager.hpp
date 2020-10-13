@@ -9,25 +9,34 @@
 #include <renderer_core/descriptor_heap.hpp>
 #include <renderer_core/resources/linear_allocator.hpp>
 
+#ifdef RAY_BUILD_RENDERER_CORE
+#define RAY_RENDERERCORE_API __declspec(dllexport)
+#else
+#define RAY_RENDERERCORE_API RAY_DLLIMPORT
+#endif
+
 namespace ray::renderer_core_api
 {
+	class Renderer2D;
+
 	struct ManagedTexture
 	{
 		D3D12_CPU_DESCRIPTOR_HANDLE Descriptor;
 		ID3D12Resource* Resource;
 	};
 
-	class TextureManager
+	struct RAY_RENDERERCORE_API TextureManager
 	{
+		friend class Renderer2D;
 	public:
-
-		void PrepareTextures(CommandContext& ctx, RTexture* textures, size_t numTextures, bool bFlush = false);
-		void LoadToGPU(CommandContext& ctx, RTexture* textures, size_t numTextures);
+		void PrepareTextures(CommandContext& ctx, RTexture** textures, size_t numTextures, bool bFlush = false);
+		void LoadToGPU(CommandContext& ctx, RTexture** textures, size_t numTextures);
+		static void Destroy() noexcept;
 
 	private:
-		DynAlloc _uploadedResources[64]; // temporary
-		ManagedTexture _gpuResources[64]; // temporary
-		UserDescriptorHeap _descriptorHeap;
+		static DynAlloc* _uploadedResources[64]; // temporary
+		static ManagedTexture _gpuResources[64]; // temporary
+		static UserDescriptorHeap _descriptorHeap;
 
 	};
 }

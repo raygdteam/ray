@@ -6,7 +6,11 @@
 
 namespace ray::renderer_core_api
 {
-	void TextureManager::PrepareTextures(CommandContext& ctx, RTexture* textures, size_t numTextures, bool bFlush)
+	DynAlloc* TextureManager::_uploadedResources[64];
+	ManagedTexture TextureManager::_gpuResources[64];
+
+
+	void TextureManager::PrepareTextures(CommandContext& ctx, RTexture** textures, size_t numTextures, bool bFlush)
 	{
 		check(numTextures <= 64)
 
@@ -31,52 +35,59 @@ namespace ray::renderer_core_api
 
 		for (size_t i = 0; i < numTextures; ++i)
 		{
-			RTexture& texture = textures[i];
+			RTexture* texture = textures[i];
 
-			resourceDesc.Width = texture.GetDimensions().x;
-			resourceDesc.Height = texture.GetDimensions().y;
+			resourceDesc.Width = texture->GetDimensions().x;
+			resourceDesc.Height = texture->GetDimensions().y;
 
 			auto hr = globals::gDevice->CreateCommittedResource(&heapProps, D3D12_HEAP_FLAG_NONE, &resourceDesc,
-				D3D12_RESOURCE_STATE_COPY_DEST, nullptr, IID_PPV_ARGS(&_gpuResources[texture.GetId()].Resource));
+				D3D12_RESOURCE_STATE_COPY_DEST, nullptr, IID_PPV_ARGS(&_gpuResources[texture->GetId()].Resource));
 
 			check(hr == S_OK)
 
-			auto textureSize = GetRequiredIntermediateSize(_gpuResources[texture.GetId()].Resource, 0, 1);
+			auto textureSize = GetRequiredIntermediateSize(_gpuResources[texture->GetId()].Resource, 0, 1);
 
 			auto mem = ctx.ReserveUploadMemory(textureSize);
-			_uploadedResources[texture.GetId()].Buffer = mem.Buffer;
-			_uploadedResources[texture.GetId()].Data = mem.Data;
-			_uploadedResources[texture.GetId()].GpuVirtualAddress = mem.GpuVirtualAddress;
-			_uploadedResources[texture.GetId()].Offset = mem.Offset;
-			_uploadedResources[texture.GetId()].Size = mem.Size;
+			_uploadedResources[texture->GetId()] = new DynAlloc(mem.Buffer, mem.Offset, mem.Size);
+			_uploadedResources[texture->GetId()]->GpuVirtualAddress = mem.GpuVirtualAddress;
+			
 		}
 
 		if (bFlush)
 			LoadToGPU(ctx, textures, numTextures);
 	}
 
-	void TextureManager::LoadToGPU(CommandContext& ctx, RTexture* textures, size_t numTextures)
+	void TextureManager::LoadToGPU(CommandContext& ctx, RTexture** textures, size_t numTextures)
 	{
 		for (size_t i = 0; i < numTextures; ++i)
 		{
-			RTexture& texture = textures[i];
+			RTexture* texture = textures[i];
 
 			D3D12_SUBRESOURCE_DATA data;
-			data.pData = texture.GetData().GetData();
-			data.RowPitch = texture.GetDimensions().x * (resources::BitsPerPixel(DXGI_FORMAT_R32G32B32A32_UINT) / 8);
-			data.SlicePitch = data.RowPitch * texture.GetDimensions().y;
+			data.pData = texture->GetData().GetData();
+			data.RowPitch = texture->GetDimensions().x * (resources::BitsPerPixel(DXGI_FORMAT_R32G32B32A32_UINT) / 8);
+			data.SlicePitch = data.RowPitch * texture->GetDimensions().y;
 
-			UpdateSubresources(static_cast<ID3D12GraphicsCommandList*>(ctx.GetCommandList()), _gpuResources[texture.GetId()].Resource, 
-								_uploadedResources[texture.GetId()].Buffer.GetResource(), 0, 0, 1, &data);
+			UpdateSubresources(static_cast<ID3D12GraphicsCommandList*>(ctx.GetCommandList()), _gpuResources[texture->GetId()].Resource,
+								_uploadedResources[texture->GetId()]->Buffer.GetResource(), 0, 0, 1, &data);
 
-			resources::GpuResource dest(_gpuResources[texture.GetId()].Resource, D3D12_RESOURCE_STATE_COPY_DEST);
+			resources::GpuResource dest(_gpuResources[texture->GetId()].Resource, D3D12_RESOURCE_STATE_COPY_DEST);
 			ctx.TransitionResource(dest, D3D12_RESOURCE_STATE_GENERIC_READ);
 
-			_gpuResources[texture.GetId()].Descriptor = _descriptorHeap.Allocate().GetCpuHandle();
+			_gpuResources[texture->GetId()].Descriptor = _descriptorHeap.Allocate().GetCpuHandle();
 
-			globals::gDevice->CreateShaderResourceView(_gpuResources[texture.GetId()].Resource, nullptr, _gpuResources[texture.GetId()].Descriptor);
+			globals::gDevice->CreateShaderResourceView(_gpuResources[texture->GetId()].Resource, nullptr, _gpuResources[texture->GetId()].Descriptor);
 		}
 
 		ctx.Finish(true);
+	}
+
+	void TextureManager::Destroy() noexcept
+	{
+		for (size_t i = 0; i < 64; ++i)
+		{
+			if (_uploadedResources[i] != nullptr)
+				delete _uploadedResources[i];
+		}
 	}
 }

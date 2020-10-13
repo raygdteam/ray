@@ -75,6 +75,9 @@ void World::LoadLevel(pcstr name)
 
 void World::Initialize(ray::core::IPlatformWindow* window)
 {
+	_renderer = new IRenderer;
+	_renderer->Initialize(window);
+
 	// load level
 	LoadLevel("\0");
 
