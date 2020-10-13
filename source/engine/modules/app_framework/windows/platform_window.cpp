@@ -4,10 +4,8 @@
 #define WIN32_LEAN_AND_MEAN
 #define VC_EXTRALEAN
 #include <windows.h>
-#include <windowsx.h>
 
 #include <functional>
-#include "input/input.hpp"
 #undef CreateWindow
 
 LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
@@ -147,9 +145,6 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 	/*case WM_DESTROY:
 		PostQuitMessage(0);
 		break;*/
-	case WM_MOUSEMOVE:
-		input::update(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
-		break;
 	default:
 		return DefWindowProc(hwnd, msg, wParam, lParam);
 	}

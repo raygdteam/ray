@@ -1,29 +1,33 @@
 #pragma once
-
 #include <core/core.hpp>
+#include <input/input_def.hpp>
 
-#include "input_def.hpp"
+#include <app_framework/base/platform_window.hpp>
+#include <core/lib/delegate.hpp>
+#include <core/math/vector.hpp>
 
-namespace input
+using namespace ray::core;
+
+class RAY_INPUT_API InputBase
 {
-	bool RAY_INPUT_API initialize();
-	void RAY_INPUT_API update(long x, long y);
+protected:
+	MulticastDelegate<void(u32, u32)> _mouseUpdate;
+	FVector2 _lastMousePos;
+	FVector2 _currentDelta;
 
-	namespace mouse
+	void WindowEventHandler(u32 msg, s64 rparam);
+public:
+	InputBase();
+
+	void Initialize(IPlatformWindow* window);
+
+	const FVector2& GetMousePosition()
 	{
-		long RAY_INPUT_API x();
-		long RAY_INPUT_API y();
+		return _lastMousePos;
 	}
-}
-
-namespace raw_input
-{
-	bool RAY_INPUT_API initialize();
-	void RAY_INPUT_API update(long x, long y);
-
-	namespace mouse
+	
+	const FVector2& GetMouseDelta()
 	{
-		long RAY_INPUT_API x();
-		long RAY_INPUT_API y();
+		return _currentDelta;
 	}
-}
+};

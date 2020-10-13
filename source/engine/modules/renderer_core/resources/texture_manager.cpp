@@ -37,7 +37,7 @@ namespace ray::renderer_core_api
 		heapProps.CPUPageProperty = D3D12_CPU_PAGE_PROPERTY_UNKNOWN;
 		heapProps.MemoryPoolPreference = D3D12_MEMORY_POOL_UNKNOWN;
 		heapProps.Type = D3D12_HEAP_TYPE_DEFAULT;
-		resourceDesc.Format = DXGI_FORMAT_R32G32B32A32_UINT;
+		resourceDesc.Format = DXGI_FORMAT_R32G32B32A32_FLOAT;
 
 		for (size_t i = 0; i < numTextures; ++i)
 		{

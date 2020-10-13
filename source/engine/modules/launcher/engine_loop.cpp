@@ -10,6 +10,8 @@
 #include <core/file_system/file_system.hpp>
 #include <core/debug/debug.hpp>
 
+#include <input/input.hpp>
+
 #include <resources/resource_manager.hpp>
 
 #if LAUNCH_EDITOR
@@ -25,6 +27,7 @@ void EngineLoop::PreInitialize()
 	state->ModuleManager = new ModuleManager();
 	state->FileSystem = new FileSystem();
 	state->Debug = new Debug();
+	state->Input = new InputBase();
 	state->ResourceManager = new ResourceManager(state);
 
 #if !LAUNCH_EDITOR
