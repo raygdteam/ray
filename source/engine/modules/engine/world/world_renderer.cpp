@@ -38,8 +38,8 @@ void World::Render()
 
 		FVector<2> scale =
 		{
-			proxy->Transform->Scale.x,
-			proxy->Transform->Scale.y
+			1.f,
+			1.f
 		}; 
 
 		Renderer2D::DrawQuad(position, scale, proxy->RenderData->TextureId, ctx);
