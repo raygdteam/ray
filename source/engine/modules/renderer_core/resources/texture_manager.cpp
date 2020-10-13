@@ -8,13 +8,12 @@ namespace ray::renderer_core_api
 {
 	DynAlloc* TextureManager::_uploadedResources[64];
 	ManagedTexture TextureManager::_gpuResources[64];
-
+	UserDescriptorHeap TextureManager::_descriptorHeap(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV, 64);
 
 	void TextureManager::PrepareTextures(CommandContext& ctx, RTexture** textures, size_t numTextures, bool bFlush)
 	{
 		check(numTextures <= 64)
-
-		_descriptorHeap = UserDescriptorHeap(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV, 64);
+		_descriptorHeap.Create();
 
 		D3D12_RESOURCE_DESC resourceDesc = {};
 		resourceDesc.MipLevels = 1;
@@ -62,21 +61,22 @@ namespace ray::renderer_core_api
 		for (size_t i = 0; i < numTextures; ++i)
 		{
 			RTexture* texture = textures[i];
+			auto textureIndex = texture->GetId();
 
 			D3D12_SUBRESOURCE_DATA data;
 			data.pData = texture->GetData().GetData();
 			data.RowPitch = texture->GetDimensions().x * (resources::BitsPerPixel(DXGI_FORMAT_R32G32B32A32_UINT) / 8);
 			data.SlicePitch = data.RowPitch * texture->GetDimensions().y;
 
-			UpdateSubresources(static_cast<ID3D12GraphicsCommandList*>(ctx.GetCommandList()), _gpuResources[texture->GetId()].Resource,
-								_uploadedResources[texture->GetId()]->Buffer.GetResource(), 0, 0, 1, &data);
+			UpdateSubresources(static_cast<ID3D12GraphicsCommandList*>(ctx.GetCommandList()), _gpuResources[textureIndex].Resource,
+								_uploadedResources[textureIndex]->Buffer.GetResource(), 0, 0, 1, &data);
 
-			resources::GpuResource dest(_gpuResources[texture->GetId()].Resource, D3D12_RESOURCE_STATE_COPY_DEST);
+			resources::GpuResource dest(_gpuResources[textureIndex].Resource, D3D12_RESOURCE_STATE_COPY_DEST);
 			ctx.TransitionResource(dest, D3D12_RESOURCE_STATE_GENERIC_READ);
 
-			_gpuResources[texture->GetId()].Descriptor = _descriptorHeap.Allocate().GetCpuHandle();
+			_gpuResources[textureIndex].Descriptor = _descriptorHeap.Allocate().GetCpuHandle();
 
-			globals::gDevice->CreateShaderResourceView(_gpuResources[texture->GetId()].Resource, nullptr, _gpuResources[texture->GetId()].Descriptor);
+			globals::gDevice->CreateShaderResourceView(_gpuResources[textureIndex].Resource, nullptr, _gpuResources[textureIndex].Descriptor);
 		}
 
 		ctx.Finish(true);

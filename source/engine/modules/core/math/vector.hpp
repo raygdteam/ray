@@ -290,7 +290,7 @@ inline f32 Dot(FVector<3> a, FVector<3> b)
 	return tmp.x + tmp.y + tmp.z;
 }
 
-FVector<3> Normalize(FVector<3> vector)
+inline FVector<3> Normalize(FVector<3> vector)
 {
 	return vector.Multiply(ray::core::math::InverseSqrt(Dot(vector, vector)));
 }

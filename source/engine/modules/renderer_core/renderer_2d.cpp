@@ -127,7 +127,7 @@ namespace ray::renderer_core_api
 			{ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 12, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 }, 
 			{ "TEXINDEX", 0, DXGI_FORMAT_R32_UINT, 0, 20, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 }
 		};
-		_2DPipeline.SetInputLayout(2, inputLayout);
+		_2DPipeline.SetInputLayout(3, inputLayout);
 		_2DPipeline.SetPrimitiveTopologyType(D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE);
 		_2DPipeline.SetRenderTargetFormat(DXGI_FORMAT_R8G8B8A8_UNORM, DXGI_FORMAT_UNKNOWN);
 		_2DPipeline.SetSampleMask(0xffffffff);
