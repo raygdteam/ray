@@ -41,6 +41,9 @@
     <ClInclude Include="resources\buddy_allocator.hpp">
       <Filter>resources\memory</Filter>
     </ClInclude>
+    <ClInclude Include="resources\texture_manager.hpp">
+      <Filter>resources</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="renderer.cpp" />
@@ -76,6 +79,9 @@
     </ClCompile>
     <ClCompile Include="resources\buddy_allocator.cpp">
       <Filter>resources\memory</Filter>
+    </ClCompile>
+    <ClCompile Include="resources\texture_manager.cpp">
+      <Filter>resources</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

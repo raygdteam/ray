@@ -64,12 +64,12 @@ namespace ray::renderer_core_api
 	enum LinearAllocatorType
 	{
 		eInvalidAllocator = -1,
-		eGpuExclusive = 0, // resources::ResourceUsage::eDefault
-		eCpuWritable = 1,   // resources::ResourceUsage::eUpload
+		eGpuExclusive = 0, 
+		eCpuWritable = 1,   
 		eNumAllocatorTypes = 2
 	};
 
-	const u32 gGpuAllocatorPageSize = 0x10000;    // 64K
+	const u32 gGpuAllocatorPageSize = 0x10000;    // 64KB
 	const u32 gCpuAllocatorPageSize = 0x200000;    // 2MB
 
 	class LinearAllocatorPageManager

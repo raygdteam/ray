@@ -160,6 +160,7 @@
     <ClInclude Include="resources\linear_allocator.hpp" />
     <ClInclude Include="resources\pixel_buffer.hpp" />
     <ClInclude Include="resources\texture.hpp" />
+    <ClInclude Include="resources\texture_manager.hpp" />
     <ClInclude Include="root_signature.hpp" />
     <ClInclude Include="sampler_manager.hpp" />
   </ItemGroup>
@@ -180,6 +181,7 @@
     <ClCompile Include="resources\linear_allocator.cpp" />
     <ClCompile Include="resources\pixel_buffer.cpp" />
     <ClCompile Include="resources\texture.cpp" />
+    <ClCompile Include="resources\texture_manager.cpp" />
     <ClCompile Include="root_signature.cpp" />
     <ClCompile Include="sampler_manager.cpp" />
   </ItemGroup>
@@ -192,6 +194,9 @@
     </ProjectReference>
     <ProjectReference Include="..\core\core.vcxproj">
       <Project>{134c88c3-3c53-4b8b-8884-95f2a2283cea}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\resources\resources.vcxproj">
+      <Project>{dc6d5790-bd21-4dba-b811-3f28f4e5689b}</Project>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
