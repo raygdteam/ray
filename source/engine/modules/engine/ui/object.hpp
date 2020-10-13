@@ -1,5 +1,8 @@
 #pragma once
 
+#include "engine/world/components/transform.hpp"
+#include "engine/world/world_render_data.hpp"
+
 namespace ui
 {
 	template <typename type>
@@ -12,7 +15,7 @@ namespace ui
 		virtual type process() = 0;
 
 	protected:
-		const FVector<2>& position;
-		const FVector<2>& size;
+		Transform* transform;
+		RenderData* render_data;
 	};
 }

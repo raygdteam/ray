@@ -4,5 +4,5 @@
 
 bool ui::button::process()
 {
-    return input::mouse::x() >= this->position.x && input::mouse::x() <= this->size.x && input::mouse::y() >= this->position.y && input::mouse::y() <= this->size.y;
+    return input::mouse::x() >= this->transform->Position.x && input::mouse::x() <= this->transform->Scale.x && input::mouse::y() >= this->transform->Position.y && input::mouse::y() <= this->transform->Scale.y;
 }

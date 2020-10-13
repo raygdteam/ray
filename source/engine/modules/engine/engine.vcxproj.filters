@@ -109,6 +109,8 @@
     <ClCompile Include="world\world_renderer.cpp">
       <Filter>world</Filter>
     </ClCompile>
-    <ClCompile Include="ui\button.cpp" />
+    <ClCompile Include="ui\button.cpp">
+      <Filter>ui</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
