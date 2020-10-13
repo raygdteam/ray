@@ -136,6 +136,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="dark\dark.cpp" />
+    <ClCompile Include="dark\ui.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="mykyta\mykyta.cpp" />
     <ClCompile Include="nikita\nikita.cpp" />
