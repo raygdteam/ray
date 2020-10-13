@@ -13,11 +13,6 @@ using namespace ray::renderer_core_api;
 void World::Render()
 {
 	Level* level = _levelData->Level;
-	const ActorData* actorData = level->_atd.GetData();
-	(void)actorData;
-	
-	StaticQuadSceneProxy* proxy = static_cast<StaticQuadSceneProxy*>(actorData->SceneProxy);
-	(void)proxy;
 	
 	GraphicsContext& ctx = GraphicsContext::Begin();
 	_renderer->BeginScene(ctx);
@@ -28,7 +23,9 @@ void World::Render()
 
 	for (size_t i = 0; i < level->_atd.Size(); ++i)
 	{
-		StaticQuadSceneProxy* proxy = static_cast<StaticQuadSceneProxy*>(actorData->SceneProxy);
+		const ActorData& actorData = level->_atd[i];
+		
+		StaticQuadSceneProxy* proxy = static_cast<StaticQuadSceneProxy*>(actorData.SceneProxy);
 		FVector<3> position =
 		{
 			proxy->Transform->Position.x,

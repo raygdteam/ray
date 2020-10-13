@@ -1,3 +1,3 @@
 #pragma once
 
-// #define DEBUG_MEMORY
+#define DEBUG_MEMORY

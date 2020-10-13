@@ -10,11 +10,18 @@ namespace ray::renderer_core_api
 	ManagedTexture TextureManager::_gpuResources[64];
 	UserDescriptorHeap TextureManager::_descriptorHeap(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV, 64);
 
+	TextureManager::TextureManager()
+	{
+		static bool once = true;
+		if (once)
+			_descriptorHeap.Create();
+		once = false;
+	}
+
 	void TextureManager::PrepareTextures(CommandContext& ctx, RTexture** textures, size_t numTextures, bool bFlush)
 	{
 		check(numTextures <= 64)
-		_descriptorHeap.Create();
-
+		
 		D3D12_RESOURCE_DESC resourceDesc = {};
 		resourceDesc.MipLevels = 1;
 		resourceDesc.DepthOrArraySize = 1;

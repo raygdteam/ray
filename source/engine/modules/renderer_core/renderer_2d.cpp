@@ -185,10 +185,11 @@ namespace ray::renderer_core_api
 			
 			sData.QuadVertexBufferPtr->Position = newPosition;
 			sData.QuadVertexBufferPtr->TexCoord = textureCoords[i];
+			sData.QuadVertexBufferPtr->TextureIndex = textureIndex;
+			
 			sData.QuadVertexBufferPtr++;
 		}
 
-		sData.QuadVertexBufferPtr->TextureIndex = textureIndex;
 		sData.QuadIndexCount += 6;
 	}
 

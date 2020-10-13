@@ -161,7 +161,7 @@ namespace ray::renderer_core_api
 		D3D12_RESOURCE_BARRIER _barriers[16];
 		u32 _numBarriersToFlush;
 
-		ID3D12DescriptorHeap* _currentDescriptorHeaps[D3D12_DESCRIPTOR_HEAP_TYPE_NUM_TYPES];
+		ID3D12DescriptorHeap* _currentDescriptorHeaps[D3D12_DESCRIPTOR_HEAP_TYPE_NUM_TYPES] = {};
 
 	protected:
 		void BindDescriptorHeaps();

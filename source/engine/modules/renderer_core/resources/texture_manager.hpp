@@ -29,6 +29,8 @@ namespace ray::renderer_core_api
 	{
 		friend class Renderer2D;
 	public:
+		TextureManager();
+		
 		void PrepareTextures(CommandContext& ctx, RTexture** textures, size_t numTextures, bool bFlush = false);
 		void LoadToGPU(CommandContext& ctx, RTexture** textures, size_t numTextures);
 		static void Destroy() noexcept;

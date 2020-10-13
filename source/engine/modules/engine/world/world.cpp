@@ -65,12 +65,17 @@ void World::LoadLevel(pcstr name)
 
 	decltype(StaticQuadActor())* actor1 = new StaticQuadActor();
 	decltype(StaticQuadActor())* actor2 = new StaticQuadActor();
+	decltype(StaticQuadActor())* actor3 = new StaticQuadActor();
+	actor2->Material.TextureName = "/engine/__tex.png";
+	actor3->Material.TextureName = "/engine/tex_.png";
 
 	actor1->GetTransform()->Position = FVector2 { 100.f, 100.f };
-	actor2->GetTransform()->Position = FVector2 { 100.f, 100.f }.Multiply(10.f);
+	actor2->GetTransform()->Position = FVector2 { 100.f, 100.f }.Multiply(3.f);
+	actor2->GetTransform()->Position = FVector2{ 100.f, 100.f }.Multiply(-3.f);
 	
 	_levelData->Level->SpawnActor(actor1);
 	_levelData->Level->SpawnActor(actor2);
+	_levelData->Level->SpawnActor(actor3);
 }
 
 void World::Initialize(ray::core::IPlatformWindow* window)
