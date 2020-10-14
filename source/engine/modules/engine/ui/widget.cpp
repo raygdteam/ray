@@ -1,11 +1,6 @@
 #include "widget.hpp"
 
-void UIWidget::AddObject(UIObject& object)
+void UiWidget::RenderAll(GraphicsContext& ctx)
 {
-	this->_objects.PushBack(&object);
-}
-
-void UIWidget::RemoveObject(UIObject& object)
-{
-	// ?
+	
 }

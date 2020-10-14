@@ -1,14 +1,27 @@
 #pragma once
+#include <core/core.hpp>
+#include <core/lib/array.hpp>
 
 #include <engine\ui\object.hpp>
-#include <engine\ui\object_proxy.hpp>
+#include <engine/ui/ui_render_data.hpp>
+#include <engine/world/components/transform.hpp>
 
-class UIWidget
+#include <renderer_core/command_context.hpp>
+
+using namespace ray::renderer_core_api;
+
+struct UiObjectProxy
 {
-public:
-	Array<UIObject*> _objects;
-	Array<UIObjectProxy*> _proxies;
+	Transform** Transform;
+	UiRenderData* RenderData;
+};
 
-	void AddObject(UIObject&);
-	void RemoveObject(UIObject&); // ?
+class UiWidget
+{
+	Array<UiObject*> _objects;
+public:
+	void AddObject(UiObject*);
+	void RemoveObject(UiObject*); // ??
+
+	void RenderAll(GraphicsContext&);
 };
