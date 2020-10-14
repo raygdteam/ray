@@ -1,14 +1,16 @@
 #include "button.hpp"
 
-#include <engine\state\state.hpp>
+#include <renderer_core/renderer_2d.hpp>
 
-void ui::button::tick()
+#include <engine/state/state.hpp>
+
+void UIButton::Tick()
 {
-    if (RayState()->Input->GetMousePosition().x >= this->render_data->Transform->Position.x && RayState()->Input->GetMousePosition().x <= this->render_data->Transform->Scale.x && RayState()->Input->GetMousePosition().y >= this->render_data->Transform->Position.y && RayState()->Input->GetMousePosition().y <= this->render_data->Transform->Scale.y)
+    if (RayState()->Input->GetMouseDelta().x >= this->Transform->Position.x && RayState()->Input->GetMousePosition().x <= this->Transform->Scale.x && RayState()->Input->GetMousePosition().y >= this->Transform->Position.y && RayState()->Input->GetMousePosition().y <= this->Transform->Scale.y)
         ;
 }
 
-void ui::button::render()
+void UIButton::Render()
 {
-    ray::renderer_core_api::Renderer2D::DrawQuad({ this->render_data->Transform->Position.x, this->render_data->Transform->Position.y, 0 }, this->render_data->Transform->Scale, this->render_data->RenderData->TextureId, ray::renderer_core_api::GraphicsContext::Begin());
+    ray::renderer_core_api::Renderer2D::DrawQuad({ this->Transform->Position.x, this->Transform->Position.y, 0 }, this->Transform->Scale, this->TextureId, ray::renderer_core_api::GraphicsContext::Begin());
 }

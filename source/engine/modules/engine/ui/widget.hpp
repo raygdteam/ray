@@ -3,12 +3,12 @@
 #include <engine\ui\object.hpp>
 #include <engine\ui\object_proxy.hpp>
 
-class UiWidget
+class UIWidget
 {
 public:
-	Array<ui::object*> _objects;
-	Array<ui::object_proxy*> _proxies;
+	Array<UIObject*> _objects;
+	Array<UIObjectProxy*> _proxies;
 
-	void AddObject(ui::object&);
-	void RemoveObject(ui::object&); // ?
+	void AddObject(UIObject&);
+	void RemoveObject(UIObject&); // ?
 };

@@ -1,22 +1,23 @@
 #pragma once
 
 #include "object.hpp"
-#include <renderer_core/renderer_2d.hpp>
 
-#include <input/input.hpp>
+#include <engine\world\components\transform.hpp>
 
-namespace ui
+class UIButton : protected UIObject
 {
-	class button : protected object
+	UIButton(Transform* Transform, u64 TextureId)
 	{
-		button(StaticQuadSceneProxy* render_data)
-		{
-			this->render_data = render_data;
-		}
+		this->Transform = Transform;
+		this->TextureId = TextureId;
+	}
 
-		//~button() {}
+	~UIButton();
 
-		virtual void tick() override;
-		virtual void render() override;
-	};
-}
+	virtual void Tick() override;
+	virtual void Render() override;
+
+private:
+	Transform* Transform;
+	u64 TextureId;
+};

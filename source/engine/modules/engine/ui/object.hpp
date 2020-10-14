@@ -1,21 +1,11 @@
 #pragma once
 
-#include "engine/world/world_render_data.hpp"
-#include <renderer_core/command_context.hpp>
-
-namespace ui
+class UIObject
 {
-	class object
-	{
-	public:
-		object();
-		~object() {};
+public:
+	UIObject();
+	~UIObject() {};
 
-		virtual void tick() = 0;
-		virtual void render() = 0;
-
-	protected:
-		StaticQuadSceneProxy* render_data;
-		ray::renderer_core_api::GraphicsContext& graphics_context;
-	};
-}
+	virtual void Tick() = 0;
+	virtual void Render() = 0;
+};

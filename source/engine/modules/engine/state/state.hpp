@@ -15,7 +15,7 @@ class RAY_INPUT_API InputBase;
 
 // Engine
 struct IEngine;
-class UiWidget;
+class UIManager;
 
 // Resource
 class RAY_RESOURCES_API ResourceManager;
@@ -33,7 +33,7 @@ struct IRayState
 	
 	/* engine */
 	IEngine* Engine;
-	UiWidget* UiWidget;
+	UIManager* UIManager;
 
 	/* resource */
 	ResourceManager* ResourceManager;

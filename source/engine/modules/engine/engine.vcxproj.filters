@@ -124,6 +124,8 @@
     <ClCompile Include="ui\widget.cpp">
       <Filter>ui</Filter>
     </ClCompile>
-    <ClCompile Include="ui\manager.cpp" />
+    <ClCompile Include="ui\manager.cpp">
+      <Filter>ui</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

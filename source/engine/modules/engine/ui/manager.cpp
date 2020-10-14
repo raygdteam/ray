@@ -1,13 +1,13 @@
 #include "manager.hpp"
 
-void UiManager::tick()
+void UIManager::Tick()
 {
 	for (size_t index = 0; index < this->_objects.size(); index++)
-		this->_objects[index]->tick();
+		this->_objects[index]->Tick();
 }
 
-void UiManager::render()
+void UIManager::Render()
 {
 	for (size_t index = 0; index < this->_objects.size(); index++)
-		this->_objects[index]->render();
+		this->_objects[index]->Render();
 }

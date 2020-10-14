@@ -2,9 +2,9 @@
 
 #include "widget.hpp"
 
-class UiManager : public UiWidget
+class UIManager : public UIWidget
 {
 public:
-	void tick();
-	void render();
+	void Tick();
+	void Render();
 };

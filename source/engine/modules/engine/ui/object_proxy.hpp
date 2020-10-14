@@ -1,10 +1,7 @@
 #pragma once
 
-namespace ui
+class UIObjectProxy
 {
-	class object_proxy
-	{
-	public:
-		;
-	};
-}
+public:
+	;
+};
