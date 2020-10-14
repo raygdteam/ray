@@ -5,14 +5,14 @@
 
 namespace ui
 {
-	template <typename type>
 	class object
 	{
 	public:
 		object();
-		~object();
+		~object() {};
 
-		virtual type process() = 0;
+		virtual void process() = 0;
+		virtual void render() = 0;
 
 	protected:
 		StaticQuadSceneProxy* render_data;

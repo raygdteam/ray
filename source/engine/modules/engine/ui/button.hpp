@@ -7,7 +7,7 @@
 
 namespace ui
 {
-	class button : protected object<bool>
+	class button : protected object
 	{
 		button(StaticQuadSceneProxy* render_data, ray::renderer_core_api::GraphicsContext& graphics_context)
 		{
@@ -15,8 +15,9 @@ namespace ui
 			//this->graphics_context = graphics_context;
 		}
 
-		~button() {}
+		//~button() {}
 
-		virtual bool process();
+		virtual void process() override;
+		virtual void render() override;
 	};
 }

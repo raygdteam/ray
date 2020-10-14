@@ -47,6 +47,12 @@
     <ClInclude Include="ui\object.hpp">
       <Filter>ui</Filter>
     </ClInclude>
+    <ClInclude Include="ui\object_proxy.hpp">
+      <Filter>ui</Filter>
+    </ClInclude>
+    <ClInclude Include="ui\widget.hpp">
+      <Filter>ui</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="engine">
@@ -110,6 +116,9 @@
       <Filter>world</Filter>
     </ClCompile>
     <ClCompile Include="ui\button.cpp">
+      <Filter>ui</Filter>
+    </ClCompile>
+    <ClCompile Include="ui\widget.cpp">
       <Filter>ui</Filter>
     </ClCompile>
   </ItemGroup>

@@ -1,6 +1,8 @@
 #pragma once
 #include <core/core.hpp>
 
+#include <engine\world\components\transform.hpp>
+
 // ------------- RENDER DATA -------------
 struct RenderData
 {};
