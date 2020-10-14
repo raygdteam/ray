@@ -2,7 +2,7 @@
 
 void UiWidget::AddObject(ui::object& object)
 {
-	// this->_objects.PushBack(ui::object);
+	this->_objects.PushBack(&object);
 }
 
 void UiWidget::RemoveObject(ui::object& object)

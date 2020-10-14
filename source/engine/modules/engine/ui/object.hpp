@@ -11,7 +11,7 @@ namespace ui
 		object();
 		~object() {};
 
-		virtual void process() = 0;
+		virtual void tick() = 0;
 		virtual void render() = 0;
 
 	protected:

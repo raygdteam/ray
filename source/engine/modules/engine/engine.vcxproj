@@ -151,6 +151,7 @@
     <ClInclude Include="pch.hpp" />
     <ClInclude Include="state\state.hpp" />
     <ClInclude Include="ui\button.hpp" />
+    <ClInclude Include="ui\manager.hpp" />
     <ClInclude Include="ui\object.hpp" />
     <ClInclude Include="ui\object_proxy.hpp" />
     <ClInclude Include="ui\widget.hpp" />
@@ -169,6 +170,7 @@
     <ClCompile Include="module_engine.cpp" />
     <ClCompile Include="state\state.cpp" />
     <ClCompile Include="ui\button.cpp" />
+    <ClCompile Include="ui\manager.cpp" />
     <ClCompile Include="ui\widget.cpp" />
     <ClCompile Include="world\actor.cpp" />
     <ClCompile Include="world\actors\camera_actor.cpp" />

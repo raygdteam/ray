@@ -9,15 +9,14 @@ namespace ui
 {
 	class button : protected object
 	{
-		button(StaticQuadSceneProxy* render_data, ray::renderer_core_api::GraphicsContext& graphics_context)
+		button(StaticQuadSceneProxy* render_data)
 		{
 			this->render_data = render_data;
-			//this->graphics_context = graphics_context;
 		}
 
 		//~button() {}
 
-		virtual void process() override;
+		virtual void tick() override;
 		virtual void render() override;
 	};
 }
