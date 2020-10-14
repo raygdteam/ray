@@ -1,7 +1,7 @@
 #pragma once
 
-#include "engine/world/components/transform.hpp"
 #include "engine/world/world_render_data.hpp"
+#include <renderer_core/command_context.hpp>
 
 namespace ui
 {
@@ -15,7 +15,7 @@ namespace ui
 		virtual type process() = 0;
 
 	protected:
-		Transform* transform;
-		RenderData* render_data;
+		StaticQuadSceneProxy* render_data;
+		ray::renderer_core_api::GraphicsContext& graphics_context;
 	};
 }
