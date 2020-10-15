@@ -19,9 +19,12 @@ struct UiObjectProxy
 class UiWidget
 {
 	Array<UiObject*> _objects;
+	Array<UiObjectProxy> _proxies;
+	
 public:
 	void AddObject(UiObject*);
 	void RemoveObject(UiObject*); // ??
 
+	void Update();
 	void RenderAll(GraphicsContext&);
 };

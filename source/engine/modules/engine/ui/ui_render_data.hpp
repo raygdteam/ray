@@ -4,8 +4,6 @@
 struct UiRenderData
 {
 	u64 Type;
-	bool Optimize : 8;
-
 	u64 State;
 
 	struct {
