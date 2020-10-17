@@ -4,8 +4,6 @@
 
 #pragma comment(lib, "shlwapi.lib")
 
-typedef rayHandle rayFileHandle;
-
 void palFileSysSwitchToExeDirectory()
 {
     char exePath[260];
