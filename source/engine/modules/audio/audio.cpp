@@ -5,7 +5,7 @@
 class audio_manager
 {
 public:
-	header::riff* load(const char* filename);
+	RAY_AUDIO_API header::riff* load(const char* filename);
 };
 
 header::riff* audio_manager::load(const char* filename)

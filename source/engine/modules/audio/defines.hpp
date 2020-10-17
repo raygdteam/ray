@@ -3,7 +3,7 @@
 #include <core/core.hpp>
 
 #ifdef RAY_BUILD_AUDIO
-#define RAY_INPUT_API RAY_DLLEXPORTS
+#define RAY_AUDIO_API RAY_DLLEXPORTS
 #else
-#define RAY_INPUT_API RAY_DLLIMPORT
+#define RAY_AUDIO_API RAY_DLLIMPORT
 #endif
