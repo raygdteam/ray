@@ -16,7 +16,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="audio.hpp" />
-    <ClInclude Include="defines.hpp" />
+    <ClInclude Include="audio_def.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="audio.cpp" />

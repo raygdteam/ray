@@ -1,6 +1,8 @@
 #include "audio/audio.hpp"
 
+extern "C" {
 #include <kernel/kernel_file.h>
+}
 
 class audio_manager
 {
