@@ -1,11 +1,24 @@
 #include "widget.hpp"
 
-void UIWidget::AddObject(UIObject& object)
+void UiWidget::AddObject(UiObject* object)
 {
-	this->_objects.PushBack(&object);
+	_objects.PushBack(object);
+	_proxies.PushBack(UiObjectProxy { .Transform = &object->_transform, .RenderData = object->_renderData });
 }
 
-void UIWidget::RemoveObject(UIObject& object)
+void UiWidget::RemoveObject(UiObject*)
 {
-	// ?
+}
+
+void UiWidget::Update()
+{
+	for (UiObject* object : _objects)
+	{
+		object->Tick();
+	}
+}
+
+void UiWidget::RenderAll(GraphicsContext& ctx)
+{
+	
 }

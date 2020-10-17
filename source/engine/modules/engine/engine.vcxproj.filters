@@ -41,19 +41,13 @@
     <ClInclude Include="world\world_render_data.hpp">
       <Filter>world</Filter>
     </ClInclude>
-    <ClInclude Include="ui\button.hpp">
-      <Filter>ui</Filter>
-    </ClInclude>
     <ClInclude Include="ui\object.hpp">
-      <Filter>ui</Filter>
-    </ClInclude>
-    <ClInclude Include="ui\object_proxy.hpp">
       <Filter>ui</Filter>
     </ClInclude>
     <ClInclude Include="ui\widget.hpp">
       <Filter>ui</Filter>
     </ClInclude>
-    <ClInclude Include="ui\manager.hpp">
+    <ClInclude Include="ui\ui_render_data.hpp">
       <Filter>ui</Filter>
     </ClInclude>
   </ItemGroup>
@@ -118,13 +112,7 @@
     <ClCompile Include="world\world_renderer.cpp">
       <Filter>world</Filter>
     </ClCompile>
-    <ClCompile Include="ui\button.cpp">
-      <Filter>ui</Filter>
-    </ClCompile>
     <ClCompile Include="ui\widget.cpp">
-      <Filter>ui</Filter>
-    </ClCompile>
-    <ClCompile Include="ui\manager.cpp">
       <Filter>ui</Filter>
     </ClCompile>
   </ItemGroup>
