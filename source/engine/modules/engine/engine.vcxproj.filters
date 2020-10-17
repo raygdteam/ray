@@ -50,6 +50,12 @@
     <ClInclude Include="ui\ui_render_data.hpp">
       <Filter>ui</Filter>
     </ClInclude>
+    <ClInclude Include="ui\button.hpp">
+      <Filter>ui</Filter>
+    </ClInclude>
+    <ClInclude Include="ui\label.hpp">
+      <Filter>ui</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="engine">
@@ -113,6 +119,12 @@
       <Filter>world</Filter>
     </ClCompile>
     <ClCompile Include="ui\widget.cpp">
+      <Filter>ui</Filter>
+    </ClCompile>
+    <ClCompile Include="ui\button.cpp">
+      <Filter>ui</Filter>
+    </ClCompile>
+    <ClCompile Include="ui\label.cpp">
       <Filter>ui</Filter>
     </ClCompile>
   </ItemGroup>

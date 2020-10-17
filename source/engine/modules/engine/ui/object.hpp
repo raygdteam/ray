@@ -17,9 +17,3 @@ public:
 
 	virtual void Tick() = 0;
 };
-
-class UiButton : public UiObject
-{
-protected:
-	virtual void OnPress() = 0;
-};
