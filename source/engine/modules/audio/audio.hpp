@@ -50,10 +50,19 @@ namespace header
     };
 }
 
-class RAY_AUDIO_API audio_manager
+#include <audioclient.h>
+
+class RAY_AUDIO_API AudioManager
 {
 public:
-    header::riff* load(const char* filename);
+    AudioManager();
+
+    header::riff* Load(const char* filename);
 
     void foo(header::riff* file);
+
+private:
+    long HResult;
+    IAudioClient* AudioClient;
+    IAudioRenderClient* AudioRenderClient;
 };

@@ -5,9 +5,19 @@
 
 extern "C" {
 #include <kernel/kernel_file.h>
+#include <stdio.h>
 }
 
-header::riff* audio_manager::load(const char* filename)
+AudioManager::AudioManager()
+{
+    this->HResult = CoInitialize(nullptr);
+
+    this->AudioClient = 0;
+
+    this->AudioRenderClient = 0;
+}
+
+header::riff* AudioManager::Load(const char* filename)
 {
 	palFileSysSwitchToExeDirectory();
 	
@@ -20,30 +30,24 @@ header::riff* audio_manager::load(const char* filename)
 	return static_cast<header::riff*>(buffer);
 }
 
-void audio_manager::foo(header::riff* file)
+void AudioManager::foo(header::riff* file)
 {
     uint32_t numWavSamples = file->dataChunkSize / (file->numChannels * sizeof(uint16_t));
     uint16_t* wavSamples = &file->samples;
 
-    HRESULT hr = CoInitializeEx(nullptr, COINIT_SPEED_OVER_MEMORY);
-
     IMMDeviceEnumerator* deviceEnumerator;
-    hr = CoCreateInstance(__uuidof(MMDeviceEnumerator), nullptr, CLSCTX_ALL, __uuidof(IMMDeviceEnumerator), (LPVOID*)(&deviceEnumerator));
+    this->HResult = CoCreateInstance(__uuidof(MMDeviceEnumerator), nullptr, CLSCTX_ALL, __uuidof(IMMDeviceEnumerator), (LPVOID*)(&deviceEnumerator));
 
     IMMDevice* audioDevice;
-    hr = deviceEnumerator->GetDefaultAudioEndpoint(eRender, eConsole, &audioDevice);
+    this->HResult = deviceEnumerator->GetDefaultAudioEndpoint(eRender, eConsole, &audioDevice);
 
     deviceEnumerator->Release();
 
-    IAudioClient* audioClient;
-    hr = audioDevice->Activate(__uuidof(IAudioClient), CLSCTX_ALL, nullptr, (LPVOID*)(&audioClient));
+    this->HResult = audioDevice->Activate(__uuidof(IAudioClient), CLSCTX_ALL, nullptr, (LPVOID*)(&this->AudioClient));
 
     audioDevice->Release();
 
-    WAVEFORMATEX* defaultMixFormat = NULL;
-    hr = audioClient->GetMixFormat(&defaultMixFormat);
-
-    WAVEFORMATEX mixFormat = {};
+    WAVEFORMATEX mixFormat = {}; // see WAVEFORMATEXTENSIBLE later
     mixFormat.wFormatTag = WAVE_FORMAT_PCM;
     mixFormat.nChannels = 2;
     mixFormat.nSamplesPerSec = file->sampleRate;
@@ -51,38 +55,35 @@ void audio_manager::foo(header::riff* file)
     mixFormat.nBlockAlign = (mixFormat.nChannels * mixFormat.wBitsPerSample) / 8;
     mixFormat.nAvgBytesPerSec = mixFormat.nSamplesPerSec * mixFormat.nBlockAlign;
 
-    const int64_t REFTIMES_PER_SEC = 10000000; // hundred nanoseconds
+    const int64_t REFTIMES_PER_SEC = 10000000; 
+
     REFERENCE_TIME requestedSoundBufferDuration = REFTIMES_PER_SEC * 2;
+
     DWORD initStreamFlags = (AUDCLNT_STREAMFLAGS_RATEADJUST
         | AUDCLNT_STREAMFLAGS_AUTOCONVERTPCM
         | AUDCLNT_STREAMFLAGS_SRC_DEFAULT_QUALITY);
-    hr = audioClient->Initialize(AUDCLNT_SHAREMODE_SHARED,
-        initStreamFlags,
-        requestedSoundBufferDuration,
-        0, &mixFormat, nullptr);
 
-    IAudioRenderClient* audioRenderClient;
-    hr = audioClient->GetService(__uuidof(IAudioRenderClient), (LPVOID*)(&audioRenderClient));
+    this->HResult = this->AudioClient->Initialize(AUDCLNT_SHAREMODE_SHARED, initStreamFlags, requestedSoundBufferDuration, 0, &mixFormat, nullptr);
+
+    this->HResult = this->AudioClient->GetService(__uuidof(IAudioRenderClient), (LPVOID*)(&this->AudioRenderClient));
 
     UINT32 bufferSizeInFrames;
-    hr = audioClient->GetBufferSize(&bufferSizeInFrames);
+    this->HResult = this->AudioClient->GetBufferSize(&bufferSizeInFrames);
 
-    hr = audioClient->Start();
+    this->HResult = this->AudioClient->Start();
 
     int wavPlaybackSample = 0;
 
     while (true)
     {
-        // Padding is how much valid data is queued up in the sound buffer
-        // if there's enough padding then we could skip writing more data
-        UINT32 bufferPadding;
-        hr = audioClient->GetCurrentPadding(&bufferPadding);
+        UINT32 bufferPadding; // по нормальному bufferPadding не должен быть равен нулю (после GetCurrentPadding он остается неизменным, значит дело в audioclient)
+        this->HResult = this->AudioClient->GetCurrentPadding(&bufferPadding);
 
         UINT32 soundBufferLatency = bufferSizeInFrames / 50;
         UINT32 numFramesToWrite = soundBufferLatency - bufferPadding;
 
         int16_t* buffer;
-        hr = audioRenderClient->GetBuffer(numFramesToWrite, (BYTE**)(&buffer));
+        this->HResult = this->AudioRenderClient->GetBuffer(numFramesToWrite, (BYTE**)(&buffer));
 
         for (UINT32 frameIndex = 0; frameIndex < numFramesToWrite; ++frameIndex)
         {
@@ -93,10 +94,11 @@ void audio_manager::foo(header::riff* file)
             wavPlaybackSample %= numWavSamples;
         }
 
-        hr = audioRenderClient->ReleaseBuffer(numFramesToWrite, 0);
+        this->HResult = this->AudioRenderClient->ReleaseBuffer(numFramesToWrite, 0);
     }
 
-    audioClient->Stop();
-    audioClient->Release();
-    audioRenderClient->Release();
+    this->AudioClient->Stop();
+    this->AudioClient->Release();
+
+    this->AudioRenderClient->Release();
 }

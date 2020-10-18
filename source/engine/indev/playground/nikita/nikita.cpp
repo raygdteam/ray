@@ -2,8 +2,8 @@
 
 void __Playground_Nikita()
 {
-	audio_manager audio_manager;
+	AudioManager audio_manager;
 
-	auto oof = audio_manager.load("StarWars60.wav");
+	auto oof = audio_manager.Load("StarWars60.wav");
 	audio_manager.foo(oof);
 }
