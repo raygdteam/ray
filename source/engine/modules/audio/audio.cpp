@@ -10,7 +10,7 @@ extern "C" {
 
 AudioManager::AudioManager()
 {
-    this->HResult = CoInitialize(nullptr);
+    CoInitialize(nullptr);
 
     this->AudioClient = 0;
 
@@ -32,30 +32,30 @@ header::riff* AudioManager::Load(const char* filename)
 
 void AudioManager::foo(header::riff* file)
 {
-    uint32_t numWavSamples = file->dataChunkSize / (file->numChannels * sizeof(uint16_t));
+    uint32_t numWavSamples = file->data_bytes / (file->num_channels * sizeof(uint16_t));
     uint16_t* wavSamples = &file->samples;
 
     IMMDeviceEnumerator* deviceEnumerator;
-    this->HResult = CoCreateInstance(__uuidof(MMDeviceEnumerator), nullptr, CLSCTX_ALL, __uuidof(IMMDeviceEnumerator), (LPVOID*)(&deviceEnumerator));
+    CoCreateInstance(__uuidof(MMDeviceEnumerator), nullptr, CLSCTX_ALL, __uuidof(IMMDeviceEnumerator), (LPVOID*)(&deviceEnumerator));
 
     IMMDevice* audioDevice;
-    this->HResult = deviceEnumerator->GetDefaultAudioEndpoint(eRender, eConsole, &audioDevice);
+    deviceEnumerator->GetDefaultAudioEndpoint(eRender, eConsole, &audioDevice);
 
     deviceEnumerator->Release();
 
-    this->HResult = audioDevice->Activate(__uuidof(IAudioClient), CLSCTX_ALL, nullptr, (LPVOID*)(&this->AudioClient));
+    audioDevice->Activate(__uuidof(IAudioClient), CLSCTX_ALL, nullptr, (LPVOID*)(&this->AudioClient));
 
     audioDevice->Release();
 
-    WAVEFORMATEX mixFormat = {}; // see WAVEFORMATEXTENSIBLE later
+    WAVEFORMATEX mixFormat = {}; // See WAVEFORMATEXTENSIBLE later.
     mixFormat.wFormatTag = WAVE_FORMAT_PCM;
     mixFormat.nChannels = 2;
-    mixFormat.nSamplesPerSec = file->sampleRate;
+    mixFormat.nSamplesPerSec = file->sample_rate;
     mixFormat.wBitsPerSample = 16;
     mixFormat.nBlockAlign = (mixFormat.nChannels * mixFormat.wBitsPerSample) / 8;
     mixFormat.nAvgBytesPerSec = mixFormat.nSamplesPerSec * mixFormat.nBlockAlign;
 
-    const int64_t REFTIMES_PER_SEC = 10000000; 
+    const int64_t REFTIMES_PER_SEC = 10000000000;
 
     REFERENCE_TIME requestedSoundBufferDuration = REFTIMES_PER_SEC * 2;
 
@@ -63,27 +63,27 @@ void AudioManager::foo(header::riff* file)
         | AUDCLNT_STREAMFLAGS_AUTOCONVERTPCM
         | AUDCLNT_STREAMFLAGS_SRC_DEFAULT_QUALITY);
 
-    this->HResult = this->AudioClient->Initialize(AUDCLNT_SHAREMODE_SHARED, initStreamFlags, requestedSoundBufferDuration, 0, &mixFormat, nullptr);
+    this->AudioClient->Initialize(AUDCLNT_SHAREMODE_SHARED, initStreamFlags, requestedSoundBufferDuration, 0, &mixFormat, nullptr);
 
-    this->HResult = this->AudioClient->GetService(__uuidof(IAudioRenderClient), (LPVOID*)(&this->AudioRenderClient));
+    this->AudioClient->GetService(__uuidof(IAudioRenderClient), (LPVOID*)(&this->AudioRenderClient));
 
     UINT32 bufferSizeInFrames;
-    this->HResult = this->AudioClient->GetBufferSize(&bufferSizeInFrames);
+    this->AudioClient->GetBufferSize(&bufferSizeInFrames);
 
-    this->HResult = this->AudioClient->Start();
+    this->AudioClient->Start();
 
     int wavPlaybackSample = 0;
 
     while (true)
     {
-        UINT32 bufferPadding; // по нормальному bufferPadding не должен быть равен нулю (после GetCurrentPadding он остается неизменным, значит дело в audioclient)
-        this->HResult = this->AudioClient->GetCurrentPadding(&bufferPadding);
+        UINT32 bufferPadding;
+        this->AudioClient->GetCurrentPadding(&bufferPadding);
 
         UINT32 soundBufferLatency = bufferSizeInFrames / 50;
         UINT32 numFramesToWrite = soundBufferLatency - bufferPadding;
 
         int16_t* buffer;
-        this->HResult = this->AudioRenderClient->GetBuffer(numFramesToWrite, (BYTE**)(&buffer));
+        this->AudioRenderClient->GetBuffer(numFramesToWrite, (BYTE**)(&buffer));
 
         for (UINT32 frameIndex = 0; frameIndex < numFramesToWrite; ++frameIndex)
         {
@@ -94,7 +94,7 @@ void AudioManager::foo(header::riff* file)
             wavPlaybackSample %= numWavSamples;
         }
 
-        this->HResult = this->AudioRenderClient->ReleaseBuffer(numFramesToWrite, 0);
+        this->AudioRenderClient->ReleaseBuffer(numFramesToWrite, 0);
     }
 
     this->AudioClient->Stop();

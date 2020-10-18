@@ -8,7 +8,7 @@ void UiWidget::AddObject(UiObject* object)
 
 void UiWidget::RemoveObject(UiObject* object)
 {
-	_objects.erase(object);
+	_objects.erase(&object);
 }
 
 void UiWidget::Update()
@@ -25,7 +25,7 @@ void UiWidget::RenderAll(GraphicsContext& ctx)
 	Array<QuadVertex> vertices;
 	Array<u32> indices;
 
-	for (UiObjectProxy& proxy : _proxies)
+	/*for (UiObjectProxy& proxy : _proxies)
 	{
 		UiRenderData& renderData = *proxy.RenderData;
 		
@@ -43,7 +43,7 @@ void UiWidget::RenderAll(GraphicsContext& ctx)
 				indices.PushBack(state.Indices[ii]);
 			}
 		}
-	}
+	}*/
 
 	ctx.SetDynamicVB(0, vertices.Size(), 12, vertices.GetData());
 	ctx.SetDynamicIB(indices.Size(), indices.GetData());

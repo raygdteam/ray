@@ -6,7 +6,7 @@ namespace header
 {
     struct riff
     {
-        /*char riff_header[4];
+        char riff_header[4];
         int wav_size;
         char wave_header[4];
 
@@ -21,32 +21,7 @@ namespace header
 
         char data_header[4];
         int data_bytes;
-        short samples;*/
-
-        // RIFF Chunk
-        uint32_t riffId;
-        uint32_t riffChunkSize;
-        uint32_t waveId;
-
-        // fmt Chunk
-        uint32_t fmtId;
-        uint32_t fmtChunkSize;
-        uint16_t formatCode;
-        uint16_t numChannels;
-        uint32_t sampleRate;
-        uint32_t byteRate;
-        uint16_t blockAlign;
-        uint16_t bitsPerSample;
-        // These are not present for PCM Wav Files
-        // uint16_t cbSize;
-        // uint16_t wValidBitsPerSample;
-        // uint32_t dwChannelMask;
-        // char subFormatGUID[16];
-
-        // data Chunk
-        uint32_t dataId;
-        uint32_t dataChunkSize;
-        uint16_t samples; // actual samples start here
+        uint16_t samples;
     };
 }
 
@@ -62,7 +37,6 @@ public:
     void foo(header::riff* file);
 
 private:
-    long HResult;
     IAudioClient* AudioClient;
     IAudioRenderClient* AudioRenderClient;
 };

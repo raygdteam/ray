@@ -12,7 +12,7 @@ protected:
 	UiRenderData* _renderData;
 	
 public:
-	UiObject();
+	UiObject() {};
 	virtual ~UiObject() {};
 
 	virtual void Tick() = 0;
