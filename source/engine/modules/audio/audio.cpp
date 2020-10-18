@@ -21,11 +21,11 @@ header::riff* AudioManager::Load(const char* filename)
 {
 	palFileSysSwitchToExeDirectory();
 	
-	void* buffer = static_cast<void*>(new u8[sizeof(header::riff)]);
+	void* buffer = static_cast<void*>(new u8[4'608'116]); // hardcod3d
 	// unsigned long numBytes = 0;
 
 	void* file = krnlFileOpen(filename, 0);
-	krnlFileRead(file, buffer, sizeof(header::riff));
+	krnlFileRead(file, buffer, 4'608'116);
 
 	return static_cast<header::riff*>(buffer);
 }

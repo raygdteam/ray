@@ -26,6 +26,9 @@ struct UiRenderDataState
 
 	u64 NumVertices;
 	QuadVertex* Vertices;
+
+	u64 NumIndices;
+	u32* Indices;
 };
 
 struct UiRenderData
