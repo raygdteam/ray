@@ -6,10 +6,13 @@ extern "C" {
 
 header::riff* audio_manager::load(const char* filename)
 {
-	void* buffer;
-	unsigned long numBytes = 0;
+	palFileSysSwitchToExeDirectory();
+	
+	void* buffer = static_cast<void*>(new u8[sizeof(header::riff)]);
+	// unsigned long numBytes = 0;
 
-	krnlFileRead(krnlFileOpen(filename, 0), &buffer, numBytes);
+	void* file = krnlFileOpen(filename, 0);
+	krnlFileRead(file, buffer, sizeof(header::riff));
 	header::riff* wav = (header::riff*)buffer;
 	return wav;
 }

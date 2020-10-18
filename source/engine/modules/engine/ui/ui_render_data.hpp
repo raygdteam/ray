@@ -13,7 +13,7 @@ struct QuadVertex
 
 enum RenderType
 {
-	eNull,
+	eRenderTypeNull,
 	eRawData,
 	eCustom = eRawData,
 

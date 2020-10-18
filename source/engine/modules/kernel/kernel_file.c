@@ -56,12 +56,14 @@ rayFileHandle krnlFileOpen(const char* path, int mode)
         break;
     }
 
-    rayFileHandle unnamed = CreateFileA(path, access, share, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
+    rayFileHandle file = CreateFileA(path, access, share, NULL, OPEN_EXISTING, 0, NULL);
 
-    if (unnamed == INVALID_HANDLE_VALUE)
+    if (file == INVALID_HANDLE_VALUE)
         return RAY_INVALID_HANDLE;
 
-    return unnamed;
+    SetFilePointer(file, 0, 0, FILE_BEGIN);
+	
+    return file;
 }
 
 void krnlFileClose(rayFileHandle file)
@@ -81,15 +83,10 @@ unsigned long long krnlFileRead(rayFileHandle file, void* buffer, unsigned long 
 {
     DWORD numRead = 0;
 
-    if (!numBytes)
-        numRead = SetEndOfFile(file) ? 0 : HFILE_ERROR;
-    else
+    if (ReadFile(file, buffer, numBytes, &numRead, NULL) == FALSE)
     {
-        if (ReadFile(file, buffer, numBytes, &numRead, NULL) == FALSE)
-        {
-            __debugbreak();
-            numRead = HFILE_ERROR;
-        }
+        __debugbreak();
+        numRead = HFILE_ERROR;
     }
 
     return numRead;
