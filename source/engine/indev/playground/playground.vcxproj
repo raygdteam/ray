@@ -25,7 +25,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v142</PlatformToolset>
+    <PlatformToolset>ClangCL</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
     <EnableUnitySupport>true</EnableUnitySupport>
   </PropertyGroup>
@@ -143,32 +143,11 @@
     <ClCompile Include="seg_fault__\seg_fault__.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\development\editor\editor.vcxproj">
-      <Project>{65fe7b51-d7de-4186-a270-da554d08b58d}</Project>
-    </ProjectReference>
-    <ProjectReference Include="..\..\modules\app_framework\app_framework.vcxproj">
-      <Project>{1f9d6dcb-4d59-4a90-b5c4-95411eda662f}</Project>
-    </ProjectReference>
-    <ProjectReference Include="..\..\modules\core\core.vcxproj">
-      <Project>{134c88c3-3c53-4b8b-8884-95f2a2283cea}</Project>
-    </ProjectReference>
-    <ProjectReference Include="..\..\modules\engine\engine.vcxproj">
-      <Project>{cafbff96-4ad5-443b-a462-fd5b34c0ebac}</Project>
-    </ProjectReference>
-    <ProjectReference Include="..\..\modules\input\input.vcxproj">
-      <Project>{a0c4e72f-34fb-4871-9c79-cd18b7743e2f}</Project>
+    <ProjectReference Include="..\..\modules\audio\audio.vcxproj">
+      <Project>{df10ee70-682f-458f-83e5-2b7c30b62491}</Project>
     </ProjectReference>
     <ProjectReference Include="..\..\modules\kernel\kernel.vcxproj">
       <Project>{481e9d9e-4af6-4693-96ab-660b91dd8b57}</Project>
-    </ProjectReference>
-    <ProjectReference Include="..\..\modules\renderer_core\renderer_core.vcxproj">
-      <Project>{1575e148-c79e-402e-ac64-89e9f37b477b}</Project>
-    </ProjectReference>
-    <ProjectReference Include="..\..\thirdparty\eastl\eastl.vcxproj">
-      <Project>{34ff6296-b8e5-43b8-a8a1-b57163615e2a}</Project>
-    </ProjectReference>
-    <ProjectReference Include="..\..\thirdparty\mimalloc\mimalloc.vcxproj">
-      <Project>{615c925d-85a3-4099-85bc-6bbb744c128e}</Project>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

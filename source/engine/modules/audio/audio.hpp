@@ -13,13 +13,19 @@ namespace header
         char fmt_header[3];
         int fmt_chunk_size;
         short audio_format;
-        short channels;
+        short num_channels;
         int sample_rate;
         int byte_rate;
-        short alignment;
+        short sample_alignment;
         short bit_depth;
 
         char data_header[4];
         int data_bytes;
     };
 }
+
+class RAY_AUDIO_API audio_manager
+{
+public:
+    header::riff* load(const char* filename);
+};

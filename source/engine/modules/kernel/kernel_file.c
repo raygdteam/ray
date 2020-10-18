@@ -14,7 +14,7 @@ void palFileSysSwitchToExeDirectory()
 
 rayFileHandle krnlFileOpen(const char* path, int mode)
 {
-    DWORD access;
+    DWORD access, share;
 
     switch (mode)
     {
@@ -32,20 +32,29 @@ rayFileHandle krnlFileOpen(const char* path, int mode)
         break;
     }
 
-    DWORD share = mode & (OF_SHARE_COMPAT | OF_SHARE_DENY_NONE | OF_SHARE_DENY_READ | OF_SHARE_DENY_WRITE | OF_SHARE_EXCLUSIVE);
+    share = mode & (OF_SHARE_COMPAT | OF_SHARE_DENY_NONE | OF_SHARE_DENY_READ | OF_SHARE_DENY_WRITE | OF_SHARE_EXCLUSIVE);
 
-    if (share == OF_SHARE_DENY_READ)
+    switch (share)
+    {
+    case OF_SHARE_DENY_READ:
         share = FILE_SHARE_WRITE;
-    else if (share == OF_SHARE_DENY_WRITE)
+        break;
+    case OF_SHARE_DENY_WRITE:
         share = FILE_SHARE_READ;
-    else if (share == OF_SHARE_DENY_NONE)
+        break;
+    case OF_SHARE_DENY_NONE:
         share = FILE_SHARE_READ | FILE_SHARE_WRITE;
-    else if (share == OF_SHARE_EXCLUSIVE)
+        break;
+    case OF_SHARE_EXCLUSIVE:
         share = 0;
-    else if (share == OF_SHARE_COMPAT)
+        break;
+    case OF_SHARE_COMPAT:
         share = FILE_SHARE_READ | FILE_SHARE_WRITE;
-    else
+        break;
+    default:
         share = 0;
+        break;
+    }
 
     rayFileHandle unnamed = CreateFileA(path, access, share, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
 

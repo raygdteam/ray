@@ -16,5 +16,5 @@ int main(int, char**)
 	// __Playground_dark();
 	// __Playground_seg_fault__(argc, argv);
 	// __Playground_Mykyta(argc, argv);
-	// __Playground_Nikita(argc, argv);
+	__Playground_Nikita();
 }
