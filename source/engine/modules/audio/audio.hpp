@@ -21,7 +21,6 @@ namespace header
 
         char data_header[4];
         int data_bytes;
-        uint16_t samples;
     };
 }
 

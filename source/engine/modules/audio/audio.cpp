@@ -32,9 +32,6 @@ header::riff* AudioManager::Load(const char* filename)
 
 void AudioManager::foo(header::riff* file)
 {
-    uint32_t numWavSamples = file->data_bytes / (file->num_channels * sizeof(uint16_t));
-    uint16_t* wavSamples = &file->samples;
-
     IMMDeviceEnumerator* deviceEnumerator;
     CoCreateInstance(__uuidof(MMDeviceEnumerator), nullptr, CLSCTX_ALL, __uuidof(IMMDeviceEnumerator), (LPVOID*)(&deviceEnumerator));
 
@@ -72,8 +69,6 @@ void AudioManager::foo(header::riff* file)
 
     this->AudioClient->Start();
 
-    int wavPlaybackSample = 0;
-
     while (true)
     {
         UINT32 bufferPadding;
@@ -85,14 +80,7 @@ void AudioManager::foo(header::riff* file)
         int16_t* buffer;
         this->AudioRenderClient->GetBuffer(numFramesToWrite, (BYTE**)(&buffer));
 
-        for (UINT32 frameIndex = 0; frameIndex < numFramesToWrite; ++frameIndex)
-        {
-            *buffer++ = wavSamples[wavPlaybackSample]; // left
-            *buffer++ = wavSamples[wavPlaybackSample]; // right
-
-            ++wavPlaybackSample;
-            wavPlaybackSample %= numWavSamples;
-        }
+        memcpy(buffer, &file->data_bytes, numFramesToWrite * mixFormat.nBlockAlign);
 
         this->AudioRenderClient->ReleaseBuffer(numFramesToWrite, 0);
     }
