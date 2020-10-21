@@ -39,7 +39,7 @@ public:
 
 private:
     IMMDeviceEnumerator* DeviceEnumerator;
-    IMMDevice* Device; // the correct name for this is EndPoint!
+    IMMDevice* EndPoint;
 
     WAVEFORMATEX* DeviceFormat; // see WAVEFORMATEXTENSIBLE later.
 

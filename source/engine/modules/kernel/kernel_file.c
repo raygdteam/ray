@@ -71,7 +71,7 @@ void krnlFileClose(rayFileHandle file)
     if (file == RAY_INVALID_HANDLE)
         return;
 
-    if (CloseHandle(file) != FALSE)
+    if (CloseHandle(file) == FALSE)
     {
         /* todo: handle failure correctly */
         __debugbreak();

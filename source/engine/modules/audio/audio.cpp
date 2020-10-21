@@ -38,9 +38,9 @@ void AudioManager::Play(header::riff* wave)
 
 	CoCreateInstance(__uuidof(MMDeviceEnumerator), NULL, CLSCTX_ALL, __uuidof(IMMDeviceEnumerator), (void**)&this->DeviceEnumerator);
 
-	this->DeviceEnumerator->GetDefaultAudioEndpoint(eRender, eConsole, &this->Device);
+	this->DeviceEnumerator->GetDefaultAudioEndpoint(eRender, eConsole, &this->EndPoint);
 
-	this->Device->Activate(__uuidof(IAudioClient), CLSCTX_ALL, NULL, (void**)&this->AudioClient);
+	this->EndPoint->Activate(__uuidof(IAudioClient), CLSCTX_ALL, NULL, (void**)&this->AudioClient);
 
 	this->AudioClient->GetMixFormat(&this->DeviceFormat);
 
