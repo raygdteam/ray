@@ -7,7 +7,7 @@ namespace header
     struct riff
     {
         char riff_header[4];
-        int wav_size;
+        int wave_size;
         char wave_header[4];
 
         char fmt_header[3];
@@ -24,18 +24,25 @@ namespace header
     };
 }
 
+#include <mmdeviceapi.h>
 #include <audioclient.h>
 
 class RAY_AUDIO_API AudioManager
 {
 public:
     AudioManager();
+    ~AudioManager();
 
     header::riff* Load(const char* filename);
 
-    void foo(header::riff* file);
+    void Play(header::riff* wave);
 
 private:
+    IMMDeviceEnumerator* DeviceEnumerator;
+    IMMDevice* Device; // the correct name for this is EndPoint!
+
+    WAVEFORMATEX* DeviceFormat; // see WAVEFORMATEXTENSIBLE later.
+
     IAudioClient* AudioClient;
     IAudioRenderClient* AudioRenderClient;
 };

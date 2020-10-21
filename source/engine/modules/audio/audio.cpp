@@ -1,92 +1,54 @@
-#include "audio/audio.hpp"
+﻿#include "audio/audio.hpp"
 
-#include <audioclient.h>
-#include <mmdeviceapi.h>
-
-extern "C" {
-#include <kernel/kernel_file.h>
-#include <stdio.h>
+extern "C"
+{
+#include <kernel\kernel_file.h>
 }
 
 AudioManager::AudioManager()
 {
-    CoInitialize(nullptr);
+	CoInitialize(NULL);
+}
 
-    this->AudioClient = 0;
-
-    this->AudioRenderClient = 0;
+AudioManager::~AudioManager()
+{
+	CoUninitialize();
 }
 
 header::riff* AudioManager::Load(const char* filename)
 {
 	palFileSysSwitchToExeDirectory();
-	
-	void* buffer = static_cast<void*>(new u8[4'608'116]); // hardcod3d
-	// unsigned long numBytes = 0;
 
-	void* file = krnlFileOpen(filename, 0);
-	krnlFileRead(file, buffer, 4'608'116);
+	auto file_handle = krnlFileOpen(filename, 0);
+	auto file_size = GetFileSize(file_handle, 0);
 
-	return static_cast<header::riff*>(buffer);
+	auto file_data = HeapAlloc(GetProcessHeap(), HEAP_ZERO_MEMORY, file_size); // is this flag correct ?
+
+	if (krnlFileRead(file_handle, file_data, file_size) == HFILE_ERROR)
+		HeapFree(GetProcessHeap(), 0, file_data); // don't forget about file_handle and file_size!
+
+	krnlFileClose(file_handle);
+
+	return static_cast<header::riff*>(file_data);
 }
 
-void AudioManager::foo(header::riff* file)
+void AudioManager::Play(header::riff* wave)
 {
-    IMMDeviceEnumerator* deviceEnumerator;
-    CoCreateInstance(__uuidof(MMDeviceEnumerator), nullptr, CLSCTX_ALL, __uuidof(IMMDeviceEnumerator), (LPVOID*)(&deviceEnumerator));
+	/* in the future all this should be moved to the constructor */
 
-    IMMDevice* audioDevice;
-    deviceEnumerator->GetDefaultAudioEndpoint(eRender, eConsole, &audioDevice);
+	CoCreateInstance(CLSID_MMDeviceEnumerator, NULL, CLSCTX_ALL, IID_IMMDeviceEnumerator, (void**)&this->DeviceEnumerator);
 
-    deviceEnumerator->Release();
+	this->DeviceEnumerator->GetDefaultAudioEndpoint(eRender, eConsole, &this->Device);
 
-    audioDevice->Activate(__uuidof(IAudioClient), CLSCTX_ALL, nullptr, (LPVOID*)(&this->AudioClient));
+	this->Device->Activate(IID_IAudioClient, CLSCTX_ALL, NULL, (void**)&this->AudioClient);
 
-    audioDevice->Release();
+	this->AudioClient->GetMixFormat(&this->DeviceFormat);
 
-    WAVEFORMATEX mixFormat = {}; // See WAVEFORMATEXTENSIBLE later.
-    mixFormat.wFormatTag = WAVE_FORMAT_PCM;
-    mixFormat.nChannels = 2;
-    mixFormat.nSamplesPerSec = file->sample_rate;
-    mixFormat.wBitsPerSample = 16;
-    mixFormat.nBlockAlign = (mixFormat.nChannels * mixFormat.wBitsPerSample) / 8;
-    mixFormat.nAvgBytesPerSec = mixFormat.nSamplesPerSec * mixFormat.nBlockAlign;
+	this->AudioClient->Initialize(AUDCLNT_SHAREMODE_SHARED, 0, 1000000 /* number of microseconds in a second */, 0, this->DeviceFormat, NULL);
 
-    const int64_t REFTIMES_PER_SEC = 10000000000;
+	// this->AudioClient->GetBufferSize(&);
 
-    REFERENCE_TIME requestedSoundBufferDuration = REFTIMES_PER_SEC * 2;
+	this->AudioClient->GetService(IID_IAudioRenderClient, (void**)&this->AudioRenderClient);
 
-    DWORD initStreamFlags = (AUDCLNT_STREAMFLAGS_RATEADJUST
-        | AUDCLNT_STREAMFLAGS_AUTOCONVERTPCM
-        | AUDCLNT_STREAMFLAGS_SRC_DEFAULT_QUALITY);
-
-    this->AudioClient->Initialize(AUDCLNT_SHAREMODE_SHARED, initStreamFlags, requestedSoundBufferDuration, 0, &mixFormat, nullptr);
-
-    this->AudioClient->GetService(__uuidof(IAudioRenderClient), (LPVOID*)(&this->AudioRenderClient));
-
-    UINT32 bufferSizeInFrames;
-    this->AudioClient->GetBufferSize(&bufferSizeInFrames);
-
-    this->AudioClient->Start();
-
-    while (true)
-    {
-        UINT32 bufferPadding;
-        this->AudioClient->GetCurrentPadding(&bufferPadding);
-
-        UINT32 soundBufferLatency = bufferSizeInFrames / 50;
-        UINT32 numFramesToWrite = soundBufferLatency - bufferPadding;
-
-        int16_t* buffer;
-        this->AudioRenderClient->GetBuffer(numFramesToWrite, (BYTE**)(&buffer));
-
-        memcpy(buffer, &file->data_bytes, numFramesToWrite * mixFormat.nBlockAlign);
-
-        this->AudioRenderClient->ReleaseBuffer(numFramesToWrite, 0);
-    }
-
-    this->AudioClient->Stop();
-    this->AudioClient->Release();
-
-    this->AudioRenderClient->Release();
+	/* in the future all this should be moved to the constructor */
 }
