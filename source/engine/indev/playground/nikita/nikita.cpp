@@ -4,5 +4,5 @@ void __Playground_Nikita()
 {
 	AudioManager AudioManager;
 
-	AudioManager.foo(AudioManager.Load("sound.wav"));
+	AudioManager.foo(AudioManager.Load("../../engine/mccom.wav"));
 }

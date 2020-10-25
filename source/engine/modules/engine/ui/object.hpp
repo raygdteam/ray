@@ -16,4 +16,5 @@ public:
 	virtual ~UiObject() {};
 
 	virtual void Tick() = 0;
+	virtual void Render() = 0;
 };
