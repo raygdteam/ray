@@ -5,25 +5,22 @@ void UiButton::Tick()
 	
 }
 
+void UiButton::Render()
+{
+}
+
 UiButton::UiButton()
 {
 	_transform = new Transform;
-	_renderData = new UiRenderData;
+	UiRenderData* ctx = _renderData = new UiRenderData;
 
-	_renderData->Type = 0b011;
+	ctx->Position = FVector3 { _transform->Position.x, _transform->Position.y, 1.f };
+	ctx->Scale = FVector2 { 1.f, 1.f };
 
-	_renderData->State = 0;
-
-	{
-		UiRenderDataState& state = _renderData->StateDescriptions[0];
-
-		state.NumVertices = 4;
-
-		/*
-			-1	-1
-			 1	-1
-			 1	 1
-			-1	 1
-		*/
-	}
+	ctx->TexCoord.PushBack(FVector2 {-1.f, -1.f});
+	ctx->TexCoord.PushBack(FVector2 {1.f, -1.f});
+	ctx->TexCoord.PushBack(FVector2 {1.f, 1.f});
+	ctx->TexCoord.PushBack(FVector2 {-1.f, 1.f});
+	
+	ctx->TextureIndex = 0;
 }

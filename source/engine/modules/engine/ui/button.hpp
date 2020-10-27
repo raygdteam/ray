@@ -6,6 +6,8 @@ class UiButton : public UiObject
 protected:
 	virtual void OnPress() = 0;
 public:
-	void Tick() override;
 	UiButton();
+	
+	void Tick() override;
+	void Render() override;
 };
