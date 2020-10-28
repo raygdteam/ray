@@ -4,7 +4,6 @@
 #include <core/core.hpp>
 
 #include <engine/state/state.hpp>
-#include <engine/ui/manager.hpp>
 
 #include <core/object/object.hpp>
 #include <core/module/module.hpp>
@@ -28,7 +27,6 @@ void EngineLoop::PreInitialize()
 	state->ModuleManager = new ModuleManager();
 	state->FileSystem = new FileSystem();
 	state->Debug = new Debug();
-	state->UIManager = new UIManager();
 	state->Input = new InputBase();
 	state->ResourceManager = new ResourceManager(state);
 
