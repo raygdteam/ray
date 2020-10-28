@@ -14,6 +14,8 @@ extern UiWidget* gWidget;
 
 using namespace ray::renderer_core_api;
 
+double currentFrame = 0.f;
+
 void World::Render()
 {
 	Level* level = _levelData->Level;
@@ -43,7 +45,19 @@ void World::Render()
 			1.f
 		}; 
 
-		Renderer2D::DrawQuad(position, scale, proxy->RenderData->TextureId, ctx);
+		currentFrame += (0.005f * _delta);
+		if (currentFrame >= 3)
+			currentFrame = 0;
+
+		FVector<2> textureCoords[4] =
+		{
+			{ static_cast<u32>(currentFrame) * .3333f, .25f },
+			{ static_cast<u32>(currentFrame) * .3333f, 0.f },
+			{ (1 + static_cast<u32>(currentFrame)) * .3333f, 0.f },
+			{ (1 + static_cast<u32>(currentFrame)) * .3333f, .25f }
+		};
+
+		Renderer2D::DrawQuad(position, scale, proxy->RenderData->TextureId, textureCoords, ctx);
 	}
 
 	gWidget->RenderAll(ctx);
