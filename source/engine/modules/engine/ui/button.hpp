@@ -4,7 +4,7 @@
 class UiButton : public UiObject
 {
 protected:
-	virtual void OnPress() = 0;
+	// virtual void OnPress() = 0;
 public:
 	UiButton();
 	

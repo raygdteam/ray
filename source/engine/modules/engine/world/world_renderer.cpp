@@ -8,6 +8,10 @@
 #include <renderer_core/renderer_2d.hpp>
 #include <renderer_core/command_context.hpp>
 
+#include <engine/ui/widget.hpp>
+
+extern UiWidget* gWidget;
+
 using namespace ray::renderer_core_api;
 
 void World::Render()
@@ -41,6 +45,8 @@ void World::Render()
 
 		Renderer2D::DrawQuad(position, scale, proxy->RenderData->TextureId, ctx);
 	}
+
+	gWidget->RenderAll(ctx);
 
 	Renderer2D::End(ctx);
 

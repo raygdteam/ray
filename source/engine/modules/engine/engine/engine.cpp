@@ -8,6 +8,9 @@
 #include <input/input.hpp>
 
 #include <engine/state/state.hpp>
+
+#include <engine/ui/widget.hpp>
+
 #include <resources/resource.hpp>
 #include <resources/resource_manager.hpp>
 
@@ -18,11 +21,13 @@
 #include <chrono>
 #include "core/debug/assert.hpp"
 #include <engine/world/world.hpp>
+#include "engine/ui/button.hpp"
 
 
 #undef CreateWindow
 
 static World* gWorld;
+UiWidget* gWidget;
 u64 tempLastTime = 0;
 
 using namespace ray;
@@ -63,6 +68,11 @@ void RayEngine::Initialize(IEngineLoop* engineLoop)
 
 	gWorld = new World();
 	gWorld->Initialize(window);
+
+	gWidget = new UiWidget();
+	gWidget->AddObject(new UiButton());
+	gWidget->Update(); // Widget and all it's children has to tick at least once in order to build RenderData
+	
 	//
 	//RTexture* texture = dynamic_cast<RTexture*>(RayState()->ResourceManager->LoadResourceSync("/engine/atlas2.png", ResourceType::eTexture));
 	//Renderer2D::Initialize((void*)texture->GetData().GetData(), texture->GetDimensions().x, texture->GetDimensions().y);
