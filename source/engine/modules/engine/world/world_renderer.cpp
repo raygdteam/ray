@@ -39,13 +39,7 @@ void World::Render()
 			1.f
 		};
 
-		FVector<2> scale =
-		{
-			1.f,
-			1.f
-		}; 
-
-		currentFrame += (0.005f * _delta);
+		currentFrame += (0.007f * _delta);
 		if (currentFrame >= 3)
 			currentFrame = 0;
 
@@ -57,7 +51,7 @@ void World::Render()
 			{ (1 + static_cast<u32>(currentFrame)) * .3333f, .25f }
 		};
 
-		Renderer2D::DrawQuad(position, scale, proxy->RenderData->TextureId, textureCoords, ctx);
+		Renderer2D::DrawQuad(position, proxy->Transform->Scale, proxy->RenderData->TextureId, textureCoords, ctx);
 	}
 
 	gWidget->RenderAll(ctx);
