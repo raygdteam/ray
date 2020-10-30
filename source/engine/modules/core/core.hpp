@@ -86,6 +86,10 @@
 #define RAY_CORE_API RAY_DLLIMPORT
 #endif
 
+#define GB(N) ((N) * 1024 * 1024 * 1024)
+#define MB(N) ((N) * 1024 * 1024)
+#define KB(N) ((N) * 1024)
+
 /* 
 	On windows, remove the dependecy on api-ms-win-crt-*.dll libraries,
 	as well as support OS < 10 
