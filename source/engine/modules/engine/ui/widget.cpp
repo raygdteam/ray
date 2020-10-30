@@ -27,7 +27,9 @@ void UiWidget::RenderAll(GraphicsContext& ctx)
 	for (UiObjectProxy& proxy : _proxies)
 	{
 		UiRenderData& renderData = *proxy.RenderData;
+
+		FVector3 position = FVector3 { proxy.Object->_transform->Position.x, proxy.Object->_transform->Position.y } + renderData.Position;
 		
-		Renderer2D::DrawQuad(renderData.Position, renderData.Scale, renderData.TextureIndex, (FVector2*)renderData.TexCoord.GetData(), ctx);
+		Renderer2D::DrawQuad(position, renderData.Scale, renderData.TextureIndex, (FVector2*)renderData.TexCoord.GetData(), ctx);
 	}
 }

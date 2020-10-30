@@ -12,6 +12,7 @@ using namespace ray::renderer_core_api;
 
 struct UiObjectProxy
 {
+	UiObject* Object;
 	Transform** Transform;
 	UiRenderData* RenderData;
 };
@@ -22,7 +23,7 @@ class UiWidget
 	Array<UiObjectProxy> _proxies;
 	
 public:
-	void AddObject(UiObject*);
+	void AddObject(UiObject* object);
 	void RemoveObject(UiObject*); // ??
 
 	void Update();

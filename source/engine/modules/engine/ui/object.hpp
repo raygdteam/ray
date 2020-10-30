@@ -8,8 +8,16 @@ class UiObject
 {
 	friend class UiWidget;
 protected:
+	UiObject* _parent;
+	UiWidget* _parentWidget;
+	
 	Transform* _transform;
 	UiRenderData* _renderData;
+
+	void SpawnSubobject(UiObject* object)
+	{
+		// TODO:
+	}
 	
 public:
 	UiObject() {};
