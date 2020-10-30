@@ -166,8 +166,11 @@
     <ClInclude Include="resources\depth_buffer.hpp" />
     <ClInclude Include="resources\gpu_buffer.hpp" />
     <ClInclude Include="resources\gpu_resource.hpp" />
+    <ClInclude Include="resources\graphics_memory_manager.hpp" />
     <ClInclude Include="resources\linear_allocator.hpp" />
     <ClInclude Include="resources\pixel_buffer.hpp" />
+    <ClInclude Include="resources\resources_loader.hpp" />
+    <ClInclude Include="resources\ring_buffer.hpp" />
     <ClInclude Include="resources\texture.hpp" />
     <ClInclude Include="resources\texture_manager.hpp" />
     <ClInclude Include="root_signature.hpp" />
@@ -187,8 +190,11 @@
     <ClCompile Include="resources\color_buffer.cpp" />
     <ClCompile Include="resources\depth_buffer.cpp" />
     <ClCompile Include="resources\gpu_buffer.cpp" />
+    <ClCompile Include="resources\graphics_memory_manager.cpp" />
     <ClCompile Include="resources\linear_allocator.cpp" />
     <ClCompile Include="resources\pixel_buffer.cpp" />
+    <ClCompile Include="resources\resources_loader.cpp" />
+    <ClCompile Include="resources\ring_buffer.cpp" />
     <ClCompile Include="resources\texture.cpp" />
     <ClCompile Include="resources\texture_manager.cpp" />
     <ClCompile Include="root_signature.cpp" />

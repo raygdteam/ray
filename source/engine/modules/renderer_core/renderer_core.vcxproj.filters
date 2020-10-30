@@ -44,6 +44,15 @@
     <ClInclude Include="resources\texture_manager.hpp">
       <Filter>resources</Filter>
     </ClInclude>
+    <ClInclude Include="resources\graphics_memory_manager.hpp">
+      <Filter>resources\memory</Filter>
+    </ClInclude>
+    <ClInclude Include="resources\ring_buffer.hpp">
+      <Filter>resources\memory</Filter>
+    </ClInclude>
+    <ClInclude Include="resources\resources_loader.hpp">
+      <Filter>resources\memory</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="renderer.cpp" />
@@ -82,6 +91,15 @@
     </ClCompile>
     <ClCompile Include="resources\texture_manager.cpp">
       <Filter>resources</Filter>
+    </ClCompile>
+    <ClCompile Include="resources\graphics_memory_manager.cpp">
+      <Filter>resources\memory</Filter>
+    </ClCompile>
+    <ClCompile Include="resources\ring_buffer.cpp">
+      <Filter>resources\memory</Filter>
+    </ClCompile>
+    <ClCompile Include="resources\resources_loader.cpp">
+      <Filter>resources\memory</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
