@@ -2,6 +2,7 @@
 #include "command_context.hpp"
 #include "command_queue.hpp"
 #include "resources/buffer_manager.hpp"
+#include "resources/graphics_memory_manager.hpp"
 #include "d3dx12.h"
 #include <core/math/vector.hpp>
 
@@ -25,6 +26,7 @@ namespace ray::renderer_core_api
 			D3D12_DESCRIPTOR_HEAP_TYPE_RTV,
 			D3D12_DESCRIPTOR_HEAP_TYPE_DSV
 		};
+		ray::renderer_core_api::resources::GraphicsMemoryManager gGMemManager;
 	}
 
 
@@ -96,7 +98,8 @@ namespace ray::renderer_core_api
 		
 		globals::gCurrentBuffer = 0;
 		globals::gDepthBuffer.Create(globals::gDisplayPlane->GetWidth(), globals::gDisplayPlane->GetHeight(), DXGI_FORMAT_D32_FLOAT);
-}
+		globals::gGMemManager.Initialize();
+	}
 
 	void IRenderer::BeginScene(GraphicsContext& gfxContext)
 	{
