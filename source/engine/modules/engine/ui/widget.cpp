@@ -4,7 +4,7 @@
 void UiWidget::AddObject(UiObject* object)
 {
 	_objects.PushBack(object);
-	_proxies.PushBack(UiObjectProxy { .Transform = &object->_transform, .RenderData = object->_renderData });
+	_proxies.PushBack(UiObjectProxy { .Object = object, .Transform = &object->_transform, .RenderData = object->_renderData });
 }
 
 void UiWidget::RemoveObject(UiObject* object)
