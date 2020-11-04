@@ -7,10 +7,11 @@ void InputBase::WindowEventHandler(u32 msg, s64 rparam)
 	
 	FVector2 currentPosition = { f32((u64)rparam & 0xffff), f32(((u64)rparam >> 16) & 0xffff) };
 
-	// printf("x = %f, y = %f\n", currentPosition.x, currentPosition.y);
+	printf("x = %f, y = %f\n", currentPosition.x, currentPosition.y);
 	
 	_currentDelta = { currentPosition.x - _lastMousePos.x, currentPosition.y - _lastMousePos.y };
 	_lastMousePos = currentPosition;
+	wasTick = true;
 }
 
 InputBase::InputBase()
@@ -19,4 +20,15 @@ InputBase::InputBase()
 void InputBase::Initialize(IPlatformWindow* window)
 {
 	window->RegisterEventCallback([this](void*, u32 msg, u64, s64 rparam) { this->WindowEventHandler(msg, rparam); });
+}
+
+void InputBase::Reset()
+{
+	if (wasTick)
+	{
+		wasTick = false;
+		return;
+	}
+	_currentDelta = FVector2 { 0.0f, 0.0f };
+	printf("reset\n");
 }

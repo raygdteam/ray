@@ -24,12 +24,23 @@ void UiWidget::Update()
 
 void UiWidget::RenderAll(GraphicsContext& ctx)
 {
+	constexpr FVector2 rootObjectPos = {0.f, 0.f};
+	
+	static CameraActor* camera = new CameraActor;
+	
+	Renderer2D::SetCamera(*camera);
+	
 	for (UiObjectProxy& proxy : _proxies)
 	{
 		UiRenderData& renderData = *proxy.RenderData;
 
-		FVector3 position = FVector3 { proxy.Object->_transform->Position.x, proxy.Object->_transform->Position.y } + renderData.Position;
+		FVector2 parentTransform = rootObjectPos;
+		if (proxy.Object != nullptr)
+			parentTransform = proxy.Object->_transform->Position;
 		
-		Renderer2D::DrawQuad(position, renderData.Scale, renderData.TextureIndex, (FVector2*)renderData.TexCoord.GetData(), ctx);
+		FVector2 position2D = parentTransform + renderData.Transform->Position;
+		FVector3 position = { position2D.x, position2D.y, 0.1f };
+		
+		Renderer2D::DrawQuad(position, renderData.Transform->Scale, renderData.TextureIndex, (FVector2*)renderData.TexCoord.GetData(), ctx);
 	}
 }

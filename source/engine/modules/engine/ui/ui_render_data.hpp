@@ -2,6 +2,7 @@
 #include <core/core.hpp>
 #include <core/math/vector.hpp>
 #include <core/lib/array.hpp>
+#include <engine/world/components/transform.hpp>
 
 struct UiRenderData
 {
@@ -10,8 +11,7 @@ struct UiRenderData
 	u64 State;
 
 	Array<UiRenderDataState> StateDescriptions;*/
-	FVector3 Position;
-	FVector2 Scale;
+	Transform* Transform;
 	Array<FVector2> TexCoord;
 
 	u32 TextureIndex;

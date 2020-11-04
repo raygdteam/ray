@@ -158,6 +158,11 @@ namespace ray::renderer_core_api
 		Flush(gfxContext);
 	}
 
+	void Renderer2D::SetCamera(CameraActor& camera)
+	{
+		sData.ViewProjectionMatrix = camera.GetViewProjection();
+	}
+
 	/*void Renderer2D::DrawQuad(const FVector<3>& pos, const FVector<2>& size, FVector<2>* textureCoords, GraphicsContext& gfxContext)
 	{
 		auto mat = FMatrix4x4::Scale(FVector<3>{ size.x, size.y, 1.f });

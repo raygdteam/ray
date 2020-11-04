@@ -26,6 +26,8 @@ namespace ray::renderer_core_api
 		static void Begin(CameraActor& camera);
 		static void End(GraphicsContext& gfxContext);
 
+		static void SetCamera(CameraActor& camera);
+		
 		static void Shutdown();
 
 		//static void DrawQuad(const FVector<3>& pos, FVector<2>* textureCoords, GraphicsContext& gfxContext);

@@ -71,7 +71,7 @@ void RayEngine::Initialize(IEngineLoop* engineLoop)
 
 	gWidget = new UiWidget();
 	gWidget->AddObject(new UiButton());
-	gWidget->Update(); // Widget and all it's children has to tick at least once in order to build RenderData
+	//gWidget->Update(); // Widget and all it's children has to tick at least once in order to build RenderData
 	
 	//
 	//RTexture* texture = dynamic_cast<RTexture*>(RayState()->ResourceManager->LoadResourceSync("/engine/atlas2.png", ResourceType::eTexture));
@@ -87,6 +87,8 @@ void RayEngine::Tick()
 {
 	static f64 delta = 0;
 	auto __start = std::chrono::high_resolution_clock::now();
+
+	RayState()->Input->Reset();
 	
 	static_cast<core::IPlatformWindow*>(_window)->Update();
 	bool bShouldClose = static_cast<core::IPlatformWindow*>(_window)->ShouldClose();

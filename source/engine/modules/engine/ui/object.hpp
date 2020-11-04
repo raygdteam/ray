@@ -7,6 +7,7 @@
 class UiObject
 {
 	friend class UiWidget;
+	friend class UiButton; // TODO: notlikethis
 protected:
 	UiObject* _parent;
 	UiWidget* _parentWidget;
