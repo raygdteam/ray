@@ -39,7 +39,7 @@ namespace ray::renderer_core_api::resources
 
 		D3D12_PLACED_SUBRESOURCE_FOOTPRINT placedSubres;
 		placedSubres.Footprint = subresourceFootprint;
-		placedSubres.Offset = static_cast<u64>(_currentPointer - _begin);
+		placedSubres.Offset = static_cast<u64>(_currentPointer - static_cast<u8*>(_begin));
 
 		const void* textureData = static_cast<const void*>(texture.GetData().GetData());
 		for (size_t i = 0; i < subresourceFootprint.Height; ++i)
@@ -56,7 +56,7 @@ namespace ray::renderer_core_api::resources
 		_currentPointer = reinterpret_cast<u8*>(AlignUp(reinterpret_cast<size_t>(_currentPointer), alignment));
 		ray_assert(_currentPointer + bufferSize <= _end, "Out of upload buffer!")
 
-		auto byteOffset = static_cast<u64>(_currentPointer - _begin);
+		//auto byteOffset = static_cast<u64>(_currentPointer - static_cast<u8*>(_begin));
 		memcpy(_currentPointer, buffer, bufferSize);
 		_currentPointer += bufferSize;
 	}

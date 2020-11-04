@@ -38,8 +38,8 @@ namespace ray::renderer_core_api::resources
 		void* _endOfUploadBuffer;
 
 		const size_t MAX_UPLOAD_BUFFER_SIZE = MB(256 + 64 + 8); 
-		size_t _maxTexturePoolSize; // determined in run-time
-		size_t _maxBufferPoolSize; // determined in run-time
+		//size_t _maxTexturePoolSize; // determined in run-time
+		//size_t _maxBufferPoolSize; // determined in run-time
 
 	};
 }
