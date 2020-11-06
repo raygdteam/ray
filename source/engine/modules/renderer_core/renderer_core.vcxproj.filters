@@ -53,6 +53,9 @@
     <ClInclude Include="resources\resources_loader.hpp">
       <Filter>resources\memory</Filter>
     </ClInclude>
+    <ClInclude Include="resources\resources_table.hpp">
+      <Filter>resources</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="renderer.cpp" />
@@ -100,6 +103,9 @@
     </ClCompile>
     <ClCompile Include="resources\resources_loader.cpp">
       <Filter>resources\memory</Filter>
+    </ClCompile>
+    <ClCompile Include="resources\resources_table.cpp">
+      <Filter>resources</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

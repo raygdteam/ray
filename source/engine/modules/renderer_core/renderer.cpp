@@ -3,6 +3,7 @@
 #include "command_queue.hpp"
 #include "resources/buffer_manager.hpp"
 #include "resources/graphics_memory_manager.hpp"
+#include "resources/resources_table.hpp"
 #include "d3dx12.h"
 #include <core/math/vector.hpp>
 
@@ -27,6 +28,9 @@ namespace ray::renderer_core_api
 			D3D12_DESCRIPTOR_HEAP_TYPE_DSV
 		};
 		ray::renderer_core_api::resources::GraphicsMemoryManager gGMemManager;
+		ray::renderer_core_api::resources::ResourcesTable gGlobalResourcesTable;
+		ray::renderer_core_api::resources::ResourcesTable gTexturesTable;
+		ray::renderer_core_api::resources::ResourcesTable gBuffersTable;
 	}
 
 
