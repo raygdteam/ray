@@ -11,24 +11,12 @@ protected:
 	void Update();
 public:
 	const Array<UiObject&>& GetChildren();
-	void AddChildren(UiObject*);
 };
 
-class UiWindow
-{
-	friend class UiRenderer;
-
-protected:
-	void Render();
-	void Update();
-public:
-	const Array<UiObject&>& GetChildren();
-	void AddChildren(UiObject*);
-};
-
-class UiRenderer
+class UiRootObject
 {
 public:
 	void RenderAll();
-	const Array<UiWindow&>& GetWindows();
+	void AddObject(UiObject* root, UiObject*);
+	const Array<UiObject&>& GetWindows();
 };
