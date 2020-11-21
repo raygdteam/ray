@@ -24,6 +24,9 @@ public:
 	UiObject() {};
 	virtual ~UiObject() {};
 
+	const Array<UiObject&>& GetChildren() const noexcept;
+	const void AddChildren(UiObject* object);
+
 	virtual void Tick() = 0;
 	virtual void Render() = 0;
 };

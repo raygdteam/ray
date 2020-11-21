@@ -56,6 +56,9 @@
     <ClInclude Include="ui\label.hpp">
       <Filter>ui</Filter>
     </ClInclude>
+    <ClInclude Include="ui2\ui2.hpp">
+      <Filter>ui2</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="engine">
@@ -78,6 +81,9 @@
     </Filter>
     <Filter Include="ui">
       <UniqueIdentifier>{5c83332d-83bc-4519-b21a-0e9b9a4bb380}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ui2">
+      <UniqueIdentifier>{1e74f10c-9704-4756-8741-5bca606238db}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -125,6 +131,9 @@
       <Filter>ui</Filter>
     </ClCompile>
     <ClCompile Include="ui\label.cpp">
+      <Filter>ui</Filter>
+    </ClCompile>
+    <ClCompile Include="ui\ui_renderer.cpp">
       <Filter>ui</Filter>
     </ClCompile>
   </ItemGroup>

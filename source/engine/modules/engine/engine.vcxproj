@@ -150,6 +150,7 @@
     <ClInclude Include="engine\engine_def.hpp" />
     <ClInclude Include="pch.hpp" />
     <ClInclude Include="state\state.hpp" />
+    <ClInclude Include="ui2\ui2.hpp" />
     <ClInclude Include="ui\button.hpp" />
     <ClInclude Include="ui\label.hpp" />
     <ClInclude Include="ui\object.hpp" />
@@ -171,6 +172,7 @@
     <ClCompile Include="state\state.cpp" />
     <ClCompile Include="ui\button.cpp" />
     <ClCompile Include="ui\label.cpp" />
+    <ClCompile Include="ui\ui_renderer.cpp" />
     <ClCompile Include="ui\widget.cpp" />
     <ClCompile Include="world\actor.cpp" />
     <ClCompile Include="world\actors\camera_actor.cpp" />
