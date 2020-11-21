@@ -53,6 +53,25 @@ namespace ray::renderer_core_api
 		return globals::gDescriptorAllocator[type].Allocate(count);
 	}
 
+	enum RendererName : u8
+	{
+		eDirectX11, // ???
+		eOpenGL, // ???
+		eVulkan,
+		eDirectX12
+	};
+
+	struct RAY_RENDERERCORE_API RendererInfo
+	{
+		bool bMultiEngine;
+		bool bRayTracing;
+		bool bReservedResources;
+		bool bArgsBuffer;
+		// TODO: 
+		
+		RendererName Name;
+	};
+
 	struct RAY_RENDERERCORE_API IRenderer final
 	{
 		IRenderer()
@@ -80,6 +99,6 @@ namespace ray::renderer_core_api
 
 	};
 
-using GetRRCClassHelper_t = IRRCClassHelper* (*)();
+// using GetRRCClassHelper_t = IRRCClassHelper* (*)();
 
 }
