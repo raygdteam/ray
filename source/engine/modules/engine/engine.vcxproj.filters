@@ -136,5 +136,8 @@
     <ClCompile Include="ui\ui_renderer.cpp">
       <Filter>ui</Filter>
     </ClCompile>
+    <ClCompile Include="ui2\ui2.cpp">
+      <Filter>ui2</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

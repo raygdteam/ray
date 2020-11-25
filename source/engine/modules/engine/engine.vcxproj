@@ -170,6 +170,7 @@
     <ClCompile Include="engine\engine.cpp" />
     <ClCompile Include="module_engine.cpp" />
     <ClCompile Include="state\state.cpp" />
+    <ClCompile Include="ui2\ui2.cpp" />
     <ClCompile Include="ui\button.cpp" />
     <ClCompile Include="ui\label.cpp" />
     <ClCompile Include="ui\ui_renderer.cpp" />
