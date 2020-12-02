@@ -10,6 +10,21 @@ UiObject::UiObject()
 {
 	_parent = &gRoot;
 	_render_data = new UiRenderData;
+	_render_data->Transform = new Transform();
+	_render_data->TextureIndex = 0;
+	
+	static FVector2 textureCoords[4] =
+	{
+		{ 0.f, 1.f },
+		{ 0.f, 0.f },
+		{ 1.f, 0.f },
+		{ 1.f, 1.f }
+	};
+
+	_render_data->TexCoord.PushBack(textureCoords[0]);
+	_render_data->TexCoord.PushBack(textureCoords[1]);
+	_render_data->TexCoord.PushBack(textureCoords[2]);
+	_render_data->TexCoord.PushBack(textureCoords[3]);
 }
 
 void UiRootObject::RenderAll()
@@ -35,7 +50,10 @@ void UiRootObject::RenderAll()
 
 void UiRootObject::AddObject(UiObject* root, UiObject* obj)
 {
-	obj->_parent = root;
+	if (root == nullptr)
+		obj->_parent = &gRoot;
+	else
+		obj->_parent = root;
 	
 	UiObjectsListEntry entry = {
 		.Object = obj,

@@ -19,15 +19,15 @@ class UiObject
 	friend class UiRootObject;
 	UiRenderData* _render_data;
 	UiObject* _parent;
-	Array<UiObject&> _children;
+	Array<UiObject*> _children;
 	
 protected:
-	void Render();
-	void Update();
+	void Render() {}
+	void Update() {}
 public:
 	UiObject();
 	
-	const Array<UiObject&>& GetChildren() const noexcept
+	const Array<UiObject*>& GetChildren() const noexcept
 	{
 		return _children;
 	}
