@@ -24,6 +24,7 @@ namespace ray::renderer_core_api
 
 		static void Initialize(/*TextureManager* textureManager*/);
 		static void Begin(CameraActor& camera);
+		static void Begin(const FMatrix4x4& viewProjection);
 		static void End(GraphicsContext& gfxContext);
 
 		static void SetCamera(CameraActor& camera);

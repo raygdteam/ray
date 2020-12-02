@@ -4,9 +4,18 @@
 
 using namespace ray::renderer_core_api;
 
+static UiObject gRoot;
+
+UiObject::UiObject()
+{
+	_parent = &gRoot;
+	_render_data = new UiRenderData;
+}
+
 void UiRootObject::RenderAll()
 {
-	GraphicsContext& ctx = /* представьте, что тут самый лучший способ получения ctx */;
+	GraphicsContext& ctx = GraphicsContext::Begin();
+	Renderer2D::Begin(_vp);
 
 	for (UiObjectsListEntry& object : _objects)
 	{
@@ -20,4 +29,18 @@ void UiRootObject::RenderAll()
 
 		Renderer2D::DrawQuad(FVector3::FromVector2(pos), data->Transform->Scale, data->TextureIndex, ctx);
 	}
+
+	Renderer2D::End(ctx);
+}
+
+void UiRootObject::AddObject(UiObject* root, UiObject* obj)
+{
+	obj->_parent = root;
+	
+	UiObjectsListEntry entry = {
+		.Object = obj,
+		.Transform = &obj->_render_data->Transform,
+		.RenderData = obj->_render_data
+	};
+	this->_objects.PushBack(entry);
 }
