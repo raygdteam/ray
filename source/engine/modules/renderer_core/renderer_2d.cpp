@@ -147,6 +147,12 @@ namespace ray::renderer_core_api
 		Begin();
 	}
 
+	void Renderer2D::Begin(const FMatrix4x4& viewProjection)
+	{
+		sData.ViewProjectionMatrix = viewProjection;
+		Begin();
+	}
+
 	void Renderer2D::Begin()
 	{
 		sData.QuadIndexCount = 0;

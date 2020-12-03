@@ -41,21 +41,6 @@
     <ClInclude Include="world\world_render_data.hpp">
       <Filter>world</Filter>
     </ClInclude>
-    <ClInclude Include="ui\object.hpp">
-      <Filter>ui</Filter>
-    </ClInclude>
-    <ClInclude Include="ui\widget.hpp">
-      <Filter>ui</Filter>
-    </ClInclude>
-    <ClInclude Include="ui\ui_render_data.hpp">
-      <Filter>ui</Filter>
-    </ClInclude>
-    <ClInclude Include="ui\button.hpp">
-      <Filter>ui</Filter>
-    </ClInclude>
-    <ClInclude Include="ui\label.hpp">
-      <Filter>ui</Filter>
-    </ClInclude>
     <ClInclude Include="ui2\ui2.hpp">
       <Filter>ui2</Filter>
     </ClInclude>
@@ -78,9 +63,6 @@
     </Filter>
     <Filter Include="world\actors">
       <UniqueIdentifier>{000ec2e6-3609-4776-bb22-05bc4b07f08d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ui">
-      <UniqueIdentifier>{5c83332d-83bc-4519-b21a-0e9b9a4bb380}</UniqueIdentifier>
     </Filter>
     <Filter Include="ui2">
       <UniqueIdentifier>{1e74f10c-9704-4756-8741-5bca606238db}</UniqueIdentifier>
@@ -124,17 +106,8 @@
     <ClCompile Include="world\world_renderer.cpp">
       <Filter>world</Filter>
     </ClCompile>
-    <ClCompile Include="ui\widget.cpp">
-      <Filter>ui</Filter>
-    </ClCompile>
-    <ClCompile Include="ui\button.cpp">
-      <Filter>ui</Filter>
-    </ClCompile>
-    <ClCompile Include="ui\label.cpp">
-      <Filter>ui</Filter>
-    </ClCompile>
-    <ClCompile Include="ui\ui_renderer.cpp">
-      <Filter>ui</Filter>
+    <ClCompile Include="ui2\ui2.cpp">
+      <Filter>ui2</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

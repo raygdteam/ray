@@ -9,9 +9,6 @@
 
 #include <resources/resource_manager.hpp>
 #include "actors/static_quad_actor.hpp"
-#include <engine/ui/widget.hpp>
-
-extern UiWidget* gWidget;
 
 void World::TickActors(ActorTickStage stage, f64 delta) const
 {
@@ -42,9 +39,6 @@ void World::WorldTickThread()
 		PhysicsUpdate();
 		TickActors(ePostPhysicsUpdate, _delta);
 		TickActors(ePostPhysicsUpdate, _delta);
-
-		// kostil
-		gWidget->Update();
 		
 		WorldTickFinished.Signal();  // Signal the level is ready to render
 	}

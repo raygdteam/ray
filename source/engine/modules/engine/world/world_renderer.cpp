@@ -8,9 +8,11 @@
 #include <renderer_core/renderer_2d.hpp>
 #include <renderer_core/command_context.hpp>
 
-#include <engine/ui/widget.hpp>
+// #include <engine/ui/widget.hpp>
+#include <engine/ui2/ui2.hpp>
 
-extern UiWidget* gWidget;
+// extern UiWidget* gWidget;
+UiRootObject* gRootObject;
 
 using namespace ray::renderer_core_api;
 
@@ -18,6 +20,15 @@ double currentFrame = 0.f;
 
 void World::Render()
 {
+	static bool once = true;
+	if (once)
+	{
+		gRootObject = new UiRootObject;
+		UiObject* obj = new UiObject;
+		gRootObject->AddObject(nullptr, obj);
+		once = not once;
+	}
+	
 	Level* level = _levelData->Level;
 	
 	GraphicsContext& ctx = GraphicsContext::Begin();
@@ -54,8 +65,6 @@ void World::Render()
 		Renderer2D::DrawQuad(position, proxy->Transform->Scale, proxy->RenderData->TextureId, textureCoords, ctx);
 	}
 
-	gWidget->RenderAll(ctx);
-
 	Renderer2D::End(ctx);
 
 	BLACK_PAPER_MOON = !BLACK_PAPER_MOON;
@@ -68,6 +77,8 @@ void World::Render()
 	// }
 
 	//Renderer2D::End(ctx);
+	
+	gRootObject->RenderAll();
 	_renderer->EndScene(ctx);
 }
 

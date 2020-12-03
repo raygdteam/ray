@@ -175,6 +175,15 @@ struct FVector<3>
 	{
 		return Add(param);
 	}
+
+	static FVector<3> FromVector2(FVector<2> vec, f32 z = 0.f)
+	{
+		return FVector<3> {
+			.x = vec.x,
+			.y = vec.y,
+			.z = z
+		};
+	}
 };
 
 template<>
