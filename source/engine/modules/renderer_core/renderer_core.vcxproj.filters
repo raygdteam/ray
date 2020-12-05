@@ -56,6 +56,7 @@
     <ClInclude Include="resources\resources_table.hpp">
       <Filter>resources</Filter>
     </ClInclude>
+    <ClInclude Include="dx12_helper_functions.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="renderer.cpp" />
@@ -107,6 +108,7 @@
     <ClCompile Include="resources\resources_table.cpp">
       <Filter>resources</Filter>
     </ClCompile>
+    <ClCompile Include="dx12_helper_functions.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="resources">

@@ -6,41 +6,41 @@
 namespace ray::renderer_core_api::resources
 {
 
-	GpuMemoryPool& GpuMemoryManager::RequestPool(u64 requestedSize, u16 heapType, u16 heapResourcesType, u16 resourceType) noexcept
+	GpuMemoryPool& GpuMemoryManager::RequestPool(u64 requestedSize, u16 heapType, u16 dimensionType, u16 resourceType) noexcept
 	{
-		check(heapType >= HEAP_TYPES_COUNT || heapResourcesType >= HEAP_RESOURCES_TYPES_COUNT || resourceType >= RESOURCE_TYPES_COUNT)
+		check(heapType < HEAP_TYPES_COUNT && dimensionType < RESOURCE_DIMENSIONS_COUNT&& resourceType < RESOURCE_TYPES_COUNT)
 		
-		auto poolsCount = _pools[heapType][heapResourcesType][resourceType].Size();
+		size_t poolsCount = _pools[heapType][dimensionType][resourceType].Size();
 		if (poolsCount <= 0)
-			return CreateNewPool(requestedSize, heapType, heapResourcesType, resourceType);
+			return CreateNewPool(requestedSize, heapType, dimensionType, resourceType);
 
-		auto& pool = _pools[heapType][heapResourcesType][resourceType].At(poolsCount - 1);
+		auto& pool = _pools[heapType][dimensionType][resourceType].At(poolsCount - 1);
 
 		if (pool.AvailableSpace < requestedSize)
-			return CreateNewPool(requestedSize, heapType, heapResourcesType, resourceType);
+			return CreateNewPool(requestedSize, heapType, dimensionType, resourceType);
 
 		return pool;
 	}
 
-	GpuMemoryPool& GpuMemoryManager::CreateNewPool(u64 requestedSize, u16 heapType, u16 heapResourcesType, u16 resourceType) noexcept
+	GpuMemoryPool& GpuMemoryManager::CreateNewPool(u64 requestedSize, u16 heapType, u16 dimensionType, u16 resourceType) noexcept
 	{
 		GpuMemoryPool newPool;
 
 		if (resourceType == RESOURCE_TYPE_COMMITTED)
-			newPool.Committed.Pool = CreateCommittedPool(requestedSize, heapType, heapResourcesType);
+			newPool.Committed.Pool = CreateCommittedPool(requestedSize, heapType, dimensionType);
 		else if (resourceType == RESOURCE_TYPE_PLACED)
-			newPool.Placed.Pool = CreateHeap(requestedSize, heapType, heapResourcesType);
+			newPool.Placed.Pool = CreateHeap(requestedSize, heapType, dimensionType);
 
 		newPool.AvailableSpace = requestedSize;
-		_pools[heapType][heapResourcesType][resourceType].PushBack(newPool);
-		auto index = _pools[heapType][heapResourcesType][resourceType].Size() - 1;
+		_pools[heapType][dimensionType][resourceType].PushBack(newPool);
+		size_t index = _pools[heapType][dimensionType][resourceType].Size() - 1;
 
-		return _pools[heapType][heapResourcesType][resourceType].At(index);
+		return _pools[heapType][dimensionType][resourceType].At(index);
 	}
 
-	ID3D12Heap* GpuMemoryManager::CreateHeap(u64 requestedSize, u16 heapType, u16 heapResourcesType) noexcept
+	ID3D12Heap* GpuMemoryManager::CreateHeap(u64 requestedSize, u16 heapType, u16 dimensionType) noexcept
 	{
-		ID3D12Heap* heap;
+		ID3D12Heap* heap = nullptr;
 
 		D3D12_HEAP_PROPERTIES heapProps = {};
 		heapProps.CreationNodeMask = 1;
@@ -60,16 +60,16 @@ namespace ray::renderer_core_api::resources
 		return heap;
 	}
 
-	ID3D12Resource* GpuMemoryManager::CreateCommittedPool(u64 requestedSize, u16 heapType, u16 heapResourcesType) noexcept
+	ID3D12Resource* GpuMemoryManager::CreateCommittedPool(u64 requestedSize, u16 heapType, u16 dimensionType) noexcept
 	{
 		D3D12_HEAP_PROPERTIES heapProps = {};
 		heapProps.CreationNodeMask = 1;
 		heapProps.VisibleNodeMask = 1;
 		heapProps.CPUPageProperty = D3D12_CPU_PAGE_PROPERTY_UNKNOWN;
 		heapProps.MemoryPoolPreference = D3D12_MEMORY_POOL_UNKNOWN;
-		heapProps.Type = D3D12_HEAP_TYPE_DEFAULT;
+		heapProps.Type = D3D12_HEAP_TYPE_UPLOAD;
 
-		D3D12_RESOURCE_DESC resourceDesc;
+		D3D12_RESOURCE_DESC resourceDesc = {};
 		resourceDesc.Dimension = D3D12_RESOURCE_DIMENSION_BUFFER;
 		resourceDesc.Alignment = 0;
 		resourceDesc.Height = 1;
@@ -91,7 +91,7 @@ namespace ray::renderer_core_api::resources
 	void GpuMemoryManager::Destroy() noexcept
 	{
 		for (size_t i = 0; i < HEAP_TYPES_COUNT; ++i)
-			for (size_t j = 0; j < HEAP_RESOURCES_TYPES_COUNT; ++j)
+			for (size_t j = 0; j < RESOURCE_DIMENSIONS_COUNT; ++j)
 				for (size_t k = 0; k < RESOURCE_TYPES_COUNT; ++k)
 					_pools[i][j][k].clear();
 	}

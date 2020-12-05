@@ -154,6 +154,7 @@
     <ClInclude Include="command_context.hpp" />
     <ClInclude Include="command_queue.hpp" />
     <ClInclude Include="descriptor_heap.hpp" />
+    <ClInclude Include="dx12_helper_functions.hpp" />
     <ClInclude Include="pipeline_state.hpp" />
     <ClInclude Include="ray_renderer_core_base.hpp" />
     <ClInclude Include="ray_renderer_core_class_helper.hpp" />
@@ -182,6 +183,7 @@
     <ClCompile Include="command_context.cpp" />
     <ClCompile Include="command_queue.cpp" />
     <ClCompile Include="descriptor_heap.cpp" />
+    <ClCompile Include="dx12_helper_functions.cpp" />
     <ClCompile Include="module_renderer_core.cpp" />
     <ClCompile Include="pipeline_state.cpp" />
     <ClCompile Include="renderer.cpp" />
