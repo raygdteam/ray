@@ -32,7 +32,7 @@ namespace ray::renderer_core_api
 
 	namespace resources
 	{
-		class GraphicsMemoryManager;
+		class GpuMemoryManager;
 		class ResourcesTable;
 	}
 
@@ -42,7 +42,7 @@ namespace ray::renderer_core_api
 		extern ContextManager gContextManager;
 		extern ID3D12Device* gDevice;
 		extern DescriptorAllocator gDescriptorAllocator[];
-		extern ray::renderer_core_api::resources::GraphicsMemoryManager gGMemManager;
+		extern ray::renderer_core_api::resources::GpuMemoryManager gGMemManager;
 		extern ray::renderer_core_api::resources::ResourcesTable gGlobalResourcesTable;
 		extern ray::renderer_core_api::resources::ResourcesTable gTexturesTable;
 		extern ray::renderer_core_api::resources::ResourcesTable gBuffersTable;

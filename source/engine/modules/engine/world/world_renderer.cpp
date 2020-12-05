@@ -24,59 +24,49 @@ void World::Render()
 	if (once)
 	{
 		gRootObject = new UiRootObject;
-		UiObject* obj = new UiObject;
+		UiObject* obj = new UiObject; 
 		gRootObject->AddObject(nullptr, obj);
 		once = not once;
 	}
 	
-	Level* level = _levelData->Level;
+	//Level* level = _levelData->Level;
 	
 	GraphicsContext& ctx = GraphicsContext::Begin();
 	_renderer->BeginScene(ctx);
 
-	Renderer2D::Begin(*_primaryCameraActor);
+	//Renderer2D::Begin(*_primaryCameraActor);
 
-	static bool BLACK_PAPER_MOON = false;
+	//static bool BLACK_PAPER_MOON = false;
 
-	for (size_t i = 0; i < level->_atd.Size(); ++i)
-	{
-		const ActorData& actorData = level->_atd[i];
-		
-		StaticQuadSceneProxy* proxy = static_cast<StaticQuadSceneProxy*>(actorData.SceneProxy);
-		FVector<3> position =
-		{
-			proxy->Transform->Position.x,
-			proxy->Transform->Position.y,
-			1.f
-		};
+	//for (size_t i = 0; i < level->_atd.Size(); ++i)
+	//{
+	//	const ActorData& actorData = level->_atd[i];
+	//	
+	//	StaticQuadSceneProxy* proxy = static_cast<StaticQuadSceneProxy*>(actorData.SceneProxy);
+	//	FVector<3> position =
+	//	{
+	//		proxy->Transform->Position.x,
+	//		proxy->Transform->Position.y,
+	//		1.f
+	//	};
 
-		currentFrame += (0.007f * _delta);
-		if (currentFrame >= 3)
-			currentFrame = 0;
+	//	currentFrame += (0.007f * _delta);
+	//	if (currentFrame >= 3)
+	//		currentFrame = 0;
 
-		FVector<2> textureCoords[4] =
-		{
-			{ static_cast<u32>(currentFrame) * .3333f, .25f },
-			{ static_cast<u32>(currentFrame) * .3333f, 0.f },
-			{ (1 + static_cast<u32>(currentFrame)) * .3333f, 0.f },
-			{ (1 + static_cast<u32>(currentFrame)) * .3333f, .25f }
-		};
+	//	FVector<2> textureCoords[4] =
+	//	{
+	//		{ static_cast<u32>(currentFrame) * .3333f, .25f },
+	//		{ static_cast<u32>(currentFrame) * .3333f, 0.f },
+	//		{ (1 + static_cast<u32>(currentFrame)) * .3333f, 0.f },
+	//		{ (1 + static_cast<u32>(currentFrame)) * .3333f, .25f }
+	//	};
 
-		Renderer2D::DrawQuad(position, proxy->Transform->Scale, proxy->RenderData->TextureId, textureCoords, ctx);
-	}
-
-	Renderer2D::End(ctx);
-
-	BLACK_PAPER_MOON = !BLACK_PAPER_MOON;
-	//
-
-	// for (const ActorData& data : actorData)
-	// {
-	//		data.SceneProxy.RenderData
-	//		...
-	// }
+	//	Renderer2D::DrawQuad(position, proxy->Transform->Scale, proxy->RenderData->TextureId, textureCoords, ctx);
+	//}
 
 	//Renderer2D::End(ctx);
+	//
 	
 	gRootObject->RenderAll();
 	_renderer->EndScene(ctx);

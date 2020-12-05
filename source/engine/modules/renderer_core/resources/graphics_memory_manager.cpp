@@ -1,13 +1,14 @@
 #include "graphics_memory_manager.hpp"
 #include "renderer_core/renderer.hpp"
 #include "renderer_core/d3dx12.h"
+#include <core/debug/assert.hpp>
 
 namespace ray::renderer_core_api::resources
 {
 
 	GpuMemoryPool& GpuMemoryManager::RequestPool(u64 requestedSize, u16 heapType, u16 heapResourcesType, u16 resourceType) noexcept
 	{
-		check(heapType >= HEAP_TYPES_COUNT || heapResourcesType >= HEAP_RESOURCES_TYPES_COUNT, resourceType >= RESOURCE_TYPES_COUNT)
+		check(heapType >= HEAP_TYPES_COUNT || heapResourcesType >= HEAP_RESOURCES_TYPES_COUNT || resourceType >= RESOURCE_TYPES_COUNT)
 		
 		auto poolsCount = _pools[heapType][heapResourcesType][resourceType].Size();
 		if (poolsCount <= 0)
@@ -83,6 +84,8 @@ namespace ray::renderer_core_api::resources
 
 		ID3D12Resource* pool = nullptr;
 		globals::gDevice->CreateCommittedResource(&heapProps, D3D12_HEAP_FLAG_NONE, &resourceDesc, D3D12_RESOURCE_STATE_GENERIC_READ, nullptr, IID_PPV_ARGS(&pool));
+	
+		return pool;
 	}
 
 	void GpuMemoryManager::Destroy() noexcept

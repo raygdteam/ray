@@ -27,7 +27,7 @@ namespace ray::renderer_core_api
 			D3D12_DESCRIPTOR_HEAP_TYPE_RTV,
 			D3D12_DESCRIPTOR_HEAP_TYPE_DSV
 		};
-		ray::renderer_core_api::resources::GraphicsMemoryManager gGMemManager;
+		ray::renderer_core_api::resources::GpuMemoryManager gGMemManager;
 		ray::renderer_core_api::resources::ResourcesTable gGlobalResourcesTable;
 		ray::renderer_core_api::resources::ResourcesTable gTexturesTable;
 		ray::renderer_core_api::resources::ResourcesTable gBuffersTable;
@@ -102,7 +102,7 @@ namespace ray::renderer_core_api
 		
 		globals::gCurrentBuffer = 0;
 		globals::gDepthBuffer.Create(globals::gDisplayPlane->GetWidth(), globals::gDisplayPlane->GetHeight(), DXGI_FORMAT_D32_FLOAT);
-		globals::gGMemManager.Initialize();
+
 	}
 
 	void IRenderer::BeginScene(GraphicsContext& gfxContext)
