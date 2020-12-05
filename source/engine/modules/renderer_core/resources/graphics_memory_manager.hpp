@@ -3,6 +3,7 @@
 #include <core/core.hpp>
 #include <core/lib/array.hpp>
 #include <core/debug/assert.hpp>
+#include <core/threading/critical_section.hpp>
 #include <d3d12.h>
 
 #define HEAP_TYPES_COUNT 0x3U
@@ -34,6 +35,7 @@ namespace ray::renderer_core_api::resources
 		{
 			AvailableSpace = 0;
 			Committed.Pool->Release();
+			Offset = 
 		}
 
 		union
@@ -50,8 +52,9 @@ namespace ray::renderer_core_api::resources
 		};
 
 		u64 AvailableSpace;
+		u64 Offset;
 
-	} ;
+	};
 
 	class GpuMemoryManager
 	{
@@ -61,16 +64,23 @@ namespace ray::renderer_core_api::resources
 			Destroy();
 		}
 
+
 		GpuMemoryPool& RequestPool(u64 requestedSize, u16 heapType, u16 dimensionType, u16 resourceType) noexcept;
+		void SetPreferencedHeapSize(u64 size) noexcept
+		{
+			_preferencedHeapSize = size;
+		}
 
 	private:
 		GpuMemoryPool& CreateNewPool(u64 requestedSize, u16 heapType, u16 dimensionType, u16 resourceType) noexcept;
-		ID3D12Heap* CreateHeap(u64 requestedSize, u16 heapType, u16 dimensionType) noexcept;
-		ID3D12Resource* CreateCommittedPool(u64 requestedSize, u16 heapType, u16 dimensionType) noexcept;
+		ID3D12Heap* CreateHeap(u64 requestedSize, u16 heapType) noexcept;
+		ID3D12Resource* CreateCommittedPool(u64 requestedSize) noexcept;
 		void Destroy() noexcept;
 
 	private:
 		Array<GpuMemoryPool> _pools[HEAP_TYPES_COUNT][RESOURCE_DIMENSIONS_COUNT][RESOURCE_TYPES_COUNT];
+		CriticalSection _mutex;
+		u64 _preferencedHeapSize;
 
 	};
 }

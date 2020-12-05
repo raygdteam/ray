@@ -2,12 +2,14 @@
 #include <core/math/common.hpp>
 #include <core/debug/assert.hpp>
 
+using namespace ray::core;
+
 namespace ray::dx12
 {
 	D3D12_RESOURCE_DESC DescribeBuffer(u64 size)
 	{
 		D3D12_RESOURCE_DESC desc = {};
-		desc.Alignment = 0;
+		desc.Alignment = D3D12_DEFAULT_RESOURCE_PLACEMENT_ALIGNMENT;
 		desc.Format = DXGI_FORMAT_UNKNOWN;
 		desc.DepthOrArraySize = 1;
 		desc.Height = 1;
@@ -62,7 +64,7 @@ namespace ray::dx12
 
 	D3D12_HEAP_DESC DescribeHeap(D3D12_HEAP_PROPERTIES& heapProps, D3D12_HEAP_FLAGS flags, u64 size)
 	{
-		check(ray::core::math::IsAligned(size, KB(64)))
+		check(math::IsAligned(size, KB(64)))
 
 		D3D12_HEAP_DESC desc;
 		desc.Alignment = D3D12_DEFAULT_RESOURCE_PLACEMENT_ALIGNMENT;
