@@ -43,9 +43,7 @@ namespace ray::renderer_core_api
 		extern ID3D12Device* gDevice;
 		extern DescriptorAllocator gDescriptorAllocator[];
 		extern ray::renderer_core_api::resources::GpuMemoryManager gGpuMemManager;
-		extern ray::renderer_core_api::resources::ResourcesTable gGlobalResourcesTable;
-		extern ray::renderer_core_api::resources::ResourcesTable gTexturesTable;
-		extern ray::renderer_core_api::resources::ResourcesTable gBuffersTable;
+		extern ray::renderer_core_api::resources::ResourcesTable gResourcesTable;
 	}
 
 	inline D3D12_CPU_DESCRIPTOR_HANDLE RAY_RENDERERCORE_API AllocateDescriptor(D3D12_DESCRIPTOR_HEAP_TYPE type, u32 count = 1)

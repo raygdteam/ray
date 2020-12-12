@@ -8,57 +8,44 @@
 
 #include <d3d12.h>
 
-// 0000 0000	0000 0000	0000 0000	0000 0000	0000 0000	0000 0000	0000 0000	0000 0000
-// f000 0000 0000 0000
-// 1000 0000 0000 0000 - buffer mask
-// 2000 0000 0000 0000 - texture mask
+#define RESOURCE_ID_NULL static_cast<u64>(-1)
 
 namespace ray::renderer_core_api::resources
 {
-	struct LoadedResource
-	{
-		enum Type : u16
-		{
-			eBuffer = BIT(0),
-			eTexture = BIT(1)
-		};
-
-		Type ResourceType;
-		bool bFlushed;
-
-		/*
-		** a resource may have different offsets in gpu and cpu memory.
-		** there is no need to use cpu side's offset if the resource got flushed.
-		** if you need the cpu side's offset it is added to beginning of upload buffer.
-		** otherwise it is added to beginning of texture or buffer pool depending on what is the resource type.
-		*/
-		union
-		{
-			struct
-			{
-				u64 Offset;
-			} CpuSide;
-
-			struct
-			{
-				u64 Offset;
-			} GpuSide;
-		};
-	};
+	struct AllocatedResource;
 
 	class ResourcesTable
 	{
 	public:
-		void AddResource(LoadedResource::Type type, u64 offset, u64 resourceId, bool bFlushed) noexcept;
+		const AllocatedResource& GetResourceByGlobalId(u64 globalId) const noexcept;
+		const AllocatedResource& GetTextureById(u64 textureId) const noexcept;
+		const AllocatedResource& GetBufferById(u64 bufferId) const noexcept;
 
-		LoadedResource& GetResourceById(size_t resourceId) noexcept
+		void SetTexture(const AllocatedResource& texture) noexcept;
+		void SetBuffer(const AllocatedResource& buffer) noexcept;
+		void SetResource(const AllocatedResource& resource, u64 localId, u16 resourceDimension) noexcept;
+
+		u64 GetResourceGlobalId(u64 localId, u16 resourceDimension, bool bCheckExisting = true) const noexcept;
+		u64 GetTexturesCount() const noexcept
 		{
-			return _table[resourceId];
+			return _texturesCount;
+		}
+
+		u64 GetBuffersCount() const noexcept
+		{
+			return _buffersCount;
+		}
+
+		u64 GetRTVsAndDSVsCount() const noexcept
+		{
+			return _rtvsAndDsvsCount;
 		}
 
 	private:
-		std::map<u64, LoadedResource> _table;
-		//Array<LoadedResource> _table;
-
+		std::map<u64, AllocatedResource> _table;
+		u64 _texturesCount = 0;
+		u64 _buffersCount = 0;
+		u64 _rtvsAndDsvsCount = 0;
+	
 	};
 }

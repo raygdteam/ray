@@ -28,9 +28,7 @@ namespace ray::renderer_core_api
 			D3D12_DESCRIPTOR_HEAP_TYPE_DSV
 		};
 		ray::renderer_core_api::resources::GpuMemoryManager gGpuMemManager;
-		ray::renderer_core_api::resources::ResourcesTable gGlobalResourcesTable;
-		ray::renderer_core_api::resources::ResourcesTable gTexturesTable;
-		ray::renderer_core_api::resources::ResourcesTable gBuffersTable;
+		ray::renderer_core_api::resources::ResourcesTable gResourcesTable;
 	}
 
 

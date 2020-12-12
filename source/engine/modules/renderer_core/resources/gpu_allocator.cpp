@@ -4,6 +4,7 @@
 #include <renderer_core/renderer.hpp>
 #include <core/debug/assert.hpp>
 #include <core/math/common.hpp>
+#include <renderer_core/resources/resources_table.hpp>
 
 using namespace ray;
 using namespace ray::core;
@@ -51,6 +52,17 @@ namespace ray::renderer_core_api::resources
 		pool.Offset += math::AlignUp(resourceSize, desc.Alignment);
 		pool.AvailableSpace -= pool.Offset;
 
+		switch (desc.Dimension)
+		{
+		case D3D12_RESOURCE_DIMENSION_BUFFER:
+			globals::gResourcesTable.SetBuffer(resource);
+			break;
+		case D3D12_RESOURCE_DIMENSION_TEXTURE1D:
+		case D3D12_RESOURCE_DIMENSION_TEXTURE2D:
+		case D3D12_RESOURCE_DIMENSION_TEXTURE3D:
+			globals::gResourcesTable.SetTexture(resource);
+			break;
+		}
 		// TODO:
 		return resource;
 	}
