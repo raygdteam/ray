@@ -9,22 +9,22 @@ namespace ray::renderer_core_api::resources
 		check(resourceDimension == RESOURCE_DIMENSION_BUFFER || resourceDimension == RESOURCE_DIMENSION_TEXTURE
 			|| resourceDimension == RESOURCE_DIMENSION_RTV_AND_DSV)
 
-		u64 globalId = (resourceDimension << RESOURCE_DIMENSION_SHIFT) | localId;
+		u64 globalId = (static_cast<u64>(resourceDimension) << RESOURCE_DIMENSION_SHIFT) | localId;
 
 		return bCheckExisting && _table.find(globalId) == _table.end() ? RESOURCE_ID_NULL : globalId;
 	}
 
-	const AllocatedResource& ResourcesTable::GetResourceByGlobalId(u64 globalId) const noexcept
+	AllocatedResource* ResourcesTable::GetResourceByGlobalId(u64 globalId) const noexcept
 	{
 		return _table.at(globalId);
 	}
 
-	const AllocatedResource& ResourcesTable::GetTextureById(u64 textureId) const noexcept
+	AllocatedResource* ResourcesTable::GetTextureById(u64 textureId) const noexcept
 	{
 		return GetResourceByGlobalId(GetResourceGlobalId(textureId, RESOURCE_DIMENSION_TEXTURE));
 	}
 
-	const AllocatedResource& ResourcesTable::GetBufferById(u64 bufferId) const noexcept
+	AllocatedResource* ResourcesTable::GetBufferById(u64 bufferId) const noexcept
 	{
 		return GetResourceByGlobalId(GetResourceGlobalId(bufferId, RESOURCE_DIMENSION_BUFFER));
 	}
@@ -41,7 +41,27 @@ namespace ray::renderer_core_api::resources
 
 	void ResourcesTable::SetResource(const AllocatedResource& resource, u64 localId, u16 resourceDimension) noexcept
 	{
-		u64 globalId = GetResourceGlobalId(localId, resourceDimension, false);
-		_table.emplace(globalId, resource);
+		auto dest = AddResource(localId, resourceDimension);
+		dest->Heap = resource.Heap;
+		dest->Offset = resource.Offset;
+		dest->Resource = resource.Resource;
+	}
+
+	AllocatedResource* ResourcesTable::AddResource(u64 localId, u16 resourceDimension) noexcept
+	{
+		AllocatedResource* resource = new AllocatedResource;
+		_table.emplace(GetResourceGlobalId(localId, resourceDimension, false), resource);
+
+		return resource;
+	}
+
+	AllocatedResource* ResourcesTable::AddTexture(u64 localId) noexcept
+	{
+		return AddResource(localId, RESOURCE_DIMENSION_TEXTURE);
+	}
+
+	AllocatedResource* ResourcesTable::AddBuffer(u64 localId) noexcept
+	{
+		return AddResource(localId, RESOURCE_DIMENSION_BUFFER);
 	}
 }

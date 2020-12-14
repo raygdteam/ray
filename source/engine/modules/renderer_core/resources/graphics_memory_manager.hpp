@@ -35,7 +35,7 @@ namespace ray::renderer_core_api::resources
 		{
 			AvailableSpace = 0;
 			Committed.Pool->Release();
-			Offset = 
+			Offset = 0;
 		}
 
 		union
@@ -52,6 +52,7 @@ namespace ray::renderer_core_api::resources
 		};
 
 		u64 AvailableSpace;
+		u64 MaxSpaceSize;
 		u64 Offset;
 
 	};

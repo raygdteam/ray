@@ -45,6 +45,7 @@ namespace ray::renderer_core_api::resources
 		}
 
 		newPool.AvailableSpace = heapSize;
+		newPool.MaxSpaceSize = heapSize;
 		newPool.Offset = 0;
 
 		_pools[heapType][dimensionType][resourceType].PushBack(newPool);
