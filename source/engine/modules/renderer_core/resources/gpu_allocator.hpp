@@ -17,15 +17,15 @@ namespace ray::renderer_core_api::resources
 	class GpuAllocator
 	{
 	public:
-		AllocatedResource& AllocateBuffer(u64 localId, u64 size, u16 heapType) noexcept;
-		AllocatedResource& AllocateTexture2D(u64 localId, u64 width, u64 height, DXGI_FORMAT format, u16 heapType) noexcept;
+		AllocatedResource& AllocateBuffer(u64 size, u16 heapType) noexcept;
+		AllocatedResource& AllocateTexture2D(DXGI_FORMAT format, u64 width, u64 height, u16 heapType) noexcept;
 
 		// allocates placed resources
-		AllocatedResource& AllocateResource(D3D12_RESOURCE_DESC& desc, u64 localId, u16 heapType) noexcept;
+		AllocatedResource& AllocateResource(D3D12_RESOURCE_DESC& desc, u16 heapType) noexcept;
 
 		AllocatedResource& AllocateUploadHeap(u64 size) noexcept;
 
-		AllocatedResource* AllocateRTVorDSV() noexcept { return nullptr; }
+		AllocatedResource& AllocateRTVorDSV() noexcept; //{}
 
 	private:
 

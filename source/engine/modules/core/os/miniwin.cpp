@@ -17,3 +17,15 @@ void WinApi::WaitForEvent(void* event, u32 timeout)
 {
 	WaitForSingleObject(event, timeout);
 }
+
+Array<RawInputDeviceList> WinApi::GetRawInputDeviceList()
+{
+	UINT numDevices = 0;
+	Array<RawInputDeviceList> list;
+	
+	::GetRawInputDeviceList(nullptr, &numDevices, sizeof(RawInputDeviceList));
+	list.resize(numDevices);
+
+	::GetRawInputDeviceList((RAWINPUTDEVICELIST*)list.GetData(), &numDevices, sizeof(RawInputDeviceList));
+	return list;
+}
