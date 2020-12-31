@@ -26,12 +26,6 @@ namespace ray
 		}
 
 	private:
-		void AddNewElementToList(const MemoryPool& pool) noexcept
-		{
-			_listOfPools.Buffer[_listOfPools.ElementsCount] = pool;
-			++_listOfPools.ElementsCount;
-		}
-
 		MemoryPool& CreatePool(size_t requestedSize) noexcept;
 
 	private:

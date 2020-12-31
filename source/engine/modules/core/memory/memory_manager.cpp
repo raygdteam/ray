@@ -5,7 +5,8 @@ namespace ray
 	template<typename MemoryPool>
 	void MemoryManager<MemoryPool>::Initialize() noexcept
 	{
-
+		_listOfPools.Buffer = static_cast<MemoryPool*>(VirtualAlloc(nullptr, KB(64), MEM_COMMIT, PAGE_READWRITE));
+		
 	}
 
 	template<typename MemoryPool>
