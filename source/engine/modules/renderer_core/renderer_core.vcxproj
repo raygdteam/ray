@@ -171,7 +171,7 @@
     <ClInclude Include="resources\graphics_memory_manager.hpp" />
     <ClInclude Include="resources\linear_allocator.hpp" />
     <ClInclude Include="resources\pixel_buffer.hpp" />
-    <ClInclude Include="resources\resources_loader.hpp" />
+    <ClInclude Include="resources\upload_buffer.hpp" />
     <ClInclude Include="resources\resources_table.hpp" />
     <ClInclude Include="resources\ring_buffer.hpp" />
     <ClInclude Include="resources\texture.hpp" />
@@ -198,7 +198,7 @@
     <ClCompile Include="resources\graphics_memory_manager.cpp" />
     <ClCompile Include="resources\linear_allocator.cpp" />
     <ClCompile Include="resources\pixel_buffer.cpp" />
-    <ClCompile Include="resources\resources_loader.cpp" />
+    <ClCompile Include="resources\upload_buffer.cpp" />
     <ClCompile Include="resources\resources_table.cpp" />
     <ClCompile Include="resources\ring_buffer.cpp" />
     <ClCompile Include="resources\texture.cpp" />

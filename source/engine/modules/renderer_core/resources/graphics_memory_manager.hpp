@@ -66,14 +66,14 @@ namespace ray::renderer_core_api::resources
 		}
 
 
-		GpuMemoryPool& RequestPool(u64 requestedSize, u16 heapType, u16 dimensionType, u16 resourceType) noexcept;
+		GpuMemoryPool& RequestPool(u64 requestedSize, u16 heapType, u16 dimensionType, u16 resourceType, bool bForceSpecifiedSize = false) noexcept;
 		void SetPreferencedHeapSize(u64 size) noexcept
 		{
 			_preferencedHeapSize = size;
 		}
 
 	private:
-		GpuMemoryPool& CreateNewPool(u64 requestedSize, u16 heapType, u16 dimensionType, u16 resourceType) noexcept;
+		GpuMemoryPool& CreateNewPool(u64 requestedSize, u16 heapType, u16 dimensionType, u16 resourceType, bool bForceSpecifiedSize = false) noexcept;
 		ID3D12Heap* CreateHeap(u64 requestedSize, u16 heapType) noexcept;
 		ID3D12Resource* CreateCommittedPool(u64 requestedSize) noexcept;
 		void Destroy() noexcept;

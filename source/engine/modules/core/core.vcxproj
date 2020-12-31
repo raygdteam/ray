@@ -34,6 +34,8 @@
     <ClInclude Include="math\vector.hpp" />
     <ClInclude Include="memory\allocator.hpp" />
     <ClInclude Include="memory\memory_debug.hpp" />
+    <ClInclude Include="memory\memory_manager.hpp" />
+    <ClInclude Include="memory\memory_pool.hpp" />
     <ClInclude Include="memory\new_delete_override.hpp" />
     <ClInclude Include="mm\memory_manager.hpp" />
     <ClInclude Include="module\module.hpp" />
@@ -54,6 +56,7 @@
     <ClCompile Include="lib\thread.cpp" />
     <ClCompile Include="math\math_common.cpp" />
     <ClCompile Include="memory\allocator.cpp" />
+    <ClCompile Include="memory\memory_manager.cpp" />
     <ClCompile Include="mm\memory_manager.cpp" />
     <ClCompile Include="module\module.cpp" />
     <ClCompile Include="object\object_db.cpp" />

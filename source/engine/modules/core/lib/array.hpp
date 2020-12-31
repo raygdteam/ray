@@ -13,7 +13,7 @@ public:
 	
 	void PushBack(Type&& value)
 	{
-		this->push_back(value);
+		this->push_back(std::move(value));
 	}
 
 	bool IsEmpty() const

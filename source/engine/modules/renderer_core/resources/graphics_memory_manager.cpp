@@ -11,9 +11,12 @@ using namespace ray::core;
 namespace ray::renderer_core_api::resources
 {
 
-	GpuMemoryPool& GpuMemoryManager::RequestPool(u64 requestedSize, u16 heapType, u16 dimensionType, u16 resourceType) noexcept
+	GpuMemoryPool& GpuMemoryManager::RequestPool(u64 requestedSize, u16 heapType, u16 dimensionType, u16 resourceType, bool bForceSpecifiedSize) noexcept
 	{
 		check(heapType < HEAP_TYPES_COUNT&& dimensionType < RESOURCE_DIMENSIONS_COUNT&& resourceType < RESOURCE_TYPES_COUNT)
+
+		if (bForceSpecifiedSize)
+				CreateNewPool(requestedSize, heapType, dimensionType, resourceType, true);
 
 		_mutex.Enter();
 		size_t poolsCount = _pools[heapType][dimensionType][resourceType].Size();
@@ -29,10 +32,10 @@ namespace ray::renderer_core_api::resources
 		return pool;
 	}
 
-	GpuMemoryPool& GpuMemoryManager::CreateNewPool(u64 requestedSize, u16 heapType, u16 dimensionType, u16 resourceType) noexcept
+	GpuMemoryPool& GpuMemoryManager::CreateNewPool(u64 requestedSize, u16 heapType, u16 dimensionType, u16 resourceType, bool bForceSpecifiedSize) noexcept
 	{
 		GpuMemoryPool newPool;
-		u64 heapSize = (_preferencedHeapSize > requestedSize) ? _preferencedHeapSize : requestedSize;
+		u64 heapSize = !bForceSpecifiedSize && (_preferencedHeapSize > requestedSize) ? _preferencedHeapSize : requestedSize;
 
 		switch (resourceType)
 		{

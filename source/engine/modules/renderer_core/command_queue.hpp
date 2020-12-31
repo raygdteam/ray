@@ -37,6 +37,11 @@ public:
 	void WaitForFence(u64 fenceValue);
 	void WaitForIdle() { WaitForFence(IncrementFence()); }
 
+	u64 GetLastCompletedValue() const noexcept
+	{
+		return _lastCompletedFenceValue;
+	}
+
 private:
 	u64 _nextFenceValue;
 	u64 _lastCompletedFenceValue;

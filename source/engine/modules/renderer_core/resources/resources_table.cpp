@@ -10,13 +10,16 @@ namespace ray::renderer_core_api::resources
 			|| resourceDimension == RESOURCE_DIMENSION_RTV_AND_DSV)
 
 		u64 globalId = (static_cast<u64>(resourceDimension) << RESOURCE_DIMENSION_SHIFT) | localId;
-
-		return bCheckExisting && _table.find(globalId) == _table.end() ? RESOURCE_ID_NULL : globalId;
+	  	auto it = std::find_if(_table.begin(), _table.end(), [globalId](const std::pair<u64, AllocatedResource*>& element) 
+			{
+				return element.first == globalId;
+			});
+		return bCheckExisting && it == _table.end() ? RESOURCE_ID_NULL : globalId;
 	}
 
 	AllocatedResource* ResourcesTable::GetResourceByGlobalId(u64 globalId) const noexcept
 	{
-		return _table.at(globalId);
+		return _table.at(globalId).second;
 	}
 
 	AllocatedResource* ResourcesTable::GetTextureById(u64 textureId) const noexcept
@@ -50,7 +53,7 @@ namespace ray::renderer_core_api::resources
 	AllocatedResource* ResourcesTable::AddResource(u64 localId, u16 resourceDimension) noexcept
 	{
 		AllocatedResource* resource = new AllocatedResource;
-		_table.emplace(GetResourceGlobalId(localId, resourceDimension, false), resource);
+		_table.emplace_back(GetResourceGlobalId(localId, resourceDimension, false), resource);
 
 		return resource;
 	}

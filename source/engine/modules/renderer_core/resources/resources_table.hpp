@@ -50,8 +50,18 @@ namespace ray::renderer_core_api::resources
 			return _rtvsAndDsvsCount;
 		}
 
+		size_t GetTableSize() const noexcept
+		{
+			return _table.Size();
+		}
+
+		const std::pair<u64, AllocatedResource*>* GetTableData() const noexcept
+		{
+			return _table.GetData();
+		}
+
 	private:
-		std::map<u64, AllocatedResource*> _table;
+		Array<std::pair<u64, AllocatedResource*>> _table;
 		u64 _texturesCount = 0;
 		u64 _buffersCount = 0;
 		u64 _rtvsAndDsvsCount = 0;
