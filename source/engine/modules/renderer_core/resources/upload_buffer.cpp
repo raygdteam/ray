@@ -1,6 +1,5 @@
 #include "upload_buffer.hpp"
 #include "graphics_memory_manager.hpp"
-#include "resources_table.hpp"
 #include "renderer_core/renderer.hpp"
 #include "gpu_allocator.hpp"
 

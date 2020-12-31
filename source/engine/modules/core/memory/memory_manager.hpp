@@ -1,9 +1,6 @@
 #pragma once
 #include <core/core.hpp>
 
-//temporary
-#include <Windows.h>
-
 namespace ray
 {
 	template<typename MemoryPool>
@@ -15,7 +12,7 @@ namespace ray
 			Destroy();
 		}
 
-		void Initialize() noexcept;
+		void Initialize(size_t preferredSize) noexcept;
 		void Destroy() noexcept;
 
 		MemoryPool& RequestPool(size_t requestedSize) noexcept;

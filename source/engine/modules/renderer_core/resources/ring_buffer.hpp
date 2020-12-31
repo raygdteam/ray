@@ -30,8 +30,6 @@ namespace ray::renderer_core_api::resources
 		bool IsMemoryEnough(u64 alignedSize) const noexcept;
 
 	private:
-		mutable UploadBuffer _uploadBuffer;
-		mutable std::queue<FrameResourceOffset> _resources;
 
 	};
 }

@@ -21,10 +21,10 @@ namespace ray::renderer_core_api::resources
 		void SetDataToUploadBuffer(void* buffer, size_t bufferSize, size_t alignment, bool bRegisterResource) noexcept;
 
 	private:
-		u8* _begin;
-		u8* _end;
-		u8* _currentPointer;
-		u64 _maxPoolSize;
-		ID3D12Resource* _underlyingResource;
+		//u8* _begin;
+		//u8* _end;
+		//u8* _currentPointer;
+		//u64 _maxPoolSize;
+		//ID3D12Resource* _underlyingResource;
 	};
 }

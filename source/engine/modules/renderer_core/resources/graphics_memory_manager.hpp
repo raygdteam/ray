@@ -75,7 +75,8 @@ namespace ray::renderer_core_api::resources
 		GpuMemoryPool& CreateNewPool(u64 requestedSize, u16 heapType, u16 dimensionType, u16 resourceType, bool bForceSpecifiedSize = false) noexcept;
 		ID3D12Heap* CreateHeap(u64 requestedSize, u16 heapType) noexcept;
 		ID3D12Resource* CreateCommittedPool(u64 requestedSize) noexcept;
-		void Destroy() noexcept;
+		void Destroy() noexcept
+		{}
 
 	private:
 		Array<GpuMemoryPool> _pools[HEAP_TYPES_COUNT][RESOURCE_DIMENSIONS_COUNT][RESOURCE_TYPES_COUNT];

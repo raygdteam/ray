@@ -30,6 +30,11 @@ namespace ray
 			VirtualFree(_listOfSegments.Buffer, 0, MEM_RELEASE);
 		}
 
+		bool IsEnough(size_t size) const noexcept
+		{
+			return _offset + size <= _maxMemoryPoolSize;
+		}
+
 		virtual void Allocate(size_t size) noexcept = 0;
 		virtual void Deallocate(void* mem) noexcept = 0;
 

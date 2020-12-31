@@ -33,7 +33,6 @@ namespace ray::renderer_core_api
 	namespace resources
 	{
 		class GpuMemoryManager;
-		class ResourcesTable;
 		class GpuAllocator;
 		struct AllocatedResource;
 		struct LoadedResource;
@@ -46,8 +45,6 @@ namespace ray::renderer_core_api
 		extern ID3D12Device* gDevice;
 		extern DescriptorAllocator gDescriptorAllocator[];
 		extern ray::renderer_core_api::resources::GpuMemoryManager gGpuMemManager;
-		extern ray::renderer_core_api::resources::ResourcesTable gFlushedResourcesTable;
-		extern ray::renderer_core_api::resources::ResourcesTable gLoadedResourcesTable;
 		extern ray::renderer_core_api::resources::GpuAllocator gGpuAllocator;
 	}
 
