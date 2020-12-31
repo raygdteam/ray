@@ -1,7 +1,11 @@
 #include "texture.hpp"
 #include "../renderer.hpp"
 #include "../command_context.hpp"
+#include <renderer_core/dx12_helper_functions.hpp>
 #include <core/debug/assert.hpp>
+#include <core/math/common.hpp>
+#include <core/memory/memory_pool.hpp>
+#include <core/memory/memory_manager.hpp>
 
 namespace ray::renderer_core_api::resources
 {
@@ -150,6 +154,77 @@ namespace ray::renderer_core_api::resources
             return 0;
         }
     }
+
+    class TexturePool : ray::IMemoryPool
+    {
+        friend class TextureAllocator;
+
+    public:
+        ~TexturePool() {}
+
+        void Create(size_t maxMemoryPoolSize) noexcept override;
+        void Destroy() noexcept override;
+
+    private:
+        ID3D12Heap* _heap;
+
+    };
+
+    void TexturePool::Create(size_t maxMemoryPoolSize) noexcept
+    {
+        IMemoryPool::Create(maxMemoryPoolSize);
+
+        auto heapProps = ray::dx12::DescribeHeapProps(D3D12_HEAP_TYPE_DEFAULT);
+        auto heapDesc = ray::dx12::DescribeHeap(heapProps, D3D12_HEAP_FLAG_NONE, maxMemoryPoolSize);
+        globals::gDevice->CreateHeap(&heapDesc, IID_PPV_ARGS(&_heap));
+    }
+
+    void TexturePool::Destroy() noexcept
+    {
+        _heap->Release();
+    }
+
+    class TextureAllocator
+    {
+    public:
+        TextureAllocator(size_t preferredSize)
+        {
+            _memoryManager.Initialize(preferredSize);
+        }
+
+        ID3D12Resource* Allocate(u64 width, u64 height) noexcept;
+        void Free(ID3D12Resource* resource) noexcept;
+
+    private:
+        ray::MemoryManager<TexturePool> _memoryManager;
+        TexturePool* _pool = nullptr;
+
+    };
+
+    ID3D12Resource* TextureAllocator::Allocate(u64 width, u64 height) noexcept
+    {
+        auto desc = ray::dx12::DescribeDefaultTexture2D(DXGI_FORMAT_R32G32B32A32_FLOAT, width, height);
+        u64 alignedSize = ray::core::math::AlignUp(width * height, desc.Alignment);
+        if (_pool == nullptr || !_pool->IsEnough(alignedSize))
+            _pool = &_memoryManager.RequestPool(alignedSize);
+        
+        ID3D12Resource* resource;
+        auto hr = globals::gDevice->CreatePlacedResource(_pool->_heap, _pool->_offset, &desc, D3D12_RESOURCE_STATE_COPY_DEST, nullptr, IID_PPV_ARGS(&resource));
+    
+        check(hr == S_OK)
+
+        _pool->_offset += alignedSize;
+        _pool->_availableSize -= _pool->_offset;
+
+        return resource;
+    }
+
+    void TextureAllocator::Free(ID3D12Resource* resource) noexcept
+    {
+        resource->Release();
+    }
+
+    static TextureAllocator sTextureAllocator(256);
 
 	void Texture::Create(size_t pitch, size_t width, size_t height, DXGI_FORMAT format, const void* initialData)
 	{

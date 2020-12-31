@@ -35,17 +35,6 @@ namespace ray
 			return _offset + size <= _maxMemoryPoolSize;
 		}
 
-		virtual void Allocate(size_t size) noexcept = 0;
-		virtual void Deallocate(void* mem) noexcept = 0;
-
-	protected:
-		void AddNewElementToList(const MemorySegment& segment) noexcept
-		{
-			_listOfSegments.Buffer[_listOfSegments.ElementsCount] = segment;
-			++_listOfSegments.ElementsCount;
-			_listOfSegments.FreedSpace += segment.Size;
-		}
-
 	protected:
 		size_t _maxMemoryPoolSize;
 		void* _pool;
