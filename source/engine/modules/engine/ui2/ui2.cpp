@@ -46,6 +46,7 @@ void UiRootObject::RenderAll()
 	}
 
 	Renderer2D::End(ctx);
+	ctx.Finish(true);
 }
 
 void UiRootObject::AddObject(UiObject* root, UiObject* obj)

@@ -1,5 +1,6 @@
 #include "input.hpp"
 #include <cstdio>
+#include <core/os/miniwin.hpp>
 
 void InputBase::WindowEventHandler(u32 msg, s64 rparam)
 {
@@ -15,7 +16,13 @@ void InputBase::WindowEventHandler(u32 msg, s64 rparam)
 }
 
 InputBase::InputBase()
-{}
+{
+	Array<RawInputDeviceList> devices = WinApi::GetRawInputDeviceList();
+	for (RawInputDeviceList& device : devices)
+	{
+		printf("--- TYPE: %lu\n", device.Type);
+	}
+}
 
 void InputBase::Initialize(IPlatformWindow* window)
 {

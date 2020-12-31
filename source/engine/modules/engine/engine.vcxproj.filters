@@ -44,6 +44,9 @@
     <ClInclude Include="ui2\ui2.hpp">
       <Filter>ui2</Filter>
     </ClInclude>
+    <ClInclude Include="ui2\io.hpp">
+      <Filter>ui2</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="engine">
