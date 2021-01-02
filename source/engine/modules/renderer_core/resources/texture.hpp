@@ -1,9 +1,45 @@
 #pragma once
 #include "gpu_resource.hpp"
 #include <d3d12.h>
+#include <core/memory/memory_pool.hpp>
+#include <core/memory/memory_manager.hpp>
 
 namespace ray::renderer_core_api::resources
 {
+	class TexturePool : public ray::IMemoryPool
+	{
+		friend class TextureAllocator;
+
+	public:
+		~TexturePool() {}
+
+		void Create(size_t maxMemoryPoolSize) noexcept override;
+		void Destroy() noexcept override;
+
+	private:
+		ID3D12Heap* _heap;
+
+	};
+
+	class TextureAllocator
+	{
+	public:
+		TextureAllocator(size_t preferredSize)
+		{
+			_memoryManager.Initialize(preferredSize);
+		}
+
+		ID3D12Resource* Allocate(u64 width, u64 height) noexcept;
+		void Free(ID3D12Resource* resource) noexcept;
+
+	private:
+		ray::MemoryManager<TexturePool> _memoryManager;
+		TexturePool* _pool = nullptr;
+
+	};
+
+	static TextureAllocator sTextureAllocator(256);
+
 	class Texture : public GpuResource
 	{
 	public:

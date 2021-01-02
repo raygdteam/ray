@@ -4,8 +4,6 @@
 #include <renderer_core/dx12_helper_functions.hpp>
 #include <core/debug/assert.hpp>
 #include <core/math/common.hpp>
-#include <core/memory/memory_pool.hpp>
-#include <core/memory/memory_manager.hpp>
 
 namespace ray::renderer_core_api::resources
 {
@@ -155,21 +153,6 @@ namespace ray::renderer_core_api::resources
         }
     }
 
-    class TexturePool : ray::IMemoryPool
-    {
-        friend class TextureAllocator;
-
-    public:
-        ~TexturePool() {}
-
-        void Create(size_t maxMemoryPoolSize) noexcept override;
-        void Destroy() noexcept override;
-
-    private:
-        ID3D12Heap* _heap;
-
-    };
-
     void TexturePool::Create(size_t maxMemoryPoolSize) noexcept
     {
         IMemoryPool::Create(maxMemoryPoolSize);
@@ -183,23 +166,6 @@ namespace ray::renderer_core_api::resources
     {
         _heap->Release();
     }
-
-    class TextureAllocator
-    {
-    public:
-        TextureAllocator(size_t preferredSize)
-        {
-            _memoryManager.Initialize(preferredSize);
-        }
-
-        ID3D12Resource* Allocate(u64 width, u64 height) noexcept;
-        void Free(ID3D12Resource* resource) noexcept;
-
-    private:
-        ray::MemoryManager<TexturePool> _memoryManager;
-        TexturePool* _pool = nullptr;
-
-    };
 
     ID3D12Resource* TextureAllocator::Allocate(u64 width, u64 height) noexcept
     {
@@ -223,8 +189,6 @@ namespace ray::renderer_core_api::resources
     {
         resource->Release();
     }
-
-    static TextureAllocator sTextureAllocator(256);
 
 	void Texture::Create(size_t pitch, size_t width, size_t height, DXGI_FORMAT format, const void* initialData)
 	{
