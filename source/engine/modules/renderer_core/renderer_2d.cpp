@@ -44,7 +44,7 @@ namespace ray::renderer_core_api
 		static const u32 MAX_INDICES = MAX_QUADS * 6;
 
 		resources::GpuBuffer IndexBuffer;
-		resources::Texture TextureAtlas;
+		resources::GpuTexture TextureAtlas;
 		D3D12_INDEX_BUFFER_VIEW IndexBufferView;
 
 		u32 QuadIndexCount = 0;
@@ -231,9 +231,10 @@ namespace ray::renderer_core_api
 		ConstantBuffer cb;
 		cb.ViewProjMatrix = sData.ViewProjectionMatrix.Transpose();
 
-		gfxContext.SetDescriptorHeap(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV, TextureManager::_descriptorHeap.GetHeapPointer());
+		// TODO
+		/*gfxContext.SetDescriptorHeap(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV, TextureManager::_descriptorHeap.GetHeapPointer());
 		gfxContext.SetDescriptorTable(0, TextureManager::_descriptorHeap.GetDescriptorAtOffset(0).GetGpuHandle());
-		gfxContext.SetDynamicCBV(1, sizeof(cb), &cb);
+		gfxContext.SetDynamicCBV(1, sizeof(cb), &cb);*/
 
 		size_t bufferSize = sData.QuadVertexBufferPtr - sData.QuadVertexBufferBase;
 		gfxContext.SetDynamicVB(0, bufferSize, sizeof(QuadVertex), sData.QuadVertexBufferBase);

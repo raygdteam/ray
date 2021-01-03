@@ -25,7 +25,6 @@ namespace ray::renderer_core_api::resources
 		void Create(u32 numElements, u32 elementSize, const void* initialData = nullptr);
 		void CreatePlaces(ID3D12Heap* backingHeap, size_t heapOffset, u32 numElements, u32 elementSize, const void* initialData = nullptr);
 
-		D3D12_GPU_VIRTUAL_ADDRESS RootConstantBufferView() const noexcept { return _gpuVirtualAddress; }
 		D3D12_CPU_DESCRIPTOR_HANDLE CreateConstantBufferView(UserDescriptorHeap& heap, size_t offset, size_t size);
 
 		D3D12_VERTEX_BUFFER_VIEW VertexBufferView(size_t offset, size_t size, u32 stride);
@@ -61,6 +60,8 @@ namespace ray::renderer_core_api::resources
 
 		// virtual void CreateDerivedViews() = 0; TODO: StructuredBuffer and ByteAddressBuffer
 		D3D12_RESOURCE_DESC DescribeBuffer() const noexcept;
+
+		u64 _gpuVirtualAddress;
 
 		size_t _bufferSize;
 		u32 _elementCount;

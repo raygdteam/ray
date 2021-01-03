@@ -12,53 +12,75 @@ namespace ray::renderer_core_api
 
 namespace ray::renderer_core_api::resources 
 {
+	enum class ResourceMappingMode
+	{
+		eReadAccess,
+		eWriteAccess,
+	};
+
 	class GpuResource
 	{
 		friend class ray::renderer_core_api::CommandContext;
 		friend class ::ray::renderer_core_api::GraphicsContext;
 		friend class ::ray::renderer_core_api::ComputeContext;
+
+	protected:
+		ID3D12Resource* _resource;
+		D3D12_RESOURCE_STATES _usageState;
+		D3D12_RESOURCE_STATES _transitioningState;
+		u64 _resourceSize;
+
 	public:
 		GpuResource() noexcept
-			: _userAllocatedMemory(nullptr)
-			, _gpuVirtualAddress(0)
-			, _resource(nullptr)
+			: _resource(nullptr)
 			, _usageState(D3D12_RESOURCE_STATE_COMMON)
 			, _transitioningState(static_cast<D3D12_RESOURCE_STATES>(-1))
 		{}
 
 		GpuResource(ID3D12Resource* inResource, D3D12_RESOURCE_STATES currentState) noexcept
-			: _userAllocatedMemory(nullptr)
-			, _gpuVirtualAddress(0)
-			, _resource(inResource)
+			: _resource(inResource)
 			, _usageState(currentState)
 			, _transitioningState(static_cast<D3D12_RESOURCE_STATES>(-1))
 		{}
 
-		virtual ~GpuResource() {}
-
-		virtual void Destroy() noexcept
+		virtual ~GpuResource() 
 		{
-			_resource = nullptr;
-			_gpuVirtualAddress = 0;
-			if (_userAllocatedMemory == nullptr)
+			Destroy();
+		}
+
+		void Destroy() noexcept
+		{
+			if (_resourceSize != 0)
 			{
-				// TODO: VirtualFree
-				VirtualFree(_userAllocatedMemory, 0, MEM_RELEASE);
-				_userAllocatedMemory = nullptr;
+				Release();
+				_resourceSize = 0;
 			}
 		}
 
-		D3D12_GPU_VIRTUAL_ADDRESS GetGpuVirtualAddress() const noexcept { return _gpuVirtualAddress; }
+		virtual void Release() noexcept {}
+
 		ID3D12Resource* GetResource() const noexcept { return _resource; }
-		void* GetUserAllocatedMemory() const noexcept { return _userAllocatedMemory; }
+		u64 GetResourceSize() const noexcept { return _resourceSize; }
 
+		void Map(ResourceMappingMode mode, void** data) const noexcept
+		{
+			D3D12_RANGE range;
+			range.Begin = 0;
+			range.End = 0;
 
-	protected:
-		void* _userAllocatedMemory;
-		D3D12_GPU_VIRTUAL_ADDRESS _gpuVirtualAddress;
-		ID3D12Resource* _resource;
-		D3D12_RESOURCE_STATES _usageState;
-		D3D12_RESOURCE_STATES _transitioningState;
+			D3D12_RANGE* access = &range;
+
+			if (mode == ResourceMappingMode::eReadAccess)
+				access = nullptr;
+
+			_resource->Map(0, access, data);
+		}
+
+		void Unmap() const noexcept
+		{
+			_resource->Unmap(0, nullptr);
+		}
 
 	};
+
 }

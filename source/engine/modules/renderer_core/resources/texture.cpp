@@ -7,7 +7,7 @@
 
 namespace ray::renderer_core_api::resources
 {
-    size_t BitsPerPixel(_In_ DXGI_FORMAT fmt)
+    size_t BitsPerPixel(_In_ DXGI_FORMAT fmt) noexcept
     {
         switch (fmt)
         {
@@ -167,10 +167,24 @@ namespace ray::renderer_core_api::resources
         _heap->Release();
     }
 
-    ID3D12Resource* TextureAllocator::Allocate(u64 width, u64 height) noexcept
+    ID3D12Resource* TextureAllocator::Allocate(GpuTextureDescription& textureDesc) noexcept
     {
-        auto desc = ray::dx12::DescribeDefaultTexture2D(DXGI_FORMAT_R32G32B32A32_FLOAT, width, height);
-        u64 alignedSize = ray::core::math::AlignUp(width * height, desc.Alignment);
+        D3D12_RESOURCE_DESC desc = {};
+        desc.MipLevels = textureDesc.MipLevels;
+        desc.DepthOrArraySize = textureDesc.ArraySize;
+        desc.Dimension = textureDesc.Dimension;
+        desc.Flags = textureDesc.Flags;
+        desc.SampleDesc = textureDesc.SampleDesc;
+        desc.Layout = D3D12_TEXTURE_LAYOUT_UNKNOWN;
+        desc.Format = textureDesc.Format;
+        desc.Width = textureDesc.Width;
+        desc.Height = textureDesc.Height;
+        if (desc.Width * desc.Height <= KB(64))
+            desc.Alignment = D3D12_SMALL_RESOURCE_PLACEMENT_ALIGNMENT;
+        else
+            desc.Alignment = D3D12_DEFAULT_RESOURCE_PLACEMENT_ALIGNMENT;
+
+        u64 alignedSize = ray::core::math::AlignUp(desc.Width * desc.Height, desc.Alignment);
         if (_pool == nullptr || !_pool->IsEnough(alignedSize))
             _pool = &_memoryManager.RequestPool(alignedSize);
         
@@ -190,44 +204,17 @@ namespace ray::renderer_core_api::resources
         resource->Release();
     }
 
-	void Texture::Create(size_t pitch, size_t width, size_t height, DXGI_FORMAT format, const void* initialData)
+	bool GpuTexture::Create(GpuTextureDescription& desc) noexcept
 	{
 		_usageState = D3D12_RESOURCE_STATE_COPY_DEST;
+        _resource = sTextureAllocator.Allocate(desc);
 
-		D3D12_RESOURCE_DESC resourceDesc = {};
-		resourceDesc.Width = width;
-		resourceDesc.Height = height;
-		resourceDesc.MipLevels = 1;
-		resourceDesc.DepthOrArraySize = 1;
-		resourceDesc.Dimension = D3D12_RESOURCE_DIMENSION_TEXTURE2D;
-		resourceDesc.Flags = D3D12_RESOURCE_FLAG_NONE;
-		resourceDesc.Format = format;
-		resourceDesc.Layout = D3D12_TEXTURE_LAYOUT_UNKNOWN;
-		resourceDesc.SampleDesc.Count = 1;
-		resourceDesc.SampleDesc.Quality = 0;
-
-		D3D12_HEAP_PROPERTIES heapProps = {};
-		heapProps.CreationNodeMask = 1;
-		heapProps.VisibleNodeMask = 1;
-		heapProps.CPUPageProperty = D3D12_CPU_PAGE_PROPERTY_UNKNOWN;
-		heapProps.MemoryPoolPreference = D3D12_MEMORY_POOL_UNKNOWN;
-		heapProps.Type = D3D12_HEAP_TYPE_DEFAULT;
-
-		auto hr = globals::gDevice->CreateCommittedResource(&heapProps, D3D12_HEAP_FLAG_NONE, &resourceDesc, 
-				_usageState, nullptr, IID_PPV_ARGS(&_resource));
-
-		check(hr == S_OK)
-
-		D3D12_SUBRESOURCE_DATA texResource;
-		texResource.pData = initialData;
-		texResource.RowPitch = pitch * (BitsPerPixel(format) / 8);
-		texResource.SlicePitch = texResource.RowPitch * height;
-
-		CommandContext::InitializeTexture(*this, 1, &texResource);
-
-		if (_CpuHandle.ptr == D3D12_GPU_VIRTUAL_ADDRESS_UNKNOWN)
-            _CpuHandle = AllocateDescriptor(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
-		globals::gDevice->CreateShaderResourceView(_resource, nullptr, _CpuHandle);
+        return _resource ? true : false;
 	}
+
+    void GpuTexture::Release() noexcept
+    {
+        _resource->Release();
+    }
 
 }

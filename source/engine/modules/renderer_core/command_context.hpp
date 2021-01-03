@@ -1,6 +1,5 @@
 #pragma once
 #include "command_queue.hpp"
-#include "resources/linear_allocator.hpp"
 #include "pipeline_state.hpp"
 #include "resources/color_buffer.hpp"
 #include <core/threading/critical_section.hpp>
@@ -89,10 +88,10 @@ namespace ray::renderer_core_api
 		void ResetCounter()
 		*/
 
-		DynAlloc ReserveUploadMemory(size_t sizeInBytes)
+		/*DynAlloc ReserveUploadMemory(size_t sizeInBytes)
 		{
 			return _cpuLinearAllocator.Allocate(sizeInBytes);
-		}
+		}*/
 
 		static void InitializeTexture(resources::GpuResource& dest, u32 numSubResources, D3D12_SUBRESOURCE_DATA* data);
 		static void InitializeTextureArraySlice(resources::GpuResource& dest, u64 sliceIndex, resources::GpuResource& src);
@@ -155,8 +154,8 @@ namespace ray::renderer_core_api
 		ID3D12RootSignature* _graphicsRootSig;
 		ID3D12RootSignature* _computeRootSig;
 
-		LinearAllocator _cpuLinearAllocator;
-		LinearAllocator _gpuLinearAllocator;
+		/*LinearAllocator _cpuLinearAllocator;
+		LinearAllocator _gpuLinearAllocator;*/
 
 		D3D12_RESOURCE_BARRIER _barriers[16];
 		u32 _numBarriersToFlush;

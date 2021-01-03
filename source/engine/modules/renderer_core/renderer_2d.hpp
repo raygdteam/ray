@@ -2,7 +2,6 @@
 #include <core/math/vector.hpp>
 #include <resources/resource_manager.hpp>
 #include <engine/world/actors/camera_actor.hpp>
-#include <renderer_core/resources/texture_manager.hpp>
 
 #ifdef RAY_BUILD_RENDERER_CORE
 #define RAY_RENDERERCORE_API __declspec(dllexport)

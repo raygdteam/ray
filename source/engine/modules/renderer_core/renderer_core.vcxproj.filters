@@ -13,9 +13,6 @@
     <ClInclude Include="resources\gpu_resource.hpp">
       <Filter>resources</Filter>
     </ClInclude>
-    <ClInclude Include="resources\linear_allocator.hpp">
-      <Filter>resources\memory</Filter>
-    </ClInclude>
     <ClInclude Include="command_context.hpp" />
     <ClInclude Include="..\renderer_dx12\d3dx12.h" />
     <ClInclude Include="resources\color_buffer.hpp">
@@ -41,9 +38,6 @@
     <ClInclude Include="resources\buddy_allocator.hpp">
       <Filter>resources\memory</Filter>
     </ClInclude>
-    <ClInclude Include="resources\texture_manager.hpp">
-      <Filter>resources</Filter>
-    </ClInclude>
     <ClInclude Include="resources\graphics_memory_manager.hpp">
       <Filter>resources\memory</Filter>
     </ClInclude>
@@ -57,6 +51,9 @@
     <ClInclude Include="resources\upload_buffer.hpp">
       <Filter>resources\memory</Filter>
     </ClInclude>
+    <ClInclude Include="resources\resource_view.hpp">
+      <Filter>resources</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="renderer.cpp" />
@@ -65,9 +62,6 @@
     <ClCompile Include="descriptor_heap.cpp" />
     <ClCompile Include="command_allocator.cpp" />
     <ClCompile Include="command_queue.cpp" />
-    <ClCompile Include="resources\linear_allocator.cpp">
-      <Filter>resources\memory</Filter>
-    </ClCompile>
     <ClCompile Include="command_context.cpp" />
     <ClCompile Include="resources\color_buffer.cpp">
       <Filter>resources</Filter>
@@ -93,9 +87,6 @@
     <ClCompile Include="resources\buddy_allocator.cpp">
       <Filter>resources\memory</Filter>
     </ClCompile>
-    <ClCompile Include="resources\texture_manager.cpp">
-      <Filter>resources</Filter>
-    </ClCompile>
     <ClCompile Include="resources\graphics_memory_manager.cpp">
       <Filter>resources\memory</Filter>
     </ClCompile>
@@ -108,6 +99,9 @@
     </ClCompile>
     <ClCompile Include="resources\upload_buffer.cpp">
       <Filter>resources\memory</Filter>
+    </ClCompile>
+    <ClCompile Include="resources\resource_view.cpp">
+      <Filter>resources</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

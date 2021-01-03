@@ -6,6 +6,77 @@
 
 namespace ray::renderer_core_api::resources
 {
+	struct GpuTextureDescription
+	{
+	public:
+		D3D12_RESOURCE_DIMENSION Dimension;
+		u32 Width;
+		u32 Height;
+		u32 Depth;
+		u32 ArraySize;
+		DXGI_FORMAT Format;
+		DXGI_SAMPLE_DESC SampleDesc;
+		u32 MipLevels;
+		D3D12_RESOURCE_FLAGS Flags;
+
+	public:
+		GpuTextureDescription() = default;
+		~GpuTextureDescription() = default;
+
+		GpuTextureDescription(GpuTextureDescription&& rhs) = default;
+		GpuTextureDescription& operator = (GpuTextureDescription&&) = default;
+
+	public:
+		static GpuTextureDescription&& Texture1D(u32 width, DXGI_FORMAT format, u32 arraySize, D3D12_RESOURCE_FLAGS flags) noexcept
+		{
+			GpuTextureDescription desc;
+			desc.Dimension = D3D12_RESOURCE_DIMENSION_TEXTURE1D;
+			desc.Width = width;
+			desc.Height = 1;
+			desc.Depth = 1;
+			desc.ArraySize = arraySize;
+			desc.MipLevels = 1;
+			desc.Format = format;
+			desc.SampleDesc.Count = 1;
+			desc.SampleDesc.Quality = 0;
+			desc.Flags = flags;
+			return std::move(desc);
+		}
+
+		static GpuTextureDescription&& Texture2D(u32 width, u32 height, DXGI_FORMAT format, u32 arraySize, D3D12_RESOURCE_FLAGS flags = D3D12_RESOURCE_FLAG_ALLOW_RENDER_TARGET) noexcept
+		{
+			GpuTextureDescription desc;
+			desc.Dimension = D3D12_RESOURCE_DIMENSION_TEXTURE2D;
+			desc.Width = width;
+			desc.Height = height;
+			desc.Depth = 1;
+			desc.ArraySize = arraySize;
+			desc.MipLevels = 1;
+			desc.Format = format;
+			desc.SampleDesc.Count = 1;
+			desc.SampleDesc.Quality = 0;
+			desc.Flags = flags;
+			return std::move(desc);
+		}
+
+		static GpuTextureDescription&& Texture3D(u32 width, u32 height, u32 depth, DXGI_FORMAT format, D3D12_RESOURCE_FLAGS flags) noexcept
+		{
+			GpuTextureDescription desc;
+			desc.Dimension = D3D12_RESOURCE_DIMENSION_TEXTURE3D;
+			desc.Width = width;
+			desc.Height = height;
+			desc.Depth = depth;
+			desc.ArraySize = 1;
+			desc.MipLevels = 1;
+			desc.Format = format;
+			desc.SampleDesc.Count = 1;
+			desc.SampleDesc.Quality = 0;
+			desc.Flags = flags;
+			return std::move(desc);
+		}
+
+	};
+
 	class TexturePool : public ray::IMemoryPool
 	{
 		friend class TextureAllocator;
@@ -29,7 +100,7 @@ namespace ray::renderer_core_api::resources
 			_memoryManager.Initialize(preferredSize);
 		}
 
-		ID3D12Resource* Allocate(u64 width, u64 height) noexcept;
+		ID3D12Resource* Allocate(GpuTextureDescription& textureDesc) noexcept;
 		void Free(ID3D12Resource* resource) noexcept;
 
 	private:
@@ -38,44 +109,27 @@ namespace ray::renderer_core_api::resources
 
 	};
 
-	static TextureAllocator sTextureAllocator(256);
+	static TextureAllocator sTextureAllocator(MB(256));
 
-	class Texture : public GpuResource
+	// represents texture resource in gpu memory
+	class GpuTexture : public GpuResource
 	{
+	private:
+		GpuTextureDescription _desc;
+
 	public:
-		Texture()
+		~GpuTexture() override {}
+
+		bool Create(GpuTextureDescription& desc) noexcept;
+		bool Create(GpuTextureDescription&& rhs) noexcept
 		{
-			_CpuHandle.ptr = static_cast<D3D12_GPU_VIRTUAL_ADDRESS>(-1);
+			_desc = std::move(rhs);
+			return Create(_desc);
 		}
 
-		Texture(D3D12_CPU_DESCRIPTOR_HANDLE handle)
-			: _CpuHandle(handle)
-		{}
-
-		void Create(size_t pitch, size_t width, size_t height, DXGI_FORMAT format, const void* initialData);
-		void Create(size_t width, size_t height, DXGI_FORMAT format, const void* initialData)
-		{
-			return Create(width, width, height, format, initialData);
-		}
-
-		D3D12_CPU_DESCRIPTOR_HANDLE GetSRV() const noexcept
-		{
-			return _CpuHandle;
-		}
-
-		void Destroy() noexcept override
-		{
-			GpuResource::Destroy();
-			// TODO: reusing freed descriptors
-			_CpuHandle.ptr = static_cast<D3D12_GPU_VIRTUAL_ADDRESS>(0);
-		}
-
-		bool operator!() const noexcept { return _CpuHandle.ptr == static_cast<D3D12_GPU_VIRTUAL_ADDRESS>(0); }
-
-	protected:
-		D3D12_CPU_DESCRIPTOR_HANDLE _CpuHandle;
+		void Release() noexcept override;
 
 	};
 
-	size_t BitsPerPixel(_In_ DXGI_FORMAT fmt);
+	size_t BitsPerPixel(_In_ DXGI_FORMAT fmt) noexcept;
 }

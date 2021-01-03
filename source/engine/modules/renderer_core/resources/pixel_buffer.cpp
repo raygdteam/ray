@@ -1,5 +1,6 @@
 #include "pixel_buffer.hpp"
 #include "../d3dx12.h"
+#include <core/debug/assert.hpp>
 
 namespace ray::renderer_core_api::resources
 {
@@ -85,7 +86,7 @@ namespace ray::renderer_core_api::resources
         case DXGI_FORMAT_X24_TYPELESS_G8_UINT:
         case DXGI_FORMAT_D16_UNORM:
 
-            assert(false && "Requested a UAV format for a depth stencil format.");
+            ray_assert(false, "Requested a UAV format for a depth stencil format.");
 #endif
 
         default:
@@ -300,9 +301,10 @@ namespace ray::renderer_core_api::resources
         Destroy();
 
         CD3DX12_HEAP_PROPERTIES heapProps(D3D12_HEAP_TYPE_DEFAULT);
-        assert(device->CreateCommittedResource(&heapProps, D3D12_HEAP_FLAG_NONE, &desc, D3D12_RESOURCE_STATE_COMMON, &clearValue, IID_PPV_ARGS(&_resource)) == S_OK);
+        check(device->CreateCommittedResource(&heapProps, D3D12_HEAP_FLAG_NONE, &desc, D3D12_RESOURCE_STATE_COMMON, &clearValue, IID_PPV_ARGS(&_resource)) == S_OK);
 
         _usageState = D3D12_RESOURCE_STATE_COMMON;
+        u64 _gpuVirtualAddress;
         _gpuVirtualAddress = static_cast<D3D12_GPU_VIRTUAL_ADDRESS>(0);
     }
 
@@ -330,7 +332,7 @@ namespace ray::renderer_core_api::resources
 
     void PixelBuffer::AssociateWithResource(ID3D12Device* device, ID3D12Resource* resource, D3D12_RESOURCE_STATES currentState)
     {
-        assert(resource != nullptr);
+        check(resource != nullptr);
 
         _resource = resource;
 

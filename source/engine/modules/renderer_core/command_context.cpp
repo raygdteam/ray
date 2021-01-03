@@ -72,8 +72,6 @@ namespace ray::renderer_core_api
 
 	void CommandContext::DestroyAllContexts()
 	{
-		LinearAllocator::DestroyAll();
-
 		globals::gContextManager.DestroyAllContexts();
 	}
 
@@ -112,9 +110,6 @@ namespace ray::renderer_core_api
 		u64 fenceValue = queue.ExecuteCommandList(_commandList);
 		queue.DiscardAllocator(fenceValue, _commandAllocator);
 		_commandAllocator = nullptr;
-
-		_cpuLinearAllocator.CleanupUsedPages(fenceValue);
-		_gpuLinearAllocator.CleanupUsedPages(fenceValue);
 		// TODO: 
 
 		if (bWaitForComplition)
@@ -132,8 +127,6 @@ namespace ray::renderer_core_api
 		, _currentPipelineState(nullptr)
 		, _graphicsRootSig(nullptr)
 		, _computeRootSig(nullptr)
-		, _cpuLinearAllocator(LinearAllocatorType::eCpuWritable)
-		, _gpuLinearAllocator(LinearAllocatorType::eGpuExclusive)
 		, _numBarriersToFlush(0)
 
 		//TODO: 
@@ -171,7 +164,9 @@ namespace ray::renderer_core_api
 
 	void CommandContext::InitializeTexture(resources::GpuResource& dest, u32 numSubResources, D3D12_SUBRESOURCE_DATA* data)
 	{
-		u64 uploadBufferSize = GetRequiredIntermediateSize(dest.GetResource(), 0, numSubResources);
+		// TODO:
+
+		/*u64 uploadBufferSize = GetRequiredIntermediateSize(dest.GetResource(), 0, numSubResources);
 		
 		CommandContext& context = CommandContext::Begin();
 		DynAlloc uploadBuffer = context.ReserveUploadMemory(uploadBufferSize);
@@ -179,7 +174,7 @@ namespace ray::renderer_core_api
 		UpdateSubresources(context._commandList, dest.GetResource(), uploadBuffer.Buffer.GetResource(), 0, 0, numSubResources, data);
 		context.TransitionResource(dest, D3D12_RESOURCE_STATE_GENERIC_READ);
 
-		context.Finish(true);
+		context.Finish(true);*/
 	}
 
 	void CommandContext::InitializeTextureArraySlice(resources::GpuResource& dest, u64 sliceIndex, resources::GpuResource& src)
@@ -244,7 +239,9 @@ namespace ray::renderer_core_api
 
 	void CommandContext::InitializeBuffer(resources::GpuResource& dest, const void* data, size_t numBytes, size_t offset)
 	{
-		CommandContext& context = CommandContext::Begin();
+		// TODO
+
+		/*CommandContext& context = CommandContext::Begin();
 		DynAlloc mem = context.ReserveUploadMemory(numBytes);
 
 		sse::MemCopy(mem.Data, data, math::DivideByMultiple(numBytes, 16));
@@ -253,23 +250,27 @@ namespace ray::renderer_core_api
 		context._commandList->CopyBufferRegion(dest.GetResource(), offset, mem.Buffer.GetResource(), 0, numBytes);
 		context.TransitionResource(dest, D3D12_RESOURCE_STATE_GENERIC_READ);
 
-		context.Finish(true);
+		context.Finish(true);*/
 	}
 
 	void CommandContext::WriteBuffer(resources::GpuResource& dest, size_t destOffset, const void* data, size_t numBytes)
 	{
-		check(data != nullptr && math::IsAligned(numBytes, 16));
+		// TODO
+
+		/*check(data != nullptr && math::IsAligned(numBytes, 16));
 		DynAlloc mem = _cpuLinearAllocator.Allocate(numBytes, 512);
 		sse::MemCopy(mem.Data, data, math::DivideByMultiple(numBytes, 16));
-		CopyBufferRegion(dest, destOffset, mem.Buffer, mem.Offset, numBytes);
+		CopyBufferRegion(dest, destOffset, mem.Buffer, mem.Offset, numBytes);*/
 	}
 
 	void CommandContext::FillBuffer(resources::GpuResource& dest, size_t destOffset, float value, size_t numBytes)
 	{
+		// TODO
+		/*
 		DynAlloc mem = _cpuLinearAllocator.Allocate(numBytes, 512);
 		__m128 vectorValue = _mm_set1_ps(value);
 		sse::MemFill(mem.Data, vectorValue, math::DivideByMultiple(numBytes, 16));
-		CopyBufferRegion(dest, destOffset, mem.Buffer, mem.Offset, numBytes);
+		CopyBufferRegion(dest, destOffset, mem.Buffer, mem.Offset, numBytes);*/
 	}
 
 	void CommandContext::TransitionResource(resources::GpuResource& dest, D3D12_RESOURCE_STATES newState, bool bFlushImmediate)
@@ -491,7 +492,9 @@ namespace ray::renderer_core_api
 
 	void GraphicsContext::SetDynamicVB(u32 startSlot, size_t numVertices, size_t vertexStride, const void* data)
 	{
-		check(data != nullptr && math::IsAligned(data, 16))
+		// TODO 
+
+		/*check(data != nullptr && math::IsAligned(data, 16))
 		size_t bufferSize = math::AlignUp(numVertices * vertexStride, 16);
 
 		auto vb = _cpuLinearAllocator.Allocate(bufferSize);
@@ -502,12 +505,14 @@ namespace ray::renderer_core_api
 		view.SizeInBytes = static_cast<u32>(bufferSize);
 		view.StrideInBytes = static_cast<u32>(vertexStride);
 
-		_commandList->IASetVertexBuffers(startSlot, 1, &view);
+		_commandList->IASetVertexBuffers(startSlot, 1, &view);*/
 	}
 
 	void GraphicsContext::SetDynamicIB(size_t indexCount, const u32* data, bool b32Bit)
 	{
-		check(data != nullptr && math::IsAligned(data, 16))
+		// TODO
+
+		/*check(data != nullptr && math::IsAligned(data, 16))
 		
 		size_t bufferSize = math::AlignUp(indexCount * (b32Bit ? sizeof(u32) : sizeof(u16)), 16);
 		auto ib = _cpuLinearAllocator.Allocate(bufferSize);
@@ -518,15 +523,17 @@ namespace ray::renderer_core_api
 		view.Format = b32Bit ? DXGI_FORMAT_R32_UINT : DXGI_FORMAT_R16_UINT;
 		view.SizeInBytes = bufferSize;
 
-		_commandList->IASetIndexBuffer(&view);
+		_commandList->IASetIndexBuffer(&view);*/
 	}
 
 	void GraphicsContext::SetDynamicCBV(u32 rootIndex, size_t bufferSize, void* data)
 	{
-		check(data != nullptr && math::IsAligned(data, 16))
+		// TODO
+
+		/*check(data != nullptr && math::IsAligned(data, 16))
 		auto mem = _cpuLinearAllocator.Allocate(bufferSize);
 		memcpy(mem.Data, data, bufferSize);
-		_commandList->SetGraphicsRootConstantBufferView(rootIndex, mem.GpuVirtualAddress);
+		_commandList->SetGraphicsRootConstantBufferView(rootIndex, mem.GpuVirtualAddress);*/
 	}
 
 	void GraphicsContext::SetDescriptorTable(u32 rootIndex, D3D12_GPU_DESCRIPTOR_HANDLE handle)
