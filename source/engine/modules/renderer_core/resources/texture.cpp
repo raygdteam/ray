@@ -9,7 +9,7 @@ namespace ray::renderer_core_api::resources
 {
     static TextureAllocator sTextureAllocator(MB(256));
 	
-    size_t BitsPerPixel(_In_ DXGI_FORMAT fmt)
+    size_t BitsPerPixel(_In_ DXGI_FORMAT fmt) noexcept
     {
         switch (fmt)
         {
