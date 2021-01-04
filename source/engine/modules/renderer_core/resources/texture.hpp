@@ -38,8 +38,6 @@ namespace ray::renderer_core_api::resources
 
 	};
 
-	static TextureAllocator sTextureAllocator(256);
-
 	class Texture : public GpuResource
 	{
 	public:
