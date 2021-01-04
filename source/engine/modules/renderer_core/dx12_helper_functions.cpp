@@ -66,7 +66,7 @@ namespace ray::dx12
 	{
 		check(math::IsAligned(size, KB(64)))
 
-		D3D12_HEAP_DESC desc;
+		D3D12_HEAP_DESC desc = {};
 		desc.Alignment = D3D12_DEFAULT_RESOURCE_PLACEMENT_ALIGNMENT;
 		desc.Flags = flags;
 		desc.Properties = heapProps;
@@ -79,7 +79,7 @@ namespace ray::dx12
 	{
 		check(ray::core::math::IsAligned(size, MB(4)))
 
-		D3D12_HEAP_DESC desc;
+			D3D12_HEAP_DESC desc = {};
 		desc.Alignment = D3D12_DEFAULT_MSAA_RESOURCE_PLACEMENT_ALIGNMENT;
 		desc.Flags = flags;
 		desc.Properties = heapProps;

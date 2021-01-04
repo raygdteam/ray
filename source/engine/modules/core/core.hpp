@@ -127,3 +127,10 @@ using f32 = float; using f64 = double;
 
 using pcstr = const char*;
 using pcwstr = const wchar_t*;
+
+struct NonCopyable
+{
+	NonCopyable() = default;
+	NonCopyable(const NonCopyable&) = delete;
+	NonCopyable& operator = (const NonCopyable&) = delete;
+};

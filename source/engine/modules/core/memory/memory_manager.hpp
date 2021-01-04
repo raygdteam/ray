@@ -47,7 +47,7 @@ namespace ray
 
 		_listOfPools.Buffer = static_cast<MemoryPool*>(VirtualAlloc(nullptr, KB(64), MEM_COMMIT, PAGE_READWRITE));
 		new (&_listOfPools.Buffer[0]) MemoryPool;
-		_listOfPools.Buffer[0].Create(preferredSize);
+		_listOfPools.Buffer[0].Create(preferredSize, 0);
 		_listOfPools.ElementsCount += 1;
 	}
 
@@ -60,7 +60,7 @@ namespace ray
 				_listOfPools.Buffer[i].Destroy();
 
 			VirtualFree(_listOfPools.Buffer, 0, MEM_RELEASE);
-			_listOfPools.ElementsCount = -1;
+			_listOfPools.ElementsCount = -1u;
 		}
 	}
 
@@ -79,7 +79,8 @@ namespace ray
 	template<typename MemoryPool>
 	MemoryPool& MemoryManager<MemoryPool>::CreatePool(size_t requestedSize) noexcept
 	{
-		_listOfPools.Buffer[_listOfPools.ElementsCount].Create(requestedSize);
+		new (&_listOfPools.Buffer[_listOfPools.ElementsCount]) MemoryPool;
+		_listOfPools.Buffer[_listOfPools.ElementsCount].Create(requestedSize, _listOfPools.ElementsCount);
 		return _listOfPools.Buffer[_listOfPools.ElementsCount++];
 	}
 }

@@ -13,7 +13,7 @@ namespace ray::renderer_core_api::resources
 	{
 	public:
 		virtual void* GetNativeHandle() = 0;
-
+	
 	};
 
 	class ShaderResourceView : public IResourceView

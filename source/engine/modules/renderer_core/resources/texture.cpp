@@ -7,8 +7,6 @@
 
 namespace ray::renderer_core_api::resources
 {
-    static TextureAllocator sTextureAllocator(MB(256));
-	
     size_t BitsPerPixel(_In_ DXGI_FORMAT fmt) noexcept
     {
         switch (fmt)
@@ -155,9 +153,9 @@ namespace ray::renderer_core_api::resources
         }
     }
 
-    void TexturePool::Create(size_t maxMemoryPoolSize) noexcept
+    void TexturePool::Create(size_t maxMemoryPoolSize, size_t index) noexcept
     {
-        IMemoryPool::Create(maxMemoryPoolSize);
+        IMemoryPool::Create(maxMemoryPoolSize, index);
 
         auto heapProps = ray::dx12::DescribeHeapProps(D3D12_HEAP_TYPE_DEFAULT);
         auto heapDesc = ray::dx12::DescribeHeap(heapProps, D3D12_HEAP_FLAG_NONE, maxMemoryPoolSize);
@@ -169,7 +167,7 @@ namespace ray::renderer_core_api::resources
         _heap->Release();
     }
 
-    ID3D12Resource* TextureAllocator::Allocate(GpuTextureDescription& textureDesc) noexcept
+    GpuTexture&& TextureAllocator::Allocate(GpuTextureDescription& textureDesc) noexcept
     {
         D3D12_RESOURCE_DESC resourceDesc = {};
         resourceDesc.Width = textureDesc.Width;
@@ -181,44 +179,50 @@ namespace ray::renderer_core_api::resources
         resourceDesc.Format = textureDesc.Format;
         resourceDesc.Layout = D3D12_TEXTURE_LAYOUT_UNKNOWN;
         resourceDesc.SampleDesc = textureDesc.SampleDesc;
-        if (resourceDesc.Width * resourceDesc.Height <= KB(64))
-            resourceDesc.Alignment = D3D12_SMALL_RESOURCE_PLACEMENT_ALIGNMENT;
-        else
-            resourceDesc.Alignment = D3D12_DEFAULT_RESOURCE_PLACEMENT_ALIGNMENT;
 
-        u64 alignedSize = ray::core::math::AlignUp(resourceDesc.Width * resourceDesc.Height, resourceDesc.Alignment);
-        if (_pool == nullptr || !_pool->IsEnough(alignedSize))
-            _pool = &_memoryManager.RequestPool(alignedSize);
+        auto resourceAllocationInfo = globals::gDevice->GetResourceAllocationInfo(1, 1, &resourceDesc);
+        resourceDesc.Alignment = resourceAllocationInfo.Alignment;
+
+        if (_pool == nullptr || !_pool->IsEnough(resourceAllocationInfo.SizeInBytes))
+            _pool = &_memoryManager.RequestPool(resourceAllocationInfo.SizeInBytes);
         
         ID3D12Resource* resource;
         auto hr = globals::gDevice->CreatePlacedResource(_pool->_heap, _pool->_offset, &resourceDesc, D3D12_RESOURCE_STATE_COPY_DEST, nullptr, IID_PPV_ARGS(&resource));
     
         check(hr == S_OK)
 
-        _pool->_offset += alignedSize;
+        _pool->_offset += resourceAllocationInfo.SizeInBytes;
         _pool->_availableSize -= _pool->_offset;
 
-        return resource;
+        GpuTexture ret;
+        ret._desc = std::move(textureDesc);
+        ret._underlyingPool = _pool;
+        ret._resource = resource;
+        ret._resourceSize = resourceAllocationInfo.SizeInBytes;
+        ret._usageState = D3D12_RESOURCE_STATE_COPY_DEST;
+
+        return std::move(ret);
     }
 
-    void TextureAllocator::Free(ID3D12Resource* resource) noexcept
+    void TextureAllocator::Free(GpuTexture& resource) noexcept
     {
-        resource->Release();
-    }
-
-    void GpuTexture::Release() noexcept
-    {
-        _resource->Release();
+        resource._resource->Release();
+        resource._underlyingPool->_availableSize += resource._resourceSize;
+        
+        // TODO: MemorySegment
     }
 
 	bool GpuTexture::Create(GpuTextureDescription& textureDesc) noexcept
 	{
-		_usageState = D3D12_RESOURCE_STATE_COPY_DEST;
-        _resource = sTextureAllocator.Allocate(textureDesc);
-
+        *this = std::move(globals::gTextureAllocator.Allocate(textureDesc));
         // TODO
 
         return true;
 	}
+
+    void GpuTexture::Release() noexcept
+    {
+        globals::gTextureAllocator.Free(*this);
+    }
 
 }

@@ -4,6 +4,7 @@
 #include "resources/buffer_manager.hpp"
 #include "resources/graphics_memory_manager.hpp"
 #include "resources/gpu_allocator.hpp"
+#include "resources/texture.hpp"
 #include "d3dx12.h"
 #include <core/math/vector.hpp>
 
@@ -29,6 +30,7 @@ namespace ray::renderer_core_api
 		};
 		ray::renderer_core_api::resources::GpuMemoryManager gGpuMemManager;
 		ray::renderer_core_api::resources::GpuAllocator gGpuAllocator;
+		ray::renderer_core_api::resources::TextureAllocator gTextureAllocator;
 	}
 
 	bool IRenderer::_sbReady = false;
@@ -99,7 +101,11 @@ namespace ray::renderer_core_api
 		
 		globals::gCurrentBuffer = 0;
 		globals::gDepthBuffer.Create(globals::gDisplayPlane->GetWidth(), globals::gDisplayPlane->GetHeight(), DXGI_FORMAT_D32_FLOAT);
-		globals::gGpuMemManager.SetPreferencedHeapSize(MB(256));
+		globals::gTextureAllocator.Initialize(MB(256));
+
+		resources::GpuTexture texture;
+		auto desc = resources::GpuTextureDescription::Texture2D(800, 600, DXGI_FORMAT_R32G32B32A32_FLOAT, 1);
+		texture.Create(desc);
 	}
 
 	void IRenderer::BeginScene(GraphicsContext& gfxContext)
@@ -126,6 +132,7 @@ namespace ray::renderer_core_api
 		CommandContext::DestroyAllContexts();
 		globals::gCommandListManager.Shutdown();
 		DescriptorAllocator::DestroyAll();
+		globals::gTextureAllocator.Destroy();
 
 		_swapChain->Release();
 		_swapChain = nullptr;

@@ -16,13 +16,6 @@
 namespace ray::renderer_core_api
 {
 
-	struct NonCopyable
-	{
-		NonCopyable() = default;
-		NonCopyable(const NonCopyable&) = delete;
-		NonCopyable& operator = (const NonCopyable&) = delete;
-	};
-
 	class CommandContext;
 	class ComputeContext;
 	class GraphicsContext;
