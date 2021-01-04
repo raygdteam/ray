@@ -46,7 +46,9 @@ namespace ray
 		_preferredPoolSize = preferredSize;
 
 		_listOfPools.Buffer = static_cast<MemoryPool*>(VirtualAlloc(nullptr, KB(64), MEM_COMMIT, PAGE_READWRITE));
-		_listOfPools.Buffer[_listOfPools.ElementsCount++].Create(preferredSize);
+		new (&_listOfPools.Buffer[0]) MemoryPool;
+		_listOfPools.Buffer[0].Create(preferredSize);
+		_listOfPools.ElementsCount += 1;
 	}
 
 	template<typename MemoryPool>

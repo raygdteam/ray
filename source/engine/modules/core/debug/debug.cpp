@@ -33,7 +33,7 @@ void Debug::handleSignal(int sc)
 
 Debug::Debug()
 {
-	gLog = new Logger("debug");
+	if (gLog == nullptr) gLog = new Logger("debug");
 	signal(SIGINT, Debug::handleSignal); // interrupt
 	signal(SIGILL, Debug::handleSignal); // illegal instruction
 	signal(SIGFPE, Debug::handleSignal); // FPU error
@@ -42,6 +42,7 @@ Debug::Debug()
 
 void Debug::__Internal_HandleAssertionFailure(pcstr expression, pcstr file, u16 line, pcstr message)
 {
+	if (gLog == nullptr) gLog = new Logger("debug");
 	gLog->Log("---------- ASSERTION FAILURE ----------");
 	gLog->Log("  Expression:       {}", expression);
 	gLog->Log("  Message:          {}", message);

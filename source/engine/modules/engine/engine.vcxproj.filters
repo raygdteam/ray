@@ -44,8 +44,26 @@
     <ClInclude Include="ui2\ui2.hpp">
       <Filter>ui2</Filter>
     </ClInclude>
-    <ClInclude Include="ui2\io.hpp">
-      <Filter>ui2</Filter>
+    <ClInclude Include="ui2\ext\imconfig.h">
+      <Filter>ui2\ext</Filter>
+    </ClInclude>
+    <ClInclude Include="ui2\ext\imgui.h">
+      <Filter>ui2\ext</Filter>
+    </ClInclude>
+    <ClInclude Include="ui2\ext\imgui_impl_win32.h">
+      <Filter>ui2\ext</Filter>
+    </ClInclude>
+    <ClInclude Include="ui2\ext\imgui_internal.h">
+      <Filter>ui2\ext</Filter>
+    </ClInclude>
+    <ClInclude Include="ui2\ext\imstb_rectpack.h">
+      <Filter>ui2\ext</Filter>
+    </ClInclude>
+    <ClInclude Include="ui2\ext\imstb_textedit.h">
+      <Filter>ui2\ext</Filter>
+    </ClInclude>
+    <ClInclude Include="ui2\ext\imstb_truetype.h">
+      <Filter>ui2\ext</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -69,6 +87,9 @@
     </Filter>
     <Filter Include="ui2">
       <UniqueIdentifier>{1e74f10c-9704-4756-8741-5bca606238db}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ui2\ext">
+      <UniqueIdentifier>{5e6d0a1a-a138-4831-88c8-9af04cc0806f}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -111,6 +132,21 @@
     </ClCompile>
     <ClCompile Include="ui2\ui2.cpp">
       <Filter>ui2</Filter>
+    </ClCompile>
+    <ClCompile Include="ui2\ext\imgui.cpp">
+      <Filter>ui2\ext</Filter>
+    </ClCompile>
+    <ClCompile Include="ui2\ext\imgui_demo.cpp">
+      <Filter>ui2\ext</Filter>
+    </ClCompile>
+    <ClCompile Include="ui2\ext\imgui_draw.cpp">
+      <Filter>ui2\ext</Filter>
+    </ClCompile>
+    <ClCompile Include="ui2\ext\imgui_impl_win32.cpp">
+      <Filter>ui2\ext</Filter>
+    </ClCompile>
+    <ClCompile Include="ui2\ext\imgui_widgets.cpp">
+      <Filter>ui2\ext</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

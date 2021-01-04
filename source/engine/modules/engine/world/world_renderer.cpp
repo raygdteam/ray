@@ -20,15 +20,6 @@ double currentFrame = 0.f;
 
 void World::Render()
 {
-	static bool once = true;
-	if (once)
-	{
-		gRootObject = new UiRootObject;
-		UiObject* obj = new UiObject; 
-		gRootObject->AddObject(nullptr, obj);
-		once = not once;
-	}
-	
 	//Level* level = _levelData->Level;
 	
 	GraphicsContext& ctx = GraphicsContext::Begin();
