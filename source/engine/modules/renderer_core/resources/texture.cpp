@@ -7,7 +7,7 @@
 
 namespace ray::renderer_core_api::resources
 {
-    static TextureAllocator sTextureAllocator(256);
+    static TextureAllocator sTextureAllocator(MB(256));
 	
     size_t BitsPerPixel(_In_ DXGI_FORMAT fmt)
     {
@@ -169,15 +169,29 @@ namespace ray::renderer_core_api::resources
         _heap->Release();
     }
 
-    ID3D12Resource* TextureAllocator::Allocate(u64 width, u64 height) noexcept
+    ID3D12Resource* TextureAllocator::Allocate(GpuTextureDescription& textureDesc) noexcept
     {
-        auto desc = ray::dx12::DescribeDefaultTexture2D(DXGI_FORMAT_R32G32B32A32_FLOAT, width, height);
-        u64 alignedSize = ray::core::math::AlignUp(width * height, desc.Alignment);
+        D3D12_RESOURCE_DESC resourceDesc = {};
+        resourceDesc.Width = textureDesc.Width;
+        resourceDesc.Height = textureDesc.Height;
+        resourceDesc.MipLevels = textureDesc.MipLevels;
+        resourceDesc.DepthOrArraySize = textureDesc.ArraySize;
+        resourceDesc.Dimension = textureDesc.Dimension;
+        resourceDesc.Flags = textureDesc.Flags;
+        resourceDesc.Format = textureDesc.Format;
+        resourceDesc.Layout = D3D12_TEXTURE_LAYOUT_UNKNOWN;
+        resourceDesc.SampleDesc = textureDesc.SampleDesc;
+        if (resourceDesc.Width * resourceDesc.Height <= KB(64))
+            resourceDesc.Alignment = D3D12_SMALL_RESOURCE_PLACEMENT_ALIGNMENT;
+        else
+            resourceDesc.Alignment = D3D12_DEFAULT_RESOURCE_PLACEMENT_ALIGNMENT;
+
+        u64 alignedSize = ray::core::math::AlignUp(resourceDesc.Width * resourceDesc.Height, resourceDesc.Alignment);
         if (_pool == nullptr || !_pool->IsEnough(alignedSize))
             _pool = &_memoryManager.RequestPool(alignedSize);
         
         ID3D12Resource* resource;
-        auto hr = globals::gDevice->CreatePlacedResource(_pool->_heap, _pool->_offset, &desc, D3D12_RESOURCE_STATE_COPY_DEST, nullptr, IID_PPV_ARGS(&resource));
+        auto hr = globals::gDevice->CreatePlacedResource(_pool->_heap, _pool->_offset, &resourceDesc, D3D12_RESOURCE_STATE_COPY_DEST, nullptr, IID_PPV_ARGS(&resource));
     
         check(hr == S_OK)
 
@@ -192,44 +206,19 @@ namespace ray::renderer_core_api::resources
         resource->Release();
     }
 
-	void Texture::Create(size_t pitch, size_t width, size_t height, DXGI_FORMAT format, const void* initialData)
+    void GpuTexture::Release() noexcept
+    {
+        _resource->Release();
+    }
+
+	bool GpuTexture::Create(GpuTextureDescription& textureDesc) noexcept
 	{
 		_usageState = D3D12_RESOURCE_STATE_COPY_DEST;
+        _resource = sTextureAllocator.Allocate(textureDesc);
 
-		D3D12_RESOURCE_DESC resourceDesc = {};
-		resourceDesc.Width = width;
-		resourceDesc.Height = height;
-		resourceDesc.MipLevels = 1;
-		resourceDesc.DepthOrArraySize = 1;
-		resourceDesc.Dimension = D3D12_RESOURCE_DIMENSION_TEXTURE2D;
-		resourceDesc.Flags = D3D12_RESOURCE_FLAG_NONE;
-		resourceDesc.Format = format;
-		resourceDesc.Layout = D3D12_TEXTURE_LAYOUT_UNKNOWN;
-		resourceDesc.SampleDesc.Count = 1;
-		resourceDesc.SampleDesc.Quality = 0;
+        // TODO
 
-		D3D12_HEAP_PROPERTIES heapProps = {};
-		heapProps.CreationNodeMask = 1;
-		heapProps.VisibleNodeMask = 1;
-		heapProps.CPUPageProperty = D3D12_CPU_PAGE_PROPERTY_UNKNOWN;
-		heapProps.MemoryPoolPreference = D3D12_MEMORY_POOL_UNKNOWN;
-		heapProps.Type = D3D12_HEAP_TYPE_DEFAULT;
-
-		auto hr = globals::gDevice->CreateCommittedResource(&heapProps, D3D12_HEAP_FLAG_NONE, &resourceDesc, 
-				_usageState, nullptr, IID_PPV_ARGS(&_resource));
-
-		check(hr == S_OK)
-
-		D3D12_SUBRESOURCE_DATA texResource;
-		texResource.pData = initialData;
-		texResource.RowPitch = pitch * (BitsPerPixel(format) / 8);
-		texResource.SlicePitch = texResource.RowPitch * height;
-
-		CommandContext::InitializeTexture(*this, 1, &texResource);
-
-		if (_CpuHandle.ptr == D3D12_GPU_VIRTUAL_ADDRESS_UNKNOWN)
-            _CpuHandle = AllocateDescriptor(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
-		globals::gDevice->CreateShaderResourceView(_resource, nullptr, _CpuHandle);
+        return true;
 	}
 
 }

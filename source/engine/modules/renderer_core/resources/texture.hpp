@@ -109,8 +109,6 @@ namespace ray::renderer_core_api::resources
 
 	};
 
-	static TextureAllocator sTextureAllocator(MB(256));
-
 	// represents texture resource in gpu memory
 	class GpuTexture : public GpuResource
 	{
