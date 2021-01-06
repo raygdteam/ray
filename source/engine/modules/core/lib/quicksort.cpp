@@ -9,7 +9,7 @@ Iterator makingParts(Iterator low, Iterator high, Predicator p)
     Iterator left = low;
     Iterator right = high - 1;
 
-    // Hoare partition scheme
+    // Hoare partition scheme.
     while (left < right) {
         while (p(*left, pivot))
         {
