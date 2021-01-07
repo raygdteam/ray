@@ -15,7 +15,7 @@ namespace ray::renderer_core_api::resources
 		u8* _end;
 		u8* _currentPointer;
 		u64 _maxPoolSize;
-		ID3D12Resource* _underlyingResource;
+		ID3D12Resource* _pool;
 
 	public:
 		UploadBuffer() = default;
@@ -34,6 +34,7 @@ namespace ray::renderer_core_api::resources
 		u8* SetConstantBufferData(void* buffer, size_t bufferSize) noexcept;
 
 		u8* GetBeginPointer() const noexcept { return _begin; }
+		ID3D12Resource* GetNativePool() const noexcept { return _pool; }
 
 	private:
 		u8* SetBufferDataToUploadBuffer(void* buffer, size_t bufferSize, size_t alignment) noexcept;

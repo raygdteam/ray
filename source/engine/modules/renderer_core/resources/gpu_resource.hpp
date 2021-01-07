@@ -39,7 +39,7 @@ namespace ray::renderer_core_api::resources
 
 		// common properties
 		DXGI_FORMAT Format;
-		const void* InitialData;
+		const void* UploadBufferData;
 
 	public:
 		GpuResourceDescription() = default;

@@ -87,6 +87,8 @@ namespace ray::renderer_core_api::resources
 	public:
 		bool Create(GpuTextureDescription& desc) noexcept;
 
+	public:
+		bool Load(const void* uploadBufferData) noexcept override;
 		void Release() noexcept override;
 
 	};

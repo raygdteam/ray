@@ -20,6 +20,11 @@ namespace ray::renderer_core_api
 	class ComputeContext;
 	class GraphicsContext;
 
+	namespace resources
+	{
+		class UploadBuffer;
+	}
+
 	class RAY_RENDERERCORE_API ContextManager
 	{
 	public:
@@ -73,8 +78,8 @@ namespace ray::renderer_core_api
 		}
 
 		void CopyBuffer(resources::GpuResource& dest, resources::GpuResource& src);
-		void CopyBufferRegion(resources::GpuResource& dest, size_t destOffset, resources::GpuResource& src, size_t srcOffset, size_t numBytes);
-		void CopySubresource(resources::GpuResource& dest, u32 destSubIndex, resources::GpuResource& src, u32 srcSubIndex);
+		void CopyBufferRegion(resources::GpuResource& dest, resources::UploadBuffer& src, size_t srcOffset, size_t numBytes);
+		void CopyTextureRegion(resources::GpuResource& dest, resources::UploadBuffer& src, D3D12_PLACED_SUBRESOURCE_FOOTPRINT& srcFootprint);
 		/*
 		TODO:
 		void CopyCounter()
@@ -86,10 +91,10 @@ namespace ray::renderer_core_api
 			return _cpuLinearAllocator.Allocate(sizeInBytes);
 		}*/
 
-		static void InitializeTexture(resources::GpuResource& dest, u32 numSubResources, D3D12_SUBRESOURCE_DATA* data);
+		static void InitializeTexture(resources::GpuResource& dest, resources::UploadBuffer& src);
 		static void InitializeTextureArraySlice(resources::GpuResource& dest, u64 sliceIndex, resources::GpuResource& src);
 		static void ReadbackTexture2D(resources::GpuResource& readbackBuffer, resources::PixelBuffer& srcBuffer);
-		static void InitializeBuffer(resources::GpuResource& dest, const void* data, size_t numBytes, size_t offset = 0);
+		static void InitializeBuffer(resources::GpuResource& dest, resources::UploadBuffer& src);
 
 		void WriteBuffer(resources::GpuResource& dest, size_t destOffset, const void* data, size_t numBytes);
 		void FillBuffer(resources::GpuResource& dest, size_t destOffset, float value, size_t numBytes);

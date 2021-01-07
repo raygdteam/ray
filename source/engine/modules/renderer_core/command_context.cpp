@@ -1,5 +1,7 @@
 #include "command_context.hpp"
 #include "renderer.hpp"
+#include "resources/upload_buffer.hpp"
+#include "resources/texture.hpp"
 #include "d3dx12.h"
 #include <core/extended_instuctions/sse/common.hpp>
 #include <core/math/common.hpp>
@@ -162,24 +164,33 @@ namespace ray::renderer_core_api
 		//TODO:
 	}
 
-	void CommandContext::InitializeTexture(resources::GpuResource& dest, u32 numSubResources, D3D12_SUBRESOURCE_DATA* data)
+	void CommandContext::InitializeTexture(resources::GpuResource& dest, resources::UploadBuffer& src)
 	{
-		// TODO:
-
-		/*u64 uploadBufferSize = GetRequiredIntermediateSize(dest.GetResource(), 0, numSubResources);
-		
 		CommandContext& context = CommandContext::Begin();
-		DynAlloc uploadBuffer = context.ReserveUploadMemory(uploadBufferSize);
-		
-		UpdateSubresources(context._commandList, dest.GetResource(), uploadBuffer.Buffer.GetResource(), 0, 0, numSubResources, data);
+		auto textureDesc = dest.GetDesc();
+		size_t bitesPerPixel = resources::BitesPerPixel(textureDesc.Format);
+
+		D3D12_SUBRESOURCE_FOOTPRINT footprint;
+		footprint.Depth = 1;
+		footprint.Format = textureDesc.Format;
+		footprint.Height = textureDesc.Height;
+		footprint.Width = textureDesc.Width;
+		footprint.RowPitch = math::AlignUp(bitesPerPixel * footprint.Width, D3D12_TEXTURE_DATA_PITCH_ALIGNMENT);
+
+		D3D12_PLACED_SUBRESOURCE_FOOTPRINT placedFootprint;
+		placedFootprint.Footprint = footprint;
+		placedFootprint.Offset = reinterpret_cast<const u8*>(textureDesc.UploadBufferData) - src.GetBeginPointer();
+
+		context.CopyTextureRegion(dest, src, placedFootprint);
 		context.TransitionResource(dest, D3D12_RESOURCE_STATE_GENERIC_READ);
 
-		context.Finish(true);*/
+		context.Finish(true);
 	}
 
 	void CommandContext::InitializeTextureArraySlice(resources::GpuResource& dest, u64 sliceIndex, resources::GpuResource& src)
 	{
-		// TODO:
+		// TODO: 
+		// still not supported
 
 		/*CommandContext& context = CommandContext::Begin();
 
@@ -225,6 +236,7 @@ namespace ray::renderer_core_api
 	void CommandContext::ReadbackTexture2D(resources::GpuResource& readbackBuffer, resources::PixelBuffer& srcBuffer)
 	{
 		// TODO:
+		// still not supported
 
 		/*D3D12_PLACED_SUBRESOURCE_FOOTPRINT placedSubresource;
 		auto desc = srcBuffer.GetResource()->GetDesc();
@@ -241,25 +253,22 @@ namespace ray::renderer_core_api
 	}
 
 
-	void CommandContext::InitializeBuffer(resources::GpuResource& dest, const void* data, size_t numBytes, size_t offset)
+	void CommandContext::InitializeBuffer(resources::GpuResource& dest, resources::UploadBuffer& src)
 	{
-		// TODO
+		auto& context = CommandContext::Begin();
+		auto bufferDesc = dest.GetDesc();
+		size_t srcOffset = reinterpret_cast<const u8*>(bufferDesc.UploadBufferData) - src.GetBeginPointer();
 
-		/*CommandContext& context = CommandContext::Begin();
-		DynAlloc mem = context.ReserveUploadMemory(numBytes);
-
-		sse::MemCopy(mem.Data, data, math::DivideByMultiple(numBytes, 16));
-		
-		context.TransitionResource(dest, D3D12_RESOURCE_STATE_COPY_DEST, true);
-		context._commandList->CopyBufferRegion(dest.GetResource(), offset, mem.Buffer.GetResource(), 0, numBytes);
+		context.CopyBufferRegion(dest, src, srcOffset, bufferDesc.SizeInBytes);
 		context.TransitionResource(dest, D3D12_RESOURCE_STATE_GENERIC_READ);
 
-		context.Finish(true);*/
+		context.Finish(true);
 	}
 
 	void CommandContext::WriteBuffer(resources::GpuResource& dest, size_t destOffset, const void* data, size_t numBytes)
 	{
 		// TODO
+		// we need it?
 
 		/*check(data != nullptr && math::IsAligned(numBytes, 16));
 		DynAlloc mem = _cpuLinearAllocator.Allocate(numBytes, 512);
@@ -270,6 +279,8 @@ namespace ray::renderer_core_api
 	void CommandContext::FillBuffer(resources::GpuResource& dest, size_t destOffset, float value, size_t numBytes)
 	{
 		// TODO
+		// we need it?
+
 		/*
 		DynAlloc mem = _cpuLinearAllocator.Allocate(numBytes, 512);
 		__m128 vectorValue = _mm_set1_ps(value);
@@ -301,7 +312,12 @@ namespace ray::renderer_core_api
 			dest._usageState = newState;
 		}
 		else if(newState == D3D12_RESOURCE_STATE_UNORDERED_ACCESS)
-		{ /*TODO:*/ }
+		{ 
+			/*
+				TODO:
+				still not supported
+			*/ 
+		}
 
 		if (bFlushImmediate || _numBarriersToFlush == 16)
 			FlushResourceBarriers();
@@ -343,45 +359,33 @@ namespace ray::renderer_core_api
 
 	void CommandContext::CopyBuffer(resources::GpuResource& dest, resources::GpuResource& src)
 	{
-		// TODO:
-
-		/*TransitionResource(dest, D3D12_RESOURCE_STATE_COPY_DEST);
+		TransitionResource(dest, D3D12_RESOURCE_STATE_COPY_DEST);
 		TransitionResource(src, D3D12_RESOURCE_STATE_COPY_SOURCE);
 		FlushResourceBarriers();
-		_commandList->CopyResource(dest.GetResource(), src.GetResource());*/
+		_commandList->CopyResource(dest.GetNativeResource(), src.GetNativeResource());
 	}
 
-	void CommandContext::CopyBufferRegion(resources::GpuResource& dest, size_t destOffset, resources::GpuResource& src, size_t srcOffset, size_t numBytes)
+	void CommandContext::CopyBufferRegion(resources::GpuResource& dest, resources::UploadBuffer& src, size_t srcOffset, size_t numBytes)
 	{
-		// TODO:
+		TransitionResource(dest, D3D12_RESOURCE_STATE_COPY_DEST, true);
+		_commandList->CopyBufferRegion(dest.GetNativeResource(), 0, src.GetNativePool(), srcOffset, numBytes);
+	}
 
-		/*TransitionResource(dest, D3D12_RESOURCE_STATE_COPY_DEST);
-		TransitionResource(src, D3D12_RESOURCE_STATE_COPY_SOURCE);
+	void CommandContext::CopyTextureRegion(resources::GpuResource& dest, resources::UploadBuffer& src, D3D12_PLACED_SUBRESOURCE_FOOTPRINT& srcFootprint)
+	{
 		FlushResourceBarriers();
-		_commandList->CopyBufferRegion(dest.GetResource(), destOffset, src.GetResource(), srcOffset, numBytes);*/
-	}
 
-	void CommandContext::CopySubresource(resources::GpuResource& dest, u32 destSubIndex, resources::GpuResource& src, u32 srcSubIndex)
-	{
-		// TODO:
+		D3D12_TEXTURE_COPY_LOCATION destLocation;
+		destLocation.pResource = dest.GetNativeResource();
+		destLocation.SubresourceIndex = 0;
+		destLocation.Type = D3D12_TEXTURE_COPY_TYPE_SUBRESOURCE_INDEX;
 
-		/*FlushResourceBarriers();
-
-		D3D12_TEXTURE_COPY_LOCATION destLocation =
-		{
-			dest.GetResource(),
-			D3D12_TEXTURE_COPY_TYPE_SUBRESOURCE_INDEX,
-			{ destSubIndex }
-		};
-
-		D3D12_TEXTURE_COPY_LOCATION srcLocation =
-		{
-			src.GetResource(),
-			D3D12_TEXTURE_COPY_TYPE_SUBRESOURCE_INDEX,
-			{ srcSubIndex }
-		};
-
-		_commandList->CopyTextureRegion(&destLocation, 0, 0, 0, &srcLocation, nullptr);*/
+		D3D12_TEXTURE_COPY_LOCATION srcLocation;
+		srcLocation.pResource = src.GetNativePool();
+		srcLocation.PlacedFootprint = srcFootprint;
+		srcLocation.Type = D3D12_TEXTURE_COPY_TYPE_PLACED_FOOTPRINT;
+		
+		_commandList->CopyTextureRegion(&destLocation, 0, 0, 0, &srcLocation, nullptr);
 	}
 
 	void CommandContext::BindDescriptorHeaps()
@@ -503,6 +507,7 @@ namespace ray::renderer_core_api
 	void GraphicsContext::SetDynamicVB(u32 startSlot, size_t numVertices, size_t vertexStride, const void* data)
 	{
 		// TODO 
+		// ring buffer
 
 		/*check(data != nullptr && math::IsAligned(data, 16))
 		size_t bufferSize = math::AlignUp(numVertices * vertexStride, 16);
@@ -521,6 +526,7 @@ namespace ray::renderer_core_api
 	void GraphicsContext::SetDynamicIB(size_t indexCount, const u32* data, bool b32Bit)
 	{
 		// TODO
+		// ring buffer
 
 		/*check(data != nullptr && math::IsAligned(data, 16))
 		
@@ -539,6 +545,7 @@ namespace ray::renderer_core_api
 	void GraphicsContext::SetDynamicCBV(u32 rootIndex, size_t bufferSize, void* data)
 	{
 		// TODO
+		// ring buffer
 
 		/*check(data != nullptr && math::IsAligned(data, 16))
 		auto mem = _cpuLinearAllocator.Allocate(bufferSize);
@@ -565,6 +572,7 @@ namespace ray::renderer_core_api
 	{
 		FlushResourceBarriers();
 		// TODO: 
+		// still not supported
 		_commandList->DrawInstanced(vertexCountPerInstance, instanceCount, startVertexLocation, startInstanceLocation);
 	}
 
@@ -572,6 +580,7 @@ namespace ray::renderer_core_api
 	{
 		FlushResourceBarriers();
 		// TODO: 
+		// still not supported
 		_commandList->DrawIndexedInstanced(indexCountPerInstance, instanceCount, startIndexLocation, baseVertexLocation, startInstanceLocation);
 	}
 

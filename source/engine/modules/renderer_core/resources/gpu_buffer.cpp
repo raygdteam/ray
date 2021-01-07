@@ -59,20 +59,17 @@ namespace ray::renderer_core_api::resources
     {
         *dynamic_cast<GpuResource*>(this) = globals::gBufferAllocator.Allocate(desc);
 
-        if(desc.InitialData)
+        if(desc.UploadBufferData)
         {
-            Load(desc.InitialData);
+            Load(desc.UploadBufferData);
         }
     }
 
-    bool GpuBuffer::Load(const void* initialData) noexcept
+    bool GpuBuffer::Load(const void* uploadBufferData) noexcept
     {
-        check(initialData != nullptr)
+        check(uploadBufferData != nullptr)
 
         CommandContext& ctx = CommandContext::Begin();
-        u64 requiredSize = GetRequiredIntermediateSize(this->_resource, 0, 1);
-        (void)ctx;
-        (void)requiredSize;
 
         return true;
     }

@@ -208,11 +208,20 @@ namespace ray::renderer_core_api::resources
         *dynamic_cast<GpuResource*>(this) = std::move(globals::gTextureAllocator.Allocate(textureDesc));
         // TODO
 
-        if(textureDesc.InitialData)
-        { }
+        if(textureDesc.UploadBufferData)
+        {
+            Load(textureDesc.UploadBufferData);
+        }
 
         return true;
 	}
+
+    bool GpuTexture::Load(const void* uploadBufferData) noexcept
+    {
+        CommandContext::InitializeTexture(*this, );
+
+        return true;
+    }
 
     void GpuTexture::Release() noexcept
     {

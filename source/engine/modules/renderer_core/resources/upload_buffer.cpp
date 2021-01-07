@@ -27,7 +27,7 @@ namespace ray::renderer_core_api::resources
 		pool.Height = 1;
 		
 		auto heapProps = dx12::DescribeHeapProps(D3D12_HEAP_TYPE_UPLOAD);
-		globals::gDevice->CreateCommittedResource(&heapProps, D3D12_HEAP_FLAG_NONE, &pool, D3D12_RESOURCE_STATE_GENERIC_READ, nullptr, IID_PPV_ARGS(&_underlyingResource));
+		globals::gDevice->CreateCommittedResource(&heapProps, D3D12_HEAP_FLAG_NONE, &pool, D3D12_RESOURCE_STATE_COPY_SOURCE, nullptr, IID_PPV_ARGS(&_pool));
 
 		D3D12_RANGE range;
 		range.Begin = 0;
@@ -35,7 +35,7 @@ namespace ray::renderer_core_api::resources
 
 		void* data;
 
-		_underlyingResource->Map(0, &range, &data);
+		_pool->Map(0, &range, &data);
 		_currentPointer = _begin = reinterpret_cast<u8*>(data);
 		_end = _begin + size;
 	}
@@ -44,8 +44,8 @@ namespace ray::renderer_core_api::resources
 	{
 		if (_begin != nullptr)
 		{
-			_underlyingResource->Unmap(0, nullptr);
-			_underlyingResource->Release();
+			_pool->Unmap(0, nullptr);
+			_pool->Release();
 			_begin = _end = _currentPointer = nullptr;
 		}
 	}
