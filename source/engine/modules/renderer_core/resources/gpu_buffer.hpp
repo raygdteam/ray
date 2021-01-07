@@ -24,7 +24,7 @@ namespace ray::renderer_core_api::resources
 		{
 			SizeInBytes = sizeInBytes;
 			Stride = stride;
-			InitialData = initialData;
+			UploadBufferData = initialData;
 			Format = format;
 		}
 

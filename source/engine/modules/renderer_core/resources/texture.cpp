@@ -1,6 +1,7 @@
 #include "texture.hpp"
 #include "../renderer.hpp"
 #include "../command_context.hpp"
+#include "upload_buffer.hpp"
 #include <renderer_core/dx12_helper_functions.hpp>
 #include <core/debug/assert.hpp>
 #include <core/math/common.hpp>
@@ -218,7 +219,10 @@ namespace ray::renderer_core_api::resources
 
     bool GpuTexture::Load(const void* uploadBufferData) noexcept
     {
-        CommandContext::InitializeTexture(*this, );
+        check(uploadBufferData != nullptr)
+
+        UploadBuffer ub;
+        CommandContext::InitializeTexture(*this, ub);
 
         return true;
     }

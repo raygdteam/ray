@@ -2,6 +2,7 @@
 #include "../command_context.hpp"
 #include "../renderer.hpp"
 #include "../descriptor_heap.hpp"
+#include "upload_buffer.hpp"
 #include <core/debug/assert.hpp>
 #include <core/math/common.hpp>
 
@@ -69,7 +70,8 @@ namespace ray::renderer_core_api::resources
     {
         check(uploadBufferData != nullptr)
 
-        CommandContext& ctx = CommandContext::Begin();
+        UploadBuffer ub;
+        CommandContext::InitializeBuffer(*this, ub);
 
         return true;
     }
