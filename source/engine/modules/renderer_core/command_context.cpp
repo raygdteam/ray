@@ -179,7 +179,9 @@ namespace ray::renderer_core_api
 
 	void CommandContext::InitializeTextureArraySlice(resources::GpuResource& dest, u64 sliceIndex, resources::GpuResource& src)
 	{
-		CommandContext& context = CommandContext::Begin();
+		// TODO:
+
+		/*CommandContext& context = CommandContext::Begin();
 
 		context.TransitionResource(dest, D3D12_RESOURCE_STATE_COPY_DEST);
 		context.FlushResourceBarriers();
@@ -217,12 +219,14 @@ namespace ray::renderer_core_api
 		}
 
 		context.TransitionResource(dest, D3D12_RESOURCE_STATE_GENERIC_READ);
-		context.Finish(true);
+		context.Finish(true);*/
 	}
 
 	void CommandContext::ReadbackTexture2D(resources::GpuResource& readbackBuffer, resources::PixelBuffer& srcBuffer)
 	{
-		D3D12_PLACED_SUBRESOURCE_FOOTPRINT placedSubresource;
+		// TODO:
+
+		/*D3D12_PLACED_SUBRESOURCE_FOOTPRINT placedSubresource;
 		auto desc = srcBuffer.GetResource()->GetDesc();
 		globals::gDevice->GetCopyableFootprints(&desc, 0, 1, 0, &placedSubresource, nullptr, nullptr, nullptr);
 
@@ -233,7 +237,7 @@ namespace ray::renderer_core_api
 		CD3DX12_TEXTURE_COPY_LOCATION destCopyLocation(readbackBuffer.GetResource(), placedSubresource);
 
 		context._commandList->CopyTextureRegion(&destCopyLocation, 0, 0, 0, &srcCopyLocation, nullptr);
-		context.Finish(true);
+		context.Finish(true);*/
 	}
 
 
@@ -339,23 +343,29 @@ namespace ray::renderer_core_api
 
 	void CommandContext::CopyBuffer(resources::GpuResource& dest, resources::GpuResource& src)
 	{
-		TransitionResource(dest, D3D12_RESOURCE_STATE_COPY_DEST);
+		// TODO:
+
+		/*TransitionResource(dest, D3D12_RESOURCE_STATE_COPY_DEST);
 		TransitionResource(src, D3D12_RESOURCE_STATE_COPY_SOURCE);
 		FlushResourceBarriers();
-		_commandList->CopyResource(dest.GetResource(), src.GetResource());
+		_commandList->CopyResource(dest.GetResource(), src.GetResource());*/
 	}
 
 	void CommandContext::CopyBufferRegion(resources::GpuResource& dest, size_t destOffset, resources::GpuResource& src, size_t srcOffset, size_t numBytes)
 	{
-		TransitionResource(dest, D3D12_RESOURCE_STATE_COPY_DEST);
+		// TODO:
+
+		/*TransitionResource(dest, D3D12_RESOURCE_STATE_COPY_DEST);
 		TransitionResource(src, D3D12_RESOURCE_STATE_COPY_SOURCE);
 		FlushResourceBarriers();
-		_commandList->CopyBufferRegion(dest.GetResource(), destOffset, src.GetResource(), srcOffset, numBytes);
+		_commandList->CopyBufferRegion(dest.GetResource(), destOffset, src.GetResource(), srcOffset, numBytes);*/
 	}
 
 	void CommandContext::CopySubresource(resources::GpuResource& dest, u32 destSubIndex, resources::GpuResource& src, u32 srcSubIndex)
 	{
-		FlushResourceBarriers();
+		// TODO:
+
+		/*FlushResourceBarriers();
 
 		D3D12_TEXTURE_COPY_LOCATION destLocation =
 		{
@@ -371,7 +381,7 @@ namespace ray::renderer_core_api
 			{ srcSubIndex }
 		};
 
-		_commandList->CopyTextureRegion(&destLocation, 0, 0, 0, &srcLocation, nullptr);
+		_commandList->CopyTextureRegion(&destLocation, 0, 0, 0, &srcLocation, nullptr);*/
 	}
 
 	void CommandContext::BindDescriptorHeaps()

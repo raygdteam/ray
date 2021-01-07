@@ -9,105 +9,78 @@ namespace math = ray::core::math;
 
 namespace ray::renderer_core_api::resources
 {
-    void GpuBuffer::Create(u32 numElements, u32 elementSize, const void* initialData)
+    GpuResource&& GpuBufferAllocator::Allocate(GpuResourceDescription& bufferDesc) noexcept
     {
-        _bufferSize = numElements * elementSize;
-        _elementCount = numElements;
-        _elementSize = elementSize;
+        D3D12_RESOURCE_DESC resourceDesc = {};
+        resourceDesc.Width = bufferDesc.SizeInBytes;
+        resourceDesc.Height = 1;
+        resourceDesc.MipLevels = 1;
+        resourceDesc.DepthOrArraySize = 1;
+        resourceDesc.Dimension = D3D12_RESOURCE_DIMENSION_BUFFER;
+        resourceDesc.Flags = bufferDesc.Flags;
+        resourceDesc.Format = bufferDesc.Format;
+        resourceDesc.Layout = D3D12_TEXTURE_LAYOUT_ROW_MAJOR;
+        resourceDesc.SampleDesc.Count = 1;
+        resourceDesc.SampleDesc.Quality = 0;
 
-        auto desc = DescribeBuffer();
+        auto resourceAllocationInfo = globals::gDevice->GetResourceAllocationInfo(1, 1, &resourceDesc);
+        resourceDesc.Alignment = resourceAllocationInfo.Alignment;
 
-        _usageState = D3D12_RESOURCE_STATE_COMMON;
+        if (_currentPool == nullptr || !_currentPool->IsEnough(resourceAllocationInfo.SizeInBytes))
+            _currentPool = &_memoryManager.RequestPool(resourceAllocationInfo.SizeInBytes);
 
-        D3D12_HEAP_PROPERTIES heapProps;
-        heapProps.CPUPageProperty = D3D12_CPU_PAGE_PROPERTY_UNKNOWN;
-        heapProps.CreationNodeMask = 1;
-        heapProps.VisibleNodeMask = 1;
-        heapProps.MemoryPoolPreference = D3D12_MEMORY_POOL_UNKNOWN;
-        heapProps.Type = D3D12_HEAP_TYPE_DEFAULT;
-        
-        check(globals::gDevice->CreateCommittedResource(&heapProps, D3D12_HEAP_FLAG_NONE, &desc, _usageState, nullptr, IID_PPV_ARGS(&_resource)) == S_OK);
+        ID3D12Resource* resource;
+        auto hr = globals::gDevice->CreatePlacedResource(_currentPool->_heap, _currentPool->_offset, &resourceDesc, D3D12_RESOURCE_STATE_COPY_DEST, nullptr, IID_PPV_ARGS(&resource));
 
-        if (initialData)
-            CommandContext::InitializeBuffer(*this, initialData, _bufferSize);
+        check(hr == S_OK)
 
-        _gpuVirtualAddress = _resource->GetGPUVirtualAddress();
+        _currentPool->_offset += resourceAllocationInfo.SizeInBytes;
+        _currentPool->_availableSize -= _currentPool->_offset;
 
-        // CreateDerivedViews();
+        GpuBuffer ret;
+        ret._desc = std::move(bufferDesc);
+        ret._underlyingPool = _currentPool;
+        ret._resource = resource;
+        ret._resourceSize = resourceAllocationInfo.SizeInBytes;
+        ret._usageState = D3D12_RESOURCE_STATE_COPY_DEST;
+
+        return std::move(ret);
     }
 
-    void GpuBuffer::CreatePlaces(ID3D12Heap* backingHeap, size_t heapOffset, u32 numElements, u32 elementSize, const void* initialData)
+    void GpuBufferAllocator::Free(GpuResource& resource) noexcept
     {
-        _bufferSize = numElements * elementSize;
-        _elementCount = numElements;
-        _elementSize = elementSize;
+        dynamic_cast<GpuBuffer&>(resource)._resource->Release();
+        dynamic_cast<GpuBuffer&>(resource)._underlyingPool->_availableSize += dynamic_cast<GpuBuffer&>(resource)._resourceSize;
 
-        auto desc = DescribeBuffer();
-
-        _usageState = D3D12_RESOURCE_STATE_COMMON;
-
-        check(globals::gDevice->CreatePlacedResource(backingHeap, heapOffset, &desc, _usageState, nullptr, IID_PPV_ARGS(&_resource)) == S_OK)
-
-        if (initialData)
-            CommandContext::InitializeBuffer(*this, initialData, _bufferSize);
-
-        _gpuVirtualAddress = _resource->GetGPUVirtualAddress();
-
-        // CreateDerivedViews();
+        // TODO: MemorySegment
     }
 
-    D3D12_CPU_DESCRIPTOR_HANDLE GpuBuffer::CreateConstantBufferView(UserDescriptorHeap& heap, size_t offset, size_t size)
+    void GpuBuffer::Create(GpuBufferDescription& desc) noexcept
     {
-        check(size + offset <= _bufferSize)
+        *dynamic_cast<GpuResource*>(this) = globals::gBufferAllocator.Allocate(desc);
 
-        size = math::AlignUp(size, 16);
-
-        D3D12_CONSTANT_BUFFER_VIEW_DESC desc;
-        desc.BufferLocation = _gpuVirtualAddress + offset;
-        desc.SizeInBytes = size;
-
-        auto cbvHandle = heap.Allocate();
-
-        globals::gDevice->CreateConstantBufferView(&desc, cbvHandle.GetCpuHandle());
-
-        return cbvHandle.GetCpuHandle();
+        if(desc.InitialData)
+        {
+            Load(desc.InitialData);
+        }
     }
 
-    D3D12_VERTEX_BUFFER_VIEW GpuBuffer::VertexBufferView(size_t offset, size_t size, u32 stride)
+    bool GpuBuffer::Load(const void* initialData) noexcept
     {
-        D3D12_VERTEX_BUFFER_VIEW vbView;
-        vbView.BufferLocation = _gpuVirtualAddress + offset;
-        vbView.SizeInBytes = size;
-        vbView.StrideInBytes = stride;
-        return vbView;
+        check(initialData != nullptr)
+
+        CommandContext& ctx = CommandContext::Begin();
+        u64 requiredSize = GetRequiredIntermediateSize(this->_resource, 0, 1);
+        (void)ctx;
+        (void)requiredSize;
+
+        return true;
     }
 
-    D3D12_INDEX_BUFFER_VIEW GpuBuffer::IndexBufferView(size_t offset, size_t size, bool b32Bit)
+    void GpuBuffer::Release() noexcept
     {
-        D3D12_INDEX_BUFFER_VIEW ibView;
-        ibView.BufferLocation = _gpuVirtualAddress + offset;
-        ibView.Format = b32Bit ? DXGI_FORMAT_R32_UINT : DXGI_FORMAT_R16_UINT;
-        ibView.SizeInBytes = size;
-        return ibView;
+        globals::gBufferAllocator.Free(*this);
     }
-    
-    D3D12_RESOURCE_DESC GpuBuffer::DescribeBuffer() const noexcept
-    {
-        check(_bufferSize != 0)
 
-        D3D12_RESOURCE_DESC desc;
-        desc.Alignment = 0;
-        desc.Dimension = D3D12_RESOURCE_DIMENSION_BUFFER;
-        desc.Layout = D3D12_TEXTURE_LAYOUT_ROW_MAJOR;
-        desc.Format = DXGI_FORMAT_UNKNOWN;
-        desc.DepthOrArraySize = 1;
-        desc.Flags = _resourceFlags;
-        desc.Height = 1;
-        desc.MipLevels = 1;
-        desc.SampleDesc.Count = 1;
-        desc.SampleDesc.Quality = 0;
-        desc.Width = static_cast<u64>(_bufferSize);
-        return desc;
-    }
 }
 
