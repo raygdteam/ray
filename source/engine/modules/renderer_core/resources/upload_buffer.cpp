@@ -52,7 +52,7 @@ namespace ray::renderer_core_api::resources
 
 	u8* UploadBuffer::SetBufferData(void* buffer, size_t elementsCount, size_t elementSize) noexcept
 	{
-		return SetBufferDataToUploadBuffer(buffer, elementsCount * elementSize, sizeof(elementSize));
+		return SetBufferDataToUploadBuffer(buffer, elementsCount * elementSize, elementSize);
 	}
 
 	u8* UploadBuffer::SetConstantBufferData(void* buffer, size_t bufferSize) noexcept
@@ -63,26 +63,18 @@ namespace ray::renderer_core_api::resources
 	u8* UploadBuffer::SetTextureData(RTexture& texture) noexcept
 	{
 		size_t bitesPerPixel = BitesPerPixel(DXGI_FORMAT_R32G32B32A32_FLOAT);
-
-		D3D12_SUBRESOURCE_FOOTPRINT footprint;
-		footprint.Depth = 1;
-		footprint.Format = DXGI_FORMAT_R32G32B32A32_FLOAT;
-		footprint.Height = texture.GetDimensions().y;
-		footprint.Width = texture.GetDimensions().x;
-		footprint.RowPitch = AlignUp(bitesPerPixel * footprint.Width, D3D12_TEXTURE_DATA_PITCH_ALIGNMENT);
-
-		size_t textureSize = footprint.Height * footprint.RowPitch;
+		size_t width = texture.GetDimensions().x;
+		size_t height = texture.GetDimensions().y;
+		size_t rowPitch = AlignUp(bitesPerPixel * width, D3D12_TEXTURE_DATA_PITCH_ALIGNMENT);
+		size_t textureSize = height * rowPitch;
+		
 		_currentPointer = reinterpret_cast<u8*>(AlignUp(reinterpret_cast<size_t>(_currentPointer), D3D12_TEXTURE_DATA_PLACEMENT_ALIGNMENT));
 		check(_currentPointer + textureSize <= _end)
 
-		D3D12_PLACED_SUBRESOURCE_FOOTPRINT placedFootprint;
-		placedFootprint.Footprint = footprint;
-		placedFootprint.Offset = _currentPointer - _begin;
-
-		for (size_t i = 0; i < footprint.Height; ++i)
+		for (size_t i = 0; i < height; ++i)
 		{
-			void* dest = _currentPointer + i * footprint.RowPitch;
-			memcpy(dest, texture.GetData().GetData(), footprint.Width * bitesPerPixel);
+			void* dest = _currentPointer + i * rowPitch;
+			memcpy(dest, texture.GetData().GetData(), width * bitesPerPixel);
 		}
 
 		u8* ret = _currentPointer;

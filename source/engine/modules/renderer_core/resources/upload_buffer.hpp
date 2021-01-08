@@ -35,6 +35,7 @@ namespace ray::renderer_core_api::resources
 
 		u8* GetBeginPointer() const noexcept { return _begin; }
 		ID3D12Resource* GetNativePool() const noexcept { return _pool; }
+		u64 GetMaxPoolSize() const noexcept { return  _maxPoolSize; }
 
 	private:
 		u8* SetBufferDataToUploadBuffer(void* buffer, size_t bufferSize, size_t alignment) noexcept;

@@ -42,6 +42,11 @@ public:
 		return _lastCompletedFenceValue;
 	}
 
+	u64 GetNextFenceValue() const noexcept
+	{
+		return _nextFenceValue;
+	}
+
 private:
 	u64 _nextFenceValue;
 	u64 _lastCompletedFenceValue;
