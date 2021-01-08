@@ -110,7 +110,8 @@ Iterator BinarySearch(Element toFind, Iterator begin, Iterator end, Predicator p
     end = end - 1;
 
     // if toFind is less or more then all elements of an array, then it returns the position of the last element
-    if (p(toFind, *begin) || p(*end, toFind)) {
+    if (p(toFind, *begin) || p(*end, toFind)) 
+    {
         return end;
     }
 
