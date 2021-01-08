@@ -23,6 +23,7 @@ namespace ray::renderer_core_api
 	namespace resources
 	{
 		class UploadBuffer;
+		class RingBuffer;
 	}
 
 	class RAY_RENDERERCORE_API ContextManager
@@ -222,10 +223,10 @@ namespace ray::renderer_core_api
 		void SetIndexBuffer(const D3D12_INDEX_BUFFER_VIEW& ibView);
 		void SetVertexBuffers(u32 startSlot, u32 count, const D3D12_VERTEX_BUFFER_VIEW* vbViews);
 		void SetVertexBuffer(u32 startSlot, const D3D12_VERTEX_BUFFER_VIEW& vbView) { SetVertexBuffers(startSlot, 1, &vbView); }
-		void SetDynamicVB(u32 startSlot, size_t numVertices, size_t vertexStride, const void* data);
-		void SetDynamicIB(size_t indexCount, const u32* data, bool b32Bit = false);
+		void SetDynamicVB(resources::RingBuffer& ringBuffer, u32 startSlot, size_t numVertices, size_t vertexStride, const void* data);
+		void SetDynamicIB(resources::RingBuffer& ringBuffer, size_t indexCount, const u32* data, bool b32Bit = false);
 		void SetDynamicSRV() {}
-		void SetDynamicCBV(u32 rootIndex, size_t bufferSize, void* data);
+		void SetDynamicCBV(resources::RingBuffer& ringBuffer, u32 rootIndex, size_t bufferSize, void* data);
 
 		void SetDescriptorTable(u32 rootIndex, D3D12_GPU_DESCRIPTOR_HANDLE handle);
 

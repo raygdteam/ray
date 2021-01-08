@@ -52,7 +52,7 @@ namespace ray::renderer_core_api::resources
 
 	u8* UploadBuffer::SetBufferData(void* buffer, size_t elementsCount, size_t elementSize) noexcept
 	{
-		return SetBufferDataToUploadBuffer(buffer, elementsCount * elementSize, elementSize);
+		return SetBufferDataToUploadBuffer(buffer, elementsCount * elementSize, 4);
 	}
 
 	u8* UploadBuffer::SetConstantBufferData(void* buffer, size_t bufferSize) noexcept

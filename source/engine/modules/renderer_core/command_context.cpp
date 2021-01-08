@@ -1,6 +1,7 @@
 #include "command_context.hpp"
 #include "renderer.hpp"
 #include "resources/upload_buffer.hpp"
+#include "resources/ring_buffer.hpp"
 #include "resources/texture.hpp"
 #include "d3dx12.h"
 #include <core/extended_instuctions/sse/common.hpp>
@@ -504,53 +505,40 @@ namespace ray::renderer_core_api
 		_commandList->IASetVertexBuffers(startSlot, count, vbViews);
 	}
 
-	void GraphicsContext::SetDynamicVB(u32 startSlot, size_t numVertices, size_t vertexStride, const void* data)
+	void GraphicsContext::SetDynamicVB(resources::RingBuffer& ringBuffer, u32 startSlot, size_t numVertices, size_t vertexStride, const void* data)
 	{
-		// TODO 
-		// ring buffer
-
-		/*check(data != nullptr && math::IsAligned(data, 16))
-		size_t bufferSize = math::AlignUp(numVertices * vertexStride, 16);
-
-		auto vb = _cpuLinearAllocator.Allocate(bufferSize);
-		sse::MemCopy(vb.Data, data, bufferSize >> 4);
+		u8* vb = ringBuffer.SetBufferData(const_cast<void*>(data), numVertices, vertexStride);
+		u64 offset = vb - ringBuffer.GetBeginPointer();
 
 		D3D12_VERTEX_BUFFER_VIEW view;
-		view.BufferLocation = vb.GpuVirtualAddress;
-		view.SizeInBytes = static_cast<u32>(bufferSize);
+		view.BufferLocation = ringBuffer.GetNativePool()->GetGPUVirtualAddress() + offset;
+		view.SizeInBytes = static_cast<u32>(numVertices * vertexStride);
 		view.StrideInBytes = static_cast<u32>(vertexStride);
 
-		_commandList->IASetVertexBuffers(startSlot, 1, &view);*/
+		_commandList->IASetVertexBuffers(startSlot, 1, &view);
 	}
 
-	void GraphicsContext::SetDynamicIB(size_t indexCount, const u32* data, bool b32Bit)
+	void GraphicsContext::SetDynamicIB(resources::RingBuffer& ringBuffer, size_t indexCount, const u32* data, bool b32Bit)
 	{
-		// TODO
-		// ring buffer
-
-		/*check(data != nullptr && math::IsAligned(data, 16))
-		
-		size_t bufferSize = math::AlignUp(indexCount * (b32Bit ? sizeof(u32) : sizeof(u16)), 16);
-		auto ib = _cpuLinearAllocator.Allocate(bufferSize);
-		sse::MemCopy(ib.Data, data, bufferSize >> 4);
+		size_t elementSize = b32Bit ? 4 : 2;
+		u8* ib = ringBuffer.SetBufferData(const_cast<u32*>(data), indexCount, elementSize);
+		u64 offset = ib - ringBuffer.GetBeginPointer();
 
 		D3D12_INDEX_BUFFER_VIEW view;
-		view.BufferLocation = ib.GpuVirtualAddress;
+		view.BufferLocation = ringBuffer.GetNativePool()->GetGPUVirtualAddress() + offset;
 		view.Format = b32Bit ? DXGI_FORMAT_R32_UINT : DXGI_FORMAT_R16_UINT;
-		view.SizeInBytes = bufferSize;
+		view.SizeInBytes = elementSize * indexCount;
 
-		_commandList->IASetIndexBuffer(&view);*/
+		_commandList->IASetIndexBuffer(&view);
 	}
 
-	void GraphicsContext::SetDynamicCBV(u32 rootIndex, size_t bufferSize, void* data)
+	void GraphicsContext::SetDynamicCBV(resources::RingBuffer& ringBuffer, u32 rootIndex, size_t bufferSize, void* data)
 	{
-		// TODO
-		// ring buffer
+		u8* cb = ringBuffer.SetConstantBufferData(const_cast<void*>(data), bufferSize);
+		u64 offset = cb - ringBuffer.GetBeginPointer();
+		u64 gpuVirtualAddress = ringBuffer.GetNativePool()->GetGPUVirtualAddress() + offset;
 
-		/*check(data != nullptr && math::IsAligned(data, 16))
-		auto mem = _cpuLinearAllocator.Allocate(bufferSize);
-		memcpy(mem.Data, data, bufferSize);
-		_commandList->SetGraphicsRootConstantBufferView(rootIndex, mem.GpuVirtualAddress);*/
+		_commandList->SetGraphicsRootConstantBufferView(rootIndex, gpuVirtualAddress);
 	}
 
 	void GraphicsContext::SetDescriptorTable(u32 rootIndex, D3D12_GPU_DESCRIPTOR_HANDLE handle)

@@ -31,7 +31,7 @@ namespace ray::renderer_core_api::resources
 
 	u8* RingBuffer::SetBufferData(void* buffer, size_t elementsCount, size_t elementSize) noexcept
 	{
-		ray_assert(TryToSetResource(elementsCount * elementSize, elementSize), "Out of memory! Create new ring buffer!");
+		ray_assert(TryToSetResource(elementsCount * elementSize, 4), "Out of memory! Create new ring buffer!");
 		u8* ret = _uploadBuffer.SetBufferData(buffer, elementsCount, elementSize);
 		_frameOffsetQueue.emplace(globals::gCommandListManager.GetGraphicsQueue().GetNextFenceValue(), ret);
 		return ret;

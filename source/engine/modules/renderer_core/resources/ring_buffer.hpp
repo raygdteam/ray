@@ -51,6 +51,21 @@ namespace ray::renderer_core_api::resources
 		u8* SetBufferData(void* buffer, size_t elementsCount, size_t elementSize) noexcept;
 		u8* SetConstantBufferData(void* buffer, size_t bufferSize) noexcept;
 
+		u8* GetBeginPointer() const noexcept
+		{
+			return _uploadBuffer.GetBeginPointer();
+		}
+
+		ID3D12Resource* GetNativePool() const noexcept
+		{
+			return _uploadBuffer.GetNativePool();
+		}
+
+		u64 GetMaxPoolSize() const noexcept
+		{
+			return _uploadBuffer.GetMaxPoolSize();
+		}
+
 	private:
 		bool TryToSetResource(u64 alignedSize, u64 alignment) noexcept;
 		void TryToFreeUpMemory(u64 lastCompletedFrame) noexcept;
