@@ -139,3 +139,44 @@ Iterator BinarySearch(Element toFind, Iterator begin, Iterator end, Predicator p
     }
     return (right);
 }
+
+
+/// <summary>
+/// Euclidean algorithm for finding greatest common divisor of two integer numbers.
+/// </summary>
+/// 
+/// <example> This example shows the code for long long numbers:
+/// <code>
+/// bool less_int(long long a, long b) - return (a (less) b);
+/// long long divRem(long long a, long long b) - return (a % b);
+/// int main() - long long gcd = Gcd(x, y, (long long)0, less_int, divRem);
+/// </code>
+/// </example>
+/// <param name="first">- first integer number</param>
+/// <param name="second">- second integer number</param>
+/// <param name="zero">- zero of the same type as first and second. Check example</param>
+/// <param name="p">- compare function</param>
+/// <param name="d">- function, that makes division with remainder, and returns remainder</param>
+/// <returns>GCD of two integer numbers</returns>
+template <typename Integer, typename Compare, typename DivisionWithRemainder>
+Integer Gcd(Integer first, Integer second, Integer zero, Compare p, DivisionWithRemainder d)
+{
+    // just usual Euclidean algorithm for GCD finding
+
+    // while (a != 0 && b != 0)
+    while (!(!p(first, zero) && !p(zero, first) || !p(second, zero) && !p(zero, second)))
+    {
+        if (p(first, second))
+        {
+            second = d(second, first);
+        }
+        else
+        {
+            first = d(first, second);
+        }
+    }
+    if (p(first, second))
+        return second;
+    else
+        return first;
+}
