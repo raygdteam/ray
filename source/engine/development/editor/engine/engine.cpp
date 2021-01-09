@@ -6,7 +6,7 @@
 
 void EditorEngine::Initialize(IEngineLoop* engineLoop)
 {
-	_window = ray::core::IPlatformWindow::CreateInstance();
+	_window = IPlatformWindow::CreateInstance();
 
 	_window->Initialize();
 	_window->CreateWindow("RAY_EDITOR");

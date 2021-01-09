@@ -11,7 +11,7 @@
 
 class EDITOR_API EditorEngine : public IEngine
 {
-	ray::core::IPlatformWindow* _window = nullptr;
+	IPlatformWindow* _window = nullptr;
 	IVkRenderer* _renderer = nullptr;
 public:
 	void Initialize(IEngineLoop* engineLoop) override;

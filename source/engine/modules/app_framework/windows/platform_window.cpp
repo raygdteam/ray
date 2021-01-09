@@ -11,7 +11,7 @@
 LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
 bool gIsClosed = false;
 
-class PlatformWindow : public ray::core::IPlatformWindow
+class PlatformWindow : public IPlatformWindow
 {
 	HWND _windowHandle = nullptr;
 	MSG _lastMsg;
@@ -113,7 +113,7 @@ void PlatformWindow::Destroy()
 void PlatformWindow::Shutdown()
 { }
 
-ray::core::IPlatformWindow* ray::core::IPlatformWindow::CreateInstance()
+IPlatformWindow* IPlatformWindow::CreateInstance()
 {
 	return new PlatformWindow();
 }
@@ -123,7 +123,7 @@ void PlatformWindow::RegisterEventCallback(Function<void(void*, u32, u64, s64)> 
 	_cb.Register(callback);
 }
 
-void PlatformWindow::ProcessCallback(void* wnd, u32 msg, u64 param1, s64 param2)
+void PlatformWindow::ProcessCallback(void*, u32 msg, u64 param1, s64 param2)
 {
 	_cb.Invoke(_windowHandle, msg, param1, param2);
 }

@@ -8,7 +8,7 @@
 
 extern "C"
 {
-#include <kernel/kernel_thread.h>
+//#include <kernel/kernel_thread.h>
 }
 
 #pragma comment(lib, "Dbghelp.lib")

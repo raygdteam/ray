@@ -11,7 +11,7 @@ void UiButton::Tick()
 	ImGui::Button({});
 }
 
-void UiRootObject::Initialize(ray::core::IPlatformWindow* window)
+void UiRootObject::Initialize(IPlatformWindow* window)
 {
 	ImGui::CreateContext();
 	ImGui_ImplWin32_Init(window->GetWindowHandleRaw());

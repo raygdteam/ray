@@ -14,7 +14,7 @@
 #include "stb_image.h"
 #pragma clang diagnostic pop
 
-static Logger gDbgLog("resdbg");
+static Logger* gDbgLog;
 
 /* -------------------- RESOURCE BASE ------------------- */
 RAYOBJECT_DESCRIPTION_BEGIN(IRResource)
@@ -118,6 +118,7 @@ struct ResourceMapping
 ResourceManager::ResourceManager(IRayState* state)
 {
 	_state = state;
+	gDbgLog = new Logger("ResourceManager");
 	
 	_mapping.PushBack(ResourceMapping { 
 		.Path = String("../../engine/resources"),
@@ -243,7 +244,7 @@ IRResource* ResourceManager::LoadResourceSync(pcstr inName, ResourceType desired
 	mappingRaw[mappingEnd + 1] = '\0';
 
 	String mapping(mappingRaw);
-	gDbgLog.Log("Mapping {}", mapping.c_str());
+	gDbgLog->Log("Mapping {}", mapping.c_str());
 
 	_mutex.Enter();
 
@@ -289,6 +290,10 @@ IRResource* ResourceManager::LoadResourceSync(pcstr inName, ResourceType desired
 
 void ResourceManager::LoadResource(pcstr inName, ResourceType desiredType, Function<void(IRResource*)> callback)
 {
+	(void)inName;
+	(void)desiredType;
+	(void)callback;
+	
 	/* BUG: assuming no concurrency */
 
 	//check(inName != nullptr);

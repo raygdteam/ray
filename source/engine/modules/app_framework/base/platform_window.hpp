@@ -1,12 +1,8 @@
 #pragma once
 #include <core/lib/delegate.hpp>
-#include "app_framework/app_framework.hpp"
-
+#include <app_framework/app_framework.hpp>
 
 #undef CreateWindow
-
-namespace ray::core
-{
 
 /** Interface for OS window. */
 class IPlatformWindow
@@ -77,5 +73,3 @@ public:
 	 */
 	virtual void Shutdown() = 0;
 };
-
-}

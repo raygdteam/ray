@@ -15,7 +15,7 @@
 
 class IVkRenderer
 {
-	ray::core::IPlatformWindow* _window;
+	IPlatformWindow* _window;
 	VkExtent2D _viewport = {};
 	
 	VkInstance _instance = nullptr;
@@ -45,8 +45,8 @@ class IVkRenderer
 
 	bool InitInstance();
 	bool InitDevice();
-	bool InitSurface(ray::core::IPlatformWindow* window);
-	bool InitSwapchain(ray::core::IPlatformWindow* window);
+	bool InitSurface(IPlatformWindow* window);
+	bool InitSwapchain(IPlatformWindow* window);
 	bool InitCommandPool();
 	bool InitFramebuffer();
 
@@ -54,7 +54,7 @@ class IVkRenderer
 	void TransitionResource(VkImage image, VkFormat format, VkImageLayout old, VkImageLayout newLayout);
 	
 public:
-	bool Initialize(ray::core::IPlatformWindow* window);
+	bool Initialize(IPlatformWindow* window);
 
 	void BeginScene();
 	void EndScene();

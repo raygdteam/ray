@@ -125,6 +125,7 @@ using u64 = uint64_t; using s64 = int64_t;
 
 using f32 = float; using f64 = double;
 
+using pstr = char*;
 using pcstr = const char*;
 using pcwstr = const wchar_t*;
 

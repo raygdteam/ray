@@ -63,7 +63,7 @@ void World::Render()
 	_renderer->EndScene(ctx);
 }
 
-void World::RendererInitialize(ray::core::IPlatformWindow* window)
+void World::RendererInitialize(IPlatformWindow* window)
 {
 	_primaryCameraActor = new CameraActor();
 	/*_renderer = new IRenderer;

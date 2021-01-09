@@ -22,7 +22,7 @@ public:
 class UiRootObject
 {
 public:
-	void Initialize(ray::core::IPlatformWindow* window);
+	void Initialize(IPlatformWindow* window);
 	void Tick();
 	void RenderAll();
 };

@@ -23,7 +23,6 @@
     <ClInclude Include="file_system\file_system.hpp" />
     <ClInclude Include="lib\array.hpp" />
     <ClInclude Include="lib\delegate.hpp" />
-    <ClInclude Include="lib\format.hpp" />
     <ClInclude Include="lib\queue.hpp" />
     <ClInclude Include="lib\scoped_allocation.hpp" />
     <ClInclude Include="lib\string.hpp" />
@@ -37,7 +36,6 @@
     <ClInclude Include="memory\memory_manager.hpp" />
     <ClInclude Include="memory\memory_pool.hpp" />
     <ClInclude Include="memory\new_delete_override.hpp" />
-    <ClInclude Include="mm\memory_manager.hpp" />
     <ClInclude Include="module\module.hpp" />
     <ClInclude Include="module\module_meta.hpp" />
     <ClInclude Include="object\archive.hpp" />
@@ -54,10 +52,10 @@
     <ClCompile Include="extended_instuctions\sse\common.cpp" />
     <ClCompile Include="file_system\file_system.cpp" />
     <ClCompile Include="lib\thread.cpp" />
+    <ClCompile Include="log\log.cpp" />
     <ClCompile Include="math\math_common.cpp" />
     <ClCompile Include="memory\allocator.cpp" />
     <ClCompile Include="memory\memory_manager.cpp" />
-    <ClCompile Include="mm\memory_manager.cpp" />
     <ClCompile Include="module\module.cpp" />
     <ClCompile Include="object\object_db.cpp" />
     <ClCompile Include="os\miniwin.cpp">
@@ -79,7 +77,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="lib\result.hpp" />
-    <None Include="mm\allocator.hpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>

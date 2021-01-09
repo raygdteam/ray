@@ -1,6 +1,7 @@
 #include <core/core.hpp>
 #include <core/module/module.hpp>
 #include <core/lib/array.hpp>
+#include <core/log/log.hpp>
 
 #include <cstring>
 #include <cstdio>
@@ -15,6 +16,7 @@ struct ModuleDef
 };
 
 static Array<ModuleDef*>* gModules = nullptr;
+static Logger* gMMLog;
 
 /* We have to keep it as static memory, since we can't use */
 /* memory allocation functions as we're not sure if it's initialized. */
@@ -26,14 +28,18 @@ ModuleManager::ModuleManager()
 		gModules = new Array<ModuleDef*>();
 	else __debugbreak();
 
-	for (auto& module : StaticallyLoadedModules)
+	gMMLog = new Logger("ModuleManager");
+
+	for (auto& mod : StaticallyLoadedModules)
 	{
-		if (module == nullptr)
+		if (mod == nullptr)
 			continue;
 
-		gModules->push_back(new ModuleDef{ (*module)(), nullptr });
+		gModules->push_back(new ModuleDef{ (*mod)(), nullptr });
 	}
 
+	gMMLog->Log("Discovered {} statically linked modules", int(gModules->Size()));
+	
 	memset(&StaticallyLoadedModules, 0, sizeof(RayModuleEntryFn*) * 32);
 
 	/* Call IModule#OnLoad */

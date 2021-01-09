@@ -24,7 +24,7 @@ namespace ray::renderer_core_api
 
 	struct ConstantBuffer
 	{
-		FMatrix4 ViewProjMatrix;
+		FMatrix4x4 ViewProjMatrix;
 	};
 
 	struct QuadVertex
@@ -53,7 +53,7 @@ namespace ray::renderer_core_api
 
 		FVector<3> QuadVertexPositions[4];
 
-		FMatrix4 ViewProjectionMatrix;
+		FMatrix4x4 ViewProjectionMatrix;
 	};
 
 	static Renderer2DData sData;

@@ -35,7 +35,7 @@ namespace ray::renderer_core_api
 
 	bool IRenderer::_sbReady = false;
 
-	void IRenderer::Initialize(ray::core::IPlatformWindow* window)
+	void IRenderer::Initialize(IPlatformWindow* window)
 	{
 		ray_assert(_swapChain == nullptr, "Renderer has been already initialized")
 

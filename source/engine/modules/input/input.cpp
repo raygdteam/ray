@@ -8,7 +8,7 @@ void InputBase::WindowEventHandler(u32 msg, s64 rparam)
 	
 	FVector2 currentPosition = { f32((u64)rparam & 0xffff), f32(((u64)rparam >> 16) & 0xffff) };
 
-	printf("x = %f, y = %f\n", currentPosition.x, currentPosition.y);
+	//printf("x = %f, y = %f\n", currentPosition.x, currentPosition.y);
 	
 	_currentDelta = { currentPosition.x - _lastMousePos.x, currentPosition.y - _lastMousePos.y };
 	_lastMousePos = currentPosition;
@@ -20,7 +20,8 @@ InputBase::InputBase()
 	Array<RawInputDeviceList> devices = WinApi::GetRawInputDeviceList();
 	for (RawInputDeviceList& device : devices)
 	{
-		printf("--- TYPE: %lu\n", device.Type);
+		(void)device;
+		//printf("--- TYPE: %lu\n", device.Type);
 	}
 }
 

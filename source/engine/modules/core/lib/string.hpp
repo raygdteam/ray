@@ -80,7 +80,14 @@ public:
 		: basic_string<char>(sv, position, n, allocator)
 	{
 	}
-	
-};
 
-using string = String;
+	u64 Length() const
+	{
+		return size();
+	}
+
+	pcstr AsRawStr() const
+	{
+		return c_str();
+	}
+};

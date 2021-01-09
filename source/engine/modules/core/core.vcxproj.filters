@@ -74,12 +74,6 @@
     <ClInclude Include="log\log.hpp">
       <Filter>log</Filter>
     </ClInclude>
-    <ClInclude Include="lib\format.hpp">
-      <Filter>lib</Filter>
-    </ClInclude>
-    <ClInclude Include="mm\memory_manager.hpp">
-      <Filter>mm</Filter>
-    </ClInclude>
     <ClInclude Include="memory\allocator.hpp">
       <Filter>memory</Filter>
     </ClInclude>
@@ -122,9 +116,6 @@
     <ClCompile Include="math\math_common.cpp">
       <Filter>math</Filter>
     </ClCompile>
-    <ClCompile Include="mm\memory_manager.cpp">
-      <Filter>mm</Filter>
-    </ClCompile>
     <ClCompile Include="memory\allocator.cpp">
       <Filter>memory</Filter>
     </ClCompile>
@@ -136,6 +127,9 @@
     </ClCompile>
     <ClCompile Include="memory\memory_manager.cpp">
       <Filter>memory</Filter>
+    </ClCompile>
+    <ClCompile Include="log\log.cpp">
+      <Filter>log</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -175,9 +169,6 @@
     <Filter Include="extended instructions\avx">
       <UniqueIdentifier>{dc52e1fd-08e1-4c59-ac4b-ffc5b74e7ed6}</UniqueIdentifier>
     </Filter>
-    <Filter Include="mm">
-      <UniqueIdentifier>{0c69efe0-c0e0-447a-b5a3-2550473cbc85}</UniqueIdentifier>
-    </Filter>
     <Filter Include="os">
       <UniqueIdentifier>{05a29463-fb89-4153-a633-4f05f4930ad9}</UniqueIdentifier>
     </Filter>
@@ -185,9 +176,6 @@
   <ItemGroup>
     <None Include="lib\result.hpp">
       <Filter>lib</Filter>
-    </None>
-    <None Include="mm\allocator.hpp">
-      <Filter>mm</Filter>
     </None>
   </ItemGroup>
 </Project>
