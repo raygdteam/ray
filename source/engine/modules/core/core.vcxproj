@@ -21,6 +21,7 @@
     <ClInclude Include="extended_instuctions\sse\common.hpp" />
     <ClInclude Include="file_system\file.hpp" />
     <ClInclude Include="file_system\file_system.hpp" />
+    <ClInclude Include="lib\algorithms.hpp" />
     <ClInclude Include="lib\array.hpp" />
     <ClInclude Include="lib\delegate.hpp" />
     <ClInclude Include="lib\queue.hpp" />

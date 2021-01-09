@@ -89,6 +89,9 @@
     <ClInclude Include="memory\memory_pool.hpp">
       <Filter>memory</Filter>
     </ClInclude>
+    <ClInclude Include="lib\algorithms.hpp">
+      <Filter>lib</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="core_entry_point.cpp" />

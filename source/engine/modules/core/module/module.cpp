@@ -9,13 +9,6 @@
 // TODO(dark): rewrite to kernel
 #include <Windows.h>
 
-struct ModuleDef
-{
-	IModule* Module;
-	void* RawOsHandle;
-};
-
-static Array<ModuleDef*>* gModules = nullptr;
 static Logger* gMMLog;
 
 /* We have to keep it as static memory, since we can't use */
@@ -24,10 +17,6 @@ static RayModuleEntryFn* StaticallyLoadedModules[32] = {};
 
 ModuleManager::ModuleManager()
 {
-	if (gModules == nullptr)
-		gModules = new Array<ModuleDef*>();
-	else __debugbreak();
-
 	gMMLog = new Logger("ModuleManager");
 
 	for (auto& mod : StaticallyLoadedModules)
@@ -35,37 +24,50 @@ ModuleManager::ModuleManager()
 		if (mod == nullptr)
 			continue;
 
-		gModules->push_back(new ModuleDef{ (*mod)(), nullptr });
+		_modules.PushBack(ModuleDef { (*mod)(), nullptr });
 	}
 
-	gMMLog->Log("Discovered {} statically linked modules", int(gModules->Size()));
+	gMMLog->Log("Discovered %ull statically linked modules", _modules.Size());
 	
 	memset(&StaticallyLoadedModules, 0, sizeof(RayModuleEntryFn*) * 32);
 
 	/* Call IModule#OnLoad */
-	for (ModuleDef*& gModule : *gModules)
+	for (ModuleDef& gModule : _modules)
 	{
-		gModule->Module->OnLoad();
+		gModule.Module->OnLoad();
 	}
+}
+
+ModuleManager::~ModuleManager()
+{
+	for (ModuleDef& mod : _modules)
+	{
+		gMMLog->Log("Shutting down and freeing module %s.", mod.Module->Meta.Name);
+		mod.Module->OnUnload();
+
+		if (mod.RawOsHandle != nullptr) 
+			FreeLibrary(static_cast<HMODULE>(mod.RawOsHandle));
+	}
+
+	_modules.clear();
+	gMMLog->Log("Bye.");
+	delete gMMLog;
 }
 
 Result<IModule*, ModuleLoadError> ModuleManager::LoadModule(pcstr name)
 {
-	/* 1. Check is it's already loaded. */
-	if (!gModules->empty())
+	/* Check is it's already loaded. */
+	for (ModuleDef& mod : _modules)
 	{
-		for (ModuleDef* module : *gModules)
-		{
-			if (strcmp(module->Module->Meta.Name, name) == 0)
-				return { module->Module, eSuccess };
-		}
+		if (strcmp(mod.Module->Meta.Name, name) == 0)
+			return { mod.Module, eSuccess };
 	}
 
 	/* Load it. */
-	IModule* module = nullptr;
+	IModule* mod = nullptr;
 	void* rawHandle = nullptr;
 
-	/* 2. If not in static environment, load the appropriate .dll. */
+	/* If not in static environment, load the appropriate .dll. */
 #if RAY_STATIC == 0
 	{
 		HMODULE lib = nullptr;
@@ -85,26 +87,26 @@ Result<IModule*, ModuleLoadError> ModuleManager::LoadModule(pcstr name)
 			return { nullptr,eNotARayModule };
 		}
 
-		module = (*entry)();
+		mod = (*entry)();
 		rawHandle = lib;
 	}
 #endif
 	/* 3. Initialize module. */
-	module->OnLoad();
+	mod->OnLoad();
 
 	/* 4. Add to the linked list. */
-	gModules->push_back(new ModuleDef{ module, rawHandle });
+	_modules.push_back(ModuleDef { mod, rawHandle });
 
-	return { module, eSuccess };
+	return { mod, eSuccess };
 }
 
-void ModuleManager::__Internal_LoadModuleStatic(RayModuleEntryFn module)
+void ModuleManager::__Internal_LoadModuleStatic(RayModuleEntryFn mod)
 {
 	for (u8 i = 0; i < 32; ++i)
 	{
 		if (StaticallyLoadedModules[i] == nullptr)
 		{
-			StaticallyLoadedModules[i] = module;
+			StaticallyLoadedModules[i] = mod;
 			return;
 		}
 	}
