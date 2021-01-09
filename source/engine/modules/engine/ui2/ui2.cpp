@@ -21,8 +21,15 @@ void UiRootObject::Tick()
 {
 	ImGui_ImplWin32_NewFrame();
 	ImGui::NewFrame();
-	ImGui::Begin({});
-	ImGui::End();
+
+	for (UiWindow* window : _windows)
+	{
+		for (UiObject* object : window->_objects)
+		{
+			object->Tick();
+		}
+	}
+	
 	ImGui::EndFrame();
 }
 
