@@ -12,13 +12,30 @@
 #include <Windows.h>
 
 static u64 gTimestamp = 0;
+static f64 gPCFrequency = 0.0;
 static CriticalSection* gLoggerMutex = nullptr;
+
+f64 _GetLoggerTimestamp()
+{
+	LARGE_INTEGER counter = {};
+	QueryPerformanceCounter(&counter);
+	return f64(counter.QuadPart - gTimestamp) / gPCFrequency;
+}
 
 Logger::Logger(pcstr name)
 {
 	_name = String(name);
 
-	if (gTimestamp == 0) gTimestamp = GetTickCount64();
+	LARGE_INTEGER counter = {};
+	QueryPerformanceFrequency(&counter);
+	gPCFrequency = f64(counter.QuadPart) / 1000.0;
+
+	if (gTimestamp == 0)
+	{
+		QueryPerformanceCounter(&counter);
+		gTimestamp = counter.QuadPart;
+	}
+	
 	if (gLoggerMutex == nullptr) gLoggerMutex = new CriticalSection();
 }
 
@@ -30,7 +47,7 @@ void Logger::Log(pcstr msg, ...)
 {
 	/* Get timestamp. We need to call it as early as possible.*/
 	char time[64] = {};
-	sprintf(time, "%f", f32(GetTickCount64() - gTimestamp) / 1000.f);
+	sprintf(time, "%f", _GetLoggerTimestamp() / 1000.0);
 
 	/* Format user string. */
 	va_list mark = {};
