@@ -76,8 +76,9 @@ namespace ray::renderer_core_api
 			offset += 4;
 		}
 
-		sData.IndexBuffer.Create(sData.MAX_INDICES, sizeof(u32), quadIndices);
-		sData.IndexBufferView = sData.IndexBuffer.IndexBufferView(0);
+		// TODO
+		/*sData.IndexBuffer.Create(sData.MAX_INDICES, sizeof(u32), quadIndices);
+		sData.IndexBufferView = sData.IndexBuffer.IndexBufferView(0);*/
 		delete[] quadIndices;
 
 		/*_descriptorHeap.Create();

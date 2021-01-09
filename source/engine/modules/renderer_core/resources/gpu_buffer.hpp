@@ -13,73 +13,81 @@ namespace ray::renderer_core_api
 
 namespace ray::renderer_core_api::resources
 {
+	struct GpuBufferDescription : public GpuResourceDescription
+	{
+	public:
+		GpuBufferDescription()
+			: GpuResourceDescription()
+		{}
+
+		GpuBufferDescription(u32 sizeInBytes, u32 stride, const void* initialData, DXGI_FORMAT format)
+		{
+			SizeInBytes = sizeInBytes;
+			Stride = stride;
+			UploadBufferData = initialData;
+			Format = format;
+		}
+
+	public:
+		static GpuBufferDescription Buffer(u32 sizeInBytes, u32 stride = 0, const void* data = nullptr, DXGI_FORMAT format = DXGI_FORMAT_UNKNOWN) noexcept
+		{
+			return GpuBufferDescription(sizeInBytes, stride, data, format);
+		}
+
+		static GpuBufferDescription Vertex(u32 elementsCount, u32 stride, const void* data = nullptr) noexcept
+		{
+			return Buffer(elementsCount * stride, stride, data);
+		}
+
+		static GpuBufferDescription Index(u32 elementsCount, u32 stride, const void* data = nullptr) noexcept
+		{
+			auto format = stride == 4 ? DXGI_FORMAT_R32_UINT : DXGI_FORMAT_R16_UINT;
+			return Buffer(elementsCount * stride, stride, data, format);
+		}
+
+		// TODO: Typed, Argument, Raw, Structured
+
+	};
+
+	class GpuBufferAllocator : public GpuResourceAllocator
+	{
+	public:
+		void Initialize(size_t preferredSize) noexcept override
+		{
+			GpuResourceAllocator::Initialize(preferredSize);
+		}
+
+		void Destroy() noexcept override
+		{
+			GpuResourceAllocator::Destroy();
+		}
+
+		GpuResource&& Allocate(GpuResourceDescription& bufferDesc) noexcept override;
+		void Free(GpuResource& resource) noexcept override;
+
+	};
+
+	// represents buffer resource in gpu memory
 	class GpuBuffer : public GpuResource
 	{
 		friend struct ray::renderer_core_api::IRenderer;
 		friend struct ray::renderer_core_api::Renderer2DData;
-		friend struct ray::renderer_core_api::BuddyBlock;
+		friend GpuBufferAllocator;
 
 	public:
-		virtual ~GpuBuffer() { Destroy(); }
+		GpuBuffer() = default;
 
-		void Create(u32 numElements, u32 elementSize, const void* initialData = nullptr);
-		void CreatePlaces(ID3D12Heap* backingHeap, size_t heapOffset, u32 numElements, u32 elementSize, const void* initialData = nullptr);
+		GpuBuffer(GpuBuffer&& rhs) = default;
+		GpuBuffer& operator = (GpuBuffer&& rhs) = default;
 
-		D3D12_CPU_DESCRIPTOR_HANDLE CreateConstantBufferView(UserDescriptorHeap& heap, size_t offset, size_t size);
+		~GpuBuffer() override {}
 
-		D3D12_VERTEX_BUFFER_VIEW VertexBufferView(size_t offset, size_t size, u32 stride);
-		D3D12_VERTEX_BUFFER_VIEW VertexBufferView(u32 startIndex)
-		{
-			size_t offset = _elementSize * startIndex;
-			return VertexBufferView(offset, (_bufferSize - offset), _elementSize);
-		}
+	public:
+		void Create(GpuBufferDescription& desc) noexcept;
 
-		D3D12_INDEX_BUFFER_VIEW IndexBufferView(size_t offset, size_t size, bool b32Bit = false);
-		D3D12_INDEX_BUFFER_VIEW IndexBufferView(u32 startIndex)
-		{
-			size_t offset = _elementSize * startIndex;
-			return IndexBufferView(offset, (_bufferSize - offset), _elementSize == 4);
-		}
-
-		size_t GetBufferSize() const noexcept { return _bufferSize; }
-		u32 GetElementCount() const noexcept { return _elementCount; }
-		u32 GetElementSize() const noexcept { return _elementSize; }
-		const D3D12_CPU_DESCRIPTOR_HANDLE& GetSRV() const noexcept { return _srvHandle; }
-		const D3D12_CPU_DESCRIPTOR_HANDLE& GetUAV() const noexcept { return _uavHandle; }
-
-	protected:
-		GpuBuffer()
-			: _bufferSize(0)
-			, _elementCount(0)
-			, _elementSize(0)
-		{
-			_resourceFlags = D3D12_RESOURCE_FLAG_ALLOW_UNORDERED_ACCESS;
-			_srvHandle.ptr = static_cast<D3D12_GPU_VIRTUAL_ADDRESS>(-1);
-			_uavHandle.ptr = static_cast<D3D12_GPU_VIRTUAL_ADDRESS>(-1);
-		}
-
-		// virtual void CreateDerivedViews() = 0; TODO: StructuredBuffer and ByteAddressBuffer
-		D3D12_RESOURCE_DESC DescribeBuffer() const noexcept;
-
-		u64 _gpuVirtualAddress;
-
-		size_t _bufferSize;
-		u32 _elementCount;
-		u32 _elementSize;
-		D3D12_RESOURCE_FLAGS _resourceFlags;
-
-		D3D12_CPU_DESCRIPTOR_HANDLE _srvHandle;
-		D3D12_CPU_DESCRIPTOR_HANDLE _uavHandle;
-
-	};
-
-	class StructuredBuffer : public GpuBuffer
-	{
-
-	};
-
-	class ByteAddressBuffer : public GpuBuffer
-	{
+	public:
+		bool Load(const void* initialData) noexcept override;
+		void Release() noexcept override;
 
 	};
 }

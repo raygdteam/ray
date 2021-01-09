@@ -1,6 +1,7 @@
 #include "texture.hpp"
 #include "../renderer.hpp"
 #include "../command_context.hpp"
+#include "upload_buffer.hpp"
 #include <renderer_core/dx12_helper_functions.hpp>
 #include <core/debug/assert.hpp>
 #include <core/math/common.hpp>
@@ -153,21 +154,7 @@ namespace ray::renderer_core_api::resources
         }
     }
 
-    void TexturePool::Create(size_t maxMemoryPoolSize, size_t index) noexcept
-    {
-        IMemoryPool::Create(maxMemoryPoolSize, index);
-
-        auto heapProps = ray::dx12::DescribeHeapProps(D3D12_HEAP_TYPE_DEFAULT);
-        auto heapDesc = ray::dx12::DescribeHeap(heapProps, D3D12_HEAP_FLAG_NONE, maxMemoryPoolSize);
-        globals::gDevice->CreateHeap(&heapDesc, IID_PPV_ARGS(&_heap));
-    }
-
-    void TexturePool::Destroy() noexcept
-    {
-        _heap->Release();
-    }
-
-    GpuTexture&& TextureAllocator::Allocate(GpuTextureDescription& textureDesc) noexcept
+    GpuResource&& GpuTextureAllocator::Allocate(GpuResourceDescription& textureDesc) noexcept
     {
         D3D12_RESOURCE_DESC resourceDesc = {};
         resourceDesc.Width = textureDesc.Width;
@@ -183,20 +170,20 @@ namespace ray::renderer_core_api::resources
         auto resourceAllocationInfo = globals::gDevice->GetResourceAllocationInfo(1, 1, &resourceDesc);
         resourceDesc.Alignment = resourceAllocationInfo.Alignment;
 
-        if (_pool == nullptr || !_pool->IsEnough(resourceAllocationInfo.SizeInBytes))
-            _pool = &_memoryManager.RequestPool(resourceAllocationInfo.SizeInBytes);
+        if (_currentPool == nullptr || !_currentPool->IsEnough(resourceAllocationInfo.SizeInBytes))
+            _currentPool = &_memoryManager.RequestPool(resourceAllocationInfo.SizeInBytes);
         
         ID3D12Resource* resource;
-        auto hr = globals::gDevice->CreatePlacedResource(_pool->_heap, _pool->_offset, &resourceDesc, D3D12_RESOURCE_STATE_COPY_DEST, nullptr, IID_PPV_ARGS(&resource));
+        auto hr = globals::gDevice->CreatePlacedResource(_currentPool->_heap, _currentPool->_offset, &resourceDesc, D3D12_RESOURCE_STATE_COPY_DEST, nullptr, IID_PPV_ARGS(&resource));
     
         check(hr == S_OK)
 
-        _pool->_offset += resourceAllocationInfo.SizeInBytes;
-        _pool->_availableSize -= _pool->_offset;
+        _currentPool->_offset += resourceAllocationInfo.SizeInBytes;
+        _currentPool->_availableSize -= _currentPool->_offset;
 
         GpuTexture ret;
         ret._desc = std::move(textureDesc);
-        ret._underlyingPool = _pool;
+        ret._underlyingPool = _currentPool;
         ret._resource = resource;
         ret._resourceSize = resourceAllocationInfo.SizeInBytes;
         ret._usageState = D3D12_RESOURCE_STATE_COPY_DEST;
@@ -204,21 +191,41 @@ namespace ray::renderer_core_api::resources
         return std::move(ret);
     }
 
-    void TextureAllocator::Free(GpuTexture& resource) noexcept
+    void GpuTextureAllocator::Free(GpuResource& resource) noexcept
     {
-        resource._resource->Release();
-        resource._underlyingPool->_availableSize += resource._resourceSize;
+        dynamic_cast<GpuTexture&>(resource)._resource->Release();
+        dynamic_cast<GpuTexture&>(resource)._underlyingPool->_availableSize += dynamic_cast<GpuTexture&>(resource)._resourceSize;
         
         // TODO: MemorySegment
     }
 
 	bool GpuTexture::Create(GpuTextureDescription& textureDesc) noexcept
 	{
-        *this = std::move(globals::gTextureAllocator.Allocate(textureDesc));
+        ray_assert(     textureDesc.Dimension == D3D12_RESOURCE_DIMENSION_TEXTURE1D || 
+                        textureDesc.Dimension == D3D12_RESOURCE_DIMENSION_TEXTURE2D ||
+                        textureDesc.Dimension == D3D12_RESOURCE_DIMENSION_TEXTURE3D ,
+                        "Resource dimension must be texture!"                       )
+
+        *dynamic_cast<GpuResource*>(this) = std::move(globals::gTextureAllocator.Allocate(textureDesc));
         // TODO
+
+        if(textureDesc.UploadBufferData)
+        {
+            Load(textureDesc.UploadBufferData);
+        }
 
         return true;
 	}
+
+    bool GpuTexture::Load(const void* uploadBufferData) noexcept
+    {
+        check(uploadBufferData != nullptr)
+
+        UploadBuffer ub;
+        CommandContext::InitializeTexture(*this, ub);
+
+        return true;
+    }
 
     void GpuTexture::Release() noexcept
     {

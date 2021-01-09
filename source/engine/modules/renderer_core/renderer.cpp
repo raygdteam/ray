@@ -2,9 +2,8 @@
 #include "command_context.hpp"
 #include "command_queue.hpp"
 #include "resources/buffer_manager.hpp"
-#include "resources/graphics_memory_manager.hpp"
-#include "resources/gpu_allocator.hpp"
 #include "resources/texture.hpp"
+#include "resources/gpu_buffer.hpp"
 #include "d3dx12.h"
 #include <core/math/vector.hpp>
 
@@ -28,9 +27,8 @@ namespace ray::renderer_core_api
 			D3D12_DESCRIPTOR_HEAP_TYPE_RTV,
 			D3D12_DESCRIPTOR_HEAP_TYPE_DSV
 		};
-		ray::renderer_core_api::resources::GpuMemoryManager gGpuMemManager;
-		ray::renderer_core_api::resources::GpuAllocator gGpuAllocator;
-		ray::renderer_core_api::resources::TextureAllocator gTextureAllocator;
+		ray::renderer_core_api::resources::GpuTextureAllocator gTextureAllocator;
+		ray::renderer_core_api::resources::GpuBufferAllocator gBufferAllocator;
 	}
 
 	bool IRenderer::_sbReady = false;
@@ -101,11 +99,8 @@ namespace ray::renderer_core_api
 		
 		globals::gCurrentBuffer = 0;
 		globals::gDepthBuffer.Create(globals::gDisplayPlane->GetWidth(), globals::gDisplayPlane->GetHeight(), DXGI_FORMAT_D32_FLOAT);
-		globals::gTextureAllocator.Initialize(MB(256));
-
-		resources::GpuTexture texture;
-		auto desc = resources::GpuTextureDescription::Texture2D(800, 600, DXGI_FORMAT_R32G32B32A32_FLOAT, 1);
-		texture.Create(desc);
+		globals::gTextureAllocator.Initialize(MB(4));
+		//globals::gBufferAllocator.Initialize(MB(400));
 	}
 
 	void IRenderer::BeginScene(GraphicsContext& gfxContext)
