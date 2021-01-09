@@ -1,7 +1,5 @@
 #include <core/core.hpp>
 #include <core/module/module.hpp>
-#include <core/lib/array.hpp>
-#include <core/log/log.hpp>
 
 #include <cstring>
 #include <cstdio>
@@ -9,16 +7,13 @@
 // TODO(dark): rewrite to kernel
 #include <Windows.h>
 
-static Logger* gMMLog;
-
 /* We have to keep it as static memory, since we can't use */
 /* memory allocation functions as we're not sure if it's initialized. */
 static RayModuleEntryFn* StaticallyLoadedModules[32] = {};
 
 ModuleManager::ModuleManager()
+	: _log("ModuleManager")
 {
-	gMMLog = new Logger("ModuleManager");
-
 	for (auto& mod : StaticallyLoadedModules)
 	{
 		if (mod == nullptr)
@@ -27,7 +22,7 @@ ModuleManager::ModuleManager()
 		_modules.PushBack(ModuleDef { (*mod)(), nullptr });
 	}
 
-	gMMLog->Log("Discovered %ull statically linked modules", _modules.Size());
+	_log.Log("Discovered %llu statically linked modules", _modules.Size());
 	
 	memset(&StaticallyLoadedModules, 0, sizeof(RayModuleEntryFn*) * 32);
 
@@ -42,7 +37,7 @@ ModuleManager::~ModuleManager()
 {
 	for (ModuleDef& mod : _modules)
 	{
-		gMMLog->Log("Shutting down and freeing module %s.", mod.Module->Meta.Name);
+		_log.Log("Shutting down and freeing module %s.", mod.Module->Meta.Name);
 		mod.Module->OnUnload();
 
 		if (mod.RawOsHandle != nullptr) 
@@ -50,8 +45,7 @@ ModuleManager::~ModuleManager()
 	}
 
 	_modules.clear();
-	gMMLog->Log("Bye.");
-	delete gMMLog;
+	_log.Log("Bye.");
 }
 
 Result<IModule*, ModuleLoadError> ModuleManager::LoadModule(pcstr name)

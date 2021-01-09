@@ -3,6 +3,7 @@
 #include <core/module/module_meta.hpp>
 #include <core/lib/result.hpp>
 #include <core/lib/array.hpp>
+#include <core/log/log.hpp>
 
 enum ModuleLoadError : u8
 {
@@ -34,6 +35,8 @@ using RayModuleEntryFn = IModule * ();
 class RAY_CORE_API ModuleManager
 {
 	Array<ModuleDef> _modules;
+	Logger _log;
+	
 public:
 	ModuleManager();
 	~ModuleManager();
