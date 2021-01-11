@@ -6,10 +6,10 @@
 
 using namespace ray::renderer_core_api;
 
-void UiButton::Tick()
+/*void UiButton::Tick()
 {
 	ImGui::Button({});
-}
+}*/
 
 void UiRootObject::Initialize(IPlatformWindow* window)
 {

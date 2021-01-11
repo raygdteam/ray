@@ -1,7 +1,5 @@
 #include "allocator.hpp"
 
-namespace ray
-{
 	static MemoryAllocatorManager sMallocManager;
 
 	MemoryPool* MemoryAllocatorManager::RequesPool(size_t requestedSize)
@@ -23,4 +21,3 @@ namespace ray
 	{
 
 	}
-}

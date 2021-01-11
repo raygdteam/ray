@@ -26,8 +26,6 @@
 static World* gWorld;
 u64 tempLastTime = 0;
 
-using namespace ray;
-
 static Logger* eng;
 
 RayEngine::RayEngine() : _engineLoop(nullptr)
