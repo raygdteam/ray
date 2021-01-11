@@ -379,7 +379,6 @@ struct FMatrix4x4
 	static FMatrix4x4 RotationX(f32 angle)
 	{
 		/* TODO: get rid of it */
-		using namespace ray::core::math;
 
 		/*
 		 *      X Rotation
@@ -400,7 +399,6 @@ struct FMatrix4x4
 	static FMatrix4x4 RotationY(f32 angle)
 	{
 		/* TODO: get rid of it */
-		using namespace ray::core::math;
 
 		/*
 		 *      Y Rotation
@@ -421,7 +419,6 @@ struct FMatrix4x4
 	static FMatrix4x4 RotationZ(f32 angle)
 	{
 		/* TODO: get rid of it */
-		using namespace ray::core::math;
 
 		/*
 		 *      Z Rotation

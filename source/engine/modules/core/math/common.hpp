@@ -1,8 +1,6 @@
 #pragma once
 #include <core/core.hpp>
 
-namespace ray::core::math
-{
 	template<typename Type>
 	inline Type AlignUpWithMask(Type value, size_t mask)
 	{
@@ -45,4 +43,3 @@ namespace ray::core::math
 	RAY_CORE_API f32 Acos(f32 val);
 
 	RAY_CORE_API f32 InverseSqrt(f32 val);
-}

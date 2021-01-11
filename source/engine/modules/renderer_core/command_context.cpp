@@ -9,7 +9,6 @@
 #include <core/debug/assert.hpp>
 
 namespace sse = ray::core::sse;
-namespace math = ray::core::math;
 
 #pragma clang diagnostic ignored "-Wmissing-braces" 
 
@@ -176,7 +175,7 @@ namespace ray::renderer_core_api
 		footprint.Format = textureDesc.Format;
 		footprint.Height = textureDesc.Height;
 		footprint.Width = textureDesc.Width;
-		footprint.RowPitch = math::AlignUp(bitesPerPixel * footprint.Width, D3D12_TEXTURE_DATA_PITCH_ALIGNMENT);
+		footprint.RowPitch = AlignUp(bitesPerPixel * footprint.Width, D3D12_TEXTURE_DATA_PITCH_ALIGNMENT);
 
 		D3D12_PLACED_SUBRESOURCE_FOOTPRINT placedFootprint;
 		placedFootprint.Footprint = footprint;
@@ -271,9 +270,9 @@ namespace ray::renderer_core_api
 		// TODO
 		// we need it?
 
-		/*check(data != nullptr && math::IsAligned(numBytes, 16));
+		/*check(data != nullptr && IsAligned(numBytes, 16));
 		DynAlloc mem = _cpuLinearAllocator.Allocate(numBytes, 512);
-		sse::MemCopy(mem.Data, data, math::DivideByMultiple(numBytes, 16));
+		sse::MemCopy(mem.Data, data, DivideByMultiple(numBytes, 16));
 		CopyBufferRegion(dest, destOffset, mem.Buffer, mem.Offset, numBytes);*/
 	}
 
@@ -285,7 +284,7 @@ namespace ray::renderer_core_api
 		/*
 		DynAlloc mem = _cpuLinearAllocator.Allocate(numBytes, 512);
 		__m128 vectorValue = _mm_set1_ps(value);
-		sse::MemFill(mem.Data, vectorValue, math::DivideByMultiple(numBytes, 16));
+		sse::MemFill(mem.Data, vectorValue, DivideByMultiple(numBytes, 16));
 		CopyBufferRegion(dest, destOffset, mem.Buffer, mem.Offset, numBytes);*/
 	}
 

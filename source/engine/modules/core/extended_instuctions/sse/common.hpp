@@ -8,16 +8,14 @@
 #include <intrin.h>
 #include <cassert>
 
-namespace math = ray::core::math;
-
 namespace ray::core::sse
 {
 
     // A faster version of memcopy that uses SSE instructions.
     inline void MemCopy(void* __restrict _Dest, const void* __restrict _Source, size_t NumQuadwords)
     {
-        assert(math::IsAligned(_Dest, 16));
-        assert(math::IsAligned(_Source, 16));
+        assert(IsAligned(_Dest, 16));
+        assert(IsAligned(_Source, 16));
 
         __m128i* __restrict Dest = (__m128i * __restrict)_Dest;
         const __m128i* __restrict Source = (const __m128i * __restrict)_Source;
@@ -95,7 +93,7 @@ namespace ray::core::sse
 
     inline void MemFill(void* __restrict _Dest, __m128 FillVector, size_t NumQuadwords)
     {
-        assert(math::IsAligned(_Dest, 16));
+        assert(IsAligned(_Dest, 16));
 
         const __m128i Source = _mm_castps_si128(FillVector);
         __m128i* __restrict Dest = (__m128i * __restrict)_Dest;

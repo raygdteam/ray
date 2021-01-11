@@ -1,0 +1,152 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClInclude Include="pch.hpp" />
+    <ClInclude Include="engine\engine.hpp">
+      <Filter>engine</Filter>
+    </ClInclude>
+    <ClInclude Include="engine\engine_def.hpp">
+      <Filter>engine</Filter>
+    </ClInclude>
+    <ClInclude Include="bundle\bundle_meta.hpp">
+      <Filter>bundle</Filter>
+    </ClInclude>
+    <ClInclude Include="state\state.hpp">
+      <Filter>state</Filter>
+    </ClInclude>
+    <ClInclude Include="world\world.hpp">
+      <Filter>world</Filter>
+    </ClInclude>
+    <ClInclude Include="world\actor.hpp">
+      <Filter>world</Filter>
+    </ClInclude>
+    <ClInclude Include="world\components\transform.hpp">
+      <Filter>world\components</Filter>
+    </ClInclude>
+    <ClInclude Include="world\level.hpp">
+      <Filter>world</Filter>
+    </ClInclude>
+    <ClInclude Include="world\components\component_base.hpp">
+      <Filter>world\components</Filter>
+    </ClInclude>
+    <ClInclude Include="world\components\camera_component.hpp">
+      <Filter>world\components</Filter>
+    </ClInclude>
+    <ClInclude Include="world\actors\camera_actor.hpp">
+      <Filter>world\actors</Filter>
+    </ClInclude>
+    <ClInclude Include="world\actors\static_quad_actor.hpp">
+      <Filter>world\actors</Filter>
+    </ClInclude>
+    <ClInclude Include="world\world_render_data.hpp">
+      <Filter>world</Filter>
+    </ClInclude>
+    <ClInclude Include="ui2\ui2.hpp">
+      <Filter>ui2</Filter>
+    </ClInclude>
+    <ClInclude Include="ui2\ext\imconfig.h">
+      <Filter>ui2\ext</Filter>
+    </ClInclude>
+    <ClInclude Include="ui2\ext\imgui.h">
+      <Filter>ui2\ext</Filter>
+    </ClInclude>
+    <ClInclude Include="ui2\ext\imgui_impl_win32.h">
+      <Filter>ui2\ext</Filter>
+    </ClInclude>
+    <ClInclude Include="ui2\ext\imgui_internal.h">
+      <Filter>ui2\ext</Filter>
+    </ClInclude>
+    <ClInclude Include="ui2\ext\imstb_rectpack.h">
+      <Filter>ui2\ext</Filter>
+    </ClInclude>
+    <ClInclude Include="ui2\ext\imstb_textedit.h">
+      <Filter>ui2\ext</Filter>
+    </ClInclude>
+    <ClInclude Include="ui2\ext\imstb_truetype.h">
+      <Filter>ui2\ext</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="engine">
+      <UniqueIdentifier>{e27168b1-9c42-48fd-97c5-e5dd4e7305bc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="bundle">
+      <UniqueIdentifier>{6226b311-7e8a-409b-bbe0-f41d9ad09471}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="state">
+      <UniqueIdentifier>{04de3668-c600-4f1d-856f-80d6a510882a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="world">
+      <UniqueIdentifier>{2a35b505-1c90-4de7-9705-98d20c9672d1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="world\components">
+      <UniqueIdentifier>{d4acd06e-4e1a-47b4-b2a4-d8cee7add7c7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="world\actors">
+      <UniqueIdentifier>{000ec2e6-3609-4776-bb22-05bc4b07f08d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ui2">
+      <UniqueIdentifier>{1e74f10c-9704-4756-8741-5bca606238db}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ui2\ext">
+      <UniqueIdentifier>{5e6d0a1a-a138-4831-88c8-9af04cc0806f}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="engine\engine.cpp">
+      <Filter>engine</Filter>
+    </ClCompile>
+    <ClCompile Include="module_engine.cpp" />
+    <ClCompile Include="state\state.cpp">
+      <Filter>state</Filter>
+    </ClCompile>
+    <ClCompile Include="world\world.cpp">
+      <Filter>world</Filter>
+    </ClCompile>
+    <ClCompile Include="world\actor.cpp">
+      <Filter>world</Filter>
+    </ClCompile>
+    <ClCompile Include="world\level.cpp">
+      <Filter>world</Filter>
+    </ClCompile>
+    <ClCompile Include="world\level_test.cpp">
+      <Filter>world</Filter>
+    </ClCompile>
+    <ClCompile Include="world\components\transform.cpp">
+      <Filter>world\components</Filter>
+    </ClCompile>
+    <ClCompile Include="world\components\component_base.cpp">
+      <Filter>world\components</Filter>
+    </ClCompile>
+    <ClCompile Include="world\components\camera_component.cpp">
+      <Filter>world\components</Filter>
+    </ClCompile>
+    <ClCompile Include="world\actors\camera_actor.cpp">
+      <Filter>world\actors</Filter>
+    </ClCompile>
+    <ClCompile Include="world\actors\static_quad_actor.cpp">
+      <Filter>world\actors</Filter>
+    </ClCompile>
+    <ClCompile Include="world\world_renderer.cpp">
+      <Filter>world</Filter>
+    </ClCompile>
+    <ClCompile Include="ui2\ui2.cpp">
+      <Filter>ui2</Filter>
+    </ClCompile>
+    <ClCompile Include="ui2\ext\imgui.cpp">
+      <Filter>ui2\ext</Filter>
+    </ClCompile>
+    <ClCompile Include="ui2\ext\imgui_demo.cpp">
+      <Filter>ui2\ext</Filter>
+    </ClCompile>
+    <ClCompile Include="ui2\ext\imgui_draw.cpp">
+      <Filter>ui2\ext</Filter>
+    </ClCompile>
+    <ClCompile Include="ui2\ext\imgui_impl_win32.cpp">
+      <Filter>ui2\ext</Filter>
+    </ClCompile>
+    <ClCompile Include="ui2\ext\imgui_widgets.cpp">
+      <Filter>ui2\ext</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

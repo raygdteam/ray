@@ -6,8 +6,6 @@
 #include <core/debug/assert.hpp>
 #include <core/math/common.hpp>
 
-namespace math = ray::core::math;
-
 namespace ray::renderer_core_api::resources
 {
     GpuResource&& GpuBufferAllocator::Allocate(GpuResourceDescription& bufferDesc) noexcept

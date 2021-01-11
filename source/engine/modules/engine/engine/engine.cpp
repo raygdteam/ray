@@ -27,7 +27,6 @@ static World* gWorld;
 u64 tempLastTime = 0;
 
 using namespace ray;
-using namespace ray::core;
 
 static Logger* eng;
 

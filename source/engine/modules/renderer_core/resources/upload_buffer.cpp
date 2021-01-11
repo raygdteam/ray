@@ -4,8 +4,6 @@
 #include "texture.hpp"
 #include <core/math/common.hpp>
 
-using namespace ray::core::math;
-
 namespace ray::renderer_core_api::resources
 {
 

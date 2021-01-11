@@ -2,8 +2,6 @@
 
 #include <audio/audio_def.hpp>
 
-namespace header
-{
     struct riff
     {
         // riff chunk
@@ -26,7 +24,6 @@ namespace header
         int data_bytes;
         short samples;
     };
-}
 
 #include <mmdeviceapi.h>
 #include <audioclient.h>
@@ -37,9 +34,9 @@ public:
     AudioManager();
     ~AudioManager();
 
-    header::riff* Load(const char* filename);
+    riff* Load(const char* filename);
 
-    void Play(header::riff* wave);
+    void Play(riff* wave);
 
 private:
     IMMDeviceEnumerator* DeviceEnumerator;

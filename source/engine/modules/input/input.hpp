@@ -7,8 +7,6 @@
 #include <core/math/vector.hpp>
 #include <core\lib\string.hpp>
 
-using namespace ray::core;
-
 enum MouseAxis : u8
 {
 	eX = 0b01,

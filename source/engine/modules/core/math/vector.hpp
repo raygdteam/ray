@@ -301,5 +301,5 @@ inline f32 Dot(FVector<3> a, FVector<3> b)
 
 inline FVector<3> Normalize(FVector<3> vector)
 {
-	return vector.Multiply(ray::core::math::InverseSqrt(Dot(vector, vector)));
+	return vector.Multiply(InverseSqrt(Dot(vector, vector)));
 }
