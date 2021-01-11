@@ -2,8 +2,6 @@
 #include <core/math/common.hpp>
 #include <core/debug/assert.hpp>
 
-using namespace ray::core;
-
 namespace ray::dx12
 {
 	D3D12_RESOURCE_DESC DescribeBuffer(u64 size)

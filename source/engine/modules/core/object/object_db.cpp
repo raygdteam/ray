@@ -50,7 +50,7 @@ void ObjectDb::__Internal_RegisterObjectStatic(Type* type)
 	}
 
 	if (type->NameCrc32 == 0)
-		type->NameCrc32 = ray::core::sse::Crc32((u8*)type->Name, strlen(type->Name));
+		type->NameCrc32 = Crc32((u8*)type->Name, strlen(type->Name));
 	
 	gObjects->PushBack(type);
 }

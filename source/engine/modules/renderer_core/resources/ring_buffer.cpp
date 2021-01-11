@@ -6,8 +6,6 @@
 #include <renderer_core/renderer.hpp>
 #include <renderer_core/command_queue.hpp>
 
-using namespace ray::core;
-
 namespace ray::renderer_core_api::resources
 {
 	void RingBuffer::Initialize(u64 maxRingBufferSize) noexcept

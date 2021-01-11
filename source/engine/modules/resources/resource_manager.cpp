@@ -139,7 +139,7 @@ IRResource* ResourceManager::LoadResourceResolved(pcstr path, pcstr resorcePath,
 		dcPath += "/";
 		
 		char crc32[32] = {};
-		sprintf_s(crc32, "%u", ray::core::sse::Crc32((u8*)resorcePath, strlen(resorcePath)));
+		sprintf_s(crc32, "%u", Crc32((u8*)resorcePath, strlen(resorcePath)));
 		dcPath.append(crc32);
 		dcPath.append(".bundle");
 		
@@ -181,7 +181,7 @@ IRResource* ResourceManager::LoadResourceResolved(pcstr path, pcstr resorcePath,
 	String dcPath = _dataCacheDirectory;
 	dcPath += "/";
 	char crc32[32] = {};
-	sprintf_s(crc32, "%u", ray::core::sse::Crc32((u8*)resorcePath, strlen(resorcePath)));
+	sprintf_s(crc32, "%u", Crc32((u8*)resorcePath, strlen(resorcePath)));
 	dcPath.append(crc32);
 	dcPath.append(".bundle");
 	IFile* dcFile = _state->FileSystem->OpenFile(dcPath.c_str(), WriteBinary);

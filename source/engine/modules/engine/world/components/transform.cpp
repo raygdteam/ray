@@ -3,7 +3,7 @@
 
 void Transform::Serialize(Archive& ar)
 {
-	//ar.Write<u32>(ray::core::sse::Crc32((u8*)GetType()->Name, strlen(GetType()->Name)));
+	//ar.Write<u32>(Crc32((u8*)GetType()->Name, strlen(GetType()->Name)));
 	ar.Write(this->Position);
 }
 

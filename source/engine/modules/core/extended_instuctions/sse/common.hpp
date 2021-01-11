@@ -8,9 +8,6 @@
 #include <intrin.h>
 #include <cassert>
 
-namespace ray::core::sse
-{
-
     // A faster version of memcopy that uses SSE instructions.
     inline void MemCopy(void* __restrict _Dest, const void* __restrict _Source, size_t NumQuadwords)
     {
@@ -133,6 +130,5 @@ namespace ray::core::sse
 
 	// We keep it in core separate so we won't have to enable SSE instructions per project
     u32 RAY_CORE_API Crc32(u8* buffer, u64 len);
-}
 
 #endif // RAY_PLATFORM_WIN

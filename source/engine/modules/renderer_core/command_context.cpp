@@ -8,8 +8,6 @@
 #include <core/math/common.hpp>
 #include <core/debug/assert.hpp>
 
-namespace sse = ray::core::sse;
-
 #pragma clang diagnostic ignored "-Wmissing-braces" 
 
 namespace ray::renderer_core_api
@@ -272,7 +270,7 @@ namespace ray::renderer_core_api
 
 		/*check(data != nullptr && IsAligned(numBytes, 16));
 		DynAlloc mem = _cpuLinearAllocator.Allocate(numBytes, 512);
-		sse::MemCopy(mem.Data, data, DivideByMultiple(numBytes, 16));
+		MemCopy(mem.Data, data, DivideByMultiple(numBytes, 16));
 		CopyBufferRegion(dest, destOffset, mem.Buffer, mem.Offset, numBytes);*/
 	}
 
@@ -284,7 +282,7 @@ namespace ray::renderer_core_api
 		/*
 		DynAlloc mem = _cpuLinearAllocator.Allocate(numBytes, 512);
 		__m128 vectorValue = _mm_set1_ps(value);
-		sse::MemFill(mem.Data, vectorValue, DivideByMultiple(numBytes, 16));
+		MemFill(mem.Data, vectorValue, DivideByMultiple(numBytes, 16));
 		CopyBufferRegion(dest, destOffset, mem.Buffer, mem.Offset, numBytes);*/
 	}
 
