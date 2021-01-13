@@ -123,9 +123,10 @@ void PlatformWindow::RegisterEventCallback(Function<void(void*, u32, u64, s64)> 
 	_cb.Register(callback);
 }
 
-void PlatformWindow::ProcessCallback(void*, u32 msg, u64 param1, s64 param2)
+void PlatformWindow::ProcessCallback(void* windowHandle, u32 msg, u64 param1, s64 param2)
 {
-	_cb.Invoke(_windowHandle, msg, param1, param2);
+	if (windowHandle == ::GetActiveWindow())
+		_cb.Invoke(_windowHandle, msg, param1, param2);
 }
 
 LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)

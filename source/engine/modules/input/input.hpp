@@ -6,26 +6,36 @@
 
 #include "app_framework/base/platform_window.hpp"
 
+#include "core/math/vector.hpp"
+
 class RAY_INPUT_API Input
 {
 public:
 	enum key_code
 	{
 		f,
-		escape
+		escape,
+		mouse_left,
+		mouse_middle,
+		mouse_right
 	};
 
 	Input();
 	~Input();
 
-	void unnamed(IPlatformWindow* window);
+	void Initialize(IPlatformWindow* window);
 
 	bool get_key_up(const key_code key) { return !keys[key] && previous_keys[key]; }
 	bool get_key_down(const key_code key) { return keys[key] && !previous_keys[key]; }
 
-private:
-	void window_event_handler(unsigned int, long long);
+	FVector2 mouse_position;
+	FVector2 mouse_delta;
 
-	std::array<bool, 2> keys;
-	std::array<bool, 2> previous_keys;
+private:
+	void window_event_handler(void*, unsigned int, unsigned long long, signed long long);
+
+	std::array<bool, 5> keys;
+	std::array<bool, 5> previous_keys;
+
+	float mouse_wheel_delta = 0;
 };
