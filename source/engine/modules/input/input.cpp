@@ -1,42 +1,26 @@
 #include "input.hpp"
-#include <cstdio>
-#include <core/os/miniwin.hpp>
 
-void InputBase::WindowEventHandler(u32 msg, s64 rparam)
+#include <windows.h>
+
+Input::Input()
 {
-	if (msg != 0x0200) return;
-	
-	FVector2 currentPosition = { f32((u64)rparam & 0xffff), f32(((u64)rparam >> 16) & 0xffff) };
 
-	//printf("x = %f, y = %f\n", currentPosition.x, currentPosition.y);
-	
-	_currentDelta = { currentPosition.x - _lastMousePos.x, currentPosition.y - _lastMousePos.y };
-	_lastMousePos = currentPosition;
-	wasTick = true;
 }
 
-InputBase::InputBase()
+Input::~Input()
 {
-	Array<RawInputDeviceList> devices = WinApi::GetRawInputDeviceList();
-	for (RawInputDeviceList& device : devices)
-	{
-		(void)device;
-		//printf("--- TYPE: %lu\n", device.Type);
-	}
+
 }
 
-void InputBase::Initialize(IPlatformWindow* window)
+void Input::unnamed(IPlatformWindow* window)
 {
-	window->RegisterEventCallback([this](void*, u32 msg, u64, s64 rparam) { this->WindowEventHandler(msg, rparam); });
+	window->RegisterEventCallback([this](void*, unsigned int message, unsigned long long, signed long long second_parameter) { this->window_event_handler(message, second_parameter); });
 }
 
-void InputBase::Reset()
+void Input::window_event_handler(unsigned int message, long long parameter)
 {
-	if (wasTick)
-	{
-		wasTick = false;
-		return;
-	}
-	_currentDelta = FVector2 { 0.0f, 0.0f };
-	printf("reset\n");
+	this->previous_keys = this->keys;
+
+	this->keys[0] = (GetKeyState(0x46) & 0x8000) != 0;
+	this->keys[1] = (GetKeyState(0x1B) & 0x8000) != 0;
 }

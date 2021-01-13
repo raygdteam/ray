@@ -27,7 +27,7 @@ void EngineLoop::PreInitialize()
 	state->ModuleManager = new ModuleManager();
 	state->FileSystem = new FileSystem();
 	state->Debug = new Debug();
-	state->Input = new InputBase();
+	state->Input = new Input();
 	state->ResourceManager = new ResourceManager(state);
 
 #if !LAUNCH_EDITOR

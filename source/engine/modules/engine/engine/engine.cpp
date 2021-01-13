@@ -48,7 +48,7 @@ void RayEngine::Initialize(IEngineLoop* engineLoop)
 	window->Initialize();
 	window->CreateWindow("RAY_ENGINE");
 
-	state->Input->Initialize(window);
+	state->Input->unnamed(window);
 
 	eng->Log("renderer load begin");
 
@@ -79,8 +79,11 @@ void RayEngine::Tick()
 	static f64 delta = 0;
 	auto __start = std::chrono::high_resolution_clock::now();
 
-	RayState()->Input->Reset();
-	
+	if (RayState()->Input->get_key_down(Input::key_code::escape))
+		printf("eeessskkkeeeiiittt!\n");
+	if (RayState()->Input->get_key_down(Input::key_code::f))
+		printf("you paid respect\n");
+
 	static_cast<IPlatformWindow*>(_window)->Update();
 	bool bShouldClose = static_cast<IPlatformWindow*>(_window)->ShouldClose();
 	if (bShouldClose)
