@@ -79,14 +79,6 @@ void RayEngine::Tick()
 	static f64 delta = 0;
 	auto __start = std::chrono::high_resolution_clock::now();
 
-	/*if (RayState()->Input->get_key_down(Input::key_code::escape))
-		printf("you pressed eeessscccaaapppeeeiiittt!\n");
-	if (RayState()->Input->get_key_down(Input::key_code::f))
-		printf("you paid respect\n");
-	if (RayState()->Input->get_key_down(Input::key_code::mouse_left))
-		printf("you pressed left mouse\n");*/
-	printf("%f %f\n", RayState()->Input->mouse_position.x, RayState()->Input->mouse_position.y);
-
 	static_cast<IPlatformWindow*>(_window)->Update();
 	bool bShouldClose = static_cast<IPlatformWindow*>(_window)->ShouldClose();
 	if (bShouldClose)
