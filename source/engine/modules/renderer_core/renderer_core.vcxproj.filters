@@ -45,9 +45,6 @@
     <ClInclude Include="resources\upload_buffer.hpp">
       <Filter>resources\memory</Filter>
     </ClInclude>
-    <ClInclude Include="resources\resource_view.hpp">
-      <Filter>resources</Filter>
-    </ClInclude>
     <ClInclude Include="resources\gpu_memory_pool.hpp">
       <Filter>resources\memory</Filter>
     </ClInclude>
@@ -90,9 +87,6 @@
     <ClCompile Include="dx12_helper_functions.cpp" />
     <ClCompile Include="resources\upload_buffer.cpp">
       <Filter>resources\memory</Filter>
-    </ClCompile>
-    <ClCompile Include="resources\resource_view.cpp">
-      <Filter>resources</Filter>
     </ClCompile>
     <ClCompile Include="resources\gpu_memory_pool.cpp">
       <Filter>resources\memory</Filter>

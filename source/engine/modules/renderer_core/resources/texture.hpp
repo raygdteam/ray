@@ -93,8 +93,30 @@ namespace ray::renderer_core_api::resources
 
 	};
 
+	class TextureView : public IResourceView
+	{
+	private:
+		DescriptorHandle _rtvHandle;
+		DescriptorHandle _dsvHandle[2];
+
+	public:
+		void Create(GpuResource& resource) noexcept override;
+
+	public:
+		D3D12_CPU_DESCRIPTOR_HANDLE GetRTV() const noexcept
+		{
+			return _rtvHandle.GetCpuHandle();
+		}
+
+		D3D12_CPU_DESCRIPTOR_HANDLE GetDSV() const noexcept
+		{
+			return _dsvHandle.GetCpuHandle();
+		}
+
+	};
+
 	size_t BitsPerPixel(_In_ DXGI_FORMAT fmt) noexcept;
-	size_t BitesPerPixel(DXGI_FORMAT fmt) noexcept
+	size_t BytesPerPixel(DXGI_FORMAT fmt) noexcept
 	{
 		return (BitsPerPixel(fmt) / 8);
 	}

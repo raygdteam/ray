@@ -4,6 +4,7 @@
 #include <core/core.hpp>
 #include <core/memory/memory_manager.hpp>
 #include "gpu_memory_pool.hpp"
+#include <renderer_core/descriptor_heap.hpp>
 
 namespace ray::renderer_core_api
 {
@@ -159,6 +160,28 @@ namespace ray::renderer_core_api::resources
 		u64 GetResourceSize() const noexcept { return _resourceSize; }
 		GpuMemoryPool* GetUnderlyingPool() const noexcept { return _underlyingPool; }
 		GpuResourceDescription GetDesc() const noexcept { return _desc; }
+
+	};
+
+	class IResourceView
+	{
+	protected:
+		DescriptorHandle _srvHandle;
+		DescriptorHandle _uavHandle;
+
+	public:
+		virtual void Create(GpuResource& resource) noexcept = 0;
+
+	public:
+		D3D12_CPU_DESCRIPTOR_HANDLE GetSRV() const noexcept
+		{
+			return _srvHandle.GetCpuHandle();
+		}
+
+		D3D12_CPU_DESCRIPTOR_HANDLE GetUAV() const noexcept
+		{
+			return _uavHandle.GetCpuHandle();
+		}
 
 	};
 

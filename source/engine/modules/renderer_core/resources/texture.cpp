@@ -232,4 +232,80 @@ namespace ray::renderer_core_api::resources
         globals::gTextureAllocator.Free(*this);
     }
 
+    void TextureView::Create(GpuResource& resource) noexcept
+    {
+        auto desc = resource.GetDesc();
+        auto nativeResource = resource.GetNativeResource();
+        auto gpuVirtualAddress = nativeResource->GetGPUVirtualAddress();
+        u32 numElements = desc.SizeInBytes / desc.Stride;
+
+        // TODO:
+        // auto& rtvDescriptorHeap = gDescriptorHeapsManager.GetCurrentRTV_Heap();
+        // auto& dsvDescriptorHeap = gDescriptorHeapsManager.GetCurrentDSV_Heap();
+        // auto& descriptorHeap = gDescriptorHeapsManager.GetCurrentSRV_Heap();
+
+        // ========================== RENDER TARGET VIEW ========================== //
+        if (desc.Flags & D3D12_RESOURCE_FLAG_ALLOW_RENDER_TARGET)
+        {
+            D3D12_RENDER_TARGET_VIEW_DESC rtvDesc;
+            rtvDesc.Format = desc.Format;
+            rtvDesc.ViewDimension = D3D12_RTV_DIMENSION_TEXTURE2D;
+            rtvDesc.Texture2D.MipSlice = 0;
+            rtvDesc.Texture2D.PlaneSlice = 0;
+
+            // TODO:
+            
+            // _rtvHandle = rtvDescriptorHeap.Allocate(1);
+            globals::gDevice->CreateRenderTargetView(nativeResource, &rtvDesc, _rtvHandle.GetCpuHandle());
+        }
+
+        // ========================== DEPTH STENCIL VIEW ========================== //
+        if (desc.Flags & D3D12_RESOURCE_FLAG_ALLOW_DEPTH_STENCIL)
+        {
+            D3D12_DEPTH_STENCIL_VIEW_DESC dsvDesc;
+            dsvDesc.Format = desc.Format;
+            dsvDesc.ViewDimension = D3D12_DSV_DIMENSION_TEXTURE2D;
+            dsvDesc.Texture2D.MipSlice = 0;
+
+            // _dsvHandle[0] = dsvDescriptorHeap.Allocate(1);
+            // _dsvHandle[1] = dsvDescriptorHeap.Allocate(1);
+
+            dsvDesc.Flags = D3D12_DSV_FLAG_NONE;
+            globals::gDevice->CreateDepthStencilView(nativeResource, &dsvDesc, _dsvHandle[0].GetCpuHandle());
+
+            dsvDesc.Flags = D3D12_DSV_FLAG_READ_ONLY_DEPTH;
+            globals::gDevice->CreateDepthStencilView(nativeResource, &dsvDesc, _dsvHandle[1].GetCpuHandle());
+        }
+
+        // ========================== SHADER RESOURCE VIEW ========================== //
+        if (desc.Flags & D3D12_RESOURCE_FLAG_DENY_SHADER_RESOURCE == 0)
+        {
+            D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc;
+            srvDesc.Format = desc.Format;
+            srvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D; // for now we are supporting only texture2d
+            srvDesc.Texture2D.MipLevels = desc.MipLevels;
+            srvDesc.Texture2D.MostDetailedMip = 0;
+            srvDesc.Texture2D.PlaneSlice = 0;
+            srvDesc.Texture2D.ResourceMinLODClamp = 0.f;
+
+            // TODO:
+            // _srvHandle = descriptorHeap.Allocate(1);
+            globals::gDevice->CreateShaderResourceView(nativeResource, &srvDesc, _srvHandle.GetCpuHandle());
+        }
+        
+        // ========================== UNORDERED ACCESS VIEW ========================== //
+        if (desc.Flags & D3D12_RESOURCE_FLAG_ALLOW_UNORDERED_ACCESS)
+        {
+            D3D12_UNORDERED_ACCESS_VIEW_DESC uavDesc;
+            uavDesc.Format = desc.Format;
+            uavDesc.ViewDimension = D3D12_UAV_DIMENSION_TEXTURE2D; // for now we are supporting only texture2d
+            uavDesc.Texture2D.PlaneSlice = 0;
+            uavDesc.Texture2D.MipSlice = 0;
+
+            // TODO:
+            // _uavHandle = descriptorHeap.Allocate(1);
+            globals::gDevice->CreateUnorderedAccessView(nativeResource, nullptr, &uavDesc, _uavHandle.GetCpuHandle());
+        }
+    }
+
 }

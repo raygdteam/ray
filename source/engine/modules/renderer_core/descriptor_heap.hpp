@@ -113,7 +113,7 @@ namespace ray::renderer_core_api
 
 		void Create();
 		
-		DescriptorHandle Allocate(u32 coutn = 1);
+		DescriptorHandle Allocate(u32 count = 1);
 
 		bool HasAvailableSpace(u32 count) const noexcept { return count <= _numFreeDescriptors; }
 		DescriptorHandle GetDescriptorAtOffset(u32 offset) const noexcept { return _firstHandle + offset * _descriptorSize; }

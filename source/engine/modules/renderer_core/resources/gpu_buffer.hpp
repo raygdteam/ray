@@ -90,5 +90,33 @@ namespace ray::renderer_core_api::resources
 		void Release() noexcept override;
 
 	};
+
+	class BufferView : public IResourceView
+	{
+	private:
+		D3D12_VERTEX_BUFFER_VIEW _vbView;
+		D3D12_INDEX_BUFFER_VIEW _ibView;
+		D3D12_GPU_VIRTUAL_ADDRESS _cbView;
+
+	public:
+		void Create(GpuResource& resource) noexcept override;
+
+	public:
+		D3D12_VERTEX_BUFFER_VIEW GetVertexBufferView() const noexcept
+		{
+			return _vbView;
+		}
+
+		D3D12_INDEX_BUFFER_VIEW GetIndexBufferView() const noexcept
+		{
+			return _ibView;
+		}
+
+		D3D12_GPU_VIRTUAL_ADDRESS GetContantBufferView() const noexcept
+		{
+			return _cbView;
+		}
+		
+	};
 }
 
