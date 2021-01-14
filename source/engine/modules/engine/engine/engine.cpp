@@ -26,9 +26,6 @@
 static World* gWorld;
 u64 tempLastTime = 0;
 
-using namespace ray;
-using namespace ray::core;
-
 static Logger* eng;
 
 RayEngine::RayEngine() : _engineLoop(nullptr)
@@ -43,15 +40,15 @@ void RayEngine::Initialize(IEngineLoop* engineLoop)
 	IRayState* state = RayState();
 
 	eng->Log("Initializing Ray engine");
-	eng->Log("version {}.{}.{} [{}]", RAY_VERSION_MAJOR, RAY_VERSION_MINOR, RAY_VERSION_PATCH, RAY_VERSION_CODENAME);
-	eng->Log("built on \"{}\"", __TIMESTAMP__);
+	eng->Log("version %s.%s.%s [%s]", RAY_VERSION_MAJOR, RAY_VERSION_MINOR, RAY_VERSION_PATCH, RAY_VERSION_CODENAME);
+	eng->Log("built on \"%s\"", __TIMESTAMP__);
 
-	ray::core::IPlatformWindow* window = core::IPlatformWindow::CreateInstance();
+	IPlatformWindow* window = IPlatformWindow::CreateInstance();
 	
 	window->Initialize();
 	window->CreateWindow("RAY_ENGINE");
 
-	state->Input->Initialize(window);
+	state->Input->RegisterWindowEventHandler(window);
 
 	eng->Log("renderer load begin");
 
@@ -82,10 +79,8 @@ void RayEngine::Tick()
 	static f64 delta = 0;
 	auto __start = std::chrono::high_resolution_clock::now();
 
-	RayState()->Input->Reset();
-	
-	static_cast<core::IPlatformWindow*>(_window)->Update();
-	bool bShouldClose = static_cast<core::IPlatformWindow*>(_window)->ShouldClose();
+	static_cast<IPlatformWindow*>(_window)->Update();
+	bool bShouldClose = static_cast<IPlatformWindow*>(_window)->ShouldClose();
 	if (bShouldClose)
 	{
 		RequestEngineExit(true);
@@ -100,12 +95,12 @@ void RayEngine::Tick()
 
 RayEngine::~RayEngine()
 {
-	static_cast<core::IPlatformWindow*>(_window)->Destroy();
-	static_cast<core::IPlatformWindow*>(_window)->Shutdown();
+	static_cast<IPlatformWindow*>(_window)->Destroy();
+	static_cast<IPlatformWindow*>(_window)->Shutdown();
 	//_renderer->Shutdown();
 
 	//delete _renderer;
-	delete (core::IPlatformWindow*)_window;
+	delete (IPlatformWindow*)_window;
 }
 
 /************************************/

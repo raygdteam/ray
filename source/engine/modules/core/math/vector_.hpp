@@ -1,9 +1,6 @@
 #pragma once
 #include <core/core.hpp>
 
-namespace ray::math
-{
-
 template<size_t Rank, typename Type>
 struct RAY_CORE_API Vector
 {
@@ -110,4 +107,3 @@ public:
 		return !(this == other);
 	}
 };
-}

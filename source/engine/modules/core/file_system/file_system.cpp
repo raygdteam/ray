@@ -106,6 +106,6 @@ IFile* FileSystem::OpenFile(pcstr name, FileMode mode)
 
 void FileSystem::CreateAllDirectories(pcstr path)
 {
-	
+	(void)path;
 }
 

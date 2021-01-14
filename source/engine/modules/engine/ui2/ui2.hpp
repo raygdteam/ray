@@ -1,10 +1,7 @@
 #pragma once
 #include <core/core.hpp>
 #include <core/lib/array.hpp>
-#include <core/math/vector.hpp>
-#include <core/math/matrix.hpp>
 #include <app_framework/base/platform_window.hpp>
-#include <engine/world/components/transform.hpp>
 
 class UiObject
 {
@@ -13,16 +10,20 @@ public:
 	virtual void Tick() = 0;
 };
 
-class UiButton : public UiObject
+class UiWindow
 {
+	friend class UiRootObject;
+protected:
+	Array<UiObject*> _objects;
 public:
-	void Tick() override;
+	UiWindow();
 };
 
 class UiRootObject
 {
+	Array<UiWindow*> _windows;
 public:
-	void Initialize(ray::core::IPlatformWindow* window);
+	void Initialize(IPlatformWindow* window);
 	void Tick();
 	void RenderAll();
 };

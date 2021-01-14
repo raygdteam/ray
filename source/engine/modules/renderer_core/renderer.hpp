@@ -75,7 +75,7 @@ namespace ray::renderer_core_api
 			: _swapChain(nullptr)
 		{}
 
-		void Initialize(ray::core::IPlatformWindow* window);
+		void Initialize(IPlatformWindow* window);
 		void Shutdown();
 
 		void BeginScene(GraphicsContext& gfxContext);

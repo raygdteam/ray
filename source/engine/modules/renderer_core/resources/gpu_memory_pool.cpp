@@ -17,4 +17,3 @@ namespace ray::renderer_core_api::resources
         _heap->Release();
     }
 }
-

@@ -6,12 +6,12 @@
 
 using namespace ray::renderer_core_api;
 
-void UiButton::Tick()
+/*void UiButton::Tick()
 {
 	ImGui::Button({});
-}
+}*/
 
-void UiRootObject::Initialize(ray::core::IPlatformWindow* window)
+void UiRootObject::Initialize(IPlatformWindow* window)
 {
 	ImGui::CreateContext();
 	ImGui_ImplWin32_Init(window->GetWindowHandleRaw());
@@ -21,8 +21,15 @@ void UiRootObject::Tick()
 {
 	ImGui_ImplWin32_NewFrame();
 	ImGui::NewFrame();
-	ImGui::Begin({});
-	ImGui::End();
+
+	for (UiWindow* window : _windows)
+	{
+		for (UiObject* object : window->_objects)
+		{
+			object->Tick();
+		}
+	}
+	
 	ImGui::EndFrame();
 }
 

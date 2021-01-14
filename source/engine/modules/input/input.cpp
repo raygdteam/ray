@@ -1,41 +1,37 @@
-#include "input.hpp"
-#include <cstdio>
-#include <core/os/miniwin.hpp>
+﻿#include "input.hpp"
 
-void InputBase::WindowEventHandler(u32 msg, s64 rparam)
+#include <windows.h>
+#include <iostream>
+
+Input::Input()
 {
-	if (msg != 0x0200) return;
-	
-	FVector2 currentPosition = { f32((u64)rparam & 0xffff), f32(((u64)rparam >> 16) & 0xffff) };
-
-	printf("x = %f, y = %f\n", currentPosition.x, currentPosition.y);
-	
-	_currentDelta = { currentPosition.x - _lastMousePos.x, currentPosition.y - _lastMousePos.y };
-	_lastMousePos = currentPosition;
-	wasTick = true;
+	this->_keys = new bool[256];
+	this->_previousKeys = new bool[256];
 }
 
-InputBase::InputBase()
+Input::~Input()
 {
-	Array<RawInputDeviceList> devices = WinApi::GetRawInputDeviceList();
-	for (RawInputDeviceList& device : devices)
-	{
-		printf("--- TYPE: %lu\n", device.Type);
-	}
+	delete this->_keys;
+	delete this->_previousKeys;
 }
 
-void InputBase::Initialize(IPlatformWindow* window)
+void Input::RegisterWindowEventHandler(IPlatformWindow* window)
 {
-	window->RegisterEventCallback([this](void*, u32 msg, u64, s64 rparam) { this->WindowEventHandler(msg, rparam); });
+	RAWINPUTDEVICE rid[1] = {};
+
+	rid[0].usUsagePage = 0x01;
+	rid[0].usUsage = 0x06;
+	rid[0].dwFlags = 0;
+	rid[0].hwndTarget = static_cast<HWND>(window->GetWindowHandleRaw());
+
+	RegisterRawInputDevices(rid, 1, sizeof(rid[0]));
+
+	window->RegisterEventCallback([this](void*, u32 message, u64 wParameter, s64 lParameter) { this->WindowEventHandler(message, wParameter, lParameter); });
 }
 
-void InputBase::Reset()
+void Input::WindowEventHandler(u32 message, u64 wParameter, s64 lParameter)
 {
-	if (wasTick)
-	{
-		wasTick = false;
-		return;
-	}
-	_currentDelta = FVector2 { 0.0f, 0.0f };
-	printf("reset\n");
+	(void)message;(void)wParameter;(void)lParameter;
+
+	this->_previousKeys = this->_keys;
 }

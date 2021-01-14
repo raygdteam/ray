@@ -6,8 +6,6 @@
 #include <renderer_core/renderer.hpp>
 #include <renderer_core/command_queue.hpp>
 
-using namespace ray::core;
-
 namespace ray::renderer_core_api::resources
 {
 	void RingBuffer::Initialize(u64 maxRingBufferSize) noexcept
@@ -20,7 +18,7 @@ namespace ray::renderer_core_api::resources
 		size_t bitesPerPixel = BitesPerPixel(DXGI_FORMAT_R32G32B32A32_FLOAT);
 		size_t width = texture.GetDimensions().x;
 		size_t height = texture.GetDimensions().y;
-		size_t rowPitch = math::AlignUp(bitesPerPixel * width, D3D12_TEXTURE_DATA_PITCH_ALIGNMENT);
+		size_t rowPitch = AlignUp(bitesPerPixel * width, D3D12_TEXTURE_DATA_PITCH_ALIGNMENT);
 		size_t textureSize = height * rowPitch;
 
 		ray_assert(TryToSetResource(textureSize, D3D12_TEXTURE_DATA_PLACEMENT_ALIGNMENT), "Out of memory! Create new ring buffer!");
@@ -52,7 +50,7 @@ namespace ray::renderer_core_api::resources
 			return false;
 		}
 
-		u8* currentPointer = reinterpret_cast<u8*>(math::AlignUp(reinterpret_cast<size_t>(_uploadBuffer._currentPointer), alignment));
+		u8* currentPointer = reinterpret_cast<u8*>(AlignUp(reinterpret_cast<size_t>(_uploadBuffer._currentPointer), alignment));
 		u8* nextResource = nullptr;
 		auto& frontElement = _frameOffsetQueue.front();
 		
@@ -65,7 +63,7 @@ namespace ray::renderer_core_api::resources
 			nextResource = _uploadBuffer._end;
 			if(!IsMemoryEnough(currentPointer, _uploadBuffer._end, alignedSize))
 			{
-				currentPointer = reinterpret_cast<u8*>(math::AlignUp(reinterpret_cast<size_t>(_uploadBuffer._begin), alignment));
+				currentPointer = reinterpret_cast<u8*>(AlignUp(reinterpret_cast<size_t>(_uploadBuffer._begin), alignment));
 				nextResource = frontElement.ResourceOffset;
 			}
 		}
@@ -83,7 +81,7 @@ namespace ray::renderer_core_api::resources
 
 			if (_frameOffsetQueue.empty())
 			{
-				currentPointer = reinterpret_cast<u8*>(math::AlignUp(reinterpret_cast<size_t>(_uploadBuffer._begin), alignment));
+				currentPointer = reinterpret_cast<u8*>(AlignUp(reinterpret_cast<size_t>(_uploadBuffer._begin), alignment));
 			}
 		}
 

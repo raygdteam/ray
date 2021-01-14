@@ -134,7 +134,7 @@ bool IVkRenderer::InitDevice()
 	return true;
 }
 
-bool IVkRenderer::InitSurface(ray::core::IPlatformWindow* window)
+bool IVkRenderer::InitSurface(IPlatformWindow* window)
 {
 	VkWin32SurfaceCreateInfoKHR createInfo = {
 		.sType = VK_STRUCTURE_TYPE_WIN32_SURFACE_CREATE_INFO_KHR,
@@ -155,7 +155,7 @@ bool IVkRenderer::InitSurface(ray::core::IPlatformWindow* window)
 	return true;
 }
 
-bool IVkRenderer::InitSwapchain(ray::core::IPlatformWindow* window)
+bool IVkRenderer::InitSwapchain(IPlatformWindow* window)
 {
 	VkSurfaceCapabilitiesKHR capabilities = {};
 	vkGetPhysicalDeviceSurfaceCapabilitiesKHR(_physicalDevice, _surface, &capabilities);
@@ -332,7 +332,7 @@ static void ImguiCallback(void* hWnd, u32 msg, u64 wParam, s64 lParam)
 	ImGui_ImplWin32_WndProcHandler((HWND)hWnd, msg, wParam, lParam);
 }
 
-bool IVkRenderer::Initialize(ray::core::IPlatformWindow* window)
+bool IVkRenderer::Initialize(IPlatformWindow* window)
 {
 	gLog.Log(" -------------------- BEGIN VULKAN INIT --------------------");
 

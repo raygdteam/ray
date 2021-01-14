@@ -1,51 +1,31 @@
-#pragma once
-#include <core/core.hpp>
-#include <input/input_def.hpp>
+﻿#pragma once
 
-#include <app_framework/base/platform_window.hpp>
-#include <core/lib/delegate.hpp>
-#include <core/math/vector.hpp>
-#include <core\lib\string.hpp>
+#include "input_def.hpp"
 
-using namespace ray::core;
+#include "core/lib/array.hpp"
+#include "core/math/vector.hpp"
 
-enum MouseAxis : u8
+#include "app_framework/base/platform_window.hpp"
+
+class RAY_INPUT_API Input
 {
-	eX = 0b01,
-	eY = 0b10
-};
-
-class RAY_INPUT_API InputBase
-{
-protected:
-	MulticastDelegate<void(u32, u32)> _mouseUpdate;
-	FVector2 _lastMousePos;
-	FVector2 _currentDelta;
-
-	bool wasTick = true;
-
-	void WindowEventHandler(u32 msg, s64 rparam);
 public:
-	InputBase();
-
-	void Initialize(IPlatformWindow* window);
-	void Reset();
-
-	const FVector2& GetMousePosition()
+	enum KeyCode
 	{
-		return _lastMousePos;
-	}
-	
-	const FVector2& GetMouseDelta()
-	{
-		return _currentDelta;
-	}
-};
 
-class Input
-{
-	void RegisterListener(struct ListenerDescription* listener);
-
-	void CreateMouseInputMapping(String& name, MouseAxis axis);
+	};
 	
+	Input();
+	~Input();
+
+	void RegisterWindowEventHandler(IPlatformWindow* window);
+
+	bool IsKeyUp(const KeyCode key) { return !_keys[key] && _previousKeys[key]; }
+	bool IsKeyDown(const KeyCode key) { return _keys[key] && !_previousKeys[key]; }
+
+private:
+	void WindowEventHandler(u32, u64, s64);
+
+	bool* _keys;
+	bool* _previousKeys;
 };

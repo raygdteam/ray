@@ -1,6 +1,6 @@
 #include "common.hpp"
 
-u32 ray::core::sse::Crc32(u8* buffer, u64 len)
+u32 Crc32(u8* buffer, u64 len)
 {
     u32 hash = 0;
 

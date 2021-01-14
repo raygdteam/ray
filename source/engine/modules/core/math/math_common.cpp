@@ -2,8 +2,6 @@
 #include "common.hpp"
 #include <math.h>
 
-namespace ray::core::math
-{
 	f32 Sin(f32 val)
 	{
 		return sinf(val);
@@ -33,4 +31,3 @@ namespace ray::core::math
 	{
 		return 1.f / sqrtf(val);
 	}
-}

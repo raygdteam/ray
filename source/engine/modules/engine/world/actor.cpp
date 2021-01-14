@@ -25,7 +25,7 @@ Transform* Actor::GetTransform()
 
 void Actor::Serialize(Archive& ar)
 {
-	ar.Write<u32>(ray::core::sse::Crc32((u8*)GetType()->Name, strlen(GetType()->Name)));
+	ar.Write<u32>(Crc32((u8*)GetType()->Name, strlen(GetType()->Name)));
 	ar.Write<u64>(_components.Size());
 
 	// TODO: not like this!

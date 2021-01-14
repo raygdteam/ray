@@ -1,5 +1,4 @@
 #pragma once
-
 #include <core/object/object.hpp>
 #include <core/lib/array.hpp>
 #include <core/threading/condition_variable.hpp>
@@ -44,14 +43,14 @@ class World final
 	/* Render the level. */
 	void Render();
 
-	void RendererInitialize(ray::core::IPlatformWindow* window);
+	void RendererInitialize(IPlatformWindow* window);
 
 	void WorldTickThread();
 	void RenderingThread();
 
 	void LoadLevel(pcstr name);
 public:
-	void Initialize(ray::core::IPlatformWindow* window);
+	void Initialize(IPlatformWindow* window);
 	void Tick(f64 delta);
 
 	void SetPrimaryCamera(CameraActor* camera);

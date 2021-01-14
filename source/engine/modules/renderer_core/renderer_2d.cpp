@@ -25,7 +25,7 @@ namespace ray::renderer_core_api
 
 	struct ConstantBuffer
 	{
-		FMatrix4 ViewProjMatrix;
+		FMatrix4x4 ViewProjMatrix;
 	};
 
 	struct QuadVertex
@@ -54,7 +54,7 @@ namespace ray::renderer_core_api
 
 		FVector<3> QuadVertexPositions[4];
 
-		FMatrix4 ViewProjectionMatrix;
+		FMatrix4x4 ViewProjectionMatrix;
 	};
 
 	static Renderer2DData sData;
@@ -245,8 +245,8 @@ namespace ray::renderer_core_api
 		gfxContext.SetDescriptorTable(0, TextureManager::_descriptorHeap.GetDescriptorAtOffset(0).GetGpuHandle());
 		gfxContext.SetDynamicCBV(1, sizeof(cb), &cb);*/
 
-		size_t bufferSize = sData.QuadVertexBufferPtr - sData.QuadVertexBufferBase;
-		gfxContext.SetDynamicVB(0, bufferSize, sizeof(QuadVertex), sData.QuadVertexBufferBase);
+		/*size_t bufferSize = sData.QuadVertexBufferPtr - sData.QuadVertexBufferBase;
+		gfxContext.SetDynamicVB(0, bufferSize, sizeof(QuadVertex), sData.QuadVertexBufferBase);*/
 		gfxContext.SetIndexBuffer(sData.IndexBufferView);
 		gfxContext.DrawIndexedInstanced(sData.QuadIndexCount, 1, 0, 0, 0);
 

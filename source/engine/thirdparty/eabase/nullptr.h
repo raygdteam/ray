@@ -8,6 +8,7 @@
 #include <eabase/eabase.h>
 #include <eabase/eahave.h>
 
+#if 0
 
 #if defined(EA_PRAGMA_ONCE_SUPPORTED)
 	#pragma once /* Some compilers (e.g. VC++) benefit significantly from using this. We've measured 3-4% build speed improvements in apps as a result. */
@@ -100,3 +101,4 @@
 
 #endif // EA_COMPILER_NO_NULLPTR
 
+#endif

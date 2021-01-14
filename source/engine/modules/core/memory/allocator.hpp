@@ -1,8 +1,6 @@
 #pragma once
 #include "core/core.hpp"
 
-namespace ray
-{
 	struct AllocHeader
 	{
 		u32 AllocatedDataSize;
@@ -38,4 +36,3 @@ namespace ray
 
 
 	};
-}

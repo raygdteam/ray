@@ -11,7 +11,7 @@ class RAY_CORE_API Debug;
 class RAY_CORE_API ModuleManager;
 
 // Input
-class RAY_INPUT_API InputBase;
+class RAY_INPUT_API Input;
 
 // Engine
 struct IEngine;
@@ -28,7 +28,7 @@ struct IRayState
 	Debug* Debug;
 
 	/* input */
-	InputBase* Input;
+	Input* Input;
 	
 	/* engine */
 	IEngine* Engine;

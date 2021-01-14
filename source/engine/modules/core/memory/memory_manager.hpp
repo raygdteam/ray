@@ -4,8 +4,6 @@
 //temporary
 #include <Windows.h>
 
-namespace ray
-{
 	template<typename MemoryPool>
 	class MemoryManager
 	{
@@ -83,4 +81,3 @@ namespace ray
 		_listOfPools.Buffer[_listOfPools.ElementsCount].Create(requestedSize, _listOfPools.ElementsCount);
 		return _listOfPools.Buffer[_listOfPools.ElementsCount++];
 	}
-}

@@ -81,7 +81,7 @@ void World::LoadLevel(pcstr name)
 	//_levelData->Level->SpawnActor(actor3);
 }
 
-void World::Initialize(ray::core::IPlatformWindow* window)
+void World::Initialize(IPlatformWindow* window)
 {
 	_renderer = new IRenderer;
 	_renderer->Initialize(window);

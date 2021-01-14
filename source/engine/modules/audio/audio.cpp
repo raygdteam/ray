@@ -25,7 +25,7 @@ AudioManager::~AudioManager()
 	CoUninitialize();
 }
 
-header::riff* AudioManager::Load(const char* filename)
+riff* AudioManager::Load(const char* filename)
 {
 	palFileSysSwitchToExeDirectory();
 
@@ -39,10 +39,10 @@ header::riff* AudioManager::Load(const char* filename)
 
 	krnlFileClose(file_handle);
 
-	return static_cast<header::riff*>(file_data);
+	return static_cast<riff*>(file_data);
 }
 
-void AudioManager::Play(header::riff* wave)
+void AudioManager::Play(riff* wave)
 {
     auto wave_samples = &wave->samples;
 

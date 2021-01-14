@@ -4,9 +4,7 @@
 
 // #include <renderer_core/renderer_commands.hpp>
 
-#ifndef _TEMP_NO_RENDERER_CORE_API_
 using namespace ray::renderer_core_api;
-#endif
 
 /**
  * Represents the engine loop object, where all the magic is being called.

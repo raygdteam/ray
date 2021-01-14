@@ -2,6 +2,8 @@
 #include <core/core.hpp>
 #include <core/module/module_meta.hpp>
 #include <core/lib/result.hpp>
+#include <core/lib/array.hpp>
+#include <core/log/log.hpp>
 
 enum ModuleLoadError : u8
 {
@@ -10,15 +12,45 @@ enum ModuleLoadError : u8
 	eNotARayModule,
 };
 
+/**
+ * Used internally by ModuleManager to keep track of module data.
+ * @hide
+ */
+struct ModuleDef
+{
+	IModule* Module;
+	void* RawOsHandle;
+};
+
+/**
+ * Delegate to create the module object.
+ */
 using RayModuleEntryFn = IModule * ();
 
+/**
+ * Primary class for managing modules.
+ *
+ * @note Keep only one instance of this class.
+ */
 class RAY_CORE_API ModuleManager
 {
+	Array<ModuleDef> _modules;
+	Logger _log;
+	
 public:
 	ModuleManager();
+	~ModuleManager();
 
+	/**
+	 * Primary method of getting/loading modules.
+	 * If the module is already loaded, returns it's object.
+	 * @param name The name of module to load.
+	 */
 	Result<IModule*, ModuleLoadError> LoadModule(pcstr name);
 
+	/**
+	 * @hide
+	 */
 	static void __Internal_LoadModuleStatic(RayModuleEntryFn);
 };
 
