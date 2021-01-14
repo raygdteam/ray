@@ -11,6 +11,9 @@ using namespace ray::renderer_core_api;
 	ImGui::Button({});
 }*/
 
+UiObject::UiObject()
+{ }
+
 void UiRootObject::Initialize(IPlatformWindow* window)
 {
 	ImGui::CreateContext();

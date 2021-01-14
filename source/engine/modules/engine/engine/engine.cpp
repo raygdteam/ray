@@ -1,5 +1,4 @@
 #include "engine.hpp"
-#include <app_framework/base/platform_window.hpp>
 
 #include <core/lib/thread.hpp>
 #include <core/log/log.hpp>
@@ -43,12 +42,12 @@ void RayEngine::Initialize(IEngineLoop* engineLoop)
 	eng->Log("version %s.%s.%s [%s]", RAY_VERSION_MAJOR, RAY_VERSION_MINOR, RAY_VERSION_PATCH, RAY_VERSION_CODENAME);
 	eng->Log("built on \"%s\"", __TIMESTAMP__);
 
-	IPlatformWindow* window = IPlatformWindow::CreateInstance();
+	_window = IPlatformWindow::CreateInstance();
 	
-	window->Initialize();
-	window->CreateWindow("RAY_ENGINE");
+	_window->Initialize();
+	_window->CreateWindow("RAY_ENGINE");
 
-	state->Input->RegisterWindowEventHandler(window);
+	state->Input->RegisterWindowEventHandler(_window);
 
 	eng->Log("renderer load begin");
 
@@ -60,7 +59,7 @@ void RayEngine::Initialize(IEngineLoop* engineLoop)
 	//_renderer->Initialize(window);
 
 	gWorld = new World();
-	gWorld->Initialize(window);
+	gWorld->Initialize(_window);
 
 	//gWidget->Update(); // Widget and all it's children has to tick at least once in order to build RenderData
 	
@@ -70,8 +69,7 @@ void RayEngine::Initialize(IEngineLoop* engineLoop)
 
 	eng->Log("renderer load end");
 	
-	window->SetWindowVisibility(true);
-	_window = window;
+	_window->SetWindowVisibility(true);
 }
 
 void RayEngine::Tick()

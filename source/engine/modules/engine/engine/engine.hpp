@@ -1,4 +1,6 @@
 #pragma once
+#include <core/core.hpp>
+#include <app_framework/base/platform_window.hpp>
 #include <engine/engine/engine_def.hpp>
 #include <renderer_core/renderer.hpp>
 
@@ -35,7 +37,7 @@ struct IEngine
 class RAY_ENGINE_API RayEngine : public IEngine
 {
 	IEngineLoop* _engineLoop;
-	void* _window = nullptr;
+	IPlatformWindow* _window = nullptr;
 public:
 	RayEngine();
 	~RayEngine();

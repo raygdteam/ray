@@ -157,6 +157,8 @@
     <ClInclude Include="ui2\ext\imstb_rectpack.h" />
     <ClInclude Include="ui2\ext\imstb_textedit.h" />
     <ClInclude Include="ui2\ext\imstb_truetype.h" />
+    <ClInclude Include="ui2\objects\button.hpp" />
+    <ClInclude Include="ui2\objects\label.hpp" />
     <ClInclude Include="ui2\ui2.hpp" />
     <ClInclude Include="world\actor.hpp" />
     <ClInclude Include="world\actors\camera_actor.hpp" />
@@ -177,6 +179,7 @@
     <ClCompile Include="ui2\ext\imgui_draw.cpp" />
     <ClCompile Include="ui2\ext\imgui_impl_win32.cpp" />
     <ClCompile Include="ui2\ext\imgui_widgets.cpp" />
+    <ClCompile Include="ui2\objects\button.cpp" />
     <ClCompile Include="ui2\ui2.cpp" />
     <ClCompile Include="world\actor.cpp" />
     <ClCompile Include="world\actors\camera_actor.cpp" />
@@ -211,6 +214,9 @@
     <ProjectReference Include="..\resources\resources.vcxproj">
       <Project>{dc6d5790-bd21-4dba-b811-3f28f4e5689b}</Project>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ui2\objects\label.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
