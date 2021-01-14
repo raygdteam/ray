@@ -20,12 +20,12 @@ public:
 
 	void RegisterWindowEventHandler(IPlatformWindow* window);
 
-	bool GetKeyUp(const KeyCode key) { return !_keys[key] && _previousKeys[key]; }
-	bool GetKeyDown(const KeyCode key) { return _keys[key] && !_previousKeys[key]; }
+	bool IsKeyUp(const KeyCode key) { return !_keys[key] && _previousKeys[key]; }
+	bool IsKeyDown(const KeyCode key) { return _keys[key] && !_previousKeys[key]; }
 
 private:
-	void WindowEventHandler();
+	void WindowEventHandler(u32, u64, s64);
 
-	Array<bool> _keys;
-	Array<bool> _previousKeys;
+	bool* _keys;
+	bool* _previousKeys;
 };
