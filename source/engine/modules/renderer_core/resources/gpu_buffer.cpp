@@ -86,7 +86,8 @@ namespace ray::renderer_core_api::resources
         auto nativeResource = resource.GetNativeResource();
         auto gpuVirtualAddress = nativeResource->GetGPUVirtualAddress();
         u32 numElements = desc.SizeInBytes / desc.Stride;
-        desc.Flags;
+
+        auto descriptorHeap = globals::gDescriptorHeapsManager.GetCurrentCBV_SRV_UAV_Heap(true);
 
         // ========================== VERTEX BUFFER VIEW ========================== //
         _vbView.BufferLocation = gpuVirtualAddress;
@@ -102,7 +103,7 @@ namespace ray::renderer_core_api::resources
         _cbView = gpuVirtualAddress;
 
         // ========================== SHADER RESOURCE VIEW ========================== //
-        if (desc.Flags & D3D12_RESOURCE_FLAG_DENY_SHADER_RESOURCE == 0)
+        if ((desc.Flags & D3D12_RESOURCE_FLAG_DENY_SHADER_RESOURCE) == 0)
         {
             D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc;
             srvDesc.Format = desc.Format;
@@ -112,9 +113,7 @@ namespace ray::renderer_core_api::resources
             srvDesc.Buffer.NumElements = numElements;
             srvDesc.Buffer.StructureByteStride = desc.Stride;
 
-            // TODO:
-            // auto& descriptorHeap = gDescriptorHeapsManager.GetCurrentSRV_Heap();
-            // _srvHandle = descriptorHeap.Allocate(1);
+            _srvHandle = descriptorHeap.Allocate(1);
             globals::gDevice->CreateShaderResourceView(nativeResource, &srvDesc, _srvHandle.GetCpuHandle());
         }
         
@@ -130,8 +129,7 @@ namespace ray::renderer_core_api::resources
             uavDesc.Buffer.NumElements = numElements;
             uavDesc.Buffer.StructureByteStride = desc.Stride;
 
-            // TODO:
-            // _uavHandle = descriptorHeap.Allocate(1);
+            _uavHandle = descriptorHeap.Allocate(1);
             globals::gDevice->CreateUnorderedAccessView(nativeResource, nullptr, &uavDesc, _uavHandle.GetCpuHandle());
         }
     }

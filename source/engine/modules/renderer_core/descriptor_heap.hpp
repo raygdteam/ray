@@ -1,42 +1,14 @@
 #pragma once
 #include "ray_renderer_core_base.hpp"
 #include <core/core.hpp>
-#include <vector>
+#include <core/lib/array.hpp>
 #include <core/threading/critical_section.hpp>
 #include <d3d12.h>
 
 #define D3D12_GPU_VIRTUAL_ADDRESS_UNKNOWN static_cast<D3D12_GPU_VIRTUAL_ADDRESS>(-1)
 
-/*
-**	Vulkan:			VkDescriptorPool
-**	Direct3D 12:	ID3D12DescriptorHeap
-*/
-
 namespace ray::renderer_core_api
 {
-	class DescriptorAllocator
-	{
-	public:
-		DescriptorAllocator(D3D12_DESCRIPTOR_HEAP_TYPE type) : _currentHeap(nullptr), _type(type) {}
-
-		D3D12_CPU_DESCRIPTOR_HANDLE Allocate(size_t count = 1);
-		static void DestroyAll();
-
-	private:
-		static const uint32_t sNumDescriptorsPerHeap = 256;
-		static CriticalSection sAllocationMutex;
-		static std::vector<ID3D12DescriptorHeap*> sDescriptorHeapPool;
-		static ID3D12DescriptorHeap* RequestNewHeap(D3D12_DESCRIPTOR_HEAP_TYPE Type);
-
-		ID3D12DescriptorHeap* _currentHeap;
-		D3D12_DESCRIPTOR_HEAP_TYPE _type;
-		std::vector<ID3D12DescriptorHeap*> _descriptorHeapPool;
-		size_t _remainingFreeHandles;
-		size_t _descriptorSize;
-		D3D12_CPU_DESCRIPTOR_HANDLE _currentHandle;
-
-	};
-
 	class DescriptorHandle
 	{
 	public:
@@ -98,15 +70,15 @@ namespace ray::renderer_core_api
 
 	};
 
-	class UserDescriptorHeap
+	class DescriptorHeap
 	{
 	public:
-		UserDescriptorHeap(D3D12_DESCRIPTOR_HEAP_TYPE type, size_t numDescriptors)
+		DescriptorHeap(D3D12_DESCRIPTOR_HEAP_TYPE type, D3D12_DESCRIPTOR_HEAP_FLAGS flag, size_t numDescriptors)
 		{
 			_heapDesc = D3D12_DESCRIPTOR_HEAP_DESC{
 				.Type = type,
 				.NumDescriptors = u32(numDescriptors), // TODO: workaround
-				.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE,
+				.Flags = flag,
 				.NodeMask = 1
 			};
 		}
@@ -120,6 +92,10 @@ namespace ray::renderer_core_api
 		bool ValidateHandle(const DescriptorHandle& handle) const noexcept;
 
 		ID3D12DescriptorHeap* GetHeapPointer() const noexcept { return _heap; }
+		u32 GetMaxDescriptorsCount() const noexcept
+		{
+			return _heapDesc.NumDescriptors;
+		}
 
 	private:
 		ID3D12DescriptorHeap* _heap;
@@ -128,6 +104,40 @@ namespace ray::renderer_core_api
 		u32 _numFreeDescriptors;
 		DescriptorHandle _firstHandle;
 		DescriptorHandle _nextFreeHandle;
+
+	};
+
+	class DescriptorHeapsManager
+	{
+	private:
+		Array<DescriptorHeap> _heaps[D3D12_DESCRIPTOR_HEAP_TYPE_NUM_TYPES];
+		u32 _currentHeaps[D3D12_DESCRIPTOR_HEAP_TYPE_NUM_TYPES];
+
+	public:
+		DescriptorHeap& CreateHeap(D3D12_DESCRIPTOR_HEAP_TYPE type, D3D12_DESCRIPTOR_HEAP_FLAGS flag, u32 elementsCount) noexcept;
+
+	public:
+		DescriptorHeap& GetCurrentHeap(D3D12_DESCRIPTOR_HEAP_TYPE type, bool bAllowCreateNewHeap) noexcept;
+
+		DescriptorHeap& GetCurrentRTV_Heap(bool bAllowCreateNewHeap) noexcept
+		{
+			return GetCurrentHeap(D3D12_DESCRIPTOR_HEAP_TYPE_RTV, bAllowCreateNewHeap);
+		}
+
+		DescriptorHeap& GetCurrentCBV_SRV_UAV_Heap(bool bAllowCreateNewHeap) noexcept
+		{
+			return GetCurrentHeap(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV, bAllowCreateNewHeap);
+		}
+
+		DescriptorHeap& GetCurrentSamplerHeap(bool bAllowCreateNewHeap) noexcept
+		{
+			return GetCurrentHeap(D3D12_DESCRIPTOR_HEAP_TYPE_SAMPLER, bAllowCreateNewHeap);
+		}
+
+		DescriptorHeap& GetCurrentDSV_Heap(bool bAllowCreateNewHeap) noexcept
+		{
+			return GetCurrentHeap(D3D12_DESCRIPTOR_HEAP_TYPE_DSV, bAllowCreateNewHeap);
+		}
 
 	};
 

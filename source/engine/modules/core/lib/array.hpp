@@ -16,6 +16,12 @@ public:
 		this->push_back(std::move(value));
 	}
 
+	template<typename... Args>
+	void EmplaceBack(Args&&... args)
+	{
+		this->emplace_back(std::forward(args)...);
+	}
+
 	bool IsEmpty() const
 	{
 		return this->empty();

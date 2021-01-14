@@ -236,13 +236,10 @@ namespace ray::renderer_core_api::resources
     {
         auto desc = resource.GetDesc();
         auto nativeResource = resource.GetNativeResource();
-        auto gpuVirtualAddress = nativeResource->GetGPUVirtualAddress();
-        u32 numElements = desc.SizeInBytes / desc.Stride;
 
-        // TODO:
-        // auto& rtvDescriptorHeap = gDescriptorHeapsManager.GetCurrentRTV_Heap();
-        // auto& dsvDescriptorHeap = gDescriptorHeapsManager.GetCurrentDSV_Heap();
-        // auto& descriptorHeap = gDescriptorHeapsManager.GetCurrentSRV_Heap();
+        auto& rtvDescriptorHeap = globals::gDescriptorHeapsManager.GetCurrentRTV_Heap(true);
+        auto& dsvDescriptorHeap = globals::gDescriptorHeapsManager.GetCurrentDSV_Heap(true);
+        auto& descriptorHeap = globals::gDescriptorHeapsManager.GetCurrentCBV_SRV_UAV_Heap(true);
 
         // ========================== RENDER TARGET VIEW ========================== //
         if (desc.Flags & D3D12_RESOURCE_FLAG_ALLOW_RENDER_TARGET)
@@ -253,9 +250,7 @@ namespace ray::renderer_core_api::resources
             rtvDesc.Texture2D.MipSlice = 0;
             rtvDesc.Texture2D.PlaneSlice = 0;
 
-            // TODO:
-            
-            // _rtvHandle = rtvDescriptorHeap.Allocate(1);
+            _rtvHandle = rtvDescriptorHeap.Allocate(1);
             globals::gDevice->CreateRenderTargetView(nativeResource, &rtvDesc, _rtvHandle.GetCpuHandle());
         }
 
@@ -267,8 +262,8 @@ namespace ray::renderer_core_api::resources
             dsvDesc.ViewDimension = D3D12_DSV_DIMENSION_TEXTURE2D;
             dsvDesc.Texture2D.MipSlice = 0;
 
-            // _dsvHandle[0] = dsvDescriptorHeap.Allocate(1);
-            // _dsvHandle[1] = dsvDescriptorHeap.Allocate(1);
+            _dsvHandle[0] = dsvDescriptorHeap.Allocate(1);
+            _dsvHandle[1] = dsvDescriptorHeap.Allocate(1);
 
             dsvDesc.Flags = D3D12_DSV_FLAG_NONE;
             globals::gDevice->CreateDepthStencilView(nativeResource, &dsvDesc, _dsvHandle[0].GetCpuHandle());
@@ -278,7 +273,7 @@ namespace ray::renderer_core_api::resources
         }
 
         // ========================== SHADER RESOURCE VIEW ========================== //
-        if (desc.Flags & D3D12_RESOURCE_FLAG_DENY_SHADER_RESOURCE == 0)
+        if ((desc.Flags & D3D12_RESOURCE_FLAG_DENY_SHADER_RESOURCE) == 0)
         {
             D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc;
             srvDesc.Format = desc.Format;
@@ -288,8 +283,7 @@ namespace ray::renderer_core_api::resources
             srvDesc.Texture2D.PlaneSlice = 0;
             srvDesc.Texture2D.ResourceMinLODClamp = 0.f;
 
-            // TODO:
-            // _srvHandle = descriptorHeap.Allocate(1);
+            _srvHandle = descriptorHeap.Allocate(1);
             globals::gDevice->CreateShaderResourceView(nativeResource, &srvDesc, _srvHandle.GetCpuHandle());
         }
         
@@ -302,8 +296,7 @@ namespace ray::renderer_core_api::resources
             uavDesc.Texture2D.PlaneSlice = 0;
             uavDesc.Texture2D.MipSlice = 0;
 
-            // TODO:
-            // _uavHandle = descriptorHeap.Allocate(1);
+            _uavHandle = descriptorHeap.Allocate(1);
             globals::gDevice->CreateUnorderedAccessView(nativeResource, nullptr, &uavDesc, _uavHandle.GetCpuHandle());
         }
     }
