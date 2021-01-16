@@ -103,9 +103,10 @@ void BufferView::Create(GpuResource& resource) noexcept
 	// ========================== SHADER RESOURCE VIEW ========================== //
 	if ((desc.Flags & D3D12_RESOURCE_FLAG_DENY_SHADER_RESOURCE) == 0)
 	{
-		D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc;
+		D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc = {};
 		srvDesc.Format = desc.Format;
 		srvDesc.ViewDimension = D3D12_SRV_DIMENSION_BUFFER;
+		srvDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
 		srvDesc.Buffer.FirstElement = 0;
 		srvDesc.Buffer.Flags = D3D12_BUFFER_SRV_FLAG_NONE;
 		srvDesc.Buffer.NumElements = numElements;
@@ -118,8 +119,8 @@ void BufferView::Create(GpuResource& resource) noexcept
 	// ========================== UNORDERED ACCESS VIEW ========================== //
 	if (desc.Flags & D3D12_RESOURCE_FLAG_ALLOW_UNORDERED_ACCESS)
 	{
-		D3D12_UNORDERED_ACCESS_VIEW_DESC uavDesc;
-		uavDesc.Format = desc.Format;
+		D3D12_UNORDERED_ACCESS_VIEW_DESC uavDesc = {};
+		uavDesc.Format = GpuTexture::GetUAVFormat(desc.Format);
 		uavDesc.ViewDimension = D3D12_UAV_DIMENSION_BUFFER;
 		uavDesc.Buffer.CounterOffsetInBytes = 0;
 		uavDesc.Buffer.FirstElement = 0;

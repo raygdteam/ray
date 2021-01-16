@@ -383,7 +383,7 @@ void TextureView::Create(GpuResource& resource) noexcept
 	// ========================== RENDER TARGET VIEW ========================== //
 	if (desc.Flags & D3D12_RESOURCE_FLAG_ALLOW_RENDER_TARGET)
 	{
-		D3D12_RENDER_TARGET_VIEW_DESC rtvDesc;
+		D3D12_RENDER_TARGET_VIEW_DESC rtvDesc = {};
 		rtvDesc.Format = desc.Format;
 		rtvDesc.ViewDimension = D3D12_RTV_DIMENSION_TEXTURE2D;
 		rtvDesc.Texture2D.MipSlice = 0;
@@ -396,7 +396,7 @@ void TextureView::Create(GpuResource& resource) noexcept
 	// ========================== DEPTH STENCIL VIEW ========================== //
 	if (desc.Flags & D3D12_RESOURCE_FLAG_ALLOW_DEPTH_STENCIL)
 	{
-		D3D12_DEPTH_STENCIL_VIEW_DESC dsvDesc;
+		D3D12_DEPTH_STENCIL_VIEW_DESC dsvDesc = {};
 		dsvDesc.Format = GpuTexture::GetDSVFormat(desc.Format);
 		dsvDesc.ViewDimension = D3D12_DSV_DIMENSION_TEXTURE2D;
 		dsvDesc.Texture2D.MipSlice = 0;
@@ -414,8 +414,9 @@ void TextureView::Create(GpuResource& resource) noexcept
 	// ========================== SHADER RESOURCE VIEW ========================== //
 	if ((desc.Flags & D3D12_RESOURCE_FLAG_DENY_SHADER_RESOURCE) == 0)
 	{
-		D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc;
+		D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc = {};
 		srvDesc.Format = desc.Format;
+		srvDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
 		srvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D; // for now we are supporting only texture2d
 		srvDesc.Texture2D.MipLevels = desc.MipLevels;
 		srvDesc.Texture2D.MostDetailedMip = 0;
@@ -429,8 +430,8 @@ void TextureView::Create(GpuResource& resource) noexcept
 	// ========================== UNORDERED ACCESS VIEW ========================== //
 	if (desc.Flags & D3D12_RESOURCE_FLAG_ALLOW_UNORDERED_ACCESS)
 	{
-		D3D12_UNORDERED_ACCESS_VIEW_DESC uavDesc;
-		uavDesc.Format = desc.Format;
+		D3D12_UNORDERED_ACCESS_VIEW_DESC uavDesc = {};
+		uavDesc.Format = GpuTexture::GetUAVFormat(desc.Format);
 		uavDesc.ViewDimension = D3D12_UAV_DIMENSION_TEXTURE2D; // for now we are supporting only texture2d
 		uavDesc.Texture2D.PlaneSlice = 0;
 		uavDesc.Texture2D.MipSlice = 0;
