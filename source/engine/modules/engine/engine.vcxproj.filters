@@ -65,6 +65,12 @@
     <ClInclude Include="ui2\ext\imstb_truetype.h">
       <Filter>ui2\ext</Filter>
     </ClInclude>
+    <ClInclude Include="ui2\objects\label.hpp">
+      <Filter>ui2\objects</Filter>
+    </ClInclude>
+    <ClInclude Include="ui2\objects\button.hpp">
+      <Filter>ui2\objects</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="engine">
@@ -90,6 +96,9 @@
     </Filter>
     <Filter Include="ui2\ext">
       <UniqueIdentifier>{5e6d0a1a-a138-4831-88c8-9af04cc0806f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ui2\objects">
+      <UniqueIdentifier>{b8ca7a69-c892-4efa-8889-86dbb854be23}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -148,5 +157,13 @@
     <ClCompile Include="ui2\ext\imgui_widgets.cpp">
       <Filter>ui2\ext</Filter>
     </ClCompile>
+    <ClCompile Include="ui2\objects\button.cpp">
+      <Filter>ui2\objects</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ui2\objects\label.cpp">
+      <Filter>ui2\objects</Filter>
+    </None>
   </ItemGroup>
 </Project>

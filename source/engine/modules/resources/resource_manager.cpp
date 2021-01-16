@@ -134,7 +134,7 @@ IRResource* ResourceManager::LoadResourceResolved(pcstr path, pcstr resorcePath,
 	check(type == eTexture);
 
 	/* check in data cache */
-	{
+	/*{
 		String dcPath = _dataCacheDirectory;
 		dcPath += "/";
 		
@@ -158,7 +158,7 @@ IRResource* ResourceManager::LoadResourceResolved(pcstr path, pcstr resorcePath,
 			delete dcFile;
 			return texture;
 		}
-	}
+	}*/
 	
 	IFile* file = _state->FileSystem->OpenFile(path, ReadBinary);
 	check(file != nullptr);
@@ -178,7 +178,7 @@ IRResource* ResourceManager::LoadResourceResolved(pcstr path, pcstr resorcePath,
 	delete file;
 
 	/* Serialize into data cache */
-	String dcPath = _dataCacheDirectory;
+	/*String dcPath = _dataCacheDirectory;
 	dcPath += "/";
 	char crc32[32] = {};
 	sprintf_s(crc32, "%u", Crc32((u8*)resorcePath, strlen(resorcePath)));
@@ -191,7 +191,7 @@ IRResource* ResourceManager::LoadResourceResolved(pcstr path, pcstr resorcePath,
 	texture->Serialize(ar);
 	
 	dcFile->Close();
-	delete dcFile;
+	delete dcFile;*/
 	
 	return texture;
 }

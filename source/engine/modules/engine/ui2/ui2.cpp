@@ -9,6 +9,9 @@
 	ImGui::Button({});
 }*/
 
+UiObject::UiObject()
+{ }
+
 void UiRootObject::Initialize(IPlatformWindow* window)
 {
 	ImGui::CreateContext();
