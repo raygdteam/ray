@@ -13,7 +13,7 @@ void RingBuffer::Initialize(u64 maxRingBufferSize) noexcept
 
 u8* RingBuffer::SetTextureData(RTexture& texture) noexcept
 {
-	size_t bitesPerPixel = BytesPerPixel(DXGI_FORMAT_R32G32B32A32_FLOAT);
+	size_t bitesPerPixel = GpuTexture::BytesPerPixel(DXGI_FORMAT_R32G32B32A32_FLOAT);
 	size_t width = texture.GetDimensions().x;
 	size_t height = texture.GetDimensions().y;
 	size_t rowPitch = AlignUp(bitesPerPixel * width, D3D12_TEXTURE_DATA_PITCH_ALIGNMENT);

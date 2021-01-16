@@ -17,22 +17,15 @@ public:
 		_clearColor[3] = a;
 	}
 
+public:
 	void CreateFromSwapChain(ID3D12Resource* inResource);
 	void Create(u32 width, u32 height, u32 numMips, DXGI_FORMAT format, D3D12_RESOURCE_FLAGS flags);
 	void CreateArray(u32 width, u32 height, u32 numMips, u32 arrayCount, DXGI_FORMAT format, D3D12_RESOURCE_FLAGS flags);
 
-	const D3D12_CPU_DESCRIPTOR_HANDLE& GetSRV() const noexcept { return _view.GetSRV(); }
-	const D3D12_CPU_DESCRIPTOR_HANDLE& GetRTV() const noexcept { return _view.GetRTV(); }
-	const D3D12_CPU_DESCRIPTOR_HANDLE& GetUAV() const noexcept { return _view.GetUAV(); }
-
-	void SetClearColor(float r, float g, float b, float a) noexcept
-	{
-		_clearColor[0] = r;
-		_clearColor[1] = g;
-		_clearColor[2] = b;
-		_clearColor[3] = a;
-	}
-
+public:
+	D3D12_CPU_DESCRIPTOR_HANDLE GetSRV() const noexcept { return _view.GetSRV(); }
+	D3D12_CPU_DESCRIPTOR_HANDLE GetRTV() const noexcept { return _view.GetRTV(); }
+	D3D12_CPU_DESCRIPTOR_HANDLE GetUAV() const noexcept { return _view.GetUAV(); }
 
 	void GetClearColor(float* r, float* g, float* b, float* a) const noexcept
 	{
@@ -42,6 +35,15 @@ public:
 		*a = _clearColor[3];
 	}
 
+	void SetClearColor(float r, float g, float b, float a) noexcept
+	{
+		_clearColor[0] = r;
+		_clearColor[1] = g;
+		_clearColor[2] = b;
+		_clearColor[3] = a;
+	}
+
+public:
 	void GenerateMipMaps(CommandContext& context);
 
 protected:

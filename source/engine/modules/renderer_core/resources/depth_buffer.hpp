@@ -13,7 +13,7 @@ public:
 	void Create(u32 width, u32 height, DXGI_FORMAT format);
 
 public:
-	const D3D12_CPU_DESCRIPTOR_HANDLE& GetDSV() const { return _view.GetDSV(); }
-	const D3D12_CPU_DESCRIPTOR_HANDLE& GetDSV_Readonly() const { return _view.GetDSV_ReadOnly(); }
+	D3D12_CPU_DESCRIPTOR_HANDLE GetDSV() const { return _view.GetDSV(); }
+	D3D12_CPU_DESCRIPTOR_HANDLE GetDSV_Readonly() const { return _view.GetDSV_ReadOnly(); }
 
 };

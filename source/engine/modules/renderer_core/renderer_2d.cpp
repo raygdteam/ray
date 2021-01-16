@@ -138,7 +138,7 @@ void Renderer2D::Initialize(/*TextureManager* textureManager*/)
 
 	//globals::gDepthBuffer.Create(1280, 720, DXGI_FORMAT_D32_FLOAT);
 	_2DPipeline.SetDepthStencilState(CD3DX12_DEPTH_STENCIL_DESC(D3D12_DEFAULT));
-	_2DPipeline.SetDSVFormat(gDepthBuffer.GetFormat());
+	_2DPipeline.SetDSVFormat(gDepthBuffer.GetDesc().Format);
 
 	_2DPipeline.Finalize();
 }

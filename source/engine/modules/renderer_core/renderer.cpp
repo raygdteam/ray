@@ -87,7 +87,7 @@ void IRenderer::Initialize(IPlatformWindow* window)
 	}
 
 	gCurrentBuffer = 0;
-	gDepthBuffer.Create(gDisplayPlane->GetWidth(), gDisplayPlane->GetHeight(), DXGI_FORMAT_D32_FLOAT);
+	gDepthBuffer.Create(gDisplayPlane->GetDesc().Width, gDisplayPlane->GetDesc().Height, DXGI_FORMAT_D32_FLOAT);
 	gTextureAllocator.Initialize(MB(4));
 	//globals::gBufferAllocator.Initialize(MB(400));
 }

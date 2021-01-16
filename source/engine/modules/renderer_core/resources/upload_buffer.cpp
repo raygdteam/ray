@@ -57,7 +57,7 @@ u8* UploadBuffer::SetConstantBufferData(void* buffer, size_t bufferSize) noexcep
 
 u8* UploadBuffer::SetTextureData(RTexture& texture) noexcept
 {
-	size_t bitesPerPixel = BytesPerPixel(DXGI_FORMAT_R32G32B32A32_FLOAT);
+	size_t bitesPerPixel = GpuTexture::BytesPerPixel(DXGI_FORMAT_R32G32B32A32_FLOAT);
 	size_t width = texture.GetDimensions().x;
 	size_t height = texture.GetDimensions().y;
 	size_t rowPitch = AlignUp(bitesPerPixel * width, D3D12_TEXTURE_DATA_PITCH_ALIGNMENT);
