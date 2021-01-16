@@ -17,9 +17,6 @@
     <ClInclude Include="resources\color_buffer.hpp">
       <Filter>resources</Filter>
     </ClInclude>
-    <ClInclude Include="resources\pixel_buffer.hpp">
-      <Filter>resources</Filter>
-    </ClInclude>
     <ClInclude Include="resources\gpu_buffer.hpp">
       <Filter>resources</Filter>
     </ClInclude>
@@ -54,9 +51,6 @@
     <ClCompile Include="command_queue.cpp" />
     <ClCompile Include="command_context.cpp" />
     <ClCompile Include="resources\color_buffer.cpp">
-      <Filter>resources</Filter>
-    </ClCompile>
-    <ClCompile Include="resources\pixel_buffer.cpp">
       <Filter>resources</Filter>
     </ClCompile>
     <ClCompile Include="resources\gpu_buffer.cpp">

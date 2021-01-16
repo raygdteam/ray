@@ -164,7 +164,7 @@ void CommandContext::InitializeTexture(GpuResource& dest, UploadBuffer& src)
 {
 	CommandContext& context = CommandContext::Begin();
 	auto textureDesc = dest.GetDesc();
-	size_t bitesPerPixel = BytesPerPixel(textureDesc.Format);
+	size_t bitesPerPixel = GpuTexture::BytesPerPixel(textureDesc.Format);
 
 	D3D12_SUBRESOURCE_FOOTPRINT footprint;
 	footprint.Depth = 1;
@@ -229,7 +229,7 @@ void CommandContext::InitializeTextureArraySlice(GpuResource& dest, u64 sliceInd
 	context.Finish(true);*/
 }
 
-void CommandContext::ReadbackTexture2D(GpuResource& readbackBuffer, PixelBuffer& srcBuffer)
+void CommandContext::ReadbackTexture2D(GpuResource& readbackBuffer, GpuTexture& srcBuffer)
 {
 	// TODO:
 	// still not supported

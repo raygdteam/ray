@@ -1,17 +1,19 @@
 #pragma once
-#include <renderer_core/resources/pixel_buffer.hpp>
+#include "gpu_texture.hpp"
 
-class DepthBuffer : public PixelBuffer
+class DepthBuffer : public GpuTexture
 {
 private:
-	D3D12_CPU_DESCRIPTOR_HANDLE _dsvHandle[2];
+	TextureView _view;
 
-	void CreateViews(DXGI_FORMAT format);
 public:
-	DepthBuffer();
+	DepthBuffer() = default;
 
+public:
 	void Create(u32 width, u32 height, DXGI_FORMAT format);
 
-	const D3D12_CPU_DESCRIPTOR_HANDLE& GetDSV() const { return _dsvHandle[0]; }
-	const D3D12_CPU_DESCRIPTOR_HANDLE& GetDSV_Readonly() const { return _dsvHandle[1]; }
+public:
+	const D3D12_CPU_DESCRIPTOR_HANDLE& GetDSV() const { return _view.GetDSV(); }
+	const D3D12_CPU_DESCRIPTOR_HANDLE& GetDSV_Readonly() const { return _view.GetDSV_ReadOnly(); }
+
 };

@@ -89,7 +89,7 @@ public:
 
 	static void InitializeTexture(GpuResource& dest, UploadBuffer& src);
 	static void InitializeTextureArraySlice(GpuResource& dest, u64 sliceIndex, GpuResource& src);
-	static void ReadbackTexture2D(GpuResource& readbackBuffer, PixelBuffer& srcBuffer);
+	static void ReadbackTexture2D(GpuResource& readbackBuffer, GpuTexture& srcBuffer);
 	static void InitializeBuffer(GpuResource& dest, UploadBuffer& src);
 
 	void WriteBuffer(GpuResource& dest, size_t destOffset, const void* data, size_t numBytes);

@@ -6,21 +6,207 @@
 #include <core/debug/assert.hpp>
 #include <core/math/common.hpp>
 
-size_t BitsPerPixel(_In_ DXGI_FORMAT fmt) noexcept
+DXGI_FORMAT GpuTexture::GetBaseFormat(DXGI_FORMAT defaultFormat)
 {
-	switch (fmt)
+	switch (defaultFormat)
+	{
+	case DXGI_FORMAT_R8G8B8A8_UNORM:
+	case DXGI_FORMAT_R8G8B8A8_UNORM_SRGB:
+		return DXGI_FORMAT_R8G8B8A8_TYPELESS;
+
+	case DXGI_FORMAT_B8G8R8A8_UNORM:
+	case DXGI_FORMAT_B8G8R8A8_UNORM_SRGB:
+		return DXGI_FORMAT_B8G8R8A8_TYPELESS;
+
+	case DXGI_FORMAT_B8G8R8X8_UNORM:
+	case DXGI_FORMAT_B8G8R8X8_UNORM_SRGB:
+		return DXGI_FORMAT_B8G8R8X8_TYPELESS;
+
+		// 32-bit Z w/ Stencil
+	case DXGI_FORMAT_R32G8X24_TYPELESS:
+	case DXGI_FORMAT_D32_FLOAT_S8X24_UINT:
+	case DXGI_FORMAT_R32_FLOAT_X8X24_TYPELESS:
+	case DXGI_FORMAT_X32_TYPELESS_G8X24_UINT:
+		return DXGI_FORMAT_R32G8X24_TYPELESS;
+
+		// No Stencil
+	case DXGI_FORMAT_R32_TYPELESS:
+	case DXGI_FORMAT_D32_FLOAT:
+	case DXGI_FORMAT_R32_FLOAT:
+		return DXGI_FORMAT_R32_TYPELESS;
+
+		// 24-bit Z
+	case DXGI_FORMAT_R24G8_TYPELESS:
+	case DXGI_FORMAT_D24_UNORM_S8_UINT:
+	case DXGI_FORMAT_R24_UNORM_X8_TYPELESS:
+	case DXGI_FORMAT_X24_TYPELESS_G8_UINT:
+		return DXGI_FORMAT_R24G8_TYPELESS;
+
+		// 16-bit Z w/o Stencil
+	case DXGI_FORMAT_R16_TYPELESS:
+	case DXGI_FORMAT_D16_UNORM:
+	case DXGI_FORMAT_R16_UNORM:
+		return DXGI_FORMAT_R16_TYPELESS;
+
+	default:
+		return defaultFormat;
+	}
+}
+
+DXGI_FORMAT GpuTexture::GetUAVFormat(DXGI_FORMAT defaultFormat)
+{
+	switch (defaultFormat)
+	{
+	case DXGI_FORMAT_R8G8B8A8_TYPELESS:
+	case DXGI_FORMAT_R8G8B8A8_UNORM:
+	case DXGI_FORMAT_R8G8B8A8_UNORM_SRGB:
+		return DXGI_FORMAT_R8G8B8A8_UNORM;
+
+	case DXGI_FORMAT_B8G8R8A8_TYPELESS:
+	case DXGI_FORMAT_B8G8R8A8_UNORM:
+	case DXGI_FORMAT_B8G8R8A8_UNORM_SRGB:
+		return DXGI_FORMAT_B8G8R8A8_UNORM;
+
+	case DXGI_FORMAT_B8G8R8X8_TYPELESS:
+	case DXGI_FORMAT_B8G8R8X8_UNORM:
+	case DXGI_FORMAT_B8G8R8X8_UNORM_SRGB:
+		return DXGI_FORMAT_B8G8R8X8_UNORM;
+
+	case DXGI_FORMAT_R32_TYPELESS:
+	case DXGI_FORMAT_R32_FLOAT:
+		return DXGI_FORMAT_R32_FLOAT;
+
+#ifdef _DEBUG
+	case DXGI_FORMAT_R32G8X24_TYPELESS:
+	case DXGI_FORMAT_D32_FLOAT_S8X24_UINT:
+	case DXGI_FORMAT_R32_FLOAT_X8X24_TYPELESS:
+	case DXGI_FORMAT_X32_TYPELESS_G8X24_UINT:
+	case DXGI_FORMAT_D32_FLOAT:
+	case DXGI_FORMAT_R24G8_TYPELESS:
+	case DXGI_FORMAT_D24_UNORM_S8_UINT:
+	case DXGI_FORMAT_R24_UNORM_X8_TYPELESS:
+	case DXGI_FORMAT_X24_TYPELESS_G8_UINT:
+	case DXGI_FORMAT_D16_UNORM:
+
+		ray_assert(false, "Requested a UAV format for a depth stencil format.");
+#endif
+
+	default:
+		return defaultFormat;
+	}
+}
+
+DXGI_FORMAT GpuTexture::GetDSVFormat(DXGI_FORMAT defaultFormat)
+{
+	switch (defaultFormat)
+	{
+		// 32-bit Z w/ Stencil
+	case DXGI_FORMAT_R32G8X24_TYPELESS:
+	case DXGI_FORMAT_D32_FLOAT_S8X24_UINT:
+	case DXGI_FORMAT_R32_FLOAT_X8X24_TYPELESS:
+	case DXGI_FORMAT_X32_TYPELESS_G8X24_UINT:
+		return DXGI_FORMAT_D32_FLOAT_S8X24_UINT;
+
+		// No Stencil
+	case DXGI_FORMAT_R32_TYPELESS:
+	case DXGI_FORMAT_D32_FLOAT:
+	case DXGI_FORMAT_R32_FLOAT:
+		return DXGI_FORMAT_D32_FLOAT;
+
+		// 24-bit Z
+	case DXGI_FORMAT_R24G8_TYPELESS:
+	case DXGI_FORMAT_D24_UNORM_S8_UINT:
+	case DXGI_FORMAT_R24_UNORM_X8_TYPELESS:
+	case DXGI_FORMAT_X24_TYPELESS_G8_UINT:
+		return DXGI_FORMAT_D24_UNORM_S8_UINT;
+
+		// 16-bit Z w/o Stencil
+	case DXGI_FORMAT_R16_TYPELESS:
+	case DXGI_FORMAT_D16_UNORM:
+	case DXGI_FORMAT_R16_UNORM:
+		return DXGI_FORMAT_D16_UNORM;
+
+	default:
+		return defaultFormat;
+	}
+}
+
+DXGI_FORMAT GpuTexture::GetDepthFormat(DXGI_FORMAT defaultFormat)
+{
+	switch (defaultFormat)
+	{
+		// 32-bit Z w/ Stencil
+	case DXGI_FORMAT_R32G8X24_TYPELESS:
+	case DXGI_FORMAT_D32_FLOAT_S8X24_UINT:
+	case DXGI_FORMAT_R32_FLOAT_X8X24_TYPELESS:
+	case DXGI_FORMAT_X32_TYPELESS_G8X24_UINT:
+		return DXGI_FORMAT_R32_FLOAT_X8X24_TYPELESS;
+
+		// No Stencil
+	case DXGI_FORMAT_R32_TYPELESS:
+	case DXGI_FORMAT_D32_FLOAT:
+	case DXGI_FORMAT_R32_FLOAT:
+		return DXGI_FORMAT_R32_FLOAT;
+
+		// 24-bit Z
+	case DXGI_FORMAT_R24G8_TYPELESS:
+	case DXGI_FORMAT_D24_UNORM_S8_UINT:
+	case DXGI_FORMAT_R24_UNORM_X8_TYPELESS:
+	case DXGI_FORMAT_X24_TYPELESS_G8_UINT:
+		return DXGI_FORMAT_R24_UNORM_X8_TYPELESS;
+
+		// 16-bit Z w/o Stencil
+	case DXGI_FORMAT_R16_TYPELESS:
+	case DXGI_FORMAT_D16_UNORM:
+	case DXGI_FORMAT_R16_UNORM:
+		return DXGI_FORMAT_R16_UNORM;
+
+	default:
+		return DXGI_FORMAT_UNKNOWN;
+	}
+}
+
+DXGI_FORMAT GpuTexture::GetStencilFormat(DXGI_FORMAT defaultFormat)
+{
+	switch (defaultFormat)
+	{
+		// 32-bit Z w/ Stencil
+	case DXGI_FORMAT_R32G8X24_TYPELESS:
+	case DXGI_FORMAT_D32_FLOAT_S8X24_UINT:
+	case DXGI_FORMAT_R32_FLOAT_X8X24_TYPELESS:
+	case DXGI_FORMAT_X32_TYPELESS_G8X24_UINT:
+		return DXGI_FORMAT_X32_TYPELESS_G8X24_UINT;
+
+		// 24-bit Z
+	case DXGI_FORMAT_R24G8_TYPELESS:
+	case DXGI_FORMAT_D24_UNORM_S8_UINT:
+	case DXGI_FORMAT_R24_UNORM_X8_TYPELESS:
+	case DXGI_FORMAT_X24_TYPELESS_G8_UINT:
+		return DXGI_FORMAT_X24_TYPELESS_G8_UINT;
+
+	default:
+		return DXGI_FORMAT_UNKNOWN;
+	}
+}
+
+//--------------------------------------------------------------------------------------
+// Return the BPP for a particular format
+//--------------------------------------------------------------------------------------
+size_t GpuTexture::BytesPerPixel(DXGI_FORMAT Format)
+{
+	switch (Format)
 	{
 	case DXGI_FORMAT_R32G32B32A32_TYPELESS:
 	case DXGI_FORMAT_R32G32B32A32_FLOAT:
 	case DXGI_FORMAT_R32G32B32A32_UINT:
 	case DXGI_FORMAT_R32G32B32A32_SINT:
-		return 128;
+		return 16;
 
 	case DXGI_FORMAT_R32G32B32_TYPELESS:
 	case DXGI_FORMAT_R32G32B32_FLOAT:
 	case DXGI_FORMAT_R32G32B32_UINT:
 	case DXGI_FORMAT_R32G32B32_SINT:
-		return 96;
+		return 12;
 
 	case DXGI_FORMAT_R16G16B16A16_TYPELESS:
 	case DXGI_FORMAT_R16G16B16A16_FLOAT:
@@ -36,10 +222,7 @@ size_t BitsPerPixel(_In_ DXGI_FORMAT fmt) noexcept
 	case DXGI_FORMAT_D32_FLOAT_S8X24_UINT:
 	case DXGI_FORMAT_R32_FLOAT_X8X24_TYPELESS:
 	case DXGI_FORMAT_X32_TYPELESS_G8X24_UINT:
-	case DXGI_FORMAT_Y416:
-	case DXGI_FORMAT_Y210:
-	case DXGI_FORMAT_Y216:
-		return 64;
+		return 8;
 
 	case DXGI_FORMAT_R10G10B10A2_TYPELESS:
 	case DXGI_FORMAT_R10G10B10A2_UNORM:
@@ -76,14 +259,7 @@ size_t BitsPerPixel(_In_ DXGI_FORMAT fmt) noexcept
 	case DXGI_FORMAT_B8G8R8A8_UNORM_SRGB:
 	case DXGI_FORMAT_B8G8R8X8_TYPELESS:
 	case DXGI_FORMAT_B8G8R8X8_UNORM_SRGB:
-	case DXGI_FORMAT_AYUV:
-	case DXGI_FORMAT_Y410:
-	case DXGI_FORMAT_YUY2:
-		return 32;
-
-	case DXGI_FORMAT_P010:
-	case DXGI_FORMAT_P016:
-		return 24;
+		return 4;
 
 	case DXGI_FORMAT_R8G8_TYPELESS:
 	case DXGI_FORMAT_R8G8_UNORM:
@@ -101,12 +277,7 @@ size_t BitsPerPixel(_In_ DXGI_FORMAT fmt) noexcept
 	case DXGI_FORMAT_B5G5R5A1_UNORM:
 	case DXGI_FORMAT_A8P8:
 	case DXGI_FORMAT_B4G4R4A4_UNORM:
-		return 16;
-
-	case DXGI_FORMAT_NV12:
-	case DXGI_FORMAT_420_OPAQUE:
-	case DXGI_FORMAT_NV11:
-		return 12;
+		return 2;
 
 	case DXGI_FORMAT_R8_TYPELESS:
 	case DXGI_FORMAT_R8_UNORM:
@@ -114,38 +285,8 @@ size_t BitsPerPixel(_In_ DXGI_FORMAT fmt) noexcept
 	case DXGI_FORMAT_R8_SNORM:
 	case DXGI_FORMAT_R8_SINT:
 	case DXGI_FORMAT_A8_UNORM:
-	case DXGI_FORMAT_AI44:
-	case DXGI_FORMAT_IA44:
 	case DXGI_FORMAT_P8:
-		return 8;
-
-	case DXGI_FORMAT_R1_UNORM:
 		return 1;
-
-	case DXGI_FORMAT_BC1_TYPELESS:
-	case DXGI_FORMAT_BC1_UNORM:
-	case DXGI_FORMAT_BC1_UNORM_SRGB:
-	case DXGI_FORMAT_BC4_TYPELESS:
-	case DXGI_FORMAT_BC4_UNORM:
-	case DXGI_FORMAT_BC4_SNORM:
-		return 4;
-
-	case DXGI_FORMAT_BC2_TYPELESS:
-	case DXGI_FORMAT_BC2_UNORM:
-	case DXGI_FORMAT_BC2_UNORM_SRGB:
-	case DXGI_FORMAT_BC3_TYPELESS:
-	case DXGI_FORMAT_BC3_UNORM:
-	case DXGI_FORMAT_BC3_UNORM_SRGB:
-	case DXGI_FORMAT_BC5_TYPELESS:
-	case DXGI_FORMAT_BC5_UNORM:
-	case DXGI_FORMAT_BC5_SNORM:
-	case DXGI_FORMAT_BC6H_TYPELESS:
-	case DXGI_FORMAT_BC6H_UF16:
-	case DXGI_FORMAT_BC6H_SF16:
-	case DXGI_FORMAT_BC7_TYPELESS:
-	case DXGI_FORMAT_BC7_UNORM:
-	case DXGI_FORMAT_BC7_UNORM_SRGB:
-		return 8;
 
 	default:
 		return 0;
@@ -172,7 +313,7 @@ GpuResource&& GpuTextureAllocator::Allocate(GpuResourceDescription& textureDesc)
 		_currentPool = &_memoryManager.RequestPool(resourceAllocationInfo.SizeInBytes);
 
 	ID3D12Resource* resource;
-	auto hr = gDevice->CreatePlacedResource(_currentPool->_heap, _currentPool->_offset, &resourceDesc, D3D12_RESOURCE_STATE_COPY_DEST, nullptr, IID_PPV_ARGS(&resource));
+	auto hr = gDevice->CreatePlacedResource(_currentPool->_heap, _currentPool->_offset, &resourceDesc, D3D12_RESOURCE_STATE_COPY_DEST, textureDesc.ClearValue, IID_PPV_ARGS(&resource));
 
 	check(hr == S_OK)
 
@@ -209,7 +350,7 @@ bool GpuTexture::Create(GpuTextureDescription& textureDesc) noexcept
 
 	if (textureDesc.UploadBufferData)
 	{
-		Load(textureDesc.UploadBufferData);
+		return Load(textureDesc.UploadBufferData);
 	}
 
 	return true;
@@ -256,7 +397,7 @@ void TextureView::Create(GpuResource& resource) noexcept
 	if (desc.Flags & D3D12_RESOURCE_FLAG_ALLOW_DEPTH_STENCIL)
 	{
 		D3D12_DEPTH_STENCIL_VIEW_DESC dsvDesc;
-		dsvDesc.Format = desc.Format;
+		dsvDesc.Format = GpuTexture::GetDSVFormat(desc.Format);
 		dsvDesc.ViewDimension = D3D12_DSV_DIMENSION_TEXTURE2D;
 		dsvDesc.Texture2D.MipSlice = 0;
 

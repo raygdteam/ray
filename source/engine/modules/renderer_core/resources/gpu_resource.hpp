@@ -28,6 +28,7 @@ public:
 	DXGI_SAMPLE_DESC SampleDesc;
 	u32 MipLevels;
 	D3D12_RESOURCE_FLAGS Flags;
+	D3D12_CLEAR_VALUE* ClearValue;
 
 	// common properties
 	DXGI_FORMAT Format;
