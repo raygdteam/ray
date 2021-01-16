@@ -7,8 +7,6 @@
 #include <engine/world/actors/camera_actor.hpp>
 #include <renderer_core/renderer.hpp>
 
-using namespace ray::renderer_core_api;
-
 // Internal use only.
 struct WorldLevelData
 {

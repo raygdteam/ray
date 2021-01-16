@@ -9,7 +9,6 @@
     <ClInclude Include="ray_renderer_core_class_helper.hpp" />
     <ClInclude Include="renderer.hpp" />
     <ClInclude Include="renderer_2d.hpp" />
-    <ClInclude Include="renderer_globals.hpp" />
     <ClInclude Include="resources\gpu_resource.hpp">
       <Filter>resources</Filter>
     </ClInclude>
@@ -32,12 +31,6 @@
       <Filter>resources</Filter>
     </ClInclude>
     <ClInclude Include="sampler_manager.hpp" />
-    <ClInclude Include="resources\texture.hpp">
-      <Filter>resources</Filter>
-    </ClInclude>
-    <ClInclude Include="resources\buddy_allocator.hpp">
-      <Filter>resources\memory</Filter>
-    </ClInclude>
     <ClInclude Include="resources\ring_buffer.hpp">
       <Filter>resources\memory</Filter>
     </ClInclude>
@@ -47,6 +40,9 @@
     </ClInclude>
     <ClInclude Include="resources\gpu_memory_pool.hpp">
       <Filter>resources\memory</Filter>
+    </ClInclude>
+    <ClInclude Include="resources\gpu_texture.hpp">
+      <Filter>resources</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -75,12 +71,6 @@
       <Filter>resources</Filter>
     </ClCompile>
     <ClCompile Include="sampler_manager.cpp" />
-    <ClCompile Include="resources\texture.cpp">
-      <Filter>resources</Filter>
-    </ClCompile>
-    <ClCompile Include="resources\buddy_allocator.cpp">
-      <Filter>resources\memory</Filter>
-    </ClCompile>
     <ClCompile Include="resources\ring_buffer.cpp">
       <Filter>resources\memory</Filter>
     </ClCompile>
@@ -90,6 +80,9 @@
     </ClCompile>
     <ClCompile Include="resources\gpu_memory_pool.cpp">
       <Filter>resources\memory</Filter>
+    </ClCompile>
+    <ClCompile Include="resources\gpu_texture.cpp">
+      <Filter>resources</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

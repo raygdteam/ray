@@ -4,8 +4,6 @@
 #include "ext/imgui.h"
 #include "ext/imgui_impl_win32.h"
 
-using namespace ray::renderer_core_api;
-
 /*void UiButton::Tick()
 {
 	ImGui::Button({});

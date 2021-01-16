@@ -4,7 +4,7 @@
 
 void __Playground_dark()
 {
-	FMatrix4 A = FMatrix4(
+	/*FMatrix4 A = FMatrix4(
 		{ 1, 1, 0, 1 },
 		{ 0, 0, 1, 1 },
 		{ 1, 0, 1, 1 },
@@ -22,7 +22,7 @@ void __Playground_dark()
 	DirectX::XMMATRIX MB = DirectX::XMMATRIX(1,0,1,0,0,0,0,0,1,0,1,0,0,0,0,1);
 
 	FMatrix4 res = A * B;
-	(void)res;
+	(void)res;*/
 
 	//DirectX::XMMATRIX rres = MA * MB;
 	//DirectX::XMMatrixTransformation

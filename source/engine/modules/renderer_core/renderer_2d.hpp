@@ -10,49 +10,43 @@
 #define RAY_RENDERERCORE_API RAY_DLLIMPORT
 #endif
 
-namespace ray::renderer_core_api
+class GraphicsPipeline;
+class RootSignature;
+class GraphicsContext;
+class DescriptorHeap;
+
+class RAY_RENDERERCORE_API Renderer2D
 {
-	class GraphicsPipeline;
-	class RootSignature;
-	class GraphicsContext;
-	class UserDescriptorHeap;
+private:
+	static GraphicsPipeline _2DPipeline;
+	static RootSignature _2DSignature;
+	static DescriptorHeap _descriptorHeap;
+	static RingBuffer _ringBuffer;
 
-	class RAY_RENDERERCORE_API Renderer2D
-	{
-	private:
-		static GraphicsPipeline _2DPipeline;
-		static RootSignature _2DSignature;
-		static UserDescriptorHeap _descriptorHeap;
-		static resources::RingBuffer _ringBuffer;
+public:
+	~Renderer2D();
 
-	public:
-		~Renderer2D();
+public:
+	static void Initialize(/*TextureManager* textureManager*/);
+	static void Shutdown();
 
-	public:
-		static void Initialize(/*TextureManager* textureManager*/);
-		static void Shutdown();
+public:
+	static void Begin(CameraActor& camera);
+	static void Begin(const FMatrix4x4& viewProjection);
+	static void End(GraphicsContext& gfxContext);
 
-	public:
-		static void Begin(CameraActor& camera);
-		static void Begin(const FMatrix4x4& viewProjection);
-		static void End(GraphicsContext& gfxContext);
+public:
+	static void SetCamera(CameraActor& camera);
 
-	public:
-		static void SetCamera(CameraActor& camera);
+public:
+	//static void DrawQuad(const FVector<3>& pos, FVector<2>* textureCoords, GraphicsContext& gfxContext);
+	static void DrawQuad(const FVector<3>& pos, const FVector<2>& size, u32 textureIndex, FVector<2>* textureCoords, GraphicsContext& gfxContext);
+	static void DrawQuad(const FVector<3>& pos, const FVector<2>& size, u32 textureIndex, GraphicsContext& gfxContext);
+	static void DrawQuad(const FVector<3>& pos, const FVector<2>& size, const FVector<4>& color, GraphicsContext& gfxContext);
 
-	public:
-		//static void DrawQuad(const FVector<3>& pos, FVector<2>* textureCoords, GraphicsContext& gfxContext);
-		static void DrawQuad(const FVector<3>& pos, const FVector<2>& size, u32 textureIndex, FVector<2>* textureCoords, GraphicsContext& gfxContext);
-		static void DrawQuad(const FVector<3>& pos, const FVector<2>& size, u32 textureIndex, GraphicsContext& gfxContext);
-		static void DrawQuad(const FVector<3>& pos, const FVector<2>& size, const FVector<4>& color, GraphicsContext& gfxContext);
+private:
+	static void Begin();
+	static void Flush(GraphicsContext& gfxContext);
+	static void FlushAndReset(GraphicsContext& gfxContext);
 
-	private:
-		static void Begin();
-		static void Flush(GraphicsContext& gfxContext);
-		static void FlushAndReset(GraphicsContext& gfxContext);
-
-	};
-
-}
-
-
+};

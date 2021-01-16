@@ -10,8 +10,6 @@ Level::Level()
 	
 }
 
-using namespace ray::renderer_core_api;
-
 void Level::SpawnActor(Actor* actor)
 {
 	actor->Awake(); // ??

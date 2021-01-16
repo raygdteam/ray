@@ -13,234 +13,225 @@
 #define RAY_RENDERERCORE_API RAY_DLLIMPORT
 #endif
 
-namespace ray::renderer_core_api
+class CommandContext;
+class ComputeContext;
+class GraphicsContext;
+
+class UploadBuffer;
+class RingBuffer;
+
+
+class RAY_RENDERERCORE_API ContextManager
 {
+public:
+	ContextManager() {}
 
-	class CommandContext;
-	class ComputeContext;
-	class GraphicsContext;
+	CommandContext* AllocateContext(D3D12_COMMAND_LIST_TYPE type) noexcept;
+	void FreeContext(CommandContext* context) noexcept;
+	static void DestroyAllContexts() noexcept;
 
-	namespace resources
+private:
+	static std::vector<CommandContext*> _sContextPool[4];
+	static std::queue<CommandContext*> _sAvailableContexts[4];
+	static CriticalSection _sContextManagerMutex;
+};
+
+class RAY_RENDERERCORE_API CommandContext : public NonCopyable
+{
+	friend class ContextManager;
+
+private:
+	CommandContext(D3D12_COMMAND_LIST_TYPE type);
+
+public:
+	~CommandContext();
+
+	static CommandContext& Begin();
+	static void DestroyAllContexts();
+
+	// 
+	u64 Flush(bool bWaitForComplition = false);
+
+	u64 Finish(bool bWaitForComplition = false);
+
+	void Initialize();
+	void Reset();
+
+	GraphicsContext& GetGraphicsContext() noexcept
 	{
-		class UploadBuffer;
-		class RingBuffer;
+		assert(_type != D3D12_COMMAND_LIST_TYPE_COMPUTE);
+		return reinterpret_cast<GraphicsContext&>(*this);
 	}
 
-	class RAY_RENDERERCORE_API ContextManager
+	ComputeContext& GetComputeContext() noexcept
 	{
-	public:
-		ContextManager() {}
+		return reinterpret_cast<ComputeContext&>(*this);
+	}
 
-		CommandContext* AllocateContext(D3D12_COMMAND_LIST_TYPE type) noexcept;
-		void FreeContext(CommandContext* context) noexcept;
-		static void DestroyAllContexts() noexcept;
-
-	private:
-		static std::vector<CommandContext*> _sContextPool[4];
-		static std::queue<CommandContext*> _sAvailableContexts[4];
-		static CriticalSection _sContextManagerMutex;
-	};
-
-	class RAY_RENDERERCORE_API CommandContext : public NonCopyable
+	ID3D12CommandList* GetCommandList() const noexcept
 	{
-		friend class ContextManager;
+		return _commandList;
+	}
 
-	private:
-		CommandContext(D3D12_COMMAND_LIST_TYPE type);
-		
-	public:
-		~CommandContext();
+	void CopyBuffer(GpuResource& dest, GpuResource& src);
+	void CopyBufferRegion(GpuResource& dest, UploadBuffer& src, size_t srcOffset, size_t numBytes);
+	void CopyTextureRegion(GpuResource& dest, UploadBuffer& src, D3D12_PLACED_SUBRESOURCE_FOOTPRINT& srcFootprint);
+	/*
+	TODO:
+	void CopyCounter()
+	void ResetCounter()
+	*/
 
-		static CommandContext& Begin();
-		static void DestroyAllContexts();
+	/*DynAlloc ReserveUploadMemory(size_t sizeInBytes)
+	{
+		return _cpuLinearAllocator.Allocate(sizeInBytes);
+	}*/
 
-		// 
-		u64 Flush(bool bWaitForComplition = false);
+	static void InitializeTexture(GpuResource& dest, UploadBuffer& src);
+	static void InitializeTextureArraySlice(GpuResource& dest, u64 sliceIndex, GpuResource& src);
+	static void ReadbackTexture2D(GpuResource& readbackBuffer, PixelBuffer& srcBuffer);
+	static void InitializeBuffer(GpuResource& dest, UploadBuffer& src);
 
-		u64 Finish(bool bWaitForComplition = false);
+	void WriteBuffer(GpuResource& dest, size_t destOffset, const void* data, size_t numBytes);
+	void FillBuffer(GpuResource& dest, size_t destOffset, float value, size_t numBytes);
 
-		void Initialize();
-		void Reset();
+	void TransitionResource(GpuResource& dest, D3D12_RESOURCE_STATES newState, bool bFlushImmediate = false);
+	void BeginResourceTransition(GpuResource& dest, D3D12_RESOURCE_STATES newState, bool bFlushImmediate = false);
+	inline void FlushResourceBarriers();
 
-		GraphicsContext& GetGraphicsContext() noexcept
+	void SetPipelineState(PipelineState& pso)
+	{
+		auto newPSO = pso.GetPSO();
+
+		if (_currentPipelineState == newPSO)
 		{
-			assert(_type != D3D12_COMMAND_LIST_TYPE_COMPUTE);
-			return reinterpret_cast<GraphicsContext&>(*this);
+			_commandList->SetPipelineState(_currentPipelineState);
+			return;
 		}
 
-		ComputeContext& GetComputeContext() noexcept
+		_commandList->SetPipelineState(newPSO);
+		_currentPipelineState = newPSO;
+	}
+
+	inline void SetDescriptorHeap(D3D12_DESCRIPTOR_HEAP_TYPE type, ID3D12DescriptorHeap* heap)
+	{
+		if (heap != nullptr && _currentDescriptorHeaps[type] != heap)
 		{
-			return reinterpret_cast<ComputeContext&>(*this);
+			_currentDescriptorHeaps[type] = heap;
 		}
 
-		ID3D12CommandList* GetCommandList() const noexcept
+		BindDescriptorHeaps();
+	}
+
+	inline void SetDescriptorHeaps(size_t numHeaps, D3D12_DESCRIPTOR_HEAP_TYPE* types, ID3D12DescriptorHeap** heaps)
+	{
+		bool bAnyChanged = false;
+
+		for (size_t i = 0; i < numHeaps; ++i)
 		{
-			return _commandList;
-		}
-
-		void CopyBuffer(resources::GpuResource& dest, resources::GpuResource& src);
-		void CopyBufferRegion(resources::GpuResource& dest, resources::UploadBuffer& src, size_t srcOffset, size_t numBytes);
-		void CopyTextureRegion(resources::GpuResource& dest, resources::UploadBuffer& src, D3D12_PLACED_SUBRESOURCE_FOOTPRINT& srcFootprint);
-		/*
-		TODO:
-		void CopyCounter()
-		void ResetCounter()
-		*/
-
-		/*DynAlloc ReserveUploadMemory(size_t sizeInBytes)
-		{
-			return _cpuLinearAllocator.Allocate(sizeInBytes);
-		}*/
-
-		static void InitializeTexture(resources::GpuResource& dest, resources::UploadBuffer& src);
-		static void InitializeTextureArraySlice(resources::GpuResource& dest, u64 sliceIndex, resources::GpuResource& src);
-		static void ReadbackTexture2D(resources::GpuResource& readbackBuffer, resources::PixelBuffer& srcBuffer);
-		static void InitializeBuffer(resources::GpuResource& dest, resources::UploadBuffer& src);
-
-		void WriteBuffer(resources::GpuResource& dest, size_t destOffset, const void* data, size_t numBytes);
-		void FillBuffer(resources::GpuResource& dest, size_t destOffset, float value, size_t numBytes);
-
-		void TransitionResource(resources::GpuResource& dest, D3D12_RESOURCE_STATES newState, bool bFlushImmediate = false);
-		void BeginResourceTransition(resources::GpuResource& dest, D3D12_RESOURCE_STATES newState, bool bFlushImmediate = false);
-		inline void FlushResourceBarriers();
-
-		void SetPipelineState(PipelineState& pso)
-		{
-			auto newPSO = pso.GetPSO();
-
-			if (_currentPipelineState == newPSO)
+			if (heaps[i] != nullptr && heaps[i] != _currentDescriptorHeaps[types[i]])
 			{
-				_commandList->SetPipelineState(_currentPipelineState);
-				return;
+				_currentDescriptorHeaps[types[i]] = heaps[i];
+				bAnyChanged = true;
 			}
-
-			_commandList->SetPipelineState(newPSO);
-			_currentPipelineState = newPSO;
 		}
 
-		inline void SetDescriptorHeap(D3D12_DESCRIPTOR_HEAP_TYPE type, ID3D12DescriptorHeap* heap)
-		{
-			if (heap != nullptr && _currentDescriptorHeaps[type] != heap)
-			{
-				_currentDescriptorHeaps[type] = heap;
-			}
-			
+		if (bAnyChanged)
 			BindDescriptorHeaps();
-		}
+	}
 
-		inline void SetDescriptorHeaps(size_t numHeaps, D3D12_DESCRIPTOR_HEAP_TYPE* types, ID3D12DescriptorHeap** heaps)
-		{
-			bool bAnyChanged = false;
+protected:
+	D3D12_COMMAND_LIST_TYPE _type;
+	ID3D12GraphicsCommandList* _commandList;
+	ID3D12CommandAllocator* _commandAllocator;
+	ID3D12PipelineState* _currentPipelineState;
+	ID3D12RootSignature* _graphicsRootSig;
+	ID3D12RootSignature* _computeRootSig;
 
-			for (size_t i = 0; i < numHeaps; ++i)
-			{
-				if (heaps[i] != nullptr && heaps[i] != _currentDescriptorHeaps[types[i]])
-				{
-					_currentDescriptorHeaps[types[i]] = heaps[i];
-					bAnyChanged = true;
-				}
-			}
+	/*LinearAllocator _cpuLinearAllocator;
+	LinearAllocator _gpuLinearAllocator;*/
 
-			if (bAnyChanged)
-				BindDescriptorHeaps();
-		}
+	D3D12_RESOURCE_BARRIER _barriers[16];
+	u32 _numBarriersToFlush;
 
-	protected:
-		D3D12_COMMAND_LIST_TYPE _type;
-		ID3D12GraphicsCommandList* _commandList;
-		ID3D12CommandAllocator* _commandAllocator;
-		ID3D12PipelineState* _currentPipelineState;
-		ID3D12RootSignature* _graphicsRootSig;
-		ID3D12RootSignature* _computeRootSig;
+	ID3D12DescriptorHeap* _currentDescriptorHeaps[D3D12_DESCRIPTOR_HEAP_TYPE_NUM_TYPES] = {};
 
-		/*LinearAllocator _cpuLinearAllocator;
-		LinearAllocator _gpuLinearAllocator;*/
+protected:
+	void BindDescriptorHeaps();
 
-		D3D12_RESOURCE_BARRIER _barriers[16];
-		u32 _numBarriersToFlush;
+};
 
-		ID3D12DescriptorHeap* _currentDescriptorHeaps[D3D12_DESCRIPTOR_HEAP_TYPE_NUM_TYPES] = {};
+class RAY_RENDERERCORE_API ComputeContext : public CommandContext
+{
+public:
+	static ComputeContext& Begin(bool bAsync = false);
 
-	protected:
-		void BindDescriptorHeaps();
+private:
 
-	};
 
-	class RAY_RENDERERCORE_API ComputeContext : public CommandContext
+};
+
+class RAY_RENDERERCORE_API GraphicsContext : public CommandContext
+{
+public:
+	static GraphicsContext& Begin()
 	{
-	public:
-		static ComputeContext& Begin(bool bAsync = false);
+		return CommandContext::Begin().GetGraphicsContext();
+	}
 
-	private:
+	void ClearUAV(GpuResource& target) {}
+	void ClearUAV(ColorBuffer& target) {}
+	void ClearColor(ColorBuffer& target);
+	void ClearDepth() {}
+	void ClearStencil() {}
+	void ClearDepthAndStencil(DepthBuffer& target);
 
-
-	};
-
-	class RAY_RENDERERCORE_API GraphicsContext : public CommandContext
+	void SetRootSignature(const RootSignature& rootSig)
 	{
-	public:
-		static GraphicsContext& Begin()
+		if (rootSig.GetRootSignature() == _graphicsRootSig)
 		{
-			return CommandContext::Begin().GetGraphicsContext();
-		}
-
-		void ClearUAV(resources::GpuResource& target) {}
-		void ClearUAV(resources::ColorBuffer& target) {}
-		void ClearColor(resources::ColorBuffer& target);
-		void ClearDepth() {}
-		void ClearStencil() {}
-		void ClearDepthAndStencil(resources::DepthBuffer& target);
-
-		void SetRootSignature(const RootSignature& rootSig)
-		{
-			if (rootSig.GetRootSignature() == _graphicsRootSig)
-			{
-				_commandList->SetGraphicsRootSignature(_graphicsRootSig);
-				return;
-			}
-
-			_graphicsRootSig = rootSig.GetRootSignature();
 			_commandList->SetGraphicsRootSignature(_graphicsRootSig);
-
-			// TODO:
+			return;
 		}
 
-		void SetRenderTargets(u32 numRTV, D3D12_CPU_DESCRIPTOR_HANDLE* rtv);
-		void SetRenderTargets(u32 numRtV, D3D12_CPU_DESCRIPTOR_HANDLE* rtv, D3D12_CPU_DESCRIPTOR_HANDLE dsv);
-		void SetRenderTarget(D3D12_CPU_DESCRIPTOR_HANDLE rtv) { SetRenderTargets(1, &rtv); }
-		void SetRenderTarget(D3D12_CPU_DESCRIPTOR_HANDLE rtv, D3D12_CPU_DESCRIPTOR_HANDLE dsv) { SetRenderTargets(1, &rtv, dsv); }
-		void SetDepthStencilView(D3D12_CPU_DESCRIPTOR_HANDLE dsv) { SetRenderTargets(0, nullptr, dsv); }
+		_graphicsRootSig = rootSig.GetRootSignature();
+		_commandList->SetGraphicsRootSignature(_graphicsRootSig);
 
-		void SetViewport(const D3D12_VIEWPORT& viewport);
-		void SetViewport(float x, float y, float w, float h, float minDepth = 0.f, float maxDepth = 1.f);
-		void SetScissor(const D3D12_RECT& rect);
-		void SetScissor(u32 left, u32 top, u32 right, u32 bottom);
-		void SetViewportAndScissor(const D3D12_VIEWPORT& viewport, const D3D12_RECT& rect);
-		void SetViewportAndScissor(u32 x, u32 y, u32 w, u32 h);
-		void SetBlendFactor(float r, float g, float b, float a);
-		void SetPrimitiveTopology(D3D12_PRIMITIVE_TOPOLOGY primitiveTopology);
+		// TODO:
+	}
 
-		void SetIndexBuffer(const D3D12_INDEX_BUFFER_VIEW& ibView);
-		void SetVertexBuffers(u32 startSlot, u32 count, const D3D12_VERTEX_BUFFER_VIEW* vbViews);
-		void SetVertexBuffer(u32 startSlot, const D3D12_VERTEX_BUFFER_VIEW& vbView) { SetVertexBuffers(startSlot, 1, &vbView); }
-		void SetDynamicVB(resources::RingBuffer& ringBuffer, u32 startSlot, size_t numVertices, size_t vertexStride, const void* data);
-		void SetDynamicIB(resources::RingBuffer& ringBuffer, size_t indexCount, const u32* data, bool b32Bit = false);
-		void SetDynamicSRV() {}
-		void SetDynamicCBV(resources::RingBuffer& ringBuffer, u32 rootIndex, size_t bufferSize, void* data);
+	void SetRenderTargets(u32 numRTV, D3D12_CPU_DESCRIPTOR_HANDLE* rtv);
+	void SetRenderTargets(u32 numRtV, D3D12_CPU_DESCRIPTOR_HANDLE* rtv, D3D12_CPU_DESCRIPTOR_HANDLE dsv);
+	void SetRenderTarget(D3D12_CPU_DESCRIPTOR_HANDLE rtv) { SetRenderTargets(1, &rtv); }
+	void SetRenderTarget(D3D12_CPU_DESCRIPTOR_HANDLE rtv, D3D12_CPU_DESCRIPTOR_HANDLE dsv) { SetRenderTargets(1, &rtv, dsv); }
+	void SetDepthStencilView(D3D12_CPU_DESCRIPTOR_HANDLE dsv) { SetRenderTargets(0, nullptr, dsv); }
 
-		void SetDescriptorTable(u32 rootIndex, D3D12_GPU_DESCRIPTOR_HANDLE handle);
+	void SetViewport(const D3D12_VIEWPORT& viewport);
+	void SetViewport(float x, float y, float w, float h, float minDepth = 0.f, float maxDepth = 1.f);
+	void SetScissor(const D3D12_RECT& rect);
+	void SetScissor(u32 left, u32 top, u32 right, u32 bottom);
+	void SetViewportAndScissor(const D3D12_VIEWPORT& viewport, const D3D12_RECT& rect);
+	void SetViewportAndScissor(u32 x, u32 y, u32 w, u32 h);
+	void SetBlendFactor(float r, float g, float b, float a);
+	void SetPrimitiveTopology(D3D12_PRIMITIVE_TOPOLOGY primitiveTopology);
 
-		void Draw(u32 vertexCount, u32 vertexStartOffset = 0);
-		void DrawIndexed(u32 indexCount, u32 startIndexLocation = 0, s32 baseVertexLocation = 0);
-		void DrawInstanced(u32 vertexCountPerInstance, u32 instanceCount, u32 startVertexLocation = 0, u32 startInstanceLocation = 0);
-		void DrawIndexedInstanced(u32 indexCountPerInstance, u32 instanceCount, u32 startIndexLocation, s32 baseVertexLocation, u32 startInstanceLocation);
-		// TODO: 
+	void SetIndexBuffer(const D3D12_INDEX_BUFFER_VIEW& ibView);
+	void SetVertexBuffers(u32 startSlot, u32 count, const D3D12_VERTEX_BUFFER_VIEW* vbViews);
+	void SetVertexBuffer(u32 startSlot, const D3D12_VERTEX_BUFFER_VIEW& vbView) { SetVertexBuffers(startSlot, 1, &vbView); }
+	void SetDynamicVB(RingBuffer& ringBuffer, u32 startSlot, size_t numVertices, size_t vertexStride, const void* data);
+	void SetDynamicIB(RingBuffer& ringBuffer, size_t indexCount, const u32* data, bool b32Bit = false);
+	void SetDynamicSRV() {}
+	void SetDynamicCBV(RingBuffer& ringBuffer, u32 rootIndex, size_t bufferSize, void* data);
 
-	private:
+	void SetDescriptorTable(u32 rootIndex, D3D12_GPU_DESCRIPTOR_HANDLE handle);
+
+	void Draw(u32 vertexCount, u32 vertexStartOffset = 0);
+	void DrawIndexed(u32 indexCount, u32 startIndexLocation = 0, s32 baseVertexLocation = 0);
+	void DrawInstanced(u32 vertexCountPerInstance, u32 instanceCount, u32 startVertexLocation = 0, u32 startInstanceLocation = 0);
+	void DrawIndexedInstanced(u32 indexCountPerInstance, u32 instanceCount, u32 startIndexLocation, s32 baseVertexLocation, u32 startInstanceLocation);
+	// TODO: 
+
+private:
 
 
-	};
-
-}
-
-
+};

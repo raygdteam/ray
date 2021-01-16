@@ -22,75 +22,59 @@
 #define RAY_RENDERERCORE_API RAY_DLLIMPORT
 #endif
 
-namespace ray::renderer_core_api
+class CommandListManager;
+class CommandContext;
+class ContextManager;
+class DescriptorHeapsManager;
+class GpuTextureAllocator;
+class GpuBufferAllocator;
+
+extern CommandListManager gCommandListManager;
+extern ContextManager gContextManager;
+extern ID3D12Device* gDevice;
+extern GpuTextureAllocator gTextureAllocator;
+extern GpuBufferAllocator gBufferAllocator;
+extern DescriptorHeapsManager gDescriptorHeapsManager;
+
+
+enum RendererName : u8
 {
-	class CommandListManager;
-	class CommandContext;
-	class ContextManager;
-	class DescriptorHeapsManager;
+	eDirectX11, // ???
+	eOpenGL, // ???
+	eVulkan,
+	eDirectX12
+};
 
-	namespace resources
-	{
-		class GpuTextureAllocator;
-		class GpuBufferAllocator;
-	}
+struct RAY_RENDERERCORE_API RendererInfo
+{
+	bool bMultiEngine;
+	bool bRayTracing;
+	bool bReservedResources;
+	bool bArgsBuffer;
+	// TODO: 
 
-	namespace globals
-	{
-		extern CommandListManager gCommandListManager;
-		extern ContextManager gContextManager;
-		extern ID3D12Device* gDevice;
-		extern ray::renderer_core_api::resources::GpuTextureAllocator gTextureAllocator;
-		extern ray::renderer_core_api::resources::GpuBufferAllocator gBufferAllocator;
-		extern DescriptorHeapsManager gDescriptorHeapsManager;
-	}
+	RendererName Name;
+};
 
-	enum RendererName : u8
-	{
-		eDirectX11, // ???
-		eOpenGL, // ???
-		eVulkan,
-		eDirectX12
-	};
+struct RAY_RENDERERCORE_API IRenderer final
+{
+	IRenderer()
+		: _swapChain(nullptr)
+	{}
 
-	struct RAY_RENDERERCORE_API RendererInfo
-	{
-		bool bMultiEngine;
-		bool bRayTracing;
-		bool bReservedResources;
-		bool bArgsBuffer;
-		// TODO: 
-		
-		RendererName Name;
-	};
+	void Initialize(IPlatformWindow* window);
+	void Shutdown();
 
-	struct RAY_RENDERERCORE_API IRenderer final
-	{
-		IRenderer()
-			: _swapChain(nullptr)
-		{}
+	void BeginScene(GraphicsContext& gfxContext);
+	void EndScene(GraphicsContext& gfxContext);
 
-		void Initialize(IPlatformWindow* window);
-		void Shutdown();
-
-		void BeginScene(GraphicsContext& gfxContext);
-		void EndScene(GraphicsContext& gfxContext);
-
-		static bool IsReady() { return _sbReady; }
+	static bool IsReady() { return _sbReady; }
 
 
-	private:
-		static bool _sbReady;
-		IDXGISwapChain1* _swapChain;
-		/*resources::GpuBuffer _vertexBuffer;
-		resources::GpuBuffer _indexBuffer;
-		RootSignature _rootSignature;
-		GraphicsPipeline _pipeline;
-		D3D12_VERTEX_BUFFER_VIEW _vertexBufferView;
-		D3D12_INDEX_BUFFER_VIEW _indexBufferView;*/
+private:
+	static bool _sbReady;
+	IDXGISwapChain1* _swapChain;
 
-	};
+};
 
 // using GetRRCClassHelper_t = IRRCClassHelper* (*)();
-
-}

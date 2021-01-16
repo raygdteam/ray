@@ -5,40 +5,37 @@
 #include <resources/resource_manager.hpp>
 #include <d3d12.h>
 
-namespace ray::renderer_core_api::resources
+class UploadBuffer
 {
-	class UploadBuffer
-	{
-		friend class RingBuffer;
-	private:
-		u8* _begin;
-		u8* _end;
-		u8* _currentPointer;
-		u64 _maxPoolSize;
-		ID3D12Resource* _pool;
+	friend class RingBuffer;
+private:
+	u8* _begin;
+	u8* _end;
+	u8* _currentPointer;
+	u64 _maxPoolSize;
+	ID3D12Resource* _pool;
 
-	public:
-		UploadBuffer() = default;
-		UploadBuffer(UploadBuffer&& rhs) = default;
-		UploadBuffer& operator = (UploadBuffer&& rhs) = default;
+public:
+	UploadBuffer() = default;
+	UploadBuffer(UploadBuffer&& rhs) = default;
+	UploadBuffer& operator = (UploadBuffer&& rhs) = default;
 
-		~UploadBuffer() { Destroy(); }
+	~UploadBuffer() { Destroy(); }
 
-	public:
-		void Initialize(u64 size) noexcept;
-		void Destroy() noexcept;
+public:
+	void Initialize(u64 size) noexcept;
+	void Destroy() noexcept;
 
-	public:
-		u8* SetTextureData(RTexture& texture) noexcept;
-		u8* SetBufferData(void* buffer, size_t elementsCount, size_t elementSize) noexcept;
-		u8* SetConstantBufferData(void* buffer, size_t bufferSize) noexcept;
+public:
+	u8* SetTextureData(RTexture& texture) noexcept;
+	u8* SetBufferData(void* buffer, size_t elementsCount, size_t elementSize) noexcept;
+	u8* SetConstantBufferData(void* buffer, size_t bufferSize) noexcept;
 
-		u8* GetBeginPointer() const noexcept { return _begin; }
-		ID3D12Resource* GetNativePool() const noexcept { return _pool; }
-		u64 GetMaxPoolSize() const noexcept { return  _maxPoolSize; }
+	u8* GetBeginPointer() const noexcept { return _begin; }
+	ID3D12Resource* GetNativePool() const noexcept { return _pool; }
+	u64 GetMaxPoolSize() const noexcept { return  _maxPoolSize; }
 
-	private:
-		u8* SetBufferDataToUploadBuffer(void* buffer, size_t bufferSize, size_t alignment) noexcept;
+private:
+	u8* SetBufferDataToUploadBuffer(void* buffer, size_t bufferSize, size_t alignment) noexcept;
 
-	};
-}
+};

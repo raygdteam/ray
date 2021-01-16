@@ -19,7 +19,7 @@ public:
 	template<typename... Args>
 	void EmplaceBack(Args&&... args)
 	{
-		this->emplace_back(std::forward(args)...);
+		this->emplace_back(std::forward<Args>(args)...);
 	}
 
 	bool IsEmpty() const

@@ -160,8 +160,6 @@
     <ClInclude Include="ray_renderer_core_class_helper.hpp" />
     <ClInclude Include="renderer.hpp" />
     <ClInclude Include="renderer_2d.hpp" />
-    <ClInclude Include="renderer_globals.hpp" />
-    <ClInclude Include="resources\buddy_allocator.hpp" />
     <ClInclude Include="resources\buffer_manager.hpp" />
     <ClInclude Include="resources\color_buffer.hpp" />
     <ClInclude Include="resources\depth_buffer.hpp" />
@@ -171,7 +169,7 @@
     <ClInclude Include="resources\pixel_buffer.hpp" />
     <ClInclude Include="resources\upload_buffer.hpp" />
     <ClInclude Include="resources\ring_buffer.hpp" />
-    <ClInclude Include="resources\texture.hpp" />
+    <ClInclude Include="resources\gpu_texture.hpp" />
     <ClInclude Include="root_signature.hpp" />
     <ClInclude Include="sampler_manager.hpp" />
   </ItemGroup>
@@ -185,7 +183,6 @@
     <ClCompile Include="pipeline_state.cpp" />
     <ClCompile Include="renderer.cpp" />
     <ClCompile Include="renderer_2d.cpp" />
-    <ClCompile Include="resources\buddy_allocator.cpp" />
     <ClCompile Include="resources\buffer_manager.cpp" />
     <ClCompile Include="resources\color_buffer.cpp" />
     <ClCompile Include="resources\depth_buffer.cpp" />
@@ -194,7 +191,7 @@
     <ClCompile Include="resources\pixel_buffer.cpp" />
     <ClCompile Include="resources\upload_buffer.cpp" />
     <ClCompile Include="resources\ring_buffer.cpp" />
-    <ClCompile Include="resources\texture.cpp" />
+    <ClCompile Include="resources\gpu_texture.cpp" />
     <ClCompile Include="root_signature.cpp" />
     <ClCompile Include="sampler_manager.cpp" />
   </ItemGroup>

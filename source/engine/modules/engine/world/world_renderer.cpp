@@ -14,8 +14,6 @@
 // extern UiWidget* gWidget;
 UiRootObject* gRootObject;
 
-using namespace ray::renderer_core_api;
-
 double currentFrame = 0.f;
 
 void World::Render()

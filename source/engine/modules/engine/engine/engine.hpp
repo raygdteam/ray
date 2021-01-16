@@ -2,10 +2,6 @@
 #include <engine/engine/engine_def.hpp>
 #include <renderer_core/renderer.hpp>
 
-// #include <renderer_core/renderer_commands.hpp>
-
-using namespace ray::renderer_core_api;
-
 /**
  * Represents the engine loop object, where all the magic is being called.
  */

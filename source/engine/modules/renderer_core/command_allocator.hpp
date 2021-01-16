@@ -4,8 +4,6 @@
 #include <queue>
 #include <d3d12.h>
 
-namespace ray::renderer_core_api
-{
 
 class CommandAllocatorPool
 {
@@ -28,4 +26,3 @@ private:
 
 };
 
-}

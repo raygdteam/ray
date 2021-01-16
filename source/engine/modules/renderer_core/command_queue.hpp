@@ -6,14 +6,6 @@
 
 #define FENCE_SHIFT 56
 
-/*
-**	Vulkan:			VkQueue
-**	Direct3D 12:	ID3D12CommandQueue
-*/
-
-namespace ray::renderer_core_api
-{
-
 class CommandListManager;
 
 class CommandQueue
@@ -116,8 +108,5 @@ private:
 	CommandQueue _copyQueue;
 
 	ID3D12Device* _device;
-	// IRRCClassHelper* _classHelper;
 
 };
-
-}
