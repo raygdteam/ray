@@ -9,6 +9,7 @@
 #include <core/module/module.hpp>
 #include <core/file_system/file_system.hpp>
 #include <core/debug/debug.hpp>
+#include <core/threading/thread_pool.hpp>
 
 #include <input/input.hpp>
 
@@ -18,8 +19,12 @@
 #include <editor/engine/engine_interface.hpp>
 #endif
 
+extern Logger* gLauncherLog;
+
 void EngineLoop::PreInitialize()
 {
+	gLauncherLog->Log("------- Beginning of EngineLoop");
+	
 	/* 1. Initialize RayState and vital core components. */
 	/* First call to RayState() will allocate the memory. */
 	IRayState* state = RayState();
@@ -30,6 +35,10 @@ void EngineLoop::PreInitialize()
 	state->Input = new Input();
 	state->ResourceManager = new ResourceManager(state);
 
+	gThreadPoolManager = new ThreadPoolManager;
+
+	gLauncherLog->Log("------- Beginning of RayEngine");
+	
 #if !LAUNCH_EDITOR
 	/* 2. Load the engine module. This will register the objects we need. */
 	auto res = state->ModuleManager->LoadModule("engine");

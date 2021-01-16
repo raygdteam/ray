@@ -29,7 +29,7 @@ static Logger* eng;
 
 RayEngine::RayEngine() : _engineLoop(nullptr)
 {
-	eng = new Logger("engine");
+	eng = new Logger("RayEngine");
 }
 
 void RayEngine::Initialize(IEngineLoop* engineLoop)

@@ -5,18 +5,19 @@
 
 #include <core/memory/new_delete_override.hpp>
 
-static Logger* gLog;
+Logger* gLauncherLog;
 
 int RayMain()
 {
-	gLog = new Logger("launcher");
+	gLauncherLog = new Logger("launcher");
+	
 	EngineLoop engineLoop;
 	engineLoop.PreInitialize();
 	engineLoop.Initialize();
 
 	if (IsEngineExitRequested())
 	{
-		gLog->Log("engine early exit");
+		gLauncherLog->Log("engine early exit");
 		return 1;
 	}
 

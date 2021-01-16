@@ -46,6 +46,7 @@
     <ClInclude Include="os\miniwin.hpp" />
     <ClInclude Include="threading\condition_variable.hpp" />
     <ClInclude Include="threading\critical_section.hpp" />
+    <ClInclude Include="threading\thread_pool.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="core_entry_point.cpp" />
@@ -64,6 +65,7 @@
     </ClCompile>
     <ClCompile Include="threading\condition_variable.cpp" />
     <ClCompile Include="threading\critical_section.cpp" />
+    <ClCompile Include="threading\thread_pool.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\thirdparty\eastl\eastl.vcxproj">
