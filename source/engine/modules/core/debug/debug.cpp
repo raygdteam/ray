@@ -44,10 +44,10 @@ void Debug::__Internal_HandleAssertionFailure(pcstr expression, pcstr file, u16 
 {
 	if (gLog == nullptr) gLog = new Logger("debug");
 	gLog->Log("---------- ASSERTION FAILURE ----------");
-	gLog->Log("  Expression:       {}", expression);
-	gLog->Log("  Message:          {}", message);
-	gLog->Log("  File:             {}", file);
-	gLog->Log("  Line:             {}", line);
+	gLog->Log("  Expression:       %s", expression);
+	gLog->Log("  Message:          %s", message);
+	gLog->Log("  File:             %s", file);
+	gLog->Log("  Line:             %i", line);
 	gLog->Log("---------------------------------------");
 
 	if (IsDebuggerPresent())

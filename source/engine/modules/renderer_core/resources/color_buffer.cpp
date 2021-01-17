@@ -13,6 +13,9 @@ void ColorBuffer::CreateFromSwapChain(ID3D12Resource* inResource)
 	_resource = inResource;
 	_bManaged = false;
 
+	_desc.MipLevels = 1;
+	_desc.Flags = D3D12_RESOURCE_FLAG_ALLOW_RENDER_TARGET | D3D12_RESOURCE_FLAG_DENY_SHADER_RESOURCE;
+	_view.Create(*this);
 	gDevice->CreateRenderTargetView(inResource, nullptr, GetRTV());
 }
 

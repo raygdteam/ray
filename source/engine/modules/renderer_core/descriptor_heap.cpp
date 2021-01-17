@@ -7,9 +7,9 @@
 void DescriptorHeap::Create()
 {
 	auto hr = gDevice->CreateDescriptorHeap(&_heapDesc, IID_PPV_ARGS(&_heap));
-	check(hr == S_OK)
-
-		D3D12_GPU_DESCRIPTOR_HANDLE nullHandle
+	check(hr == S_OK));
+	
+	D3D12_GPU_DESCRIPTOR_HANDLE nullHandle
 	{
 		.ptr = D3D12_GPU_VIRTUAL_ADDRESS_UNKNOWN
 	};
@@ -47,7 +47,10 @@ bool DescriptorHeap::ValidateHandle(const DescriptorHandle& handle) const noexce
 
 DescriptorHeap& DescriptorHeapsManager::CreateHeap(D3D12_DESCRIPTOR_HEAP_TYPE type, D3D12_DESCRIPTOR_HEAP_FLAGS flag, u32 elementsCount) noexcept
 {
-	_heaps[type].EmplaceBack(type, flag, elementsCount);
+	DescriptorHeap heap { type, flag, elementsCount };
+	heap.Create();
+	
+	_heaps[type].EmplaceBack(heap);
 	_currentHeaps[type] = _heaps[type].Size() - 1;
 
 	return _heaps[type].At(_currentHeaps[type]);
@@ -61,7 +64,7 @@ DescriptorHeap& DescriptorHeapsManager::GetCurrentHeap(D3D12_DESCRIPTOR_HEAP_TYP
 	u32 currentHeap = _currentHeaps[type];
 
 	if (heaps.empty())
-		return CreateHeap(type, D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE, heaps.At(currentHeap).GetMaxDescriptorsCount());
+		return CreateHeap(type, type == D3D12_DESCRIPTOR_HEAP_TYPE_RTV || type == D3D12_DESCRIPTOR_HEAP_TYPE_DSV ? D3D12_DESCRIPTOR_HEAP_FLAG_NONE : D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE, 64); //heaps.At(currentHeap).GetMaxDescriptorsCount());
 
 	if (!bAllowCreateNewHeap || heaps.At(currentHeap).HasAvailableSpace(1))
 		return heaps.At(currentHeap);

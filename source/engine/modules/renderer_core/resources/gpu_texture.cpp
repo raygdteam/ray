@@ -308,7 +308,7 @@ GpuResource&& GpuTextureAllocator::Allocate(GpuResourceDescription& textureDesc)
 
 	auto resourceAllocationInfo = gDevice->GetResourceAllocationInfo(1, 1, &resourceDesc);
 	resourceDesc.Alignment = resourceAllocationInfo.Alignment;
-
+	
 	if (_currentPool == nullptr || !_currentPool->IsEnough(resourceAllocationInfo.SizeInBytes))
 		_currentPool = &_memoryManager.RequestPool(resourceAllocationInfo.SizeInBytes);
 
