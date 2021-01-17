@@ -92,6 +92,9 @@
     <ClInclude Include="lib\algorithms.hpp">
       <Filter>lib</Filter>
     </ClInclude>
+    <ClInclude Include="threading\thread_pool.hpp">
+      <Filter>threading</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="core_entry_point.cpp" />
@@ -133,6 +136,9 @@
     </ClCompile>
     <ClCompile Include="log\log.cpp">
       <Filter>log</Filter>
+    </ClCompile>
+    <ClCompile Include="threading\thread_pool.cpp">
+      <Filter>threading</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

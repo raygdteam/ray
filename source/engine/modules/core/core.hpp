@@ -55,6 +55,7 @@
 
 #if defined (RAY_PLATFORM_WIN32) || defined (RAY_PLATFORM_WIN64)
 #define RAY_PLATFORM_WIN
+#define WIN32_LEAN_AND_MEAN
 #ifndef _CRT_SECURE_NO_WARNINGS
 #define _CRT_SECURE_NO_WARNINGS
 #endif
@@ -64,8 +65,9 @@
 	#define RAY_PLATFORM_LINUX
 #endif //__linux__
 
-#ifdef RAY_DEBUG
+#if defined(RAY_DEBUG) || defined(RAY_DEVELOPMENT)
 	#define RAY_ASSERT(cond, msg) do { if (!(cond)) { __debugbreak(); } } while (false);
+	#define RAY_EDITOR 1
 #else
 	#define RAY_ASSERT(cond, msg)
 #endif

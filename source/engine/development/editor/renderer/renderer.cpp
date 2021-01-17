@@ -43,8 +43,8 @@ bool IVkRenderer::InitInstance()
 		.flags = NULL,
 		.pApplicationInfo = &applicationInfo,
 
-		.enabledLayerCount = 0,
-		.ppEnabledLayerNames = nullptr, //&layerNames[0],
+		.enabledLayerCount = 0, // 1,
+		.ppEnabledLayerNames = nullptr, // &layerNames[0],
 
 		.enabledExtensionCount = 2,
 		.ppEnabledExtensionNames = extensionNames,
@@ -80,7 +80,7 @@ bool IVkRenderer::InitDevice()
 
 		if (props.deviceType == VK_PHYSICAL_DEVICE_TYPE_DISCRETE_GPU)
 		{
-			gLog.Log("Picking discrete GPU: {}", props.deviceName);
+			gLog.Log("Picking discrete GPU: %s", props.deviceName);
 			_physicalDevice = physicalDevices[i];
 		}
 	}
@@ -90,7 +90,7 @@ bool IVkRenderer::InitDevice()
 		VkPhysicalDeviceProperties props;
 		vkGetPhysicalDeviceProperties(physicalDevices[0], &props);
 
-		gLog.Log("Picking fallback GPU: {}", props.deviceName);
+		gLog.Log("Picking fallback GPU: %s", props.deviceName);
 		_physicalDevice = physicalDevices[0];
 	}
 
@@ -343,10 +343,9 @@ bool IVkRenderer::Initialize(IPlatformWindow* window)
 	if (!InitSurface(window)) return false;
 	if (!InitSwapchain(window)) return false;
 	if (!InitCommandPool()) return false;
-
+	
 	ImGui::CreateContext();
 	ImGui_ImplWin32_Init(window->GetWindowHandleRaw());
-	
 	
 	_acqSemaphore = CreateSemaphore();
 	_relSemaphore = CreateSemaphore();
@@ -482,6 +481,7 @@ void IVkRenderer::EndScene()
 {
 	ImGui::EndFrame();
 	ImGui::Render();
+	ImGui::UpdatePlatformWindows();
 	ImDrawData* drawData = ImGui::GetDrawData();
 
 	ImGui_ImplVulkan_RenderDrawData(drawData, _cmdBuf);

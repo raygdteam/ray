@@ -53,6 +53,8 @@ u32 GuardedMain()
 {
 	/* Ensure kernel.dll is loaded */
 	dummy();
+
+	SetThreadPriority(GetCurrentThread(), THREAD_PRIORITY_HIGHEST);
 	
 	// TODO: switch to more appropriate solution: here, the compiler just fucking optimizes away the whole dx12 module.
 #ifdef RAY_RELEASE

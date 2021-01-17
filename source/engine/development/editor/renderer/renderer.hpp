@@ -13,6 +13,8 @@
 
 #undef CreateSemaphore
 
+struct ImGuiViewport;
+
 class IVkRenderer
 {
 	IPlatformWindow* _window;
@@ -55,7 +57,7 @@ class IVkRenderer
 	
 public:
 	bool Initialize(IPlatformWindow* window);
-
+	
 	void BeginScene();
 	void EndScene();
 };

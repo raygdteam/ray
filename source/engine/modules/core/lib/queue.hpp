@@ -8,10 +8,11 @@ class Queue : public eastl::queue<T>
 	using Super = eastl::queue<T>;
 	
 public:
+	Queue() : Super()
+	{ }
+	
 	Queue(std::initializer_list<T> ilist) : Super(ilist)
-	{
-		
-	}
+	{ }
 
 	bool IsEmpty() const
 	{

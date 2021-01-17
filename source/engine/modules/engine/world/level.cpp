@@ -17,8 +17,8 @@ void Level::SpawnActor(Actor* actor)
 
 	StaticQuadActor* sqActor = dynamic_cast<StaticQuadActor*>(actor);
 
-	CommandContext& ctx = CommandContext::Begin();
-	(void)ctx;
+	//CommandContext& ctx = CommandContext::Begin();
+	//(void)ctx;
 	RTexture* texture = dynamic_cast<RTexture*>(RayState()->ResourceManager->LoadResourceSync(sqActor->Material.TextureName, eTexture));
 
 	if (texture == nullptr) *(u64*)0xFFFFFFFFFFFFFFFF = 0xDED;
@@ -48,6 +48,11 @@ void Level::LoadTestLevel()
 
 	SpawnActor(actor1);
 	SpawnActor(actor2);
+}
+
+Array<Actor*>& Level::GetActors()
+{
+	return _actors;
 }
 
 void Level::Serialize(Archive&)
