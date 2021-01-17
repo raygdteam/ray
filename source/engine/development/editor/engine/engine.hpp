@@ -1,5 +1,6 @@
 #pragma once
 #include <engine/engine/engine.hpp>
+#include <engine/world/level.hpp>
 #include <app_framework/base/platform_window.hpp>
 #include <editor/renderer/renderer.hpp>
 
@@ -13,6 +14,7 @@ class EDITOR_API EditorEngine : public IEngine
 {
 	IPlatformWindow* _window = nullptr;
 	IVkRenderer* _renderer = nullptr;
+	Level* _level = nullptr;
 public:
 	void Initialize(IEngineLoop* engineLoop) override;
 	void Tick() override;

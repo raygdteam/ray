@@ -5,20 +5,24 @@
 #include <cstring>
 #include "core/extended_instuctions/sse/common.hpp"
 
-
-static Array<Type*>* gObjects = nullptr;
+static Type* gStaticallyLoadedObjects[32] = {};
 
 ObjectDb::ObjectDb()
 {
-	if (gObjects == nullptr)
+	for (Type* mod : gStaticallyLoadedObjects)
 	{
-		gObjects = new Array<Type*>();
+		if (mod == nullptr)
+			continue;
+
+		_objects.PushBack(mod);
 	}
+
+	memset(&gStaticallyLoadedObjects, 0, sizeof(Type*) * 32);
 }
 
 Type* ObjectDb::GetTypeByName(pcstr name)
 {
-	for (Type* type : *gObjects)
+	for (Type* type : _objects)
 	{
 		if (strcmp(type->Name, name) == 0)
 		{
@@ -31,7 +35,7 @@ Type* ObjectDb::GetTypeByName(pcstr name)
 
 Type* ObjectDb::GetTypeByCrc(u32 crc)
 {
-	for (Type* type : *gObjects)
+	for (Type* type : _objects)
 	{
 		if (type->NameCrc32 == crc)
 		{
@@ -42,16 +46,23 @@ Type* ObjectDb::GetTypeByCrc(u32 crc)
 	return nullptr;
 }
 
+Array<Type*>& ObjectDb::GetAllTypes()
+{
+	return _objects;
+}
+
 void ObjectDb::__Internal_RegisterObjectStatic(Type* type)
 {
-	if (gObjects == nullptr)
-	{
-		gObjects = new Array<Type*>();
-	}
-
 	if (type->NameCrc32 == 0)
 		type->NameCrc32 = Crc32((u8*)type->Name, strlen(type->Name));
 	
-	gObjects->PushBack(type);
+	for (u8 i = 0; i < 32; ++i)
+	{
+		if (gStaticallyLoadedObjects[i] == nullptr)
+		{
+			gStaticallyLoadedObjects[i] = type;
+			return;
+		}
+	}
 }
 

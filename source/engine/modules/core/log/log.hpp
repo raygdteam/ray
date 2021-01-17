@@ -12,3 +12,7 @@ public:
 
 	void Log(pcstr format, ...);
 };
+
+#if RAY_EDITOR
+RAY_CORE_API String& GetLogsAll();
+#endif

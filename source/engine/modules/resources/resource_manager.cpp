@@ -244,7 +244,7 @@ IRResource* ResourceManager::LoadResourceSync(pcstr inName, ResourceType desired
 	mappingRaw[mappingEnd + 1] = '\0';
 
 	String mapping(mappingRaw);
-	gDbgLog->Log("Mapping {}", mapping.c_str());
+	gDbgLog->Log("Mapping %s", mapping.c_str());
 
 	_mutex.Enter();
 

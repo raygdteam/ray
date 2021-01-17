@@ -15,7 +15,7 @@
 
 #include <resources/resource_manager.hpp>
 
-#if LAUNCH_EDITOR
+#ifndef RAY_RELEASE
 #include <editor/engine/engine_interface.hpp>
 #endif
 
@@ -37,24 +37,36 @@ void EngineLoop::PreInitialize()
 
 	gThreadPoolManager = new ThreadPoolManager;
 
-	gLauncherLog->Log("------- Beginning of RayEngine");
-	
-#if !LAUNCH_EDITOR
-	/* 2. Load the engine module. This will register the objects we need. */
-	auto res = state->ModuleManager->LoadModule("engine");
-	RAY_ASSERT(res.IsSuccess(), "failed to load engine")
-
-	/* 2. Create the Engine class. */
-	_engine = new RayEngine();
-	state->Engine = _engine;
+	if (
+#ifndef RAY_RELEASE
+		strcmp(GetCommandLineA(), "-editor") == 0
+		|| strcmp(GetCommandLineA(), "-project=") != 0
 #else
-	auto res = state->ModuleManager->LoadModule("editor");
-	RAY_ASSERT(res.IsSuccess(), "failed to load engine");
-
-	EditorInterface* editor = (EditorInterface*)res.Data->QueryModuleInterface();
-	_engine = editor->CreateEditorEngine();
-	state->Engine = _engine;
+		false
 #endif
+		)
+	{
+		gLauncherLog->Log("------- Beginning of EditorEngine");
+
+		auto res = state->ModuleManager->LoadModule("editor");
+		RAY_ASSERT(res.IsSuccess(), "failed to load engine");
+
+		EditorInterface* editor = (EditorInterface*)res.Data->QueryModuleInterface();
+		_engine = editor->CreateEditorEngine();
+		state->Engine = _engine;
+	}
+	else
+	{
+		gLauncherLog->Log("------- Beginning of RayEngine");
+
+		/* 2. Load the engine module. This will register the objects we need. */
+		auto res = state->ModuleManager->LoadModule("engine");
+		RAY_ASSERT(res.IsSuccess(), "failed to load engine")
+
+		/* 2. Create the Engine class. */
+		_engine = new RayEngine();
+		state->Engine = _engine;
+	}
 }
 
 void EngineLoop::Initialize()

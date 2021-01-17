@@ -16,11 +16,14 @@ struct RayObject
 
 class RAY_CORE_API ObjectDb
 {
+	Array<Type*> _objects;
 public:
 	ObjectDb();
 
 	Type* GetTypeByName(pcstr name);
 	Type* GetTypeByCrc(u32 crc);
+	
+	Array<Type*>& GetAllTypes();
 
 	static void __Internal_RegisterObjectStatic(Type*);
 };

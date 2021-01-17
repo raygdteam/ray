@@ -14,5 +14,6 @@ void Transform::Deserialize(Archive& ar)
 
 RAYOBJECT_DESCRIPTION_BEGIN(Transform)
 	RAYOBJECT_DESCRIPTION_NAME("engine://world/components/Transform")
+	RAYOBJECT_DESCRIPTION_CREATEABLE()
 	RAYOBJECT_DESCRIPTION_FIELD(Position, FVector<2>, eVector2);
 RAYOBJECT_DESCRIPTION_END(Transform)

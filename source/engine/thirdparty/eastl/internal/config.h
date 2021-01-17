@@ -332,7 +332,7 @@ namespace eastl
 #ifndef EASTL_EASTDC_API
 	#if EASTL_DLL
 		#if defined(_MSC_VER)
-			#define EASTL_EASTDC_API      __declspec(dllimport)
+			#define EASTL_EASTDC_API       __declspec(dllimport)
 			#define EASTL_EASTDC_LOCAL
 		#elif defined(__CYGWIN__)
 			#define EASTL_EASTDC_API      __attribute__((dllimport))

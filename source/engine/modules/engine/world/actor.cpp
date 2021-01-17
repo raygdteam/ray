@@ -1,6 +1,8 @@
 #include "actor.hpp"
 #include "core/extended_instuctions/sse/common.hpp"
 
+static u64 gLastId = 0;
+
 Actor::Actor()
 {
 	Transform* transform = new Transform();
@@ -8,6 +10,9 @@ Actor::Actor()
 	transform->Position.x = 0.f;
 	transform->Position.y = 0.f;
 	_components.PushBack(transform);
+
+	Name = String("Actor #");
+	Name.append_sprintf("%llu", gLastId++);
 }
 
 Actor::~Actor()

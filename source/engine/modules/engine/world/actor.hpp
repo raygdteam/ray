@@ -1,6 +1,7 @@
 #pragma once
 #include <core/object/object.hpp>
 #include <core/lib/array.hpp>
+#include <core/lib/string.hpp>
 #include <engine/world/components/transform.hpp>
 #include <engine/engine/engine_def.hpp>
 
@@ -38,6 +39,7 @@ class RAY_ENGINE_API Actor : public RayObject
 	Array<IComponent*> _components;
 	
 protected:
+	String Name;
 	ActorTick ATD;
 	
 	virtual void Awake() = 0;
@@ -76,4 +78,14 @@ public:
 
 	void Serialize(Archive&) override;
 	void Deserialize(Archive&) override;
+
+	inline String GetName()
+	{
+		return Name;
+	}
+
+	Array<IComponent*>& GetComponents()
+	{
+		return _components;
+	}
 };

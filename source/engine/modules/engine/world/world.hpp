@@ -1,4 +1,5 @@
 #pragma once
+#include <core/core.hpp>
 #include <core/object/object.hpp>
 #include <core/lib/array.hpp>
 #include <core/threading/condition_variable.hpp>
@@ -52,7 +53,7 @@ public:
 	void Tick(f64 delta);
 
 	void SetPrimaryCamera(CameraActor* camera);
-
+	
 	ConditionVariable ReadyToTick;
 	ConditionVariable WorldTickFinished;
 	ConditionVariable RenderingFinished;

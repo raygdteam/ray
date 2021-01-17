@@ -65,8 +65,9 @@
 	#define RAY_PLATFORM_LINUX
 #endif //__linux__
 
-#ifdef RAY_DEBUG
+#if defined(RAY_DEBUG) || defined(RAY_DEVELOPMENT)
 	#define RAY_ASSERT(cond, msg) do { if (!(cond)) { __debugbreak(); } } while (false);
+	#define RAY_EDITOR 1
 #else
 	#define RAY_ASSERT(cond, msg)
 #endif

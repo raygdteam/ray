@@ -14,7 +14,7 @@ struct ActorData
 /**
  * Represents a collection of Actors and all necessary data for level to render.
  */
-class Level final : public RayObject
+class RAY_ENGINE_API Level final : public RayObject
 {
 	RAYOBJECT_BODY(Level, RayObject);
 	
@@ -33,6 +33,10 @@ public:
 	// TEMPORARY
 	void LoadTestLevel();
 
+#ifdef RAY_EDITOR
+	Array<Actor*>& GetActors();
+#endif
+	
 	void Serialize(Archive&) override;
 	void Deserialize(Archive&) override;
 };

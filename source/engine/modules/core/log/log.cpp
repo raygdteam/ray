@@ -15,6 +15,10 @@ static u64 gTimestamp = 0;
 static f64 gPCFrequency = 0.0;
 static CriticalSection* gLoggerMutex = nullptr;
 
+#if RAY_EDITOR
+static String gLogHistory;
+#endif
+
 f64 _GetLoggerTimestamp()
 {
 	LARGE_INTEGER counter = {};
@@ -68,5 +72,15 @@ void Logger::Log(pcstr msg, ...)
 #if defined(RAY_DEBUG) || defined(RAY_DEVELOPMENT)
 	printf("%s", str);
 #endif
+#if RAY_EDITOR
+	gLogHistory.append(str);
+#endif
 	gLoggerMutex->Leave();
 }
+
+#if RAY_EDITOR
+String& GetLogsAll()
+{
+	return gLogHistory;
+}
+#endif

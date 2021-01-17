@@ -130,4 +130,3 @@ void World::SetPrimaryCamera(CameraActor* camera)
 	// BUG: assuming no concurrency
 	_primaryCameraActor = camera;
 }
-
