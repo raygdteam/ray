@@ -4,6 +4,7 @@
 #include "resources/buffer_manager.hpp"
 #include "resources/gpu_texture.hpp"
 #include "resources/gpu_buffer.hpp"
+#include "resources/ring_buffer.hpp"
 #include "d3dx12.h"
 #include <core/math/vector.hpp>
 
@@ -19,6 +20,7 @@ ID3D12Device* gDevice;
 DescriptorHeapsManager gDescriptorHeapsManager;
 GpuTextureAllocator gTextureAllocator;
 GpuBufferAllocator gBufferAllocator;
+RingBuffer gRingBuffer;
 
 bool IRenderer::_sbReady = false;
 
@@ -26,10 +28,10 @@ void IRenderer::Initialize(IPlatformWindow* window)
 {
 	ray_assert(_swapChain == nullptr, "Renderer has been already initialized")
 
-		ID3D12Debug* spDebugController0;
+	ID3D12Debug* spDebugController0;
 	ID3D12Debug1* spDebugController1;
 	check(D3D12GetDebugInterface(IID_PPV_ARGS(&spDebugController0)) == S_OK)
-		check(spDebugController0->QueryInterface(IID_PPV_ARGS(&spDebugController1)) == S_OK);
+	check(spDebugController0->QueryInterface(IID_PPV_ARGS(&spDebugController1)) == S_OK);
 	// spDebugController1->SetEnableGPUBasedValidation(true);
 	//auto hr = globals::gDevice->GetDeviceRemovedReason();
 	//u32 code = static_cast<u32>(hr);
@@ -37,7 +39,6 @@ void IRenderer::Initialize(IPlatformWindow* window)
 
 	IDXGIFactory4* dxgiFactory;
 	auto hr = CreateDXGIFactory2(0, IID_PPV_ARGS(&dxgiFactory));
-	(void)hr;
 	assert(hr == S_OK);
 	IDXGIAdapter1* adapter;
 	ID3D12Device* device;
@@ -76,20 +77,17 @@ void IRenderer::Initialize(IPlatformWindow* window)
 	swapChainDesc.SwapEffect = DXGI_SWAP_EFFECT_FLIP_SEQUENTIAL;
 
 	hr = dxgiFactory->CreateSwapChainForHwnd(gCommandListManager.GetCommandQueue(), static_cast<HWND>(window->GetWindowHandleRaw()), &swapChainDesc, nullptr, nullptr, &_swapChain);
-	auto code = static_cast<u32>(hr);
-	if (code == 0) {}
 	for (u32 i = 0; i < SWAP_CHAIN_BUFFER_COUNT; ++i)
 	{
 		ID3D12Resource* displayPlane;
 		_swapChain->GetBuffer(i, IID_PPV_ARGS(&displayPlane));
 		gDisplayPlane[i].CreateFromSwapChain(displayPlane);
-		//displayPlane->Release();
 	}
 
 	gCurrentBuffer = 0;
 	gDepthBuffer.Create(gDisplayPlane->GetDesc().Width, gDisplayPlane->GetDesc().Height, DXGI_FORMAT_D32_FLOAT);
-	gTextureAllocator.Initialize(MB(4));
-	//globals::gBufferAllocator.Initialize(MB(400));
+	gTextureAllocator.Initialize(MB(10));
+	gRingBuffer.Initialize(MB(8));
 }
 
 void IRenderer::BeginScene(GraphicsContext& gfxContext)

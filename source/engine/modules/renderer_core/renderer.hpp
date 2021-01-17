@@ -1,5 +1,4 @@
 #pragma once
-#include <core/core.hpp>
 
 //fix it pls
 #undef CreateWindow
@@ -9,18 +8,12 @@
 #include "resources/gpu_buffer.hpp"
 #include "root_signature.hpp"
 #include "pipeline_state.hpp"
+#include "renderer_core.hpp"
 
 #include <vector>
 #include <core\module\module_meta.hpp>
 #include <d3d12.h>
 #include <dxgi1_4.h>
-
-
-#ifdef RAY_BUILD_RENDERER_CORE
-#define RAY_RENDERERCORE_API __declspec(dllexport)
-#else
-#define RAY_RENDERERCORE_API RAY_DLLIMPORT
-#endif
 
 class CommandListManager;
 class CommandContext;
@@ -28,6 +21,7 @@ class ContextManager;
 class DescriptorHeapsManager;
 class GpuTextureAllocator;
 class GpuBufferAllocator;
+class RingBuffer;
 
 extern CommandListManager gCommandListManager;
 extern ContextManager gContextManager;
@@ -35,7 +29,7 @@ extern ID3D12Device* gDevice;
 extern GpuTextureAllocator gTextureAllocator;
 extern GpuBufferAllocator gBufferAllocator;
 extern DescriptorHeapsManager gDescriptorHeapsManager;
-
+extern RingBuffer gRingBuffer;
 
 enum RendererName : u8
 {

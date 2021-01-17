@@ -10,6 +10,9 @@ void ColorBuffer::CreateFromSwapChain(ID3D12Resource* inResource)
 	_desc.ArraySize = desc.DepthOrArraySize;
 	_desc.Format = desc.Format;
 	_usageState = D3D12_RESOURCE_STATE_PRESENT;
+	_resource = inResource;
+	_bManaged = false;
+
 	gDevice->CreateRenderTargetView(inResource, nullptr, GetRTV());
 }
 

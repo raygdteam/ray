@@ -333,7 +333,10 @@ GpuResource&& GpuTextureAllocator::Allocate(GpuResourceDescription& textureDesc)
 void GpuTextureAllocator::Free(GpuResource& resource) noexcept
 {
 	dynamic_cast<GpuTexture&>(resource)._resource->Release();
-	dynamic_cast<GpuTexture&>(resource)._underlyingPool->_availableSize += dynamic_cast<GpuTexture&>(resource)._resourceSize;
+	if (resource.IsManaged())
+	{
+		dynamic_cast<GpuTexture&>(resource)._underlyingPool->_availableSize += dynamic_cast<GpuTexture&>(resource)._resourceSize;
+	}
 
 	// TODO: MemorySegment
 }

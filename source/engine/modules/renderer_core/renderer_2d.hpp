@@ -2,13 +2,7 @@
 #include <core/math/vector.hpp>
 #include <resources/resource_manager.hpp>
 #include <engine/world/actors/camera_actor.hpp>
-#include "resources/ring_buffer.hpp"
-
-#ifdef RAY_BUILD_RENDERER_CORE
-#define RAY_RENDERERCORE_API __declspec(dllexport)
-#else
-#define RAY_RENDERERCORE_API RAY_DLLIMPORT
-#endif
+#include "renderer_core.hpp"
 
 class GraphicsPipeline;
 class RootSignature;
@@ -21,7 +15,6 @@ private:
 	static GraphicsPipeline _2DPipeline;
 	static RootSignature _2DSignature;
 	static DescriptorHeap _descriptorHeap;
-	static RingBuffer _ringBuffer;
 
 public:
 	~Renderer2D();

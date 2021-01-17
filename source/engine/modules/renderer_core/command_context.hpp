@@ -6,12 +6,7 @@
 #include <d3d12.h>
 #include <core/core.hpp>
 #include "resources/depth_buffer.hpp"
-
-#ifdef RAY_BUILD_RENDERER_CORE
-#define RAY_RENDERERCORE_API __declspec(dllexport)
-#else
-#define RAY_RENDERERCORE_API RAY_DLLIMPORT
-#endif
+#include "renderer_core.hpp"
 
 class CommandContext;
 class ComputeContext;

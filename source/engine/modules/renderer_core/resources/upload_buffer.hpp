@@ -1,11 +1,11 @@
 #pragma once 
 
-#include <core/core.hpp>
 #include <core/debug/assert.hpp>
 #include <resources/resource_manager.hpp>
 #include <d3d12.h>
+#include <renderer_core/renderer_core.hpp>
 
-class UploadBuffer
+class RAY_RENDERERCORE_API UploadBuffer
 {
 	friend class RingBuffer;
 private:

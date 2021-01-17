@@ -56,8 +56,15 @@ void World::Render()
 
 	//Renderer2D::End(ctx);
 	//
+
+	Renderer2D::Begin(*_primaryCameraActor);
+	FVector<3> pos = { 0.f, 0.f, 0.f };
+	FVector<2> size = { 1.f, 1.f };
+	FVector<4> color = { 1.f, 0.f, 0.f, 1.f };
+	Renderer2D::DrawQuad(pos, size, color, ctx);
+	Renderer2D::End(ctx);
 	
-	gRootObject->RenderAll();
+	/*gRootObject->RenderAll();*/
 	_renderer->EndScene(ctx);
 }
 

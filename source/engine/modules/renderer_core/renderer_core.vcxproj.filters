@@ -41,6 +41,7 @@
     <ClInclude Include="resources\gpu_texture.hpp">
       <Filter>resources</Filter>
     </ClInclude>
+    <ClInclude Include="renderer_core.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="renderer.cpp" />
@@ -90,5 +91,7 @@
   <ItemGroup>
     <FxCompile Include="VertexShader.hlsl" />
     <FxCompile Include="PixelShader.hlsl" />
+    <FxCompile Include="VertexShaderColored.hlsl" />
+    <FxCompile Include="PixelShaderColored.hlsl" />
   </ItemGroup>
 </Project>

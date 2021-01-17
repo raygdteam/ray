@@ -16,6 +16,10 @@ struct WorldLevelData
 	 */
 };
 
+class RAY_RENDERERCORE_API UploadBuffer;
+
+extern UploadBuffer* gUploadBuffer;
+
 class World final
 {
 	/* Delta is calculated by Engine and passed in Tick. */
@@ -48,6 +52,8 @@ class World final
 
 	void LoadLevel(pcstr name);
 public:
+	~World();
+
 	void Initialize(IPlatformWindow* window);
 	void Tick(f64 delta);
 

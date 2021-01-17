@@ -88,17 +88,26 @@ protected:
 	u64 _resourceSize;
 	GpuMemoryPool* _underlyingPool;
 	GpuResourceDescription _desc;
+	bool _bManaged;
 
 public:
-	GpuResource() noexcept = default;
+	GpuResource() noexcept
+		: _resource(nullptr)
+		, _usageState(D3D12_RESOURCE_STATE_COMMON)
+		, _transitioningState(static_cast<D3D12_RESOURCE_STATES>(-1))
+		, _resourceSize(0)
+		, _underlyingPool(nullptr)
+		, _bManaged(true)
+	{}
 
-	GpuResource(ID3D12Resource* inResource, D3D12_RESOURCE_STATES currentState, u64 resourceSize, GpuMemoryPool* pool, GpuResourceDescription& desc) noexcept
+	GpuResource(ID3D12Resource* inResource, D3D12_RESOURCE_STATES currentState, u64 resourceSize, GpuMemoryPool* pool, GpuResourceDescription& desc, bool bManaged = true) noexcept
 		: _resource(inResource)
 		, _usageState(currentState)
 		, _transitioningState(static_cast<D3D12_RESOURCE_STATES>(-1))
 		, _resourceSize(resourceSize)
 		, _underlyingPool(pool)
 		, _desc(desc)
+		, _bManaged(true)
 	{}
 
 	GpuResource(GpuResource&& rhs) = default;
@@ -152,6 +161,8 @@ public:
 	u64 GetResourceSize() const noexcept { return _resourceSize; }
 	GpuMemoryPool* GetUnderlyingPool() const noexcept { return _underlyingPool; }
 	GpuResourceDescription GetDesc() const noexcept { return _desc; }
+	// whether resource is managed by allocator
+	bool IsManaged() const noexcept { return _bManaged; }
 
 };
 

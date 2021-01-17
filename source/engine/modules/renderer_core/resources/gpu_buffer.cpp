@@ -47,8 +47,10 @@ GpuResource&& GpuBufferAllocator::Allocate(GpuResourceDescription& bufferDesc) n
 void GpuBufferAllocator::Free(GpuResource& resource) noexcept
 {
 	dynamic_cast<GpuBuffer&>(resource)._resource->Release();
-	dynamic_cast<GpuBuffer&>(resource)._underlyingPool->_availableSize += dynamic_cast<GpuBuffer&>(resource)._resourceSize;
-
+	if (resource.IsManaged())
+	{
+		dynamic_cast<GpuBuffer&>(resource)._underlyingPool->_availableSize += dynamic_cast<GpuBuffer&>(resource)._resourceSize;
+	}
 	// TODO: MemorySegment
 }
 

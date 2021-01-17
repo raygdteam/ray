@@ -10,6 +10,10 @@
 #include <resources/resource_manager.hpp>
 #include "actors/static_quad_actor.hpp"
 
+#include <renderer_core/resources/upload_buffer.hpp>
+
+UploadBuffer* gUploadBuffer;
+
 void World::TickActors(ActorTickStage stage, f64 delta) const
 {
 	Level* level = _levelData->Level;
@@ -81,10 +85,21 @@ void World::LoadLevel(pcstr name)
 	//_levelData->Level->SpawnActor(actor3);
 }
 
+World::~World()
+{
+	gUploadBuffer->Destroy();
+	delete gUploadBuffer;
+
+	_renderer->Shutdown();
+	delete _renderer;
+}
+
 void World::Initialize(IPlatformWindow* window)
 {
 	_renderer = new IRenderer;
 	_renderer->Initialize(window);
+	gUploadBuffer = new UploadBuffer;
+	gUploadBuffer->Initialize(MB(64));
 
 	// load level
 	LoadLevel("\0");
