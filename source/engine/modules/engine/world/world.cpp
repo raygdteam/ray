@@ -12,7 +12,7 @@
 
 #include <renderer_core/resources/upload_buffer.hpp>
 
-UploadBuffer* gUploadBuffer;
+//UploadBuffer* gUploadBuffer;
 
 void World::TickActors(ActorTickStage stage, f64 delta) const
 {

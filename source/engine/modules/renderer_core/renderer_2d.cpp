@@ -58,10 +58,10 @@ struct Renderer2DData
 };
 
 static Renderer2DData sData;
+RAY_RENDERERCORE_API UploadBuffer* gUploadBuffer;
 
 void Renderer2D::Initialize(/*TextureManager* textureManager*/)
 {
-
 	u32* quadIndices = new uint32_t[sData.MAX_INDICES];
 	u32 offset = 0;
 	for (uint32_t i = 0; i < sData.MAX_INDICES; i += 6)

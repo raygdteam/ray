@@ -19,8 +19,6 @@ struct WorldLevelData
 
 class RAY_RENDERERCORE_API UploadBuffer;
 
-extern UploadBuffer* gUploadBuffer;
-
 class World final
 {
 	/* Delta is calculated by Engine and passed in Tick. */

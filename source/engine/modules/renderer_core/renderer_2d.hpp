@@ -3,11 +3,14 @@
 #include <resources/resource_manager.hpp>
 #include <engine/world/actors/camera_actor.hpp>
 #include "renderer_core.hpp"
+#include "resources/upload_buffer.hpp"
 
 class GraphicsPipeline;
 class RootSignature;
 class GraphicsContext;
 class DescriptorHeap;
+
+extern RAY_RENDERERCORE_API UploadBuffer* gUploadBuffer;
 
 class RAY_RENDERERCORE_API Renderer2D
 {
