@@ -261,10 +261,11 @@ void Renderer2D::Flush(GraphicsContext& gfxContext)
 	// TODO
 	/*gfxContext.SetDescriptorHeap(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV, gDescriptorHeapsManager.GetCurrentCBV_SRV_UAV_Heap(false).GetHeapPointer());
 	gfxContext.SetDescriptorTable(0, gDescriptorHeapsManager.GetCurrentCBV_SRV_UAV_Heap(false).GetDescriptorAtOffset(0).GetGpuHandle());*/
-	gfxContext.SetDynamicCBV(gRingBuffer, 0, sizeof(cb), &cb);
+
 
 	size_t bufferSize = sData.QuadVertexBufferPtr - sData.QuadVertexBufferBase;
-	gfxContext.SetDynamicVB(gRingBuffer, 0, bufferSize / sizeof(QuadVertex), sizeof(QuadVertex), sData.QuadVertexBufferBase);
+	gfxContext.SetDynamicVB(gRingBuffer, 0, bufferSize, sizeof(QuadVertex), sData.QuadVertexBufferBase);
+	gfxContext.SetDynamicCBV(gRingBuffer, 0, sizeof(cb), &cb);
 	gfxContext.SetIndexBuffer(sData.IndexBufferView);
 	gfxContext.DrawIndexedInstanced(sData.QuadIndexCount, 1, 0, 0, 0);
 

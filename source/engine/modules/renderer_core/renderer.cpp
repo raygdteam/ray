@@ -51,17 +51,17 @@ void IRenderer::Initialize(IPlatformWindow* window)
 	{
 		DXGI_ADAPTER_DESC1 desc;
 		adapter->GetDesc1(&desc);
-		if (desc.Flags & DXGI_ADAPTER_FLAG_SOFTWARE)
+		if (!(desc.Flags & DXGI_ADAPTER_FLAG_SOFTWARE))
 			continue;
 
-		if (desc.DedicatedVideoMemory > maxSize && D3D12CreateDevice(adapter, D3D_FEATURE_LEVEL_11_0, IID_PPV_ARGS(&device)) == S_OK)
+		if (desc.DedicatedVideoMemory >= maxSize && D3D12CreateDevice(adapter, D3D_FEATURE_LEVEL_11_0, IID_PPV_ARGS(&device)) == S_OK)
 		{
 			adapter->GetDesc1(&desc);
 			maxSize = desc.DedicatedVideoMemory;
 		}
 	}
 
-	if (maxSize > 0)
+	if (maxSize >= 0)
 		gDevice = device;
 
 	D3D12_FEATURE_DATA_D3D12_OPTIONS  options;

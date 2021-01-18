@@ -58,10 +58,27 @@ void World::Render()
 	//
 
 	Renderer2D::Begin(*_primaryCameraActor);
-	FVector<3> pos = { 0.f, 0.f, 0.f };
-	FVector<2> size = { 1.f, 1.f };
-	FVector<4> color = { 1.f, 0.f, 0.f, 1.f };
-	Renderer2D::DrawQuad(pos, size, color, ctx);
+	{
+		FVector<3> pos = { 0.f, 0.f, 0.f };
+		FVector<2> size = { 1.f, 1.f };
+		FVector<4> color = { 1.f, 0.f, 0.f, 1.f };
+		Renderer2D::DrawQuad(pos, size, color, ctx);
+	}
+
+	{
+		FVector<3> pos = { 107.f, 107.f, 0.f };
+		FVector<2> size = { 1.f, 1.f };
+		FVector<4> color = { 0.f, 1.f, 0.f, 1.f };
+		Renderer2D::DrawQuad(pos, size, color, ctx);
+	}
+
+	{
+		FVector<3> pos = { -107.f, -107.f, 0.f };
+		FVector<2> size = { 1.f, 1.f };
+		FVector<4> color = { 1.f, 0.f, 1.f, 1.f };
+		Renderer2D::DrawQuad(pos, size, color, ctx);
+	}
+	
 	Renderer2D::End(ctx);
 	
 	/*gRootObject->RenderAll();*/
