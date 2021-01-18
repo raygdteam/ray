@@ -102,6 +102,8 @@
 
 // Misc defines
 #define DEPRECATED(version, message) [[deprecated(message)]]
+#define NODISCARD [[nodiscard]]
+#define MAYBE_UNUSED [[maybe_unused]]
 
 // Warnings stuff
 #pragma warning(disable: 4251)
