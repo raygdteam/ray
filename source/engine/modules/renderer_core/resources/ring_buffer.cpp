@@ -49,6 +49,13 @@ bool RingBuffer::TryToSetResource(u64 alignedSize, u64 alignment) noexcept
 	}
 
 	u8* currentPointer = reinterpret_cast<u8*>(AlignUp(reinterpret_cast<size_t>(_uploadBuffer._currentPointer), alignment));
+	if (_frameOffsetQueue.empty())
+	{
+		_uploadBuffer._currentPointer = currentPointer;
+
+		return true;
+	}
+
 	u8* nextResource = nullptr;
 	auto& frontElement = _frameOffsetQueue.front();
 
@@ -89,7 +96,7 @@ bool RingBuffer::TryToSetResource(u64 alignedSize, u64 alignment) noexcept
 
 void RingBuffer::TryToFreeUpMemory(u64 lastCompletedFrame) noexcept
 {
-	while (_frameOffsetQueue.front().FrameIndex <= lastCompletedFrame)
+	while (!_frameOffsetQueue.empty() && _frameOffsetQueue.front().FrameIndex <= lastCompletedFrame)
 	{
 		_frameOffsetQueue.pop();
 	}

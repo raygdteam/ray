@@ -10,11 +10,13 @@ public:
 	{}
 
 	GpuBufferDescription(u32 sizeInBytes, u32 stride, const void* initialData, DXGI_FORMAT format)
+		: GpuBufferDescription()
 	{
 		SizeInBytes = sizeInBytes;
 		Stride = stride;
 		UploadBufferData = initialData;
 		Format = format;
+		Dimension = D3D12_RESOURCE_DIMENSION_BUFFER;
 	}
 
 public:
@@ -30,8 +32,7 @@ public:
 
 	static GpuBufferDescription Index(u32 elementsCount, u32 stride, const void* data = nullptr) noexcept
 	{
-		auto format = stride == 4 ? DXGI_FORMAT_R32_UINT : DXGI_FORMAT_R16_UINT;
-		return Buffer(elementsCount * stride, stride, data, format);
+		return Buffer(elementsCount * stride, stride, data, DXGI_FORMAT_UNKNOWN);
 	}
 
 	// TODO: Typed, Argument, Raw, Structured

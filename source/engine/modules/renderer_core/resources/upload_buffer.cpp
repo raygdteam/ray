@@ -22,7 +22,7 @@ void UploadBuffer::Initialize(u64 size) noexcept
 	pool.Height = 1;
 
 	auto heapProps = DescribeHeapProps(D3D12_HEAP_TYPE_UPLOAD);
-	gDevice->CreateCommittedResource(&heapProps, D3D12_HEAP_FLAG_NONE, &pool, D3D12_RESOURCE_STATE_COPY_SOURCE, nullptr, IID_PPV_ARGS(&_pool));
+	gDevice->CreateCommittedResource(&heapProps, D3D12_HEAP_FLAG_NONE, &pool, D3D12_RESOURCE_STATE_GENERIC_READ, nullptr, IID_PPV_ARGS(&_pool));
 
 	D3D12_RANGE range;
 	range.Begin = 0;

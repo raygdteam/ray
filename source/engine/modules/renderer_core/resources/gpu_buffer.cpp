@@ -23,7 +23,7 @@ GpuResource&& GpuBufferAllocator::Allocate(GpuResourceDescription& bufferDesc) n
 	auto resourceAllocationInfo = gDevice->GetResourceAllocationInfo(1, 1, &resourceDesc);
 	resourceDesc.Alignment = resourceAllocationInfo.Alignment;
 
-	if (_currentPool == nullptr || !_currentPool->IsEnough(resourceAllocationInfo.SizeInBytes))
+	if (!_currentPool->IsEnough(resourceAllocationInfo.SizeInBytes))
 		_currentPool = &_memoryManager.RequestPool(resourceAllocationInfo.SizeInBytes);
 
 	ID3D12Resource* resource;
@@ -31,8 +31,8 @@ GpuResource&& GpuBufferAllocator::Allocate(GpuResourceDescription& bufferDesc) n
 
 	check(hr == S_OK)
 
-		_currentPool->_offset += resourceAllocationInfo.SizeInBytes;
-	_currentPool->_availableSize -= _currentPool->_offset;
+	_currentPool->_offset += resourceAllocationInfo.SizeInBytes;
+	_currentPool->_availableSize = _currentPool->_maxMemoryPoolSize - _currentPool->_offset;
 
 	GpuBuffer ret;
 	ret._desc = std::move(bufferDesc);
@@ -68,8 +68,7 @@ bool GpuBuffer::Load(const void* uploadBufferData) noexcept
 {
 	check(uploadBufferData != nullptr)
 
-	UploadBuffer ub;
-	CommandContext::InitializeBuffer(*this, ub);
+	CommandContext::InitializeBuffer(*this, *gUploadBuffer);
 
 	return true;
 }

@@ -58,7 +58,6 @@ struct Renderer2DData
 };
 
 static Renderer2DData sData;
-RAY_RENDERERCORE_API UploadBuffer* gUploadBuffer;
 
 void Renderer2D::Initialize(/*TextureManager* textureManager*/)
 {
@@ -135,7 +134,7 @@ void Renderer2D::Initialize(/*TextureManager* textureManager*/)
 		/*{ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 12, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
 		{ "TEXINDEX", 0, DXGI_FORMAT_R32_UINT, 0, 20, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 }*/
 	};
-	_2DPipeline.SetInputLayout(sizeof(inputLayout), inputLayout);
+	_2DPipeline.SetInputLayout(sizeof(inputLayout) / sizeof(D3D12_INPUT_ELEMENT_DESC), inputLayout);
 	_2DPipeline.SetPrimitiveTopologyType(D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE);
 	_2DPipeline.SetRenderTargetFormat(DXGI_FORMAT_R8G8B8A8_UNORM, DXGI_FORMAT_UNKNOWN);
 	_2DPipeline.SetSampleMask(0xffffffff);

@@ -22,6 +22,7 @@ class DescriptorHeapsManager;
 class GpuTextureAllocator;
 class GpuBufferAllocator;
 class RingBuffer;
+class UploadBuffer;
 
 extern CommandListManager gCommandListManager;
 extern ContextManager gContextManager;
@@ -30,6 +31,7 @@ extern GpuTextureAllocator gTextureAllocator;
 extern GpuBufferAllocator gBufferAllocator;
 extern DescriptorHeapsManager gDescriptorHeapsManager;
 extern RingBuffer gRingBuffer;
+extern RAY_RENDERERCORE_API UploadBuffer* gUploadBuffer;
 
 enum RendererName : u8
 {

@@ -1,5 +1,6 @@
 #include "gpu_texture.hpp"
 #include <renderer_core/renderer.hpp>
+#include <renderer_core/renderer_2d.hpp>
 #include <renderer_core/command_context.hpp>
 #include "upload_buffer.hpp"
 #include <renderer_core/dx12_helper_functions.hpp>
@@ -309,7 +310,7 @@ GpuResource&& GpuTextureAllocator::Allocate(GpuResourceDescription& textureDesc)
 	auto resourceAllocationInfo = gDevice->GetResourceAllocationInfo(1, 1, &resourceDesc);
 	resourceDesc.Alignment = resourceAllocationInfo.Alignment;
 	
-	if (_currentPool == nullptr || !_currentPool->IsEnough(resourceAllocationInfo.SizeInBytes))
+	if (!_currentPool->IsEnough(resourceAllocationInfo.SizeInBytes))
 		_currentPool = &_memoryManager.RequestPool(resourceAllocationInfo.SizeInBytes);
 
 	ID3D12Resource* resource;
@@ -363,9 +364,7 @@ bool GpuTexture::Load(const void* uploadBufferData) noexcept
 {
 	check(uploadBufferData != nullptr)
 
-	UploadBuffer ub;
-	CommandContext::InitializeTexture(*this, ub);
-
+	CommandContext::InitializeTexture(*this, *gUploadBuffer);
 	return true;
 }
 

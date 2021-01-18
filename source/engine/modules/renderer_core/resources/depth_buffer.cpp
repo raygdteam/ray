@@ -13,7 +13,7 @@ void DepthBuffer::Create(u32 width, u32 height, DXGI_FORMAT format)
 		}
 	};
 
-	auto dsDesc = GpuTextureDescription::Texture2D(width, height, format, 1, D3D12_RESOURCE_FLAG_ALLOW_DEPTH_STENCIL);
+	auto dsDesc = GpuTextureDescription::Texture2D(width, height, format, 1, D3D12_RESOURCE_FLAG_ALLOW_DEPTH_STENCIL | D3D12_RESOURCE_FLAG_DENY_SHADER_RESOURCE);
 	dsDesc.ClearValue = &clearValue;
 	check(GpuTexture::Create(dsDesc));
 

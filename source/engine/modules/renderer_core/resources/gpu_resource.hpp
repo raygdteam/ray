@@ -35,7 +35,18 @@ public:
 	const void* UploadBufferData;
 
 public:
-	GpuResourceDescription() = default;
+	GpuResourceDescription()
+		: Dimension(D3D12_RESOURCE_DIMENSION_UNKNOWN)
+		, Width(1)
+		, Height(1)
+		, Depth(1)
+		, ArraySize(1)
+		, MipLevels(1)
+		, Flags(D3D12_RESOURCE_FLAG_NONE)
+		, ClearValue(nullptr)
+		, Format(DXGI_FORMAT_UNKNOWN)
+		, UploadBufferData(nullptr)
+	{}
 
 	GpuResourceDescription(GpuResourceDescription&& rhs) = default;
 	GpuResourceDescription& operator = (GpuResourceDescription&& rhs) = default;
@@ -61,6 +72,7 @@ public:
 	virtual void Initialize(size_t preferredSize) noexcept
 	{
 		_memoryManager.Initialize(preferredSize);
+		_currentPool = &_memoryManager.RequestPool(preferredSize);
 	}
 
 	virtual void Destroy() noexcept

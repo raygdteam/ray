@@ -5,6 +5,7 @@
 #include "resources/gpu_texture.hpp"
 #include "resources/gpu_buffer.hpp"
 #include "resources/ring_buffer.hpp"
+#include "resources/upload_buffer.hpp"
 #include "d3dx12.h"
 #include <core/math/vector.hpp>
 
@@ -21,6 +22,7 @@ DescriptorHeapsManager gDescriptorHeapsManager;
 GpuTextureAllocator gTextureAllocator;
 GpuBufferAllocator gBufferAllocator;
 RingBuffer gRingBuffer;
+RAY_RENDERERCORE_API UploadBuffer* gUploadBuffer;
 
 bool IRenderer::_sbReady = false;
 
@@ -90,6 +92,7 @@ void IRenderer::Initialize(IPlatformWindow* window)
 
 	gCurrentBuffer = 0;
 	gTextureAllocator.Initialize(MB(10));
+	gBufferAllocator.Initialize(MB(10));
 	gDepthBuffer.Create(gDisplayPlane->GetDesc().Width, gDisplayPlane->GetDesc().Height, DXGI_FORMAT_D32_FLOAT);
 	gRingBuffer.Initialize(MB(8));
 }
