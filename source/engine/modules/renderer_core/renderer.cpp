@@ -62,6 +62,10 @@ void IRenderer::Initialize(IPlatformWindow* window)
 	if (maxSize > 0)
 		gDevice = device;
 
+	D3D12_FEATURE_DATA_D3D12_OPTIONS  options;
+	gDevice->CheckFeatureSupport(D3D12_FEATURE_D3D12_OPTIONS, &options, sizeof(options));
+	(void)options.ResourceHeapTier;
+
 	gCommandListManager.Create(gDevice);
 
 	DXGI_SWAP_CHAIN_DESC1 swapChainDesc = {};

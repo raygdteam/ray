@@ -7,7 +7,7 @@
 void DescriptorHeap::Create()
 {
 	auto hr = gDevice->CreateDescriptorHeap(&_heapDesc, IID_PPV_ARGS(&_heap));
-	check(hr == S_OK));
+	check(hr == S_OK)
 	
 	D3D12_GPU_DESCRIPTOR_HANDLE nullHandle
 	{

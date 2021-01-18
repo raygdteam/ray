@@ -36,7 +36,7 @@ void EngineLoop::PreInitialize()
 	state->ResourceManager = new ResourceManager(state);
 
 	gThreadPoolManager = new ThreadPoolManager;
-
+#define RAY_RELEASE
 	if (
 #ifndef RAY_RELEASE
 		strcmp(GetCommandLineA(), "-editor") == 0

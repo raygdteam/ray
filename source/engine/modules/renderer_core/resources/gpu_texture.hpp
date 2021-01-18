@@ -23,6 +23,7 @@ public:
 		SampleDesc = sampleDesc;
 		MipLevels = mipLevels;
 		Flags = flags;
+		UploadBufferData = nullptr;
 	}
 
 public:
