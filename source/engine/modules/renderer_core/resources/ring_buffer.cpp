@@ -21,7 +21,7 @@ u8* RingBuffer::SetTextureData(RTexture& texture) noexcept
 
 	ray_assert(TryToSetResource(textureSize, D3D12_TEXTURE_DATA_PLACEMENT_ALIGNMENT), "Out of memory! Create new ring buffer!");
 	u8* ret = _uploadBuffer.SetTextureData(texture);
-	_frameOffsetQueue.emplace(gCommandListManager.GetGraphicsQueue().GetNextFenceValue(), ret);
+	_frameOffsetQueue.push(FrameResourceOffset{ gCommandListManager.GetGraphicsQueue().GetNextFenceValue(), ret });
 	return ret;
 }
 
@@ -29,7 +29,7 @@ u8* RingBuffer::SetBufferData(void* buffer, size_t elementsCount, size_t element
 {
 	ray_assert(TryToSetResource(elementsCount * elementSize, 4), "Out of memory! Create new ring buffer!");
 	u8* ret = _uploadBuffer.SetBufferData(buffer, elementsCount, elementSize);
-	_frameOffsetQueue.emplace(gCommandListManager.GetGraphicsQueue().GetNextFenceValue(), ret);
+	_frameOffsetQueue.push(FrameResourceOffset { gCommandListManager.GetGraphicsQueue().GetNextFenceValue(), ret });
 	return ret;
 }
 
@@ -37,7 +37,7 @@ u8* RingBuffer::SetConstantBufferData(void* buffer, size_t bufferSize) noexcept
 {
 	ray_assert(TryToSetResource(bufferSize, D3D12_CONSTANT_BUFFER_DATA_PLACEMENT_ALIGNMENT), "Out of memory! Create new ring buffer!");
 	u8* ret = _uploadBuffer.SetConstantBufferData(buffer, bufferSize);
-	_frameOffsetQueue.emplace(gCommandListManager.GetGraphicsQueue().GetNextFenceValue(), ret);
+	_frameOffsetQueue.push(FrameResourceOffset{ gCommandListManager.GetGraphicsQueue().GetNextFenceValue(), ret });
 	return ret;
 }
 
@@ -77,11 +77,16 @@ bool RingBuffer::TryToSetResource(u64 alignedSize, u64 alignment) noexcept
 	{
 		u64 lastCompletedFence = gCommandListManager.GetGraphicsQueue().GetLastCompletedValue();
 		TryToFreeUpMemory(lastCompletedFence);
+		currentPointer = reinterpret_cast<u8*>(AlignUp(reinterpret_cast<size_t>(_uploadBuffer._currentPointer), alignment));
 
-		while (!IsMemoryEnough(currentPointer, nextResource, alignedSize) && !_frameOffsetQueue.empty())
+		frontElement = _frameOffsetQueue.front();
+		nextResource = frontElement.ResourceOffset;
+
+		while (!IsMemoryEnough(currentPointer, nextResource, alignedSize)) // && !_frameOffsetQueue.empty())
 		{
 			gCommandListManager.GetGraphicsQueue().WaitForFence(frontElement.FrameIndex);
 			TryToFreeUpMemory(gCommandListManager.GetGraphicsQueue().GetLastCompletedValue());
+			currentPointer = reinterpret_cast<u8*>(AlignUp(reinterpret_cast<size_t>(_uploadBuffer._currentPointer), alignment));
 		}
 
 		if (_frameOffsetQueue.empty())
@@ -98,6 +103,8 @@ void RingBuffer::TryToFreeUpMemory(u64 lastCompletedFrame) noexcept
 {
 	while (!_frameOffsetQueue.empty() && _frameOffsetQueue.front().FrameIndex <= lastCompletedFrame)
 	{
+		FrameResourceOffset& offset = _frameOffsetQueue.front();
+		_uploadBuffer._currentPointer = offset.ResourceOffset;
 		_frameOffsetQueue.pop();
 	}
 }

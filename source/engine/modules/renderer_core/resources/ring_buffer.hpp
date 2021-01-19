@@ -1,10 +1,10 @@
 #pragma once
 
 #include <core/core.hpp>
+#include <core/lib/queue.hpp>
 #include <core/debug/assert.hpp>
 #include <resources/resource_manager.hpp>
 #include "upload_buffer.hpp"
-#include <queue>
 #include <d3d12.h>
 
 struct FrameResourceOffset
@@ -30,7 +30,7 @@ class RingBuffer
 {
 private:
 	UploadBuffer _uploadBuffer;
-	std::queue<FrameResourceOffset> _frameOffsetQueue;
+	Queue<FrameResourceOffset> _frameOffsetQueue;
 
 public:
 	RingBuffer() = default;
