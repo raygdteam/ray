@@ -18,14 +18,14 @@ public:
 	Input();
 	~Input();
 
-	void RegisterWindowEventHandler(IPlatformWindow* window);
+	void RegisterWindowEventHandler(IPlatformWindow*);
 
 	bool IsKeyUp(const KeyCode key) { return !_keys[key] && _previousKeys[key]; }
 	bool IsKeyDown(const KeyCode key) { return _keys[key] && !_previousKeys[key]; }
 
 private:
-	void WindowEventHandler(u32, u64, s64);
+	void WindowEventHandler(u32/*, u64*/, s64);
 
-	bool* _keys;
-	bool* _previousKeys;
+	bool _keys[256];
+	bool _previousKeys[256];
 };
