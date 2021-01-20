@@ -18,20 +18,30 @@
 class CommandListManager;
 class CommandContext;
 class ContextManager;
+
 class DescriptorHeapsManager;
+
 class GpuTextureAllocator;
 class GpuBufferAllocator;
+class GpuPixelBufferAllocator;
+
 class RingBuffer;
 class UploadBuffer;
+
+// ============================= GLOBAL VARIABLES ============================= //
 
 extern CommandListManager gCommandListManager;
 extern ContextManager gContextManager;
 extern ID3D12Device* gDevice;
+
 extern GpuTextureAllocator gTextureAllocator;
 extern GpuBufferAllocator gBufferAllocator;
+extern GpuPixelBufferAllocator gPixelBufferAllocator;
+
 extern DescriptorHeapsManager gDescriptorHeapsManager;
 extern RingBuffer gRingBuffer;
 extern RAY_RENDERERCORE_API UploadBuffer* gUploadBuffer;
+
 
 enum RendererName : u8
 {

@@ -42,6 +42,9 @@
       <Filter>resources</Filter>
     </ClInclude>
     <ClInclude Include="renderer_core.hpp" />
+    <ClInclude Include="resources\gpu_pixel_buffer.hpp">
+      <Filter>resources</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="renderer.cpp" />
@@ -77,6 +80,9 @@
       <Filter>resources\memory</Filter>
     </ClCompile>
     <ClCompile Include="resources\gpu_texture.cpp">
+      <Filter>resources</Filter>
+    </ClCompile>
+    <ClCompile Include="resources\gpu_pixel_buffer.cpp">
       <Filter>resources</Filter>
     </ClCompile>
   </ItemGroup>

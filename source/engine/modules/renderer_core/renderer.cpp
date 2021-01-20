@@ -21,6 +21,7 @@ ID3D12Device* gDevice;
 DescriptorHeapsManager gDescriptorHeapsManager;
 GpuTextureAllocator gTextureAllocator;
 GpuBufferAllocator gBufferAllocator;
+GpuPixelBufferAllocator gPixelBufferAllocator;
 RingBuffer gRingBuffer;
 RAY_RENDERERCORE_API UploadBuffer* gUploadBuffer;
 
@@ -51,7 +52,7 @@ void IRenderer::Initialize(IPlatformWindow* window)
 	{
 		DXGI_ADAPTER_DESC1 desc;
 		adapter->GetDesc1(&desc);
-		if (!(desc.Flags & DXGI_ADAPTER_FLAG_SOFTWARE))
+		if (desc.Flags & DXGI_ADAPTER_FLAG_SOFTWARE)
 			continue;
 
 		if (desc.DedicatedVideoMemory >= maxSize && D3D12CreateDevice(adapter, D3D_FEATURE_LEVEL_11_0, IID_PPV_ARGS(&device)) == S_OK)
@@ -91,6 +92,7 @@ void IRenderer::Initialize(IPlatformWindow* window)
 	}
 
 	gCurrentBuffer = 0;
+	gPixelBufferAllocator.Initialize(MB(8));
 	gTextureAllocator.Initialize(MB(10));
 	gBufferAllocator.Initialize(MB(10));
 	gDepthBuffer.Create(gDisplayPlane->GetDesc().Width, gDisplayPlane->GetDesc().Height, DXGI_FORMAT_D32_FLOAT);
@@ -120,6 +122,7 @@ void IRenderer::Shutdown()
 {
 	CommandContext::DestroyAllContexts();
 	gCommandListManager.Shutdown();
+	gPixelBufferAllocator.Destroy();
 	gTextureAllocator.Destroy();
 	gBufferAllocator.Destroy();
 

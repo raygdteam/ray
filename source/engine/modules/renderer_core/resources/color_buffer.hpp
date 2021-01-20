@@ -1,12 +1,11 @@
 #pragma once
-#include "gpu_texture.hpp"
+#include "gpu_pixel_buffer.hpp"
 #include <cassert>
 
-class ColorBuffer : public GpuTexture
+class ColorBuffer : public GpuPixelBuffer
 {
-protected:
+private:
 	float _clearColor[4]; // TODO: class Color
-	TextureView _view;
 
 public:
 	ColorBuffer(float r, float g, float b, float a)

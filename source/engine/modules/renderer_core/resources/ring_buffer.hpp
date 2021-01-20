@@ -41,7 +41,7 @@ public:
 
 public:
 	void Initialize(u64 maxRingBufferSize) noexcept;
-	void Destroy() noexcept { _uploadBuffer.Destroy(); }
+	void Destroy() noexcept {  _uploadBuffer.Destroy(); }
 
 public:
 	u8* SetTextureData(RTexture& texture) noexcept;

@@ -166,6 +166,7 @@
     <ClInclude Include="resources\depth_buffer.hpp" />
     <ClInclude Include="resources\gpu_buffer.hpp" />
     <ClInclude Include="resources\gpu_memory_pool.hpp" />
+    <ClInclude Include="resources\gpu_pixel_buffer.hpp" />
     <ClInclude Include="resources\gpu_resource.hpp" />
     <ClInclude Include="resources\upload_buffer.hpp" />
     <ClInclude Include="resources\ring_buffer.hpp" />
@@ -188,6 +189,7 @@
     <ClCompile Include="resources\depth_buffer.cpp" />
     <ClCompile Include="resources\gpu_buffer.cpp" />
     <ClCompile Include="resources\gpu_memory_pool.cpp" />
+    <ClCompile Include="resources\gpu_pixel_buffer.cpp" />
     <ClCompile Include="resources\upload_buffer.cpp" />
     <ClCompile Include="resources\ring_buffer.cpp" />
     <ClCompile Include="resources\gpu_texture.cpp" />

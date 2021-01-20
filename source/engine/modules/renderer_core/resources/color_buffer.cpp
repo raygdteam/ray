@@ -14,7 +14,7 @@ void ColorBuffer::CreateFromSwapChain(ID3D12Resource* inResource)
 	_bManaged = false;
 
 	_desc.MipLevels = 1;
-	_desc.Flags = D3D12_RESOURCE_FLAG_ALLOW_RENDER_TARGET | D3D12_RESOURCE_FLAG_DENY_SHADER_RESOURCE;
+	_desc.Flags = D3D12_RESOURCE_FLAG_ALLOW_RENDER_TARGET;
 	_view.Create(*this);
 	gDevice->CreateRenderTargetView(inResource, nullptr, GetRTV());
 }
@@ -30,8 +30,8 @@ void ColorBuffer::Create(u32 width, u32 height, u32 numMips, DXGI_FORMAT format,
 	clearValue.Color[2] = _clearColor[2];
 	clearValue.Color[3] = _clearColor[3];
 
-	GpuTexture::Create(desc);
-	_view.Create(*this);
+	desc.ClearValue = &clearValue;
+	GpuPixelBuffer::Create(desc);
 }
 
 void ColorBuffer::CreateArray(u32 width, u32 height, u32 numMips, u32 arrayCount, DXGI_FORMAT format, D3D12_RESOURCE_FLAGS flags)
@@ -45,8 +45,8 @@ void ColorBuffer::CreateArray(u32 width, u32 height, u32 numMips, u32 arrayCount
 	clearValue.Color[2] = _clearColor[2];
 	clearValue.Color[3] = _clearColor[3];
 
-	GpuTexture::Create(desc);
-	_view.Create(*this);
+	desc.ClearValue = &clearValue;
+	GpuPixelBuffer::Create(desc);
 }
 
 void ColorBuffer::GenerateMipMaps(CommandContext& context)

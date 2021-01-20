@@ -1,11 +1,8 @@
 #pragma once
-#include "gpu_texture.hpp"
+#include "gpu_pixel_buffer.hpp"
 
-class DepthBuffer : public GpuTexture
+class DepthBuffer : public GpuPixelBuffer
 {
-private:
-	TextureView _view;
-
 public:
 	DepthBuffer() = default;
 

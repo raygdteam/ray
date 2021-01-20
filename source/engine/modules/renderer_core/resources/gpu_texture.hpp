@@ -55,7 +55,7 @@ public:
 
 class GpuTexture;
 
-class GpuTextureAllocator : public GpuResourceAllocator
+class GpuTextureAllocator : public GpuResourceAllocator<GpuTextureMemoryPool>
 {
 public:
 	void Initialize(size_t preferredSize) noexcept override

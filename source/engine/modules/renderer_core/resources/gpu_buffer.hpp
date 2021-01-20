@@ -39,7 +39,7 @@ public:
 
 };
 
-class GpuBufferAllocator : public GpuResourceAllocator
+class GpuBufferAllocator : public GpuResourceAllocator<GpuBufferMemoryPool>
 {
 public:
 	void Initialize(size_t preferredSize) noexcept override

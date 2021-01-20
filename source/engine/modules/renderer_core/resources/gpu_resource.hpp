@@ -57,11 +57,12 @@ public:
 
 class GpuResource;
 
+template <typename TGpuMemoryPool>
 class GpuResourceAllocator
 {
 protected:
-	MemoryManager<GpuMemoryPool> _memoryManager;
-	GpuMemoryPool* _currentPool;
+	MemoryManager<TGpuMemoryPool> _memoryManager;
+	TGpuMemoryPool* _currentPool;
 
 public:
 	GpuResourceAllocator() = default;
@@ -90,7 +91,9 @@ class GpuResource
 	friend class CommandContext;
 	friend class GraphicsContext;
 	friend class ComputeContext;
-	friend GpuResourceAllocator;
+	friend GpuResourceAllocator<GpuBufferMemoryPool>;
+	friend GpuResourceAllocator<GpuTextureMemoryPool>;
+	friend GpuResourceAllocator<GpuPixelBufferMemoryPool>;
 	friend class GpuTextureAllocator;
 
 protected:
@@ -98,7 +101,7 @@ protected:
 	D3D12_RESOURCE_STATES _usageState;
 	D3D12_RESOURCE_STATES _transitioningState;
 	u64 _resourceSize;
-	GpuMemoryPool* _underlyingPool;
+	ray::IMemoryPool* _underlyingPool;
 	GpuResourceDescription _desc;
 	bool _bManaged;
 
@@ -171,7 +174,7 @@ public:
 public:
 	ID3D12Resource* GetNativeResource() const noexcept { return _resource; }
 	u64 GetResourceSize() const noexcept { return _resourceSize; }
-	GpuMemoryPool* GetUnderlyingPool() const noexcept { return _underlyingPool; }
+	ray::IMemoryPool* GetUnderlyingPool() const noexcept { return _underlyingPool; }
 	GpuResourceDescription GetDesc() const noexcept { return _desc; }
 	// whether resource is managed by allocator
 	bool IsManaged() const noexcept { return _bManaged; }
