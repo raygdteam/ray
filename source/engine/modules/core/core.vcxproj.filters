@@ -95,6 +95,9 @@
     <ClInclude Include="threading\thread_pool.hpp">
       <Filter>threading</Filter>
     </ClInclude>
+    <ClInclude Include="context\context.hpp">
+      <Filter>context</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="core_entry_point.cpp" />
@@ -140,6 +143,9 @@
     <ClCompile Include="threading\thread_pool.cpp">
       <Filter>threading</Filter>
     </ClCompile>
+    <ClCompile Include="context\context.cpp">
+      <Filter>context</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="log">
@@ -180,6 +186,9 @@
     </Filter>
     <Filter Include="os">
       <UniqueIdentifier>{05a29463-fb89-4153-a633-4f05f4930ad9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="context">
+      <UniqueIdentifier>{270f60cf-9d36-4c69-9e1d-790febffd157}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

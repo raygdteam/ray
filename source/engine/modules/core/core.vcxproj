@@ -15,6 +15,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="context\context.hpp" />
     <ClInclude Include="core.hpp" />
     <ClInclude Include="debug\assert.hpp" />
     <ClInclude Include="debug\debug.hpp" />
@@ -49,6 +50,7 @@
     <ClInclude Include="threading\thread_pool.hpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="context\context.cpp" />
     <ClCompile Include="core_entry_point.cpp" />
     <ClCompile Include="debug\debug.cpp" />
     <ClCompile Include="extended_instuctions\sse\common.cpp" />

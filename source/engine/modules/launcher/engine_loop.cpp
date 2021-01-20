@@ -36,11 +36,11 @@ void EngineLoop::PreInitialize()
 	state->ResourceManager = new ResourceManager(state);
 
 	gThreadPoolManager = new ThreadPoolManager;
-#define RAY_RELEASE
+
 	if (
 #ifndef RAY_RELEASE
-		strcmp(GetCommandLineA(), "-editor") == 0
-		|| strcmp(GetCommandLineA(), "-project=") != 0
+		/*strcmp(GetCommandLineA(), "-editor") != 0
+		|| strcmp(GetCommandLineA(), "-project=") == 0*/ false
 #else
 		false
 #endif
