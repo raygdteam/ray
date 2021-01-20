@@ -87,6 +87,11 @@ void World::LoadLevel(pcstr name)
 
 World::~World()
 {
+	
+}
+
+void World::Destroy() noexcept
+{
 	gUploadBuffer->Destroy();
 	delete gUploadBuffer;
 

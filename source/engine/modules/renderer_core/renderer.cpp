@@ -122,13 +122,16 @@ void IRenderer::Shutdown()
 {
 	CommandContext::DestroyAllContexts();
 	gCommandListManager.Shutdown();
-	gPixelBufferAllocator.Destroy();
 	gTextureAllocator.Destroy();
 	gBufferAllocator.Destroy();
+	gRingBuffer.Destroy();
 
 	_swapChain->Release();
 	_swapChain = nullptr;
 	for (size_t i = 0; i < SWAP_CHAIN_BUFFER_COUNT; ++i)
 		gDisplayPlane[i].Destroy();
 
+	gDepthBuffer.Destroy();
+
+	gPixelBufferAllocator.Destroy();
 }

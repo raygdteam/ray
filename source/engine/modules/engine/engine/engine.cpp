@@ -93,6 +93,9 @@ void RayEngine::Tick()
 
 RayEngine::~RayEngine()
 {
+	gWorld->Destroy();
+	delete gWorld;
+
 	static_cast<IPlatformWindow*>(_window)->Destroy();
 	static_cast<IPlatformWindow*>(_window)->Shutdown();
 	//_renderer->Shutdown();

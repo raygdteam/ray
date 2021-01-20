@@ -56,6 +56,8 @@ public:
 	void Initialize(IPlatformWindow* window);
 	void Tick(f64 delta);
 
+	void Destroy() noexcept;
+
 	void SetPrimaryCamera(CameraActor* camera);
 	
 	ConditionVariable ReadyToTick;
