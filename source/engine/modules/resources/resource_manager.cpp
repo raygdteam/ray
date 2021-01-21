@@ -231,23 +231,6 @@ IRResource* ResourceManager::LoadResourceSync(pcstr inName, ResourceType desired
 	check(inName != nullptr);
 	check(inName[0] == '/');
 
-	u32 mappingEnd = strchr(inName + 1, '/') - inName;
-	check(mappingEnd != 0);
-	check(mappingEnd <= 16);
-
-	char mappingRaw[17] = {};
-	for (u8 i = 0; i <= mappingEnd; ++i)
-	{
-		mappingRaw[i] = inName[i];
-	}
-
-	mappingRaw[mappingEnd + 1] = '\0';
-
-	String mapping(mappingRaw);
-	gDbgLog->Log("Mapping %s", mapping.c_str());
-
-	_mutex.Enter();
-
 	for (ResourceData& resource : _resources)
 	{
 		if (resource.Type == desiredType && resource.Name == inName)
@@ -255,6 +238,14 @@ IRResource* ResourceManager::LoadResourceSync(pcstr inName, ResourceType desired
 			return resource.ResourceRef;
 		}
 	}
+
+	u32 mappingEnd = strchr(inName + 1, '/') - inName;
+	check(mappingEnd != 0);
+
+	String mapping(inName, 0, mappingEnd + 1);
+	gDbgLog->Log("Mapping %s", mapping.c_str());
+
+	_mutex.Enter();
 
 	for (ResourceMapping& resourceMapping : _mapping)
 	{

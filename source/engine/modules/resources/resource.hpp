@@ -13,7 +13,7 @@ class RAY_RESOURCES_API IRResource : public RayObject
 
 	friend class ResourceManager;
 protected:
-	u64 _id;
+	u64 _id = -1;
 	
 	virtual bool LoadFrom(IFile* path) = 0;
 public:
