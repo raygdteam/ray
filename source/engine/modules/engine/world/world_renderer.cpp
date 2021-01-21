@@ -80,6 +80,7 @@ void World::Render()
 void World::RendererInitialize(IPlatformWindow* window)
 {
 	_primaryCameraActor = new CameraActor();
+	_levelData->Level->SpawnActor(_primaryCameraActor);
 	/*_renderer = new IRenderer;
 	_renderer->Initialize(window);*/
 	Renderer2D::Initialize();

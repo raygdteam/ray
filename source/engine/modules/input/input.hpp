@@ -9,23 +9,24 @@
 
 class RAY_INPUT_API Input
 {
+	bool _keys[256];
+	//bool _previousKeys[256];
+
+	void WindowEventHandler(u32/*, u64*/, s64);
 public:
 	enum KeyCode
 	{
-
+		eA = 'A',
+		eD = 'D',
+		eS = 'S',
+		eW = 'W',
 	};
 	
 	Input();
 	~Input();
 
-	void RegisterWindowEventHandler(IPlatformWindow*);
+	void Initialize(IPlatformWindow*);
 
-	bool IsKeyUp(const KeyCode key) { return !_keys[key] && _previousKeys[key]; }
-	bool IsKeyDown(const KeyCode key) { return _keys[key] && !_previousKeys[key]; }
-
-private:
-	void WindowEventHandler(u32/*, u64*/, s64);
-
-	bool _keys[256];
-	bool _previousKeys[256];
+	bool IsKeyUp(const KeyCode key) { return !_keys[key]; }
+	bool IsKeyDown(const KeyCode key) { return _keys[key]; }
 };

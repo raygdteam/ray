@@ -47,7 +47,7 @@ void RayEngine::Initialize(IEngineLoop* engineLoop)
 	_window->Initialize();
 	_window->CreateWindow("RAY_ENGINE");
 
-	state->Input->RegisterWindowEventHandler(_window);
+	state->Input->Initialize(_window);
 
 	eng->Log("renderer load begin");
 

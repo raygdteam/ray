@@ -14,10 +14,11 @@ struct StaticQuadRenderData : RenderData
 
 // ------------- SCENE PROXY ------------
 struct PrimitiveSceneProxy
-{};
+{
+	Transform* Transform;
+};
 
 struct StaticQuadSceneProxy : PrimitiveSceneProxy
 {
 	StaticQuadRenderData* RenderData;
-	Transform* Transform;
 };
