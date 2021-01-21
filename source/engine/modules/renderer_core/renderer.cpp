@@ -96,7 +96,7 @@ void IRenderer::Initialize(IPlatformWindow* window)
 	gTextureAllocator.Initialize(MB(10));
 	gBufferAllocator.Initialize(MB(10));
 	gDepthBuffer.Create(gDisplayPlane->GetDesc().Width, gDisplayPlane->GetDesc().Height, DXGI_FORMAT_D32_FLOAT);
-	gRingBuffer.Initialize(MB(1));
+	gRingBuffer.Initialize(MB(10));
 }
 
 void IRenderer::BeginScene(GraphicsContext& gfxContext)

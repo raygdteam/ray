@@ -73,26 +73,22 @@ bool RingBuffer::TryToSetResource(u64 alignedSize, u64 alignment) noexcept
 		}
 	}
 
-	if (!IsMemoryEnough(currentPointer, nextResource, alignedSize))
+	while (!IsMemoryEnough(currentPointer, nextResource, alignedSize))
 	{
+		gCommandListManager.GetGraphicsQueue().WaitForFence(frontElement.FrameIndex);
 		u64 lastCompletedFence = gCommandListManager.GetGraphicsQueue().GetLastCompletedValue();
+
 		TryToFreeUpMemory(lastCompletedFence);
-		currentPointer = reinterpret_cast<u8*>(AlignUp(reinterpret_cast<size_t>(_uploadBuffer._currentPointer), alignment));
+
+		if (_frameOffsetQueue.IsEmpty())
+		{
+			currentPointer = reinterpret_cast<u8*>(AlignUp(reinterpret_cast<size_t>(_uploadBuffer._begin), alignment));
+			break;
+		}
 
 		frontElement = _frameOffsetQueue.front();
 		nextResource = frontElement.ResourceOffset;
-
-		while (!IsMemoryEnough(currentPointer, nextResource, alignedSize)) // && !_frameOffsetQueue.empty())
-		{
-			gCommandListManager.GetGraphicsQueue().WaitForFence(frontElement.FrameIndex);
-			TryToFreeUpMemory(gCommandListManager.GetGraphicsQueue().GetLastCompletedValue());
-			currentPointer = reinterpret_cast<u8*>(AlignUp(reinterpret_cast<size_t>(_uploadBuffer._currentPointer), alignment));
-		}
-
-		if (_frameOffsetQueue.empty())
-		{
-			currentPointer = reinterpret_cast<u8*>(AlignUp(reinterpret_cast<size_t>(_uploadBuffer._begin), alignment));
-		}
+		currentPointer = reinterpret_cast<u8*>(AlignUp(reinterpret_cast<size_t>(_uploadBuffer._currentPointer), alignment));
 	}
 
 	_uploadBuffer._currentPointer = currentPointer;

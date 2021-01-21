@@ -5,9 +5,9 @@ u32 gCurrentBuffer = 0;
 
 ColorBuffer gDisplayPlane[SWAP_CHAIN_BUFFER_COUNT] =
 {
-	ColorBuffer(1.f, 1.f, 0.f, 1.f),
-	ColorBuffer(1.f, 1.f, 0.f, 1.f),
-	ColorBuffer(1.f, 1.f, 0.f, 1.f)
+	ColorBuffer(1.f, 0.f, 0.f, 1.f),
+	ColorBuffer(0.f, 1.f, 0.f, 1.f),
+	ColorBuffer(0.f, 0.f, 1.f, 1.f)
 };
 ColorBuffer gSceneColorBuffer = ColorBuffer(1.f, 1.f, 1.f, 1.f);
 DepthBuffer gDepthBuffer;
