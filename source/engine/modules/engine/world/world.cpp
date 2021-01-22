@@ -36,7 +36,7 @@ void World::WorldTickThread()
 	{
 		ReadyToTick.Wait(); // Wait for IEngine command to begin ticking
 		RenderingFinished.Wait(); // Wait for renderer thread to finish
-		// Tick(1.f / 75.f);
+		//Tick(1.f / 75.f);
 
 		TickActors(eEarlyTick, _delta);
 		TickActors(ePrePhysicsUpdate, _delta);

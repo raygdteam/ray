@@ -14,27 +14,38 @@ void Level::SpawnActor(Actor* actor)
 {
 	actor->Awake(); // ??
 	_actors.PushBack(actor);
-
+	
+	// TODO: memory leak and error
+	PrimitiveSceneProxy* proxy = nullptr;
+	
 	StaticQuadActor* sqActor = dynamic_cast<StaticQuadActor*>(actor);
 
-	//CommandContext& ctx = CommandContext::Begin();
-	//(void)ctx;
-	RTexture* texture = dynamic_cast<RTexture*>(RayState()->ResourceManager->LoadResourceSync(sqActor->Material.TextureName, eTexture));
+	if (sqActor != nullptr)
+	{
+		StaticQuadSceneProxy* sqProxy = new StaticQuadSceneProxy;
+		
+		//CommandContext& ctx = CommandContext::Begin();
+		//(void)ctx;
+		RTexture* texture = dynamic_cast<RTexture*>(RayState()->ResourceManager->LoadResourceSync(sqActor->Material.TextureName, eTexture));
 
-	if (texture == nullptr) *(u64*)0xFFFFFFFFFFFFFFFF = 0xDED;
+		if (texture == nullptr) *(u64*)0xFFFFFFFFFFFFFFFF = 0xDED;
 
-	// TODO
+		// TODO
 
-	//TextureManager textureManager;
-	//textureManager.PrepareTextures(ctx, &texture, 1, true);
+		//TextureManager textureManager;
+		//textureManager.PrepareTextures(ctx, &texture, 1, true);
+		sqProxy->RenderData = new StaticQuadRenderData;
+		sqProxy->RenderData->TextureId = texture->GetId();
 
-	// TODO: memory leak and error
-	StaticQuadSceneProxy* proxy = new StaticQuadSceneProxy;
-	proxy->RenderData = new StaticQuadRenderData;
-	proxy->RenderData->TextureId = texture->GetId();
-	proxy->Transform = sqActor->GetTransform();
-	_atd.PushBack(ActorData { actor, actor->ATD, proxy});
+		proxy = sqProxy;
+	}
+	else
+	{
+		proxy = new PrimitiveSceneProxy;
+		proxy->Transform = actor->GetTransform();
+	}
 	
+	_atd.PushBack(ActorData { actor, actor->ATD, proxy});
 	actor->BeginPlay(); // ??
 }
 

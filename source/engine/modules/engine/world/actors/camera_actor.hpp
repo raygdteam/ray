@@ -24,7 +24,7 @@ public:
 
 	void Awake() override { ATD.Stage = ePrePhysicsUpdate; ATD.Active = true; }
 	void BeginPlay() override {}
-	void Tick(f64) override {}
+	void Tick(f64) override;
 	void OnDestroy() override {}
 
 	const FMatrix4x4& GetProjection() { return _projection; }
