@@ -187,6 +187,7 @@ void Renderer2D::DrawQuad(const FVector<3>& pos, const FVector<2>& size, u32 tex
 {
 	constexpr size_t quadVertexCount = 4;
 
+	// TODO: 
 	if (sData.QuadIndexCount >= sData.MAX_INDICES)
 		FlushAndReset(gfxContext);
 
@@ -228,7 +229,7 @@ void Renderer2D::DrawQuad(const FVector<3>& pos, const FVector<2>& size, const F
 {
 	constexpr size_t quadVertexCount = 4;
 
-	if (sData.QuadIndexCount >= sData.MAX_INDICES)
+	if (sData.QuadIndexCount + 6 > sData.MAX_INDICES)
 		FlushAndReset(gfxContext);
 
 	for (size_t i = 0; i < quadVertexCount; i++)
@@ -247,13 +248,14 @@ void Renderer2D::DrawQuad(const FVector<3>& pos, const FVector<2>& size, const F
 void Renderer2D::Flush(GraphicsContext& gfxContext)
 {
 	// assuming that RTV is already transferred to D3D12_RESOURCE_STATE_RENDER_TARGET
-
 	gfxContext.SetRootSignature(_2DSignature);
 	gfxContext.SetScissor(0, 0, 1280, 720);
 	gfxContext.SetViewport(0.f, 0.f, 1280.f, 720.f);
 
 	gfxContext.SetPipelineState(_2DPipeline);
 	gfxContext.SetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+
+	gfxContext.SetRenderTarget(gDisplayPlane[gCurrentBuffer].GetRTV(), gDepthBuffer.GetDSV());
 
 	ConstantBuffer cb;
 	cb.ViewProjMatrix = sData.ViewProjectionMatrix.Transpose();

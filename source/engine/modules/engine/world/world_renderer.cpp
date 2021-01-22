@@ -59,12 +59,12 @@ void World::Render()
 
 	Renderer2D::Begin(*_primaryCameraActor);
 
-	for (size_t i = 0; i < 200; ++i)
+	for (size_t i = 0; i < 500; ++i)
 	{
-		for (size_t j = 0; j < 50; ++j)
+		for (size_t j = 0; j < 200; ++j)
 		{
-			FVector<3> pos = { -1500.f + i * 30, 900.f - j * 30, static_cast<f32>(1.0f) };
-			FVector<2> size = { 0.1f, 0.1f };
+			FVector<3> pos = { -1500.f + i * 10, 900.f - j * 10, static_cast<f32>(1.0f) };
+			FVector<2> size = { 0.05f, 0.05f };
 			auto r = Sin(i * j + 100 * 28);
 			auto g = Cos(i * j + 100 * 28);
 			FVector<4> color = { r, g, r * g, 1.f };
@@ -72,8 +72,23 @@ void World::Render()
 		}
 	}
 
+	//FVector3 pos = { 0.f, 0.f, 1.f };
+	//FVector4 color = { 1.f, 0.f, 0.f, 1.f };
+	//FVector2 size = { 1.f, 1.f };
+	//Renderer2D::DrawQuad(pos, size, color, ctx);
+
+	//Renderer2D::End(ctx);
+
+	//Renderer2D::Begin(*_primaryCameraActor);
+
+	//pos.y = 500.f;
+	//color.x = 0.f;
+	//color.y = 1.f;
+
+	//Renderer2D::DrawQuad(pos, size, color, ctx);
+	//
 	Renderer2D::End(ctx);
-	
+
 	_renderer->EndScene(ctx);
 }
 

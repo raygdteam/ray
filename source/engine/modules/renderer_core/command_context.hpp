@@ -143,9 +143,6 @@ protected:
 	ID3D12RootSignature* _graphicsRootSig;
 	ID3D12RootSignature* _computeRootSig;
 
-	/*LinearAllocator _cpuLinearAllocator;
-	LinearAllocator _gpuLinearAllocator;*/
-
 	D3D12_RESOURCE_BARRIER _barriers[16];
 	u32 _numBarriersToFlush;
 
@@ -225,8 +222,5 @@ public:
 	void DrawInstanced(u32 vertexCountPerInstance, u32 instanceCount, u32 startVertexLocation = 0, u32 startInstanceLocation = 0);
 	void DrawIndexedInstanced(u32 indexCountPerInstance, u32 instanceCount, u32 startIndexLocation, s32 baseVertexLocation, u32 startInstanceLocation);
 	// TODO: 
-
-private:
-
 
 };
