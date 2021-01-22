@@ -59,9 +59,9 @@ void World::Render()
 	_renderer->BeginScene(ctx);
 	Renderer2D::Begin(*_primaryCameraActor);
 
-	for (size_t i = 0; i < 50; ++i)
+	for (size_t i = 0; i < 500; ++i)
 	{
-		for (size_t j = 0; j < 20; ++j)
+		for (size_t j = 0; j < 200; ++j)
 		{
 			FVector<3> pos = { -1500.f + i * 40, 900.f - j * 40, static_cast<f32>(1.0f) };
 			FVector<2> size = { 0.15f, 0.15f };
