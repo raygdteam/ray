@@ -72,7 +72,7 @@ void PlatformWindow::SetWindowVisibility(bool visible)
 void PlatformWindow::Update()
 {
 	MSG msg = {};
-	if (PeekMessage(&msg, this->_windowHandle, 0, 0, PM_REMOVE))
+	while (PeekMessage(&msg, this->_windowHandle, 0, 0, PM_REMOVE))
 	{
 		TranslateMessage(&msg);
 		DispatchMessage(&msg);
