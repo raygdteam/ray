@@ -19,6 +19,7 @@ CommandListManager gCommandListManager;
 ContextManager gContextManager;
 ID3D12Device* gDevice;
 DescriptorHeapsManager gDescriptorHeapsManager;
+DescriptorHeap gMainDescriptorHeap(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV, D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE, 256);
 GpuTextureAllocator gTextureAllocator;
 GpuBufferAllocator gBufferAllocator;
 GpuPixelBufferAllocator gPixelBufferAllocator;
@@ -82,6 +83,10 @@ void IRenderer::Initialize(IPlatformWindow* window)
 	swapChainDesc.BufferCount = SWAP_CHAIN_BUFFER_COUNT;
 	swapChainDesc.Flags = DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH;
 	swapChainDesc.SwapEffect = DXGI_SWAP_EFFECT_FLIP_SEQUENTIAL;
+
+	gMainDescriptorHeap.Create();
+	DepthBuffer::sMainDSV_DescriptorHeap.Create();
+	ColorBuffer::sMainRTV_DescriptorHeap.Create();
 
 	hr = dxgiFactory->CreateSwapChainForHwnd(gCommandListManager.GetCommandQueue(), static_cast<HWND>(window->GetWindowHandleRaw()), &swapChainDesc, nullptr, nullptr, &_swapChain);
 	for (u32 i = 0; i < SWAP_CHAIN_BUFFER_COUNT; ++i)

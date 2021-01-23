@@ -187,8 +187,10 @@ protected:
 	DescriptorHandle _srvHandle;
 	DescriptorHandle _uavHandle;
 
+	DescriptorHeap* _cbvSrvUavHeap;
+
 public:
-	virtual void Create(GpuResource& resource) noexcept = 0;
+	virtual void Create(GpuResource& resource, DescriptorHeap* cbvSrvUavHeap = nullptr, DescriptorHeap* rtvHeap = nullptr, DescriptorHeap* dsvHeap = nullptr) noexcept = 0;
 
 public:
 	D3D12_CPU_DESCRIPTOR_HANDLE GetSRV() const noexcept
@@ -199,6 +201,11 @@ public:
 	D3D12_CPU_DESCRIPTOR_HANDLE GetUAV() const noexcept
 	{
 		return _uavHandle.GetCpuHandle();
+	}
+
+	DescriptorHeap* GetCBV_SRV_UAV_Heap() const noexcept
+	{
+		return _cbvSrvUavHeap;
 	}
 
 };

@@ -60,7 +60,6 @@ void GpuPixelBuffer::Create(GpuTextureDescription& desc) noexcept
 				"Resource dimension must be texture and resource must be render target or depth stencil buffer!")
 
 	*dynamic_cast<GpuResource*>(this) = std::move(gPixelBufferAllocator.Allocate(desc));
-	_view.Create(*this);
 	// TODO
 }
 

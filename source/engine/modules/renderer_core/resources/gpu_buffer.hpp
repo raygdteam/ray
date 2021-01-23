@@ -89,7 +89,7 @@ private:
 	D3D12_GPU_VIRTUAL_ADDRESS _cbView;
 
 public:
-	void Create(GpuResource& resource) noexcept override;
+	void Create(GpuResource& resource, DescriptorHeap* cbvSrvUavHeap = nullptr, DescriptorHeap* rtvHeap = nullptr, DescriptorHeap* dsvHeap = nullptr) noexcept override;
 
 public:
 	D3D12_VERTEX_BUFFER_VIEW GetVertexBufferView() const noexcept

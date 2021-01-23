@@ -95,9 +95,9 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="VertexShader.hlsl" />
-    <FxCompile Include="PixelShader.hlsl" />
     <FxCompile Include="VertexShaderColored.hlsl" />
     <FxCompile Include="PixelShaderColored.hlsl" />
+    <FxCompile Include="Renderer2D_VS.hlsl" />
+    <FxCompile Include="Renderer2D_PS.hlsl" />
   </ItemGroup>
 </Project>

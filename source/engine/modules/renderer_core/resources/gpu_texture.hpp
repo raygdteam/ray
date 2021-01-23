@@ -106,8 +106,11 @@ private:
 	DescriptorHandle _rtvHandle;
 	DescriptorHandle _dsvHandle[2];
 
+	DescriptorHeap* _rtvHeap;
+	DescriptorHeap* _dsvHeap;
+
 public:
-	void Create(GpuResource& resource) noexcept override;
+	void Create(GpuResource& resource, DescriptorHeap* cbvSrvUavHeap = nullptr, DescriptorHeap* rtvHeap = nullptr, DescriptorHeap* dsvHeap = nullptr) noexcept override;
 
 public:
 	D3D12_CPU_DESCRIPTOR_HANDLE GetRTV() const noexcept
@@ -123,6 +126,16 @@ public:
 	D3D12_CPU_DESCRIPTOR_HANDLE GetDSV_ReadOnly() const noexcept
 	{
 		return _dsvHandle[1].GetCpuHandle();
+	}
+
+	DescriptorHeap* GetRTV_Heap() const noexcept
+	{
+		return _rtvHeap;
+	}
+
+	DescriptorHeap* GetDSV_Heap() const noexcept
+	{
+		return _dsvHeap;
 	}
 
 };

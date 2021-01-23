@@ -20,7 +20,7 @@ public:
 	~Renderer2D();
 
 public:
-	static void Initialize(/*TextureManager* textureManager*/);
+	static void Initialize(RTexture& whiteTexture);
 	static void Shutdown();
 
 public:
@@ -33,9 +33,10 @@ public:
 
 public:
 	//static void DrawQuad(const FVector<3>& pos, FVector<2>* textureCoords, GraphicsContext& gfxContext);
-	static void DrawQuad(const FVector<3>& pos, const FVector<2>& size, u32 textureIndex, FVector<2>* textureCoords, GraphicsContext& gfxContext);
-	static void DrawQuad(const FVector<3>& pos, const FVector<2>& size, u32 textureIndex, GraphicsContext& gfxContext);
-	static void DrawQuad(const FVector<3>& pos, const FVector<2>& size, const FVector<4>& color, GraphicsContext& gfxContext);
+	static void DrawQuad(const FVector3& pos, const FVector2& size, u32 textureIndex, FVector2* textureCoords, GraphicsContext& gfxContext);
+	static void DrawQuad(const FVector3& pos, const FVector2& size, u32 textureIndex, GraphicsContext& gfxContext);
+	
+	static void DrawQuad(const FVector3& pos, const FVector2& size, const FVector4& color, GraphicsContext& gfxContext);
 
 private:
 	static void Begin();

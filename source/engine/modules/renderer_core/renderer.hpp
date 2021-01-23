@@ -20,6 +20,7 @@ class CommandContext;
 class ContextManager;
 
 class DescriptorHeapsManager;
+class DescriptorHeap;
 
 class GpuTextureAllocator;
 class GpuBufferAllocator;
@@ -38,6 +39,7 @@ extern GpuTextureAllocator gTextureAllocator;
 extern GpuBufferAllocator gBufferAllocator;
 extern GpuPixelBufferAllocator gPixelBufferAllocator;
 
+extern DescriptorHeap gMainDescriptorHeap;
 extern DescriptorHeapsManager gDescriptorHeapsManager;
 extern RingBuffer gRingBuffer;
 extern RAY_RENDERERCORE_API UploadBuffer* gUploadBuffer;

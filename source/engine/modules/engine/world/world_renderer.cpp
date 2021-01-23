@@ -82,6 +82,7 @@ void World::RendererInitialize(IPlatformWindow* window)
 	_levelData->Level->SpawnActor(_primaryCameraActor);
 	/*_renderer = new IRenderer;
 	_renderer->Initialize(window);*/
-	Renderer2D::Initialize();
+	RTexture* whiteTexture = dynamic_cast<RTexture*>(RayState()->ResourceManager->LoadResourceSync("/engine/white_texture.jpg", eTexture));
+	Renderer2D::Initialize(*whiteTexture);
 	//Renderer2D::Initialize({}, {}, {});
 }

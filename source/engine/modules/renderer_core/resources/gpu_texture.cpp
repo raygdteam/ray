@@ -373,14 +373,14 @@ void GpuTexture::Release() noexcept
 	gTextureAllocator.Free(*this);
 }
 
-void TextureView::Create(GpuResource& resource) noexcept
+void TextureView::Create(GpuResource& resource, DescriptorHeap* cbvSrvUavHeap, DescriptorHeap* rtvHeap, DescriptorHeap* dsvHeap) noexcept
 {
 	auto desc = resource.GetDesc();
 	auto nativeResource = resource.GetNativeResource();
 
-	auto& rtvDescriptorHeap = gDescriptorHeapsManager.GetCurrentRTV_Heap(true);
-	auto& dsvDescriptorHeap = gDescriptorHeapsManager.GetCurrentDSV_Heap(true);
-	auto& descriptorHeap = gDescriptorHeapsManager.GetCurrentCBV_SRV_UAV_Heap(true);
+	_rtvHeap = rtvHeap != nullptr ? rtvHeap : &gDescriptorHeapsManager.GetCurrentRTV_Heap(true);
+	_dsvHeap = dsvHeap != nullptr ? dsvHeap : &gDescriptorHeapsManager.GetCurrentDSV_Heap(true);
+	_cbvSrvUavHeap = cbvSrvUavHeap != nullptr ? cbvSrvUavHeap : &gDescriptorHeapsManager.GetCurrentCBV_SRV_UAV_Heap(true);
 
 	// ========================== RENDER TARGET VIEW ========================== //
 	if (desc.Flags & D3D12_RESOURCE_FLAG_ALLOW_RENDER_TARGET)
@@ -391,7 +391,7 @@ void TextureView::Create(GpuResource& resource) noexcept
 		rtvDesc.Texture2D.MipSlice = 0;
 		rtvDesc.Texture2D.PlaneSlice = 0;
 
-		_rtvHandle = rtvDescriptorHeap.Allocate(1);
+		_rtvHandle = _rtvHeap->Allocate(1);
 		gDevice->CreateRenderTargetView(nativeResource, &rtvDesc, _rtvHandle.GetCpuHandle());
 	}
 
@@ -403,8 +403,8 @@ void TextureView::Create(GpuResource& resource) noexcept
 		dsvDesc.ViewDimension = D3D12_DSV_DIMENSION_TEXTURE2D;
 		dsvDesc.Texture2D.MipSlice = 0;
 
-		_dsvHandle[0] = dsvDescriptorHeap.Allocate(1);
-		_dsvHandle[1] = dsvDescriptorHeap.Allocate(1);
+		_dsvHandle[0] = _dsvHeap->Allocate(1);
+		_dsvHandle[1] = _dsvHeap->Allocate(1);
 
 		dsvDesc.Flags = D3D12_DSV_FLAG_NONE;
 		gDevice->CreateDepthStencilView(nativeResource, &dsvDesc, _dsvHandle[0].GetCpuHandle());
@@ -425,7 +425,7 @@ void TextureView::Create(GpuResource& resource) noexcept
 		srvDesc.Texture2D.PlaneSlice = 0;
 		srvDesc.Texture2D.ResourceMinLODClamp = 0.f;
 
-		_srvHandle = descriptorHeap.Allocate(1);
+		_srvHandle = _cbvSrvUavHeap->Allocate(1);
 		gDevice->CreateShaderResourceView(nativeResource, &srvDesc, _srvHandle.GetCpuHandle());
 	}
 
@@ -438,7 +438,7 @@ void TextureView::Create(GpuResource& resource) noexcept
 		uavDesc.Texture2D.PlaneSlice = 0;
 		uavDesc.Texture2D.MipSlice = 0;
 
-		_uavHandle = descriptorHeap.Allocate(1);
+		_uavHandle = _cbvSrvUavHeap->Allocate(1);
 		gDevice->CreateUnorderedAccessView(nativeResource, nullptr, &uavDesc, _uavHandle.GetCpuHandle());
 	}
 }

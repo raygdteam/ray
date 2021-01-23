@@ -79,14 +79,14 @@ void GpuBuffer::Release() noexcept
 }
 
 
-void BufferView::Create(GpuResource& resource) noexcept
+void BufferView::Create(GpuResource& resource, DescriptorHeap* cbvSrvUavHeap, DescriptorHeap* rtvHeap, DescriptorHeap* dsvHeap) noexcept
 {
 	auto desc = resource.GetDesc();
 	auto nativeResource = resource.GetNativeResource();
 	auto gpuVirtualAddress = nativeResource->GetGPUVirtualAddress();
 	u32 numElements = desc.SizeInBytes / desc.Stride;
 
-	auto descriptorHeap = gDescriptorHeapsManager.GetCurrentCBV_SRV_UAV_Heap(true);
+	_cbvSrvUavHeap = cbvSrvUavHeap != nullptr ? cbvSrvUavHeap : &gDescriptorHeapsManager.GetCurrentCBV_SRV_UAV_Heap(true);
 
 	// ========================== VERTEX BUFFER VIEW ========================== //
 	_vbView.BufferLocation = gpuVirtualAddress;
@@ -113,7 +113,7 @@ void BufferView::Create(GpuResource& resource) noexcept
 		srvDesc.Buffer.NumElements = numElements;
 		srvDesc.Buffer.StructureByteStride = desc.Stride;
 
-		_srvHandle = descriptorHeap.Allocate(1);
+		_srvHandle = _cbvSrvUavHeap->Allocate(1);
 		gDevice->CreateShaderResourceView(nativeResource, &srvDesc, _srvHandle.GetCpuHandle());
 	}
 
@@ -129,7 +129,7 @@ void BufferView::Create(GpuResource& resource) noexcept
 		uavDesc.Buffer.NumElements = numElements;
 		uavDesc.Buffer.StructureByteStride = desc.Stride;
 
-		_uavHandle = descriptorHeap.Allocate(1);
+		_uavHandle = _cbvSrvUavHeap->Allocate(1);
 		gDevice->CreateUnorderedAccessView(nativeResource, nullptr, &uavDesc, _uavHandle.GetCpuHandle());
 	}
 }

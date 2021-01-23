@@ -30,10 +30,10 @@ struct ConstantBuffer
 
 struct QuadVertex
 {
-	FVector<3> Position;
-	FVector<4> Color;
-	/*FVector<2> TexCoord;
-	u32 TextureIndex;*/
+	FVector4 Position;
+	FVector4 Color;
+	FVector2 TexCoord;
+	u32 TextureIndex;
 };
 
 struct Renderer2DData
@@ -45,21 +45,22 @@ struct Renderer2DData
 	static const u32 MAX_INDICES = MAX_QUADS * 6;
 
 	GpuBuffer IndexBuffer;
-	GpuTexture TextureAtlas;
+	GpuTexture WhiteTexture;
+	TextureView WhiteTextureView;
 	D3D12_INDEX_BUFFER_VIEW IndexBufferView;
 
 	u32 QuadIndexCount = 0;
 	QuadVertex* QuadVertexBufferBase = nullptr;
 	QuadVertex* QuadVertexBufferPtr = nullptr;
 
-	FVector<3> QuadVertexPositions[4];
+	FVector3 QuadVertexPositions[4];
 
 	FMatrix4x4 ViewProjectionMatrix;
 };
 
 static Renderer2DData sData;
 
-void Renderer2D::Initialize(/*TextureManager* textureManager*/)
+void Renderer2D::Initialize(RTexture& whiteTexture)
 {
 	u32* quadIndices = new uint32_t[sData.MAX_INDICES];
 	u32 offset = 0;
@@ -76,15 +77,22 @@ void Renderer2D::Initialize(/*TextureManager* textureManager*/)
 		offset += 4;
 	}
 
-	// TODO
 	auto ibDesc = GpuBufferDescription::Index(sData.MAX_INDICES, sizeof(u32), quadIndices);
 	ibDesc.UploadBufferData = gUploadBuffer->SetBufferData(quadIndices, sData.MAX_INDICES, sizeof(u32));
 	ibDesc.Flags = D3D12_RESOURCE_FLAG_DENY_SHADER_RESOURCE;
 	sData.IndexBuffer.Create(ibDesc);
+
 	BufferView ibView;
 	ibView.Create(sData.IndexBuffer);
 	sData.IndexBufferView = ibView.GetIndexBufferView();
 	delete[] quadIndices;
+
+	auto textureResolution = whiteTexture.GetDimensions();
+	auto whiteTextureDesc = GpuTextureDescription::Texture2D(textureResolution.x, textureResolution.y, DXGI_FORMAT_R32G32B32A32_FLOAT, 1, D3D12_RESOURCE_FLAG_NONE);
+	whiteTextureDesc.UploadBufferData = gUploadBuffer->SetTextureData(whiteTexture);
+	sData.WhiteTexture.Create(whiteTextureDesc);
+
+	sData.WhiteTextureView.Create(sData.WhiteTexture, &gMainDescriptorHeap);
 
 	/*_descriptorHeap.Create();
 	auto srvHandle = _descriptorHeap.Allocate();*/
@@ -97,17 +105,17 @@ void Renderer2D::Initialize(/*TextureManager* textureManager*/)
 	sData.QuadVertexPositions[3] = { 100.5f, -100.5f, 0.5f }; // bottom right
 
 	SamplerDesc defaultSampler;
-	_2DSignature.Begin(1, 0);
-	//_2DSignature.InitStaticSampler(0, defaultSampler, D3D12_SHADER_VISIBILITY_PIXEL);
-	//_2DSignature.Slot(0).InitAsDescriptorRange(0, D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 64, D3D12_SHADER_VISIBILITY_PIXEL);
-	_2DSignature.Slot(0).InitAsConstantBuffer(0, D3D12_SHADER_VISIBILITY_VERTEX);
+	_2DSignature.Begin(2, 1);
+	_2DSignature.InitStaticSampler(0, defaultSampler, D3D12_SHADER_VISIBILITY_PIXEL);
+	_2DSignature.Slot(0).InitAsDescriptorRange(0, D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 64, D3D12_SHADER_VISIBILITY_PIXEL);
+	_2DSignature.Slot(1).InitAsConstantBuffer(0, D3D12_SHADER_VISIBILITY_VERTEX);
 
 	_2DSignature.Finalize(D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT);
 	_2DPipeline.SetRootSignature(_2DSignature);
 
 	ID3DBlob* vertexShader;
 	ID3DBlob* errorBuff;
-	auto hr = D3DCompileFromFile(L"..\\..\\source\\engine\\modules\\renderer_core\\VertexShaderColored.hlsl", nullptr, nullptr, "main", "vs_5_0",
+	auto hr = D3DCompileFromFile(L"..\\..\\source\\engine\\modules\\renderer_core\\Renderer2D_VS.hlsl", nullptr, nullptr, "main", "vs_5_0",
 		D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION, 0, &vertexShader, &errorBuff);
 	check(hr == S_OK)
 
@@ -116,7 +124,7 @@ void Renderer2D::Initialize(/*TextureManager* textureManager*/)
 	vertexShaderBytecode.pShaderBytecode = vertexShader->GetBufferPointer();
 
 	ID3DBlob* pixelShader;
-	hr = D3DCompileFromFile(L"..\\..\\source\\engine\\modules\\renderer_core\\PixelShaderColored.hlsl", nullptr, nullptr, "main", "ps_5_0",
+	hr = D3DCompileFromFile(L"..\\..\\source\\engine\\modules\\renderer_core\\Renderer2D_PS.hlsl", nullptr, nullptr, "main", "ps_5_0",
 		D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION, 0, &pixelShader, &errorBuff);
 	check(hr == S_OK)
 
@@ -129,10 +137,10 @@ void Renderer2D::Initialize(/*TextureManager* textureManager*/)
 
 	D3D12_INPUT_ELEMENT_DESC inputLayout[] =
 	{
-		{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
-		{ "COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 12, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 }
-		/*{ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 12, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
-		{ "TEXINDEX", 0, DXGI_FORMAT_R32_UINT, 0, 20, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 }*/
+		{ "POSITION", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 0, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
+		{ "COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 16, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0},
+		{ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 32, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
+		{ "TEXINDEX", 0, DXGI_FORMAT_R32_UINT, 0, 40, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 }
 	};
 	_2DPipeline.SetInputLayout(sizeof(inputLayout) / sizeof(D3D12_INPUT_ELEMENT_DESC), inputLayout);
 	_2DPipeline.SetPrimitiveTopologyType(D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE);
@@ -175,15 +183,15 @@ void Renderer2D::SetCamera(CameraActor& camera)
 	sData.ViewProjectionMatrix = camera.GetViewProjection();
 }
 
-/*void Renderer2D::DrawQuad(const FVector<3>& pos, const FVector<2>& size, FVector<2>* textureCoords, GraphicsContext& gfxContext)
+/*void Renderer2D::DrawQuad(const FVector3& pos, const FVector2& size, FVector2* textureCoords, GraphicsContext& gfxContext)
 {
-	auto mat = FMatrix4x4::Scale(FVector<3>{ size.x, size.y, 1.f });
-	auto position = mat.Transform(FVector<4>{ pos.x, pos.y, pos.z, 1.f });
+	auto mat = FMatrix4x4::Scale(FVector3{ size.x, size.y, 1.f });
+	auto position = mat.Transform(FVector4{ pos.x, pos.y, pos.z, 1.f });
 
-	DrawQuad(FVector<3>{ position.x, position.y, position.z }, textureCoords, gfxContext);
+	DrawQuad(FVector3{ position.x, position.y, position.z }, textureCoords, gfxContext);
 }*/
 
-void Renderer2D::DrawQuad(const FVector<3>& pos, const FVector<2>& size, u32 textureIndex, FVector<2>* textureCoords, GraphicsContext& gfxContext)
+void Renderer2D::DrawQuad(const FVector3& pos, const FVector2& size, u32 textureIndex, FVector2* textureCoords, GraphicsContext& gfxContext)
 {
 	constexpr size_t quadVertexCount = 4;
 
@@ -201,7 +209,7 @@ void Renderer2D::DrawQuad(const FVector<3>& pos, const FVector<2>& size, u32 tex
 
 		FVector3 newPosition = pos + vertexPos;
 
-		sData.QuadVertexBufferPtr->Position = newPosition;
+		sData.QuadVertexBufferPtr->Position = FVector4{ newPosition.x, newPosition.y, newPosition.z, 1.f };
 		// TODO:
 		/*sData.QuadVertexBufferPtr->TexCoord = textureCoords[i];
 		sData.QuadVertexBufferPtr->TextureIndex = textureIndex;*/
@@ -212,9 +220,9 @@ void Renderer2D::DrawQuad(const FVector<3>& pos, const FVector<2>& size, u32 tex
 	sData.QuadIndexCount += 6;
 }
 
-void Renderer2D::DrawQuad(const FVector<3>& pos, const FVector<2>& size, u32 textureIndex, GraphicsContext& gfxContext)
+void Renderer2D::DrawQuad(const FVector3& pos, const FVector2& size, u32 textureIndex, GraphicsContext& gfxContext)
 {
-	static FVector<2> textureCoords[4] =
+	static FVector2 textureCoords[4] =
 	{
 		{ 0.f, 1.f },
 		{ 0.f, 0.f },
@@ -225,9 +233,17 @@ void Renderer2D::DrawQuad(const FVector<3>& pos, const FVector<2>& size, u32 tex
 	DrawQuad(pos, size, textureIndex, textureCoords, gfxContext);
 }
 
-void Renderer2D::DrawQuad(const FVector<3>& pos, const FVector<2>& size, const FVector<4>& color, GraphicsContext& gfxContext)
+void Renderer2D::DrawQuad(const FVector3& pos, const FVector2& size, const FVector4& color, GraphicsContext& gfxContext)
 {
 	constexpr size_t quadVertexCount = 4;
+
+	static FVector2 textureCoords[4] =
+	{
+		{ 0.f, 1.f },
+		{ 0.f, 0.f },
+		{ 1.f, 0.f },
+		{ 1.f, 1.f }
+	};
 
 	if (sData.QuadIndexCount + 6 > sData.MAX_INDICES)
 		FlushAndReset(gfxContext);
@@ -237,8 +253,10 @@ void Renderer2D::DrawQuad(const FVector<3>& pos, const FVector<2>& size, const F
 		FVector3 vertexPos = sData.QuadVertexPositions[i] * FVector3{ size.x, size.y, 1.f };
 		FVector3 newPosition = pos + vertexPos;
 
-		sData.QuadVertexBufferPtr->Position = newPosition;
+		sData.QuadVertexBufferPtr->Position = FVector4{ newPosition.x, newPosition.y, newPosition.z, 1.f };
+		sData.QuadVertexBufferPtr->TexCoord = textureCoords[i];
 		sData.QuadVertexBufferPtr->Color = color;
+		sData.QuadVertexBufferPtr->TextureIndex = 0;
 		sData.QuadVertexBufferPtr++;
 	}
 
@@ -260,14 +278,12 @@ void Renderer2D::Flush(GraphicsContext& gfxContext)
 	ConstantBuffer cb;
 	cb.ViewProjMatrix = sData.ViewProjectionMatrix.Transpose();
 
-	// TODO
-	/*gfxContext.SetDescriptorHeap(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV, gDescriptorHeapsManager.GetCurrentCBV_SRV_UAV_Heap(false).GetHeapPointer());
-	gfxContext.SetDescriptorTable(0, gDescriptorHeapsManager.GetCurrentCBV_SRV_UAV_Heap(false).GetDescriptorAtOffset(0).GetGpuHandle());*/
-
+	gfxContext.SetDescriptorHeap(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV, gMainDescriptorHeap.GetHeapPointer());
+	gfxContext.SetDescriptorTable(0, gMainDescriptorHeap.GetDescriptorAtOffset(0).GetGpuHandle());
 
 	size_t bufferSize = sData.QuadVertexBufferPtr - sData.QuadVertexBufferBase;
 	gfxContext.SetDynamicVB(gRingBuffer, 0, bufferSize, sizeof(QuadVertex), sData.QuadVertexBufferBase);
-	gfxContext.SetDynamicCBV(gRingBuffer, 0, sizeof(cb), &cb);
+	gfxContext.SetDynamicCBV(gRingBuffer, 1, sizeof(cb), &cb);
 	gfxContext.SetIndexBuffer(sData.IndexBufferView);
 	gfxContext.DrawIndexedInstanced(sData.QuadIndexCount, 1, 0, 0, 0);
 
@@ -283,6 +299,7 @@ void Renderer2D::FlushAndReset(GraphicsContext& gfxContext)
 void Renderer2D::Shutdown()
 {
 	sData.IndexBuffer.Destroy();
+	sData.WhiteTexture.Destroy();
 	gRingBuffer.Destroy();
 	delete[] sData.QuadVertexBufferBase;
 }
