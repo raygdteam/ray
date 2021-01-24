@@ -101,5 +101,7 @@
     <FxCompile Include="PixelShaderColored.hlsl" />
     <FxCompile Include="Renderer2D_VS.hlsl" />
     <FxCompile Include="Renderer2D_PS.hlsl" />
+    <FxCompile Include="UiRenderer_VS.hlsl" />
+    <FxCompile Include="UiRenderer_PS.hlsl" />
   </ItemGroup>
 </Project>
