@@ -48,15 +48,15 @@ GraphicsPipeline UiRenderer::_uiPipelineState;
 RootSignature UiRenderer::_uiRootSignature;
 DescriptorHeap UiRenderer::_descriptorHeap(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV, D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE, 64);
 
-void UiRenderer::Initialize(RTexture& textureAtlas) noexcept
+void UiRenderer::Initialize(u32 w, u32 h, void* data) noexcept
 {
 	sUiData.IndexBufferBase = new uint32_t[sUiData.MAX_INDICES];
 
 	_descriptorHeap.Create();
 
-	auto textureResolution = textureAtlas.GetDimensions();
-	auto textureAtlasDesc = GpuTextureDescription::Texture2D(textureResolution.x, textureResolution.y, DXGI_FORMAT_R8G8B8A8_UNORM, 1, D3D12_RESOURCE_FLAG_NONE);
-	textureAtlasDesc.UploadBufferData = gUploadBuffer->SetTextureData(textureAtlas);
+	//auto textureResolution = FVector2 { w, h };
+	auto textureAtlasDesc = GpuTextureDescription::Texture2D(w, h, DXGI_FORMAT_R8G8B8A8_UNORM, 1, D3D12_RESOURCE_FLAG_NONE);
+	textureAtlasDesc.UploadBufferData = gUploadBuffer->SetBufferData(data, w * h, sizeof(u32));
 	sUiData.TextureAtlas.Create(textureAtlasDesc);
 
 	sUiData.TextureAtlasView.Create(sUiData.TextureAtlas, &_descriptorHeap);
@@ -118,16 +118,16 @@ void UiRenderer::Initialize(RTexture& textureAtlas) noexcept
 	_uiPipelineState.Finalize();
 }
 
-void UiRenderer::Begin(ColorBuffer& engineRenderTarget) noexcept
+void UiRenderer::Begin() noexcept
 {
-	sUiData.EngineRenderTarget = &engineRenderTarget;
+	sUiData.EngineRenderTarget = &gSceneColorBuffer;
 
 	sUiData.IndexBufferPtr = sUiData.IndexBufferBase;
 	sUiData.VertexBufferPtr = sUiData.VertexBufferBase;
 
 	u32 range[] = { 1 };
 	auto destHandle = _descriptorHeap.GetDescriptorAtOffset(1).GetCpuHandle();
-	auto srcHandle = engineRenderTarget.GetTextureView().GetSRV();
+	auto srcHandle = gSceneColorBuffer.GetTextureView().GetSRV();
 	gDevice->CopyDescriptors(1, &destHandle, range, 1, &srcHandle, range, D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
 }
 
@@ -212,5 +212,5 @@ void UiRenderer::Flush(GraphicsContext& gfxContext) noexcept
 void UiRenderer::FlushAndReset(GraphicsContext& gfxContext) noexcept
 {
 	Flush(gfxContext);
-	Begin(*sUiData.EngineRenderTarget);
+	Begin();
 }

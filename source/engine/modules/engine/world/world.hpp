@@ -3,10 +3,12 @@
 #include <core/object/object.hpp>
 #include <core/lib/array.hpp>
 #include <core/threading/condition_variable.hpp>
+#include <core/threading/thread_pool.hpp>
 
 #include <engine/world/actor.hpp>
 #include <engine/world/actors/camera_actor.hpp>
 #include <renderer_core/renderer.hpp>
+
 
 // Internal use only.
 struct WorldLevelData
@@ -22,7 +24,7 @@ class RAY_RENDERERCORE_API UploadBuffer;
 class World final
 {
 	/* Delta is calculated by Engine and passed in Tick. */
-	f64 _delta;
+	f64 _delta = 0.f;
 	
 	/* Not an array since we only support one level at a time. */
 	WorldLevelData* _levelData = nullptr;
@@ -31,6 +33,8 @@ class World final
 
 	IRenderer* _renderer = nullptr;
 
+	ThreadPool& _pool;
+	
 	/* Functionality to support level reloads on beginning of next frame. */
 	// bool _shouldLoadLevel = false;
 	// UninitializedResourceRef _levelRef;
@@ -51,6 +55,7 @@ class World final
 
 	void LoadLevel(pcstr name);
 public:
+	World();
 	~World();
 
 	void Initialize(IPlatformWindow* window);

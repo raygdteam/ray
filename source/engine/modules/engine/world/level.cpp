@@ -36,6 +36,7 @@ void Level::SpawnActor(Actor* actor)
 		//textureManager.PrepareTextures(ctx, &texture, 1, true);
 		sqProxy->RenderData = new StaticQuadRenderData;
 		sqProxy->RenderData->TextureId = texture->GetId();
+		sqProxy->Transform = actor->GetTransform();
 
 		proxy = sqProxy;
 	}
@@ -45,7 +46,7 @@ void Level::SpawnActor(Actor* actor)
 		proxy->Transform = actor->GetTransform();
 	}
 	
-	_atd.PushBack(ActorData { actor, actor->ATD, proxy});
+	_atd.PushBack(ActorData{ actor, actor->ATD, proxy, new ActorTickJob(actor, 0.0f) });
 	actor->BeginPlay(); // ??
 }
 

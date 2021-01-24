@@ -49,7 +49,7 @@ terms of the MIT license. A copy of the license can be found in the file
     #if (_MSC_VER >= 1900) && !defined(__EDG__)
       #define mi_decl_restrict          __declspec(allocator) __declspec(restrict)
     #else
-      #define mi_decl_restrict          __declspec(restrict)
+      #define mi_decl_restrict          __declspec(allocator) __declspec(restrict)
     #endif
     #define mi_attr_malloc
   #endif

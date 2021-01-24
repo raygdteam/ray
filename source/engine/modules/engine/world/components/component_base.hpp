@@ -1,10 +1,15 @@
 #pragma once
 #include <core/object/object.hpp>
 
+class Actor;
+
 class IComponent : public RayObject
 {
-	RAYOBJECT_BODY(IComponent, RayObject);
+	friend class Actor;
 	
+	RAYOBJECT_BODY(IComponent, RayObject);
+protected:
+	Actor* _parent = nullptr;
 public:
 	virtual ~IComponent() = default;
 	

@@ -11,7 +11,7 @@ struct ThreadPoolInternalData
 	Array<_TP_WORK*> Work;
 };
 
-void __stdcall _WorkCallback(PTP_CALLBACK_INSTANCE, PVOID context, PTP_WORK)
+void __stdcall _WorkCallback(PTP_CALLBACK_INSTANCE, PVOID context, PTP_WORK work)
 {
 	ThreadPoolJob* job = static_cast<ThreadPoolJob*>(context);
 	job->Run();
@@ -38,16 +38,16 @@ ThreadPool::ThreadPool()
 	 * min = 2
 	 * max = (cpus / 2) + 2 (???)
 	 */
-	//SetThreadpoolThreadMinimum(_data->Pool, 2);
-	//SetThreadpoolThreadMaximum(_data->Pool, 6);
+	SetThreadpoolThreadMinimum(_data->Pool, 2);
+	SetThreadpoolThreadMaximum(_data->Pool, 4);
 }
 
 ThreadPool& ThreadPool::Begin()
 {
-	return *gThreadPoolManager->Allocate();
+	return gThreadPoolManager->Allocate();
 }
 
-void ThreadPool::SubmitWork(ThreadPoolJob* jobs, u64 count)
+void ThreadPool::SubmitWork(ThreadPoolJob** jobs, u64 count)
 {
 	for (u64 i = 0; i < count; ++i)
 	{
@@ -59,13 +59,13 @@ void ThreadPool::SubmitWork(Array<ThreadPoolJob*>& jobs)
 {
 	for (ThreadPoolJob* job : jobs)
 	{
-		SubmitWork(*job);
+		SubmitWork(job);
 	}
 }
 
-void ThreadPool::SubmitWork(ThreadPoolJob& job)
+void ThreadPool::SubmitWork(ThreadPoolJob* job)
 {
-	PTP_WORK work = CreateThreadpoolWork(_WorkCallback, &job, &_data->Environment);
+	PTP_WORK work = CreateThreadpoolWork(_WorkCallback, job, &_data->Environment);
 	check(work != nullptr);
 	
 	_data->Work.PushBack(work);
@@ -77,18 +77,28 @@ void ThreadPool::Wait()
 	for (_TP_WORK* work : _data->Work)
 	{
 		WaitForThreadpoolWorkCallbacks(work, false);
+		CloseThreadpoolWork(work);
+	}
+}
+
+void ThreadPool::ResubmitWork()
+{
+	for (_TP_WORK* work : _data->Work)
+	{
+		SubmitThreadpoolWork(work);
 	}
 }
 
 void ThreadPool::Reset()
 {
+	_data->Work.clear();
 }
 
 ThreadPoolManager::ThreadPoolManager()
 {
 }
 
-ThreadPool* ThreadPoolManager::Allocate()
+ThreadPool& ThreadPoolManager::Allocate()
 {
 	_mutex.Enter();
 
@@ -109,16 +119,17 @@ ThreadPool* ThreadPoolManager::Allocate()
 	check(ret != nullptr);
 
 	_mutex.Leave();
-	return ret;
-
+	return *ret;
 }
 
-void ThreadPoolManager::FreeContext(ThreadPool* pool)
+void ThreadPoolManager::FreeContext(ThreadPool& pool)
 {
-	check(pool != nullptr);
+	//check(pool != nullptr);
 
+	pool.Reset();
+	
 	_mutex.Enter();
-	_avaliableTps.Push(pool);
+	_avaliableTps.Push(&pool);
 	_mutex.Leave();
 }
 

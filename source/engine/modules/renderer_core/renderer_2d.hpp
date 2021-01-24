@@ -24,12 +24,8 @@ public:
 	static void Shutdown();
 
 public:
-	static void Begin(CameraActor& camera);
 	static void Begin(const FMatrix4x4& viewProjection);
 	static void End(GraphicsContext& gfxContext);
-
-public:
-	static void SetCamera(CameraActor& camera);
 
 public:
 	//static void DrawQuad(const FVector<3>& pos, FVector<2>* textureCoords, GraphicsContext& gfxContext);

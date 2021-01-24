@@ -10,7 +10,7 @@ public:
 	ThreadPoolJob() = default;
 	virtual ~ThreadPoolJob() = default;
 	
-	virtual void Run();
+	virtual void Run() = 0;
 };
 
 class RAY_CORE_API ThreadPool
@@ -21,9 +21,9 @@ public:
 
 	static ThreadPool& Begin();
 
-	void SubmitWork(ThreadPoolJob* jobs, u64 count);
+	void SubmitWork(ThreadPoolJob** jobs, u64 count);
 	void SubmitWork(Array<ThreadPoolJob*>& jobs);
-	void SubmitWork(ThreadPoolJob& job);
+	void SubmitWork(ThreadPoolJob* job);
 
 	template<typename Type = ThreadPoolJob&>
 	void SubmitWork(Type jobs...)
@@ -32,7 +32,8 @@ public:
 	}
 
 	void Wait();
-
+	void ResubmitWork();
+	
 	void Reset();
 };
 
@@ -44,8 +45,8 @@ class RAY_CORE_API ThreadPoolManager
 public:
 	ThreadPoolManager();
 	
-	ThreadPool* Allocate();
-	void FreeContext(ThreadPool* pool);
+	ThreadPool& Allocate();
+	void FreeContext(ThreadPool& pool);
 };
 
 extern RAY_CORE_API ThreadPoolManager* gThreadPoolManager;

@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="caches">
+      <UniqueIdentifier>{45824016-fd01-488a-a300-78cbac951420}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="caches\component_cache.cpp">
+      <Filter>caches</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

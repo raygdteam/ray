@@ -11,6 +11,8 @@
 #include "actors/static_quad_actor.hpp"
 
 #include <renderer_core/resources/upload_buffer.hpp>
+#include "core/threading/thread_pool.hpp"
+#include "engine/ui2/ui2.hpp"
 
 //UploadBuffer* gUploadBuffer;
 
@@ -18,16 +20,39 @@ void World::TickActors(ActorTickStage stage, f64 delta) const
 {
 	Level* level = _levelData->Level;
 	
-	for (ActorData& tickData : level->_atd)
+	static bool bOnce = false;
+	if (!bOnce)
+	{
+		for (ActorData& tickData : level->_atd)
+		{
+			if (tickData.Tick.Stage & stage)
+			{
+				((Level::ActorTickJob*)tickData.TickJob)->SetDelta(delta);
+				_pool.SubmitWork(tickData.TickJob);
+			}
+		}
+		bOnce = !bOnce;
+	}
+	else
+	{
+		_pool.ResubmitWork();
+	}
+	
+
+	/*for (ActorData& tickData : level->_atd)
 	{
 		if (tickData.Tick.Stage & stage)
+		{
 			tickData.Actor->Tick(delta);
-	}
+		}
+	}*/
 }
 
 void World::PhysicsUpdate()
 {
 }
+
+extern UiRootObject* gRootObject;
 
 void World::WorldTickThread()
 {
@@ -36,14 +61,17 @@ void World::WorldTickThread()
 	{
 		ReadyToTick.Wait(); // Wait for IEngine command to begin ticking
 		RenderingFinished.Wait(); // Wait for renderer thread to finish
-		//Tick(1.f / 75.f);
-
-		TickActors(eEarlyTick, _delta);
-		TickActors(ePrePhysicsUpdate, _delta);
-		PhysicsUpdate();
-		TickActors(ePostPhysicsUpdate, _delta);
-		TickActors(ePostPhysicsUpdate, _delta);
+		/* swap buffers */
 		
+		//Tick(1.f / 75.f);
+		//
+		//gRootObject->Tick();
+		
+		//TickActors(eEarlyTick, _delta);
+		TickActors(ePrePhysicsUpdate, _delta);
+		//PhysicsUpdate();
+		//TickActors(ePostPhysicsUpdate, _delta);
+		//TickActors(ePostPhysicsUpdate, _delta);
 		WorldTickFinished.Signal();  // Signal the level is ready to render
 	}
 }
@@ -69,20 +97,37 @@ void World::LoadLevel(pcstr name)
 	
 	(void)name;
 
-	decltype(StaticQuadActor())* actor1 = new StaticQuadActor();
-	decltype(StaticQuadActor())* actor2 = new StaticQuadActor();
-	decltype(StaticQuadActor())* actor3 = new StaticQuadActor();
-	actor2->Material.TextureName = "/engine/hero.png";
-	actor3->Material.TextureName = "/engine/tex_.png";
+	//decltype(StaticQuadActor())* actor1 = new StaticQuadActor();
+	//decltype(StaticQuadActor())* actor2 = new StaticQuadActor();
+	//decltype(StaticQuadActor())* actor3 = new StaticQuadActor();
+	//actor2->Material.TextureName = "/engine/hero.png";
+	//actor3->Material.TextureName = "/engine/tex_.png";
 
-	actor1->GetTransform()->Position = FVector2 { 100.f, 100.f };
-	actor2->GetTransform()->Scale = FVector2 { 5.f, 5.f };
-	actor2->GetTransform()->Position = FVector2 { 100.f, 100.f }.Multiply(3.f);
-	actor2->GetTransform()->Position = FVector2{ 100.f, 100.f }.Multiply(-3.f);
+	//actor1->GetTransform()->Position = FVector2 { 100.f, 100.f };
+	//actor2->GetTransform()->Scale = FVector2 { 5.f, 5.f };
+	//actor2->GetTransform()->Position = FVector2 { 100.f, 100.f }.Multiply(3.f);
+	//actor2->GetTransform()->Position = FVector2{ 100.f, 100.f }.Multiply(-3.f);
 	
 	//_levelData->Level->SpawnActor(actor1);
-	_levelData->Level->SpawnActor(actor2);
+	//_levelData->Level->SpawnActor(actor2);
 	//_levelData->Level->SpawnActor(actor3);
+
+	for (u32 i = 0; i < 500; ++i)
+	{
+		for (u32 j = 0; j < 500; ++j)
+		{
+			StaticQuadActor* actor = new StaticQuadActor();
+			Transform* transform = actor->GetTransform();
+
+			transform->Position = FVector2 { -1500.f + i * 40, 900.f - j * 40 };
+			_levelData->Level->SpawnActor(actor);
+		}
+	}
+}
+
+World::World() : _pool(gThreadPoolManager->Allocate())
+{
+	
 }
 
 World::~World()
@@ -114,6 +159,10 @@ void World::Initialize(IPlatformWindow* window)
 	
 	IThread::Start([this] { this->WorldTickThread(); })->Start();
 	IThread::Start([this] { this->RenderingThread(); })->Start();
+
+	//_pool = gThreadPoolManager->Allocate();
+
+	gRootObject->Initialize(window);
 
 	RenderingFinished.Signal();
 	TickFinished.Signal();

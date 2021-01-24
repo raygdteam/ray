@@ -32,6 +32,7 @@ class RAY_ENGINE_API Actor : public RayObject
 {
 	friend class Level;
 	friend class World;
+	friend class IComponent;
 	
 	RAYOBJECT_BODY(Actor, RayObject);
 
@@ -68,6 +69,13 @@ protected:
 
 		return nullptr;
 	}
+
+	void AddComponent(IComponent* component)
+	{
+		_components.PushBack(component);
+		component->_parent = this;
+	}
+	
 public:
 	Actor();
 	virtual ~Actor();

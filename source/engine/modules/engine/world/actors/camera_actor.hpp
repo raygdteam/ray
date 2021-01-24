@@ -2,22 +2,20 @@
 #include <engine/world/actor.hpp>
 #include <core/math/vector.hpp>
 #include <core/math/matrix.hpp>
+#include <engine/world/components/camera_component.hpp>
 
 class CameraActor : public Actor
 {
 	friend class RayEngine;
 	RAYOBJECT_BODY(CameraActor, Actor);
 
-	FMatrix4x4 _projection;
-	FMatrix4x4 _view;
-	FMatrix4x4 _viewProjection;
+	CameraComponent* _cameraComponent = nullptr;
 
-	void UpdateMVP();
 protected:
 	void MoveTo(FVector2 pos) override
 	{
 		Super::MoveTo(pos);
-		UpdateMVP();
+		_cameraComponent->UpdateMVP();
 	}
 public:
 	CameraActor();
@@ -27,7 +25,8 @@ public:
 	void Tick(f64) override;
 	void OnDestroy() override {}
 
-	const FMatrix4x4& GetProjection() { return _projection; }
-	const FMatrix4x4& GetView() { return _view; }
-	const FMatrix4x4& GetViewProjection() { return _viewProjection; }
+	CameraComponent* GetCameraComponent()
+	{
+		return _cameraComponent;
+	}
 };

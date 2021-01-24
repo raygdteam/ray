@@ -155,12 +155,6 @@ void Renderer2D::Initialize(RTexture& whiteTexture)
 	_2DPipeline.Finalize();
 }
 
-void Renderer2D::Begin(CameraActor& camera)
-{
-	sData.ViewProjectionMatrix = camera.GetViewProjection();
-	Begin();
-}
-
 void Renderer2D::Begin(const FMatrix4x4& viewProjection)
 {
 	sData.ViewProjectionMatrix = viewProjection;
@@ -176,11 +170,6 @@ void Renderer2D::Begin()
 void Renderer2D::End(GraphicsContext& gfxContext)
 {
 	Flush(gfxContext);
-}
-
-void Renderer2D::SetCamera(CameraActor& camera)
-{
-	sData.ViewProjectionMatrix = camera.GetViewProjection();
 }
 
 /*void Renderer2D::DrawQuad(const FVector3& pos, const FVector2& size, FVector2* textureCoords, GraphicsContext& gfxContext)

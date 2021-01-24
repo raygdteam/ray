@@ -6,7 +6,7 @@
 #ifdef __cplusplus
 #if defined(_RELEASE) && !defined(RAY_BUILD_CORE)
 #else
-
+#include <new>
 #include "mimalloc/mimalloc.h"
 
 inline void operator delete(void* p) noexcept { mi_free(p); };

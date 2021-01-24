@@ -3,6 +3,8 @@
 StaticQuadActor::StaticQuadActor()
 {
 	Material.TextureName = "/engine/tex.png";
+	ATD.Stage = ePrePhysicsUpdate;
+	ATD.Active = true;
 }
 
 void StaticQuadActor::Awake()
@@ -14,8 +16,15 @@ void StaticQuadActor::BeginPlay()
 {
 }
 
+static u64 gAAAAAA = 0x4;
+
 void StaticQuadActor::Tick(f64 delta)
 {
+	for (u64 i = 0; i < 100; ++i)
+	{
+		(void)i;
+		gAAAAAA &= 0x88;
+	}
 }
 
 void StaticQuadActor::OnDestroy()
