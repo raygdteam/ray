@@ -14,16 +14,16 @@ void Level::SpawnActor(Actor* actor)
 {
 	actor->Awake(); // ??
 	_actors.PushBack(actor);
-	
+
 	// TODO: memory leak and error
 	PrimitiveSceneProxy* proxy = nullptr;
-	
+
 	StaticQuadActor* sqActor = dynamic_cast<StaticQuadActor*>(actor);
 
 	if (sqActor != nullptr)
 	{
 		StaticQuadSceneProxy* sqProxy = new StaticQuadSceneProxy;
-		
+
 		//CommandContext& ctx = CommandContext::Begin();
 		//(void)ctx;
 		RTexture* texture = dynamic_cast<RTexture*>(RayState()->ResourceManager->LoadResourceSync(sqActor->Material.TextureName, eTexture));
@@ -45,8 +45,16 @@ void Level::SpawnActor(Actor* actor)
 		proxy = new PrimitiveSceneProxy;
 		proxy->Transform = actor->GetTransform();
 	}
+
+	if (_jobCurrentSize >= ChunkSize)
+	{
+		_jobCurrentNum += 1;
+		_jobCurrentSize = 0;
+		_jobs.PushBack(new ActorTickJob());
+	}
+	_jobs[_jobCurrentNum]->Actors.PushBack(actor);
 	
-	_atd.PushBack(ActorData{ actor, actor->ATD, proxy, new ActorTickJob(actor, 0.0f) });
+	_atd.PushBack(ActorData { actor, actor->ATD, proxy });
 	actor->BeginPlay(); // ??
 }
 

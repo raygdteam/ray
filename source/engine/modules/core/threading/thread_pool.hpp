@@ -25,12 +25,6 @@ public:
 	void SubmitWork(Array<ThreadPoolJob*>& jobs);
 	void SubmitWork(ThreadPoolJob* job);
 
-	template<typename Type = ThreadPoolJob&>
-	void SubmitWork(Type jobs...)
-	{
-		SubmitWork(&jobs[0], sizeof...(jobs));
-	}
-
 	void Wait();
 	void ResubmitWork();
 	

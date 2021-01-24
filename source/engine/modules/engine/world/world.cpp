@@ -16,21 +16,16 @@
 
 //UploadBuffer* gUploadBuffer;
 
-void World::TickActors(ActorTickStage stage, f64 delta) const
+void World::TickActors(f64 delta) const
 {
 	Level* level = _levelData->Level;
 	
 	static bool bOnce = false;
 	if (!bOnce)
 	{
-		for (ActorData& tickData : level->_atd)
-		{
-			if (tickData.Tick.Stage & stage)
-			{
-				((Level::ActorTickJob*)tickData.TickJob)->SetDelta(delta);
-				_pool.SubmitWork(tickData.TickJob);
-			}
-		}
+		for (Level::ActorTickJob* job : level->_jobs)
+			_pool.SubmitWork(job);
+		
 		bOnce = !bOnce;
 	}
 	else
@@ -41,10 +36,7 @@ void World::TickActors(ActorTickStage stage, f64 delta) const
 
 	/*for (ActorData& tickData : level->_atd)
 	{
-		if (tickData.Tick.Stage & stage)
-		{
-			tickData.Actor->Tick(delta);
-		}
+		tickData.Actor->Tick(delta);
 	}*/
 }
 
@@ -67,11 +59,8 @@ void World::WorldTickThread()
 		//
 		//gRootObject->Tick();
 		
-		//TickActors(eEarlyTick, _delta);
-		TickActors(ePrePhysicsUpdate, _delta);
+		TickActors(_delta);
 		//PhysicsUpdate();
-		//TickActors(ePostPhysicsUpdate, _delta);
-		//TickActors(ePostPhysicsUpdate, _delta);
 		WorldTickFinished.Signal();  // Signal the level is ready to render
 	}
 }

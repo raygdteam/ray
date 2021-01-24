@@ -39,8 +39,7 @@ class World final
 	// bool _shouldLoadLevel = false;
 	// UninitializedResourceRef _levelRef;
 
-	/* Run tick at specified stage. */
-	void TickActors(ActorTickStage stage, f64 delta) const;
+	void TickActors(f64 delta) const;
 
 	/* Run physics update. */
 	void PhysicsUpdate();

@@ -10,8 +10,9 @@ struct ActorData
 	Actor* Actor;
 	ActorTick Tick;
 	PrimitiveSceneProxy* SceneProxy;
-	ThreadPoolJob* TickJob;
 };
+
+const u32 ChunkSize = 2048;
 
 /**
  * Represents a collection of Actors and all necessary data for level to render.
@@ -22,9 +23,16 @@ class RAY_ENGINE_API Level final : public RayObject
 	
 	friend class World;
 	friend class Actor;
-
+	
+public:
+	class ActorTickJob;
+private:
+	
 	Array<Actor*> _actors;
 	Array<ActorData> _atd;
+	Array<ActorTickJob*> _jobs;
+	u32 _jobCurrentNum = -1;
+	u32 _jobCurrentSize = ChunkSize;
 
 	World* _owningWorld = nullptr;
 public:
@@ -44,26 +52,20 @@ public:
 
 	class ActorTickJob : public ThreadPoolJob
 	{
-		Array<Actor*> _actors;
-		f64 _dt;
-
 	public:
-		ActorTickJob(Array<Actor*>& actor, f64 dt)
-		{
-			_actors = actor;
-			_dt = dt;
-		}
+		Array<Actor*> Actors;
+		f64 Delta;
 
-		void SetDelta(f64 dt)
+		ActorTickJob()
 		{
-			_dt = dt;
+			
 		}
 
 		void Run() override
 		{
-			for (Actor* actor : _actors)
+			for (Actor* actor : Actors)
 			{
-				actor->Tick(_dt);
+				actor->Tick(Delta);
 			}
 		}
 	};

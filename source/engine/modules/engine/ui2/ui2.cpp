@@ -41,8 +41,8 @@ void UiRootObject::Tick()
 
 void UiRootObject::RenderAll()
 {
-	GraphicsContext& ctx = GraphicsContext::Begin();
+	/*GraphicsContext& ctx = GraphicsContext::Begin();
 	UiRenderer::Begin();
 	UiRenderer::End(ctx);
-	ctx.Finish(true);
+	ctx.Finish(true);*/
 }
