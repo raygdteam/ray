@@ -101,6 +101,7 @@ void IRenderer::Initialize(IPlatformWindow* window)
 	gTextureAllocator.Initialize(MB(10));
 	gBufferAllocator.Initialize(MB(10));
 	gDepthBuffer.Create(gDisplayPlane->GetDesc().Width, gDisplayPlane->GetDesc().Height, DXGI_FORMAT_D32_FLOAT);
+	gSceneColorBuffer.Create(window->GetWidth(), window->GetHeight(), 1, DXGI_FORMAT_R8G8B8A8_UNORM, D3D12_RESOURCE_FLAG_ALLOW_RENDER_TARGET);
 	gRingBuffer.Initialize(MB(10));
 }
 
@@ -108,8 +109,10 @@ void IRenderer::BeginScene(GraphicsContext& gfxContext)
 {
 	gfxContext.TransitionResource(gDisplayPlane[gCurrentBuffer], D3D12_RESOURCE_STATE_RENDER_TARGET, true);
 	gfxContext.TransitionResource(gDepthBuffer, D3D12_RESOURCE_STATE_DEPTH_WRITE, true);
-	gfxContext.SetRenderTarget(gDisplayPlane[gCurrentBuffer].GetRTV(), gDepthBuffer.GetDSV());
+	gfxContext.TransitionResource(gSceneColorBuffer, D3D12_RESOURCE_STATE_RENDER_TARGET, true);
+
 	gfxContext.ClearColor(gDisplayPlane[gCurrentBuffer]);
+	gfxContext.ClearColor(gSceneColorBuffer);
 	gfxContext.ClearDepthAndStencil(gDepthBuffer);
 }
 

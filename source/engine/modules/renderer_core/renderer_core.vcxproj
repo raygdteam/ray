@@ -173,6 +173,7 @@
     <ClInclude Include="resources\gpu_texture.hpp" />
     <ClInclude Include="root_signature.hpp" />
     <ClInclude Include="sampler_manager.hpp" />
+    <ClInclude Include="ui_renderer.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="command_allocator.cpp" />
@@ -195,6 +196,7 @@
     <ClCompile Include="resources\gpu_texture.cpp" />
     <ClCompile Include="root_signature.cpp" />
     <ClCompile Include="sampler_manager.cpp" />
+    <ClCompile Include="ui_renderer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\thirdparty\eastl\eastl.vcxproj">

@@ -273,7 +273,7 @@ void Renderer2D::Flush(GraphicsContext& gfxContext)
 	gfxContext.SetPipelineState(_2DPipeline);
 	gfxContext.SetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
-	gfxContext.SetRenderTarget(gDisplayPlane[gCurrentBuffer].GetRTV(), gDepthBuffer.GetDSV());
+	gfxContext.SetRenderTarget(gSceneColorBuffer.GetRTV(), gDepthBuffer.GetDSV());
 
 	ConstantBuffer cb;
 	cb.ViewProjMatrix = sData.ViewProjectionMatrix.Transpose();

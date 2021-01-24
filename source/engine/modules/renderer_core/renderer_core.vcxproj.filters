@@ -45,6 +45,7 @@
     <ClInclude Include="resources\gpu_pixel_buffer.hpp">
       <Filter>resources</Filter>
     </ClInclude>
+    <ClInclude Include="ui_renderer.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="renderer.cpp" />
@@ -85,6 +86,7 @@
     <ClCompile Include="resources\gpu_pixel_buffer.cpp">
       <Filter>resources</Filter>
     </ClCompile>
+    <ClCompile Include="ui_renderer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="resources">

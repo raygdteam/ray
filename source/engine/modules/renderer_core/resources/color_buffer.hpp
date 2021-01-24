@@ -26,6 +26,11 @@ public:
 	D3D12_CPU_DESCRIPTOR_HANDLE GetRTV() const noexcept { return _view.GetRTV(); }
 	D3D12_CPU_DESCRIPTOR_HANDLE GetUAV() const noexcept { return _view.GetUAV(); }
 
+	TextureView& GetTextureView() noexcept
+	{
+		return _view;
+	}
+
 	void GetClearColor(float* r, float* g, float* b, float* a) const noexcept
 	{
 		*r = _clearColor[0];
