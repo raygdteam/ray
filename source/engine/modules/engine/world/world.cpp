@@ -19,7 +19,8 @@
 void World::TickActors(f64 delta) const
 {
 	Level* level = _levelData->Level;
-	
+	//_pool.Wait();
+
 	static bool bOnce = false;
 	if (!bOnce)
 	{
@@ -31,6 +32,7 @@ void World::TickActors(f64 delta) const
 	else
 	{
 		_pool.ResubmitWork();
+		//_pool.Wait();
 	}
 	
 
