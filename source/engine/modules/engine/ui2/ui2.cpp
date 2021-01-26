@@ -21,28 +21,61 @@ void UiRootObject::Initialize(IPlatformWindow* window)
 	ImGuiIO& io = ImGui::GetIO();
 	io.Fonts->GetTexDataAsRGBA32(&pixels, &width, &height);
 	UiRenderer::Initialize(u32(width), u32(height), pixels);
+
+	io.BackendRendererName = "imgui_impl_vulkan";
+	io.BackendFlags |= ImGuiBackendFlags_RendererHasVtxOffset;  // We can honor the ImDrawCmd::VtxOffset field, allowing for large meshes.
+
 }
 
 void UiRootObject::Tick()
 {
 	ImGui_ImplWin32_NewFrame();
 	ImGui::NewFrame();
-
-	for (UiWindow* window : _windows)
+	
+	ImGui::Begin("aaa");
+	ImGui::Text("aaaaa");
+	ImGui::End();
+	
+	/*for (UiWindow* window : _windows)
 	{
 		for (UiObject* object : window->_objects)
 		{
 			object->Tick();
 		}
-	}
+	}*/
 	
 	ImGui::EndFrame();
 }
 
 void UiRootObject::RenderAll()
 {
-	/*GraphicsContext& ctx = GraphicsContext::Begin();
+	ImGui::Render();
+	ImDrawData* data = ImGui::GetDrawData();
+	if (data->TotalVtxCount < 0) return;
+	
+	GraphicsContext& ctx = GraphicsContext::Begin();
 	UiRenderer::Begin();
+	
+	ImDrawList* cmd = nullptr;
+
+	u32 vtxOffset = 0;
+	u32 idxOffset = 0;
+
+	for (int i = 0; i < data->CmdListsCount; ++i)
+	{
+		cmd = data->CmdLists[i];
+
+		for (int n = 0; n < cmd->CmdBuffer.Size; n++)
+		{
+			ImDrawCmd* draw = &cmd->CmdBuffer[n];
+			
+			static_assert(sizeof(ImDrawVert) == sizeof(UiVertex), "size mismatch");
+			
+			UiRenderer::Draw((UiVertex*)cmd->VtxBuffer.Data + vtxOffset, draw->ElemCount / 3, cmd->IdxBuffer.Data + idxOffset, draw->ElemCount, ctx);
+		}
+		vtxOffset += cmd->VtxBuffer.Size;
+		idxOffset += cmd->IdxBuffer.Size;
+	}
+	
 	UiRenderer::End(ctx);
-	ctx.Finish(true);*/
 }

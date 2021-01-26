@@ -26,13 +26,14 @@ void World::TickActors(f64 delta) const
 	{
 		for (Level::ActorTickJob* job : level->_jobs)
 			_pool.SubmitWork(job);
-		
+
+		_pool.Wait();
 		bOnce = !bOnce;
 	}
 	else
 	{
 		_pool.ResubmitWork();
-		//_pool.Wait();
+		_pool.Wait();
 	}
 	
 
@@ -59,7 +60,7 @@ void World::WorldTickThread()
 		
 		//Tick(1.f / 75.f);
 		//
-		//gRootObject->Tick();
+		gRootObject->Tick();
 		
 		TickActors(_delta);
 		//PhysicsUpdate();

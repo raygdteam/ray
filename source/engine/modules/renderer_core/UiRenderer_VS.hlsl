@@ -6,6 +6,11 @@ struct VertexInput
 	uint textureIndex : TEXINDEX;
 };
 
+cbuffer ConstantBuffer : register(b0)
+{
+	float4x4 ViewProjMatrix;
+}
+
 struct VertexOutput
 {
 	float4 pos : SV_POSITION;
@@ -17,7 +22,7 @@ struct VertexOutput
 VertexOutput main(VertexInput vertex)
 {
 	VertexOutput output;
-	output.pos = float4(vertex.pos, 1.f, 1.f);
+	output.pos = mul(float4(vertex.pos, 1.f, 1.f), ViewProjMatrix);
 	output.color = vertex.color;
 	output.texcoord0 = vertex.texcoord0;
 	output.textureIndex = vertex.textureIndex;

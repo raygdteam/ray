@@ -1996,7 +1996,7 @@ struct ImDrawCmd
 // To allow large meshes with 16-bit indices: set 'io.BackendFlags |= ImGuiBackendFlags_RendererHasVtxOffset' and handle ImDrawCmd::VtxOffset in the renderer back-end (recommended).
 // To use 32-bit indices: override with '#define ImDrawIdx unsigned int' in imconfig.h.
 #ifndef ImDrawIdx
-typedef unsigned short ImDrawIdx;
+typedef unsigned int ImDrawIdx;
 #endif
 
 // Vertex layout
