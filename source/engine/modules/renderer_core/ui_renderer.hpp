@@ -33,7 +33,7 @@ public:
 
 	static void Begin() noexcept;
 	static void Draw(UiVertex* vertices, size_t verticesCount, u32* indices, size_t indicesCount, GraphicsContext& gfxContext) noexcept;
-	static void DrawEngineRenderTarget(const FVector3& pos, const FVector2& size, GraphicsContext& gfxContext) noexcept;
+	static void DrawSceneRenderTarget(const FVector3& pos, const FVector2& size, GraphicsContext& gfxContext) noexcept;
 	static void End(GraphicsContext& gfxContext) noexcept;
 
 private:
