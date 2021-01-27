@@ -64,10 +64,10 @@ DescriptorHeap& DescriptorHeapsManager::GetCurrentHeap(D3D12_DESCRIPTOR_HEAP_TYP
 	u32 currentHeap = _currentHeaps[type];
 
 	if (heaps.empty())
-		return CreateHeap(type, type == D3D12_DESCRIPTOR_HEAP_TYPE_RTV || type == D3D12_DESCRIPTOR_HEAP_TYPE_DSV ? D3D12_DESCRIPTOR_HEAP_FLAG_NONE : D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE, 64); //heaps.At(currentHeap).GetMaxDescriptorsCount());
+		return CreateHeap(type, D3D12_DESCRIPTOR_HEAP_FLAG_NONE, 64); //heaps.At(currentHeap).GetMaxDescriptorsCount());
 
 	if (!bAllowCreateNewHeap || heaps.At(currentHeap).HasAvailableSpace(1))
 		return heaps.At(currentHeap);
 
-	return CreateHeap(type, D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE, heaps.At(currentHeap).GetMaxDescriptorsCount());
+	return CreateHeap(type, D3D12_DESCRIPTOR_HEAP_FLAG_NONE, heaps.At(currentHeap).GetMaxDescriptorsCount());
 }

@@ -39,7 +39,7 @@ ThreadPool::ThreadPool()
 	 * max = (cpus / 2) + 2 (???)
 	 */
 	SetThreadpoolThreadMinimum(_data->Pool, 2);
-	SetThreadpoolThreadMaximum(_data->Pool, 4);
+	SetThreadpoolThreadMaximum(_data->Pool, 10);
 }
 
 ThreadPool& ThreadPool::Begin()
@@ -77,7 +77,6 @@ void ThreadPool::Wait()
 	for (_TP_WORK* work : _data->Work)
 	{
 		WaitForThreadpoolWorkCallbacks(work, false);
-		CloseThreadpoolWork(work);
 	}
 }
 
