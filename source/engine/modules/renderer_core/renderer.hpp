@@ -22,12 +22,17 @@ class ContextManager;
 class DescriptorHeapsManager;
 class DescriptorHeap;
 
+class GraphicsPipeline;
+class RootSignature;
+
 class GpuTextureAllocator;
 class GpuBufferAllocator;
 class GpuPixelBufferAllocator;
 
+class GpuBuffer;
 class RingBuffer;
 class UploadBuffer;
+class ColorBuffer;
 
 // ============================= GLOBAL VARIABLES ============================= //
 
@@ -66,22 +71,35 @@ struct RAY_RENDERERCORE_API RendererInfo
 
 struct RAY_RENDERERCORE_API IRenderer final
 {
-	IRenderer()
-		: _swapChain(nullptr)
-	{}
-
-	void Initialize(IPlatformWindow* window);
-	void Shutdown();
-
-	void BeginScene(GraphicsContext& gfxContext);
-	void EndScene(GraphicsContext& gfxContext);
-
-	static bool IsReady() { return _sbReady; }
-
-
 private:
 	static bool _sbReady;
 	IDXGISwapChain1* _swapChain;
+	GraphicsPipeline _presentPipeline;
+	RootSignature _presentSignature;
+	DescriptorHeap _srvDescriptorHeap;
+	GpuBuffer _vertexBuffer;
+	BufferView _vbView;
+	GpuBuffer _indexBuffer;
+	BufferView _ibView;
+
+private:
+	void PreparePresentObjects() noexcept;
+
+public:
+	IRenderer()
+		: _swapChain(nullptr)
+		, _srvDescriptorHeap(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV, D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE, 1)
+	{}
+
+	void Initialize(IPlatformWindow* window) noexcept;
+	void Shutdown() noexcept;
+
+	void Begin(ColorBuffer& renderTarget, GraphicsContext& gfxContext) noexcept;
+	void End(ColorBuffer& renderTarget, GraphicsContext& gfxContext) noexcept;
+
+	void Present(ColorBuffer& finalFrame, GraphicsContext& gfxContext) noexcept;
+
+	static bool IsReady() { return _sbReady; }
 
 };
 

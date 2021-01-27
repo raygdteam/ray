@@ -103,5 +103,7 @@
     <FxCompile Include="Renderer2D_PS.hlsl" />
     <FxCompile Include="UiRenderer_VS.hlsl" />
     <FxCompile Include="UiRenderer_PS.hlsl" />
+    <FxCompile Include="Present_VS.hlsl" />
+    <FxCompile Include="Present_PS.hlsl" />
   </ItemGroup>
 </Project>

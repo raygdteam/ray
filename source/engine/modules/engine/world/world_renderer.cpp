@@ -7,6 +7,7 @@
 #include <renderer_core/renderer.hpp>
 #include <renderer_core/renderer_2d.hpp>
 #include <renderer_core/command_context.hpp>
+#include <renderer_core/resources/buffer_manager.hpp>
 
 // #include <engine/ui/widget.hpp>
 #include <engine/ui2/ui2.hpp>
@@ -20,53 +21,62 @@ void World::Render()
 {
 	GraphicsContext& ctx = GraphicsContext::Begin();
 
-	_renderer->BeginScene(ctx);
-	Renderer2D::Begin(_primaryCameraActor->GetCameraComponent()->GetViewProjection());
+	//Renderer2D::Begin(_primaryCameraActor->GetCameraComponent()->GetViewProjection());
 
-	Level* level = _levelData->Level;
+	//Level* level = _levelData->Level;
 
-	//Renderer2D::Begin(*_primaryCameraActor);
+	////Renderer2D::Begin(*_primaryCameraActor);
 
-	//static bool BLACK_PAPER_MOON = false;
+	////static bool BLACK_PAPER_MOON = false;
 
-	for (size_t i = 0; i < level->_atd.Size(); ++i)
-	{
-		const ActorData& actorData = level->_atd[i];
-		
-		StaticQuadSceneProxy* proxy = static_cast<StaticQuadSceneProxy*>(actorData.SceneProxy);
+	//for (size_t i = 0; i < level->_atd.Size(); ++i)
+	//{
+	//	const ActorData& actorData = level->_atd[i];
+	//	
+	//	StaticQuadSceneProxy* proxy = static_cast<StaticQuadSceneProxy*>(actorData.SceneProxy);
 
-		if (proxy == nullptr) continue;
-		
-		FVector<3> position =
-		{
-			proxy->Transform->Position.x,
-			proxy->Transform->Position.y,
-			1.f
-		};
-		
-		FVector2 size = { 0.15f, 0.15f };
-		FVector4 color = { 1.f, 1.f, 0.f, 1.f };
-		Renderer2D::DrawQuad(position, size, color, ctx);
-		
-		/*currentFrame += (0.007f * _delta);
-		if (currentFrame >= 3)
-			currentFrame = 0;
+	//	if (proxy == nullptr) continue;
+	//	
+	//	FVector<3> position =
+	//	{
+	//		proxy->Transform->Position.x,
+	//		proxy->Transform->Position.y,
+	//		1.f
+	//	};
+	//	
+	//	FVector2 size = { 0.15f, 0.15f };
+	//	FVector4 color = { 1.f, 1.f, 0.f, 1.f };
+	//	Renderer2D::DrawQuad(position, size, color, ctx);
+	//	
+	//	/*currentFrame += (0.007f * _delta);
+	//	if (currentFrame >= 3)
+	//		currentFrame = 0;
 
-		FVector<2> textureCoords[4] =
-		{
-			{ static_cast<u32>(currentFrame) * .3333f, .25f },
-			{ static_cast<u32>(currentFrame) * .3333f, 0.f },
-			{ (1 + static_cast<u32>(currentFrame)) * .3333f, 0.f },
-			{ (1 + static_cast<u32>(currentFrame)) * .3333f, .25f }
-		};*/
+	//	FVector<2> textureCoords[4] =
+	//	{
+	//		{ static_cast<u32>(currentFrame) * .3333f, .25f },
+	//		{ static_cast<u32>(currentFrame) * .3333f, 0.f },
+	//		{ (1 + static_cast<u32>(currentFrame)) * .3333f, 0.f },
+	//		{ (1 + static_cast<u32>(currentFrame)) * .3333f, .25f }
+	//	};*/
 
-		//Renderer2D::DrawQuad(position, proxy->Transform->Scale, proxy->RenderData->TextureId, textureCoords, ctx);
-	}
+	//	//Renderer2D::DrawQuad(position, proxy->Transform->Scale, proxy->RenderData->TextureId, textureCoords, ctx);
+	//}
 
-	Renderer2D::End(ctx);
-	
+	//Renderer2D::End(ctx);
+	//
+
+	_renderer->Begin(gSceneColorBuffer, ctx);
+	// Renderer2D
+	_renderer->End(gSceneColorBuffer, ctx);
+
+	_renderer->Begin(gEditorColorBuffer, ctx);
+	// UiRenderer
 	gRootObject->RenderAll();
 
+	_renderer->End(gEditorColorBuffer, ctx);
+
+	_renderer->Present(gEditorColorBuffer, ctx);
 	//for (size_t i = 0; i < 500; ++i)
 	//{
 	//	for (size_t j = 0; j < 200; ++j)
@@ -81,7 +91,6 @@ void World::Render()
 	//}
 
 	//Renderer2D::End(ctx);
-	_renderer->EndScene(ctx);
 }
 
 void World::RendererInitialize(IPlatformWindow* window)

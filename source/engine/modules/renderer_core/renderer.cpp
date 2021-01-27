@@ -5,9 +5,13 @@
 #include "resources/gpu_texture.hpp"
 #include "resources/gpu_buffer.hpp"
 #include "resources/ring_buffer.hpp"
+#include "resources/color_buffer.hpp"
 #include "resources/upload_buffer.hpp"
 #include "d3dx12.h"
 #include <core/math/vector.hpp>
+#include "pipeline_state.hpp"
+#include "root_signature.hpp"
+#include "sampler_manager.hpp"
 
 //ñäåëàéòå óæå èíòåðôåéñ äëÿ ðàáîòû ñ ìîäóëÿìè
 #include <Windows.h>
@@ -28,7 +32,7 @@ RAY_RENDERERCORE_API UploadBuffer* gUploadBuffer;
 
 bool IRenderer::_sbReady = false;
 
-void IRenderer::Initialize(IPlatformWindow* window)
+void IRenderer::Initialize(IPlatformWindow* window) noexcept
 {
 	ray_assert(_swapChain == nullptr, "Renderer has been already initialized")
 
@@ -102,22 +106,134 @@ void IRenderer::Initialize(IPlatformWindow* window)
 	gBufferAllocator.Initialize(MB(10));
 	gDepthBuffer.Create(gDisplayPlane->GetDesc().Width, gDisplayPlane->GetDesc().Height, DXGI_FORMAT_D32_FLOAT);
 	gSceneColorBuffer.Create(window->GetWidth(), window->GetHeight(), 1, DXGI_FORMAT_R8G8B8A8_UNORM, D3D12_RESOURCE_FLAG_ALLOW_RENDER_TARGET);
+	gEditorColorBuffer.Create(window->GetWidth(), window->GetHeight(), 1, DXGI_FORMAT_R8G8B8A8_UNORM, D3D12_RESOURCE_FLAG_ALLOW_RENDER_TARGET);
 	gRingBuffer.Initialize(MB(10));
+
+	PreparePresentObjects();
 }
 
-void IRenderer::BeginScene(GraphicsContext& gfxContext)
+void IRenderer::PreparePresentObjects() noexcept
 {
-	gfxContext.TransitionResource(gDisplayPlane[gCurrentBuffer], D3D12_RESOURCE_STATE_RENDER_TARGET, true);
-	gfxContext.TransitionResource(gDepthBuffer, D3D12_RESOURCE_STATE_DEPTH_WRITE, true);
-	gfxContext.TransitionResource(gSceneColorBuffer, D3D12_RESOURCE_STATE_RENDER_TARGET, true);
+	_srvDescriptorHeap.Create();
 
-	gfxContext.ClearColor(gDisplayPlane[gCurrentBuffer]);
-	gfxContext.ClearColor(gSceneColorBuffer);
+	f32 vertices[] =
+	{
+		-1.f, -1.f, 1.f,
+		-1.f, 1.f, 1.f,
+		1.f, 1.f, 1.f,
+		1.f, -1.f, 1.f
+	};
+
+	auto vbDesc = GpuBufferDescription::Vertex(sizeof(vertices) / sizeof(f32), sizeof(f32));
+	vbDesc.UploadBufferData = gUploadBuffer->SetBufferData(vertices, sizeof(vertices) / sizeof(f32), sizeof(f32));
+	vbDesc.Flags = D3D12_RESOURCE_FLAG_DENY_SHADER_RESOURCE;
+	_vertexBuffer.Create(vbDesc);
+	_vbView.Create(_vertexBuffer);
+
+	u32 indices[] =
+	{
+		0, 1, 2,
+		2, 3, 0
+	};
+
+	auto ibDesc = GpuBufferDescription::Index(sizeof(indices) / sizeof(u32), sizeof(u32));
+	ibDesc.UploadBufferData = gUploadBuffer->SetBufferData(indices, sizeof(indices) / sizeof(u32), sizeof(u32));
+	ibDesc.Flags = D3D12_RESOURCE_FLAG_DENY_SHADER_RESOURCE;
+	_indexBuffer.Create(ibDesc);
+	_ibView.Create(_indexBuffer);
+	
+	SamplerDesc sampler;
+	_presentSignature.Begin(1, 1);
+	_presentSignature.Slot(0).InitAsDescriptorRange(0, D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 1, D3D12_SHADER_VISIBILITY_PIXEL);
+	_presentSignature.InitStaticSampler(0, sampler, D3D12_SHADER_VISIBILITY_PIXEL);
+	_presentSignature.Finalize(D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT);
+
+	_presentPipeline.SetRootSignature(_presentSignature);
+
+	ID3DBlob* vertexShader;
+	ID3DBlob* errorBuff;
+	MAYBE_UNUSED auto hr = D3DCompileFromFile(L"..\\..\\source\\engine\\modules\\renderer_core\\Present_VS.hlsl", nullptr, nullptr, "main", "vs_5_0",
+		D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION, 0, &vertexShader, &errorBuff);
+	check(hr == S_OK)
+
+		D3D12_SHADER_BYTECODE vertexShaderBytecode = {};
+	vertexShaderBytecode.BytecodeLength = vertexShader->GetBufferSize();
+	vertexShaderBytecode.pShaderBytecode = vertexShader->GetBufferPointer();
+
+	ID3DBlob* pixelShader;
+	hr = D3DCompileFromFile(L"..\\..\\source\\engine\\modules\\renderer_core\\Present_PS.hlsl", nullptr, nullptr, "main", "ps_5_0",
+		D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION, 0, &pixelShader, &errorBuff);
+	check(hr == S_OK)
+
+		D3D12_SHADER_BYTECODE pixelShaderBytecode = {};
+	pixelShaderBytecode.BytecodeLength = pixelShader->GetBufferSize();
+	pixelShaderBytecode.pShaderBytecode = pixelShader->GetBufferPointer();
+
+	_presentPipeline.SetVertexShader(vertexShaderBytecode);
+	_presentPipeline.SetPixelShader(pixelShaderBytecode);
+
+	D3D12_INPUT_ELEMENT_DESC inputLayout[] =
+	{
+		{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
+		{ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 12, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
+	};
+	_presentPipeline.SetInputLayout(sizeof(inputLayout) / sizeof(D3D12_INPUT_ELEMENT_DESC), inputLayout);
+	_presentPipeline.SetPrimitiveTopologyType(D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE);
+	_presentPipeline.SetRenderTargetFormat(DXGI_FORMAT_R8G8B8A8_UNORM, DXGI_FORMAT_UNKNOWN);
+	_presentPipeline.SetSampleMask(0xffffffff);
+	_presentPipeline.SetRasterizerState(CD3DX12_RASTERIZER_DESC(D3D12_DEFAULT));
+	_presentPipeline.SetBlendState(CD3DX12_BLEND_DESC(D3D12_DEFAULT));
+
+	_presentPipeline.SetDepthStencilState(CD3DX12_DEPTH_STENCIL_DESC(D3D12_DEFAULT));
+	_presentPipeline.SetDSVFormat(gDepthBuffer.GetDesc().Format);
+
+	_presentPipeline.Finalize();
+}
+
+void IRenderer::Begin(ColorBuffer& renderTarget, GraphicsContext& gfxContext) noexcept
+{
+	gfxContext.TransitionResource(gDepthBuffer, D3D12_RESOURCE_STATE_DEPTH_WRITE, true);
+	gfxContext.TransitionResource(renderTarget, D3D12_RESOURCE_STATE_RENDER_TARGET, true);
+
+	gfxContext.ClearColor(renderTarget);
 	gfxContext.ClearDepthAndStencil(gDepthBuffer);
 }
 
-void IRenderer::EndScene(GraphicsContext& gfxContext)
+void IRenderer::End(ColorBuffer& renderTarget, GraphicsContext& gfxContext) noexcept
 {
+	gfxContext.TransitionResource(gDepthBuffer, D3D12_RESOURCE_STATE_DEPTH_READ, true);
+	gfxContext.TransitionResource(renderTarget, D3D12_RESOURCE_STATE_PRESENT);
+	
+	gfxContext.Flush();
+}
+
+void IRenderer::Present(ColorBuffer& finalFrame, GraphicsContext& gfxContext) noexcept
+{
+	gfxContext.TransitionResource(finalFrame, D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE, true);
+	gfxContext.TransitionResource(gDisplayPlane[gCurrentBuffer], D3D12_RESOURCE_STATE_RENDER_TARGET, true);
+	auto frameSrv = finalFrame.GetSRV();
+	auto destSrv = _srvDescriptorHeap.GetDescriptorAtOffset(0).GetCpuHandle();
+	u32 rangeSize = 1;
+	gDevice->CopyDescriptors(1, &destSrv, &rangeSize, 1, &frameSrv, &rangeSize, D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
+
+	gfxContext.SetRootSignature(_presentSignature);
+	gfxContext.SetScissor(0, 0, 1280, 720);
+	gfxContext.SetViewport(0.f, 0.f, 1280.f, 720.f);
+
+	gfxContext.SetPipelineState(_presentPipeline);
+	gfxContext.SetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+
+	gfxContext.SetRenderTarget(gDisplayPlane[gCurrentBuffer].GetRTV(), gDepthBuffer.GetDSV());
+
+	gfxContext.SetDescriptorHeap(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV, _srvDescriptorHeap.GetHeapPointer());
+	gfxContext.SetDescriptorTable(0, _srvDescriptorHeap.GetDescriptorAtOffset(0).GetGpuHandle());
+
+	auto vb = _vbView.GetVertexBufferView();
+	auto ib = _ibView.GetIndexBufferView();
+	gfxContext.SetVertexBuffer(0, vb);
+	gfxContext.SetIndexBuffer(ib);
+	gfxContext.DrawIndexedInstanced(ib.SizeInBytes / sizeof(u32), 1, 0, 0, 0);
+
 	gfxContext.TransitionResource(gDepthBuffer, D3D12_RESOURCE_STATE_DEPTH_READ, true);
 	gfxContext.TransitionResource(gDisplayPlane[gCurrentBuffer], D3D12_RESOURCE_STATE_PRESENT);
 	gfxContext.Finish(true);
@@ -126,8 +242,11 @@ void IRenderer::EndScene(GraphicsContext& gfxContext)
 	gCurrentBuffer = (gCurrentBuffer + 1) % SWAP_CHAIN_BUFFER_COUNT;
 }
 
-void IRenderer::Shutdown()
+void IRenderer::Shutdown() noexcept
 {
+	_vertexBuffer.Destroy();
+	_indexBuffer.Destroy();
+
 	CommandContext::DestroyAllContexts();
 	gCommandListManager.Shutdown();
 	gTextureAllocator.Destroy();

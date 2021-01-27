@@ -31,7 +31,7 @@ struct UiRendererData
 	GpuTexture TextureAtlas;
 	TextureView TextureAtlasView;
 	
-	ColorBuffer* SceneRenderTarget;
+	ColorBuffer* SceneRenderTarget = nullptr;
 
 	u32* IndexBufferBase = nullptr;
 	u32* IndexBufferPtr = nullptr;
@@ -144,7 +144,9 @@ void UiRenderer::Draw(UiVertex* vertices, size_t verticesCount, u32* indices, si
 
 	for (size_t i = 0; i < verticesCount; ++i)
 	{
-		sUiData.VertexBufferPtr->Vertex = vertices[i];
+		sUiData.VertexBufferPtr->Vertex.Position = vertices[i].Position;
+		sUiData.VertexBufferPtr->Vertex.Color = vertices[i].Color;
+		sUiData.VertexBufferPtr->Vertex.TexCoords = vertices[i].TexCoords;
 		sUiData.VertexBufferPtr->TextureIndex = 0;
 		sUiData.VertexBufferPtr++;
 	}
@@ -192,7 +194,10 @@ void UiRenderer::Flush(GraphicsContext& gfxContext) noexcept
 {
 	FMatrix4x4 vp = FMatrix4x4::Orthographic(1280.f, 720.f, 0.0f, 1.0f);
 
-	gfxContext.TransitionResource(*sUiData.SceneRenderTarget, D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE, true);
+	if (sUiData.SceneRenderTarget)
+	{
+		gfxContext.TransitionResource(*sUiData.SceneRenderTarget, D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE, true);
+	}
 
 	gfxContext.SetRootSignature(_uiRootSignature);
 	gfxContext.SetScissor(0, 0, 1280, 720);
@@ -210,7 +215,7 @@ void UiRenderer::Flush(GraphicsContext& gfxContext) noexcept
 	
 	size_t bufferSize = sUiData.VertexBufferPtr - sUiData.VertexBufferBase;
 	size_t indexBufferSize = sUiData.IndexBufferPtr - sUiData.IndexBufferBase;
-	gfxContext.SetDynamicVB(gRingBuffer, 0, bufferSize, sizeof(LocalUiVertex), sUiData.VertexBufferBase);
+	gfxContext.SetDynamicVB(gRingBuffer, 0, bufferSize, bufferSize / sizeof(LocalUiVertex), sUiData.VertexBufferBase);
 	gfxContext.SetDynamicIB(gRingBuffer, indexBufferSize / sizeof(u32), sUiData.IndexBufferBase, true);
 	gfxContext.SetDynamicCBV(gRingBuffer, 1, sizeof(cb), &cb);
 	gfxContext.DrawIndexedInstanced(indexBufferSize / sizeof(u32), 1, 0, 0, 0);
