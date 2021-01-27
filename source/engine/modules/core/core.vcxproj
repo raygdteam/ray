@@ -40,6 +40,7 @@
     <ClInclude Include="memory\new_delete_override.hpp" />
     <ClInclude Include="module\module.hpp" />
     <ClInclude Include="module\module_meta.hpp" />
+    <ClInclude Include="new_lib\array.hpp" />
     <ClInclude Include="object\archive.hpp" />
     <ClInclude Include="object\file_archive.hpp" />
     <ClInclude Include="object\object.hpp" />
