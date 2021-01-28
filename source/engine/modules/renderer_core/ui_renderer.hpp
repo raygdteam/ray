@@ -31,7 +31,7 @@ private:
 public:
 	static void Initialize(u32 w, u32 h, void* data) noexcept;
 
-	static void Begin() noexcept;
+	static void Begin(const FMatrix4x4& vp) noexcept;
 	static void Draw(UiVertex* vertices, size_t verticesCount, u32* indices, size_t indicesCount, GraphicsContext& gfxContext) noexcept;
 	static void DrawSceneRenderTarget(const FVector3& pos, const FVector2& size, GraphicsContext& gfxContext) noexcept;
 	static void End(GraphicsContext& gfxContext) noexcept;

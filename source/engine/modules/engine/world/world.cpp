@@ -18,10 +18,10 @@
 
 void World::TickActors(f64 delta) const
 {
-	Level* level = _levelData->Level;
+	//Level* level = _levelData->Level;
 	//_pool.Wait();
 
-	static bool bOnce = false;
+	/*static bool bOnce = false;
 	if (!bOnce)
 	{
 		for (Level::ActorTickJob* job : level->_jobs)
@@ -34,7 +34,7 @@ void World::TickActors(f64 delta) const
 	{
 		_pool.ResubmitWork();
 		_pool.Wait();
-	}
+	}*/
 	
 
 	/*for (ActorData& tickData : level->_atd)
@@ -104,7 +104,7 @@ void World::LoadLevel(pcstr name)
 	//_levelData->Level->SpawnActor(actor2);
 	//_levelData->Level->SpawnActor(actor3);
 
-	for (u32 i = 0; i < 500; ++i)
+	/*for (u32 i = 0; i < 500; ++i)
 	{
 		for (u32 j = 0; j < 500; ++j)
 		{
@@ -114,7 +114,7 @@ void World::LoadLevel(pcstr name)
 			transform->Position = FVector2 { -1500.f + i * 40, 900.f - j * 40 };
 			_levelData->Level->SpawnActor(actor);
 		}
-	}
+	}*/
 }
 
 World::World() : _pool(gThreadPoolManager->Allocate())
