@@ -4,7 +4,7 @@
 
 DescriptorHeap ColorBuffer::sMainRTV_DescriptorHeap(D3D12_DESCRIPTOR_HEAP_TYPE_RTV, D3D12_DESCRIPTOR_HEAP_FLAG_NONE, 256);
 
-void ColorBuffer::CreateFromSwapChain(ID3D12Resource* inResource)
+void ColorBuffer::CreateFromSwapChain(ID3D12Resource* inResource, pcstr debugName)
 {
 	auto desc = inResource->GetDesc();
 	_desc.Width = desc.Width;
@@ -19,9 +19,16 @@ void ColorBuffer::CreateFromSwapChain(ID3D12Resource* inResource)
 	_desc.Flags = D3D12_RESOURCE_FLAG_ALLOW_RENDER_TARGET;
 	_view.Create(*this);
 	gDevice->CreateRenderTargetView(inResource, nullptr, GetRTV());
+
+#if defined(RAY_DEBUG) || defined(RAY_DEVELOPMENT)
+	size_t debugNameSize = strlen(debugName);
+	WCHAR dest[128];
+	MultiByteToWideChar(0, 0, debugName, debugNameSize, dest, debugNameSize + 1);
+	_resource->SetName(dest);
+#endif
 }
 
-void ColorBuffer::Create(u32 width, u32 height, u32 numMips, DXGI_FORMAT format, D3D12_RESOURCE_FLAGS flags)
+void ColorBuffer::Create(u32 width, u32 height, u32 numMips, DXGI_FORMAT format, D3D12_RESOURCE_FLAGS flags, pcstr debugName)
 {
 	auto desc = GpuTextureDescription::Texture2D(width, height, format, 1, flags);
 
@@ -33,11 +40,11 @@ void ColorBuffer::Create(u32 width, u32 height, u32 numMips, DXGI_FORMAT format,
 	clearValue.Color[3] = _clearColor[3];
 
 	desc.ClearValue = &clearValue;
-	GpuPixelBuffer::Create(desc);
+	GpuPixelBuffer::Create(desc, debugName);
 	_view.Create(*this, nullptr, &sMainRTV_DescriptorHeap);
 }
 
-void ColorBuffer::CreateArray(u32 width, u32 height, u32 numMips, u32 arrayCount, DXGI_FORMAT format, D3D12_RESOURCE_FLAGS flags)
+void ColorBuffer::CreateArray(u32 width, u32 height, u32 numMips, u32 arrayCount, DXGI_FORMAT format, D3D12_RESOURCE_FLAGS flags, pcstr debugName)
 {
 	auto desc = GpuTextureDescription::Texture2D(width, height, format, arrayCount, flags);
 
@@ -49,7 +56,7 @@ void ColorBuffer::CreateArray(u32 width, u32 height, u32 numMips, u32 arrayCount
 	clearValue.Color[3] = _clearColor[3];
 
 	desc.ClearValue = &clearValue;
-	GpuPixelBuffer::Create(desc);
+	GpuPixelBuffer::Create(desc, debugName);
 }
 
 void ColorBuffer::GenerateMipMaps(CommandContext& context)

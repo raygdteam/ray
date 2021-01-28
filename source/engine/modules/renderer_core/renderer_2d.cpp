@@ -80,7 +80,7 @@ void Renderer2D::Initialize(RTexture& whiteTexture)
 	auto ibDesc = GpuBufferDescription::Index(sData.MAX_INDICES, sizeof(u32), quadIndices);
 	ibDesc.UploadBufferData = gUploadBuffer->SetBufferData(quadIndices, sData.MAX_INDICES, sizeof(u32));
 	ibDesc.Flags = D3D12_RESOURCE_FLAG_DENY_SHADER_RESOURCE;
-	sData.IndexBuffer.Create(ibDesc);
+	sData.IndexBuffer.Create(ibDesc, "Renderer2DData::IndexBuffer");
 
 	BufferView ibView;
 	ibView.Create(sData.IndexBuffer);
@@ -90,7 +90,7 @@ void Renderer2D::Initialize(RTexture& whiteTexture)
 	auto textureResolution = whiteTexture.GetDimensions();
 	auto whiteTextureDesc = GpuTextureDescription::Texture2D(textureResolution.x, textureResolution.y, DXGI_FORMAT_R32G32B32A32_FLOAT, 1, D3D12_RESOURCE_FLAG_NONE);
 	whiteTextureDesc.UploadBufferData = gUploadBuffer->SetTextureData(whiteTexture);
-	sData.WhiteTexture.Create(whiteTextureDesc);
+	sData.WhiteTexture.Create(whiteTextureDesc, "Renderer2DData::WhiteTexture");
 
 	sData.WhiteTextureView.Create(sData.WhiteTexture, &gMainDescriptorHeap);
 

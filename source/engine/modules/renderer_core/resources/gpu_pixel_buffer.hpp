@@ -28,7 +28,10 @@ protected:
 	TextureView _view;
 
 public:
-	void Create(GpuTextureDescription& desc) noexcept;
+	GpuPixelBuffer() = default;
+
+public:
+	void Create(GpuTextureDescription& desc, pcstr debugName) noexcept;
 
 public:
 	void Release() noexcept override;

@@ -2,6 +2,7 @@
 #include <core/core.hpp>
 #include <core/lib/array.hpp>
 #include <app_framework/base/platform_window.hpp>
+#include <renderer_core/command_context.hpp>
 
 class UiObject
 {
@@ -25,5 +26,5 @@ class UiRootObject
 public:
 	void Initialize(IPlatformWindow* window);
 	void Tick();
-	void RenderAll();
+	void RenderAll(GraphicsContext& gfxContext);
 };

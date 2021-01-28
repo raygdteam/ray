@@ -129,9 +129,6 @@ World::~World()
 
 void World::Destroy() noexcept
 {
-	gUploadBuffer->Destroy();
-	delete gUploadBuffer;
-
 	_renderer->Shutdown();
 	delete _renderer;
 }
@@ -140,8 +137,6 @@ void World::Initialize(IPlatformWindow* window)
 {
 	_renderer = new IRenderer;
 	_renderer->Initialize(window);
-	gUploadBuffer = new UploadBuffer;
-	gUploadBuffer->Initialize(MB(64));
 
 	// load level
 	LoadLevel("\0");

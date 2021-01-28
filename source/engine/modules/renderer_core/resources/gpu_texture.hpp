@@ -68,7 +68,7 @@ public:
 		GpuResourceAllocator::Destroy();
 	}
 
-	GpuResource&& Allocate(GpuResourceDescription& textureDesc) noexcept override;
+	NODISCARD GpuResource&& Allocate(GpuResourceDescription& textureDesc) noexcept override;
 	void Free(GpuResource& resource) noexcept override;
 
 };
@@ -84,7 +84,7 @@ public:
 	~GpuTexture() override {}
 
 public:
-	bool Create(GpuTextureDescription& desc) noexcept;
+	bool Create(GpuTextureDescription& desc, pcstr debugName) noexcept;
 
 public:
 	bool Load(const void* uploadBufferData) noexcept override;

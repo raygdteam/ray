@@ -62,7 +62,7 @@ void UiRenderer::Initialize(u32 w, u32 h, void* data) noexcept
 	//auto textureResolution = FVector2 { w, h };
 	auto textureAtlasDesc = GpuTextureDescription::Texture2D(w, h, DXGI_FORMAT_R8G8B8A8_UNORM, 1, D3D12_RESOURCE_FLAG_NONE);
 	textureAtlasDesc.UploadBufferData = gUploadBuffer->SetBufferData(data, w * h, sizeof(u32));
-	sUiData.TextureAtlas.Create(textureAtlasDesc);
+	sUiData.TextureAtlas.Create(textureAtlasDesc, "UiRendererData::TextureAtlas");
 
 	sUiData.TextureAtlasView.Create(sUiData.TextureAtlas, &_descriptorHeap);
 
@@ -187,7 +187,10 @@ void UiRenderer::DrawSceneRenderTarget(const FVector3& pos, const FVector2& size
 
 void UiRenderer::End(GraphicsContext& gfxContext) noexcept
 {
-	Flush(gfxContext);
+	if (sUiData.VertexBufferBase != sUiData.VertexBufferPtr)
+	{
+		Flush(gfxContext);
+	}
 }
 
 void UiRenderer::Flush(GraphicsContext& gfxContext) noexcept
@@ -206,7 +209,7 @@ void UiRenderer::Flush(GraphicsContext& gfxContext) noexcept
 	gfxContext.SetPipelineState(_uiPipelineState);
 	gfxContext.SetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
-	gfxContext.SetRenderTarget(gDisplayPlane[gCurrentBuffer].GetRTV(), gDepthBuffer.GetDSV());
+	gfxContext.SetRenderTarget(gEditorColorBuffer.GetRTV(), gDepthBuffer.GetDSV());
 
 	gfxContext.SetDescriptorHeap(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV, _descriptorHeap.GetHeapPointer());
 	gfxContext.SetDescriptorTable(0, _descriptorHeap.GetDescriptorAtOffset(0).GetGpuHandle());

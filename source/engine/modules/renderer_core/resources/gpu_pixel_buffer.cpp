@@ -50,7 +50,7 @@ void GpuPixelBufferAllocator::Free(GpuResource& resource) noexcept
 	// TODO: MemorySegment
 }
 
-void GpuPixelBuffer::Create(GpuTextureDescription& desc) noexcept
+void GpuPixelBuffer::Create(GpuTextureDescription& desc, pcstr debugName) noexcept
 {
 	ray_assert((desc.Dimension == D3D12_RESOURCE_DIMENSION_TEXTURE1D  ||
 				desc.Dimension == D3D12_RESOURCE_DIMENSION_TEXTURE2D  ||
@@ -60,6 +60,15 @@ void GpuPixelBuffer::Create(GpuTextureDescription& desc) noexcept
 				"Resource dimension must be texture and resource must be render target or depth stencil buffer!")
 
 	*dynamic_cast<GpuResource*>(this) = std::move(gPixelBufferAllocator.Allocate(desc));
+
+#if defined(RAY_DEBUG) || defined(RAY_DEVELOPMENT)
+	size_t debugNameSize = strlen(debugName);
+	WCHAR dest[128];
+	MultiByteToWideChar(0, 0, debugName, debugNameSize, dest, debugNameSize);
+	dest[debugNameSize] = '\0';
+	_resource->SetName(dest);
+#endif
+
 	// TODO
 }
 

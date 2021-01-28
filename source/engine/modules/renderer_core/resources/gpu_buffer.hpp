@@ -52,7 +52,7 @@ public:
 		GpuResourceAllocator::Destroy();
 	}
 
-	GpuResource&& Allocate(GpuResourceDescription& bufferDesc) noexcept override;
+	NODISCARD GpuResource&& Allocate(GpuResourceDescription& bufferDesc) noexcept override;
 	void Free(GpuResource& resource) noexcept override;
 
 };
@@ -73,7 +73,7 @@ public:
 	~GpuBuffer() override {}
 
 public:
-	void Create(GpuBufferDescription& desc) noexcept;
+	void Create(GpuBufferDescription& desc, pcstr debugName) noexcept;
 
 public:
 	bool Load(const void* initialData) noexcept override;

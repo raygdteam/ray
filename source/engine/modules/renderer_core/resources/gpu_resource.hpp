@@ -2,6 +2,7 @@
 #include <d3d12.h>
 
 #include <core/core.hpp>
+#include <core/lib/string.hpp>
 #include <core/memory/memory_manager.hpp>
 #include "gpu_memory_pool.hpp"
 #include <renderer_core/descriptor_heap.hpp>
@@ -81,7 +82,7 @@ public:
 		_memoryManager.Destroy();
 	}
 
-	virtual GpuResource&& Allocate(GpuResourceDescription& desc) noexcept = 0;
+	NODISCARD virtual GpuResource&& Allocate(GpuResourceDescription& desc) noexcept = 0;
 	virtual void Free(GpuResource& resource) noexcept = 0;
 
 };
@@ -104,15 +105,17 @@ protected:
 	ray::IMemoryPool* _underlyingPool;
 	GpuResourceDescription _desc;
 	bool _bManaged;
+	String _debugName;
 
 public:
-	GpuResource() noexcept
+	GpuResource() 
 		: _resource(nullptr)
 		, _usageState(D3D12_RESOURCE_STATE_COMMON)
 		, _transitioningState(static_cast<D3D12_RESOURCE_STATES>(-1))
 		, _resourceSize(0)
 		, _underlyingPool(nullptr)
 		, _bManaged(true)
+		, _debugName("GpuResource::Unnamed")
 	{}
 
 	GpuResource(ID3D12Resource* inResource, D3D12_RESOURCE_STATES currentState, u64 resourceSize, GpuMemoryPool* pool, GpuResourceDescription& desc, bool bManaged = true) noexcept

@@ -97,16 +97,22 @@ void IRenderer::Initialize(IPlatformWindow* window) noexcept
 	{
 		ID3D12Resource* displayPlane;
 		_swapChain->GetBuffer(i, IID_PPV_ARGS(&displayPlane));
-		gDisplayPlane[i].CreateFromSwapChain(displayPlane);
+		gDisplayPlane[i].CreateFromSwapChain(displayPlane, "gDisplayPlane");
 	}
 
 	gCurrentBuffer = 0;
+
+	gUploadBuffer = new UploadBuffer;
+	gUploadBuffer->Initialize(MB(64));
+
 	gPixelBufferAllocator.Initialize(MB(8));
 	gTextureAllocator.Initialize(MB(10));
 	gBufferAllocator.Initialize(MB(10));
-	gDepthBuffer.Create(gDisplayPlane->GetDesc().Width, gDisplayPlane->GetDesc().Height, DXGI_FORMAT_D32_FLOAT);
-	gSceneColorBuffer.Create(window->GetWidth(), window->GetHeight(), 1, DXGI_FORMAT_R8G8B8A8_UNORM, D3D12_RESOURCE_FLAG_ALLOW_RENDER_TARGET);
-	gEditorColorBuffer.Create(window->GetWidth(), window->GetHeight(), 1, DXGI_FORMAT_R8G8B8A8_UNORM, D3D12_RESOURCE_FLAG_ALLOW_RENDER_TARGET);
+
+	gDepthBuffer.Create(gDisplayPlane->GetDesc().Width, gDisplayPlane->GetDesc().Height, DXGI_FORMAT_D32_FLOAT, "gDepthBuffer");
+	gSceneColorBuffer.Create(window->GetWidth(), window->GetHeight(), 1, DXGI_FORMAT_R8G8B8A8_UNORM, D3D12_RESOURCE_FLAG_ALLOW_RENDER_TARGET, "gSceneColorBuffer");
+	gEditorColorBuffer.Create(window->GetWidth(), window->GetHeight(), 1, DXGI_FORMAT_R8G8B8A8_UNORM, D3D12_RESOURCE_FLAG_ALLOW_RENDER_TARGET, "gEditorColorBuffer");
+	
 	gRingBuffer.Initialize(MB(10));
 
 	PreparePresentObjects();
@@ -127,8 +133,8 @@ void IRenderer::PreparePresentObjects() noexcept
 	auto vbDesc = GpuBufferDescription::Vertex(sizeof(vertices) / sizeof(f32), sizeof(f32));
 	vbDesc.UploadBufferData = gUploadBuffer->SetBufferData(vertices, sizeof(vertices) / sizeof(f32), sizeof(f32));
 	vbDesc.Flags = D3D12_RESOURCE_FLAG_DENY_SHADER_RESOURCE;
-	_vertexBuffer.Create(vbDesc);
-	_vbView.Create(_vertexBuffer);
+	_presentVB.Create(vbDesc, "IRenderer::_presentVB");
+	_vbView.Create(_presentVB);
 
 	u32 indices[] =
 	{
@@ -139,8 +145,8 @@ void IRenderer::PreparePresentObjects() noexcept
 	auto ibDesc = GpuBufferDescription::Index(sizeof(indices) / sizeof(u32), sizeof(u32));
 	ibDesc.UploadBufferData = gUploadBuffer->SetBufferData(indices, sizeof(indices) / sizeof(u32), sizeof(u32));
 	ibDesc.Flags = D3D12_RESOURCE_FLAG_DENY_SHADER_RESOURCE;
-	_indexBuffer.Create(ibDesc);
-	_ibView.Create(_indexBuffer);
+	_presentIB.Create(ibDesc, "IRenderer::_presentIB");
+	_ibView.Create(_presentIB);
 	
 	SamplerDesc sampler;
 	_presentSignature.Begin(1, 1);
@@ -201,8 +207,8 @@ void IRenderer::Begin(ColorBuffer& renderTarget, GraphicsContext& gfxContext) no
 
 void IRenderer::End(ColorBuffer& renderTarget, GraphicsContext& gfxContext) noexcept
 {
-	gfxContext.TransitionResource(gDepthBuffer, D3D12_RESOURCE_STATE_DEPTH_READ, true);
-	gfxContext.TransitionResource(renderTarget, D3D12_RESOURCE_STATE_PRESENT);
+	/*gfxContext.TransitionResource(gDepthBuffer, D3D12_RESOURCE_STATE_DEPTH_READ, true);
+	gfxContext.TransitionResource(renderTarget, D3D12_RESOURCE_STATE_PRESENT);*/
 	
 	gfxContext.Flush();
 }
@@ -244,8 +250,11 @@ void IRenderer::Present(ColorBuffer& finalFrame, GraphicsContext& gfxContext) no
 
 void IRenderer::Shutdown() noexcept
 {
-	_vertexBuffer.Destroy();
-	_indexBuffer.Destroy();
+	_presentVB.Destroy();
+	_presentIB.Destroy();
+
+	gUploadBuffer->Destroy();
+	delete gUploadBuffer;
 
 	CommandContext::DestroyAllContexts();
 	gCommandListManager.Shutdown();

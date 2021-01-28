@@ -21,6 +21,18 @@ void World::Render()
 {
 	GraphicsContext& ctx = GraphicsContext::Begin();
 
+	_renderer->Begin(gSceneColorBuffer, ctx);
+	// Renderer2D
+	_renderer->End(gSceneColorBuffer, ctx);
+
+	_renderer->Begin(gEditorColorBuffer, ctx);
+	// UiRenderer
+	gRootObject->RenderAll(ctx);
+
+	_renderer->End(gEditorColorBuffer, ctx);
+
+	_renderer->Present(gEditorColorBuffer, ctx);
+
 	//Renderer2D::Begin(_primaryCameraActor->GetCameraComponent()->GetViewProjection());
 
 	//Level* level = _levelData->Level;
@@ -66,17 +78,6 @@ void World::Render()
 	//Renderer2D::End(ctx);
 	//
 
-	_renderer->Begin(gSceneColorBuffer, ctx);
-	// Renderer2D
-	_renderer->End(gSceneColorBuffer, ctx);
-
-	_renderer->Begin(gEditorColorBuffer, ctx);
-	// UiRenderer
-	gRootObject->RenderAll();
-
-	_renderer->End(gEditorColorBuffer, ctx);
-
-	_renderer->Present(gEditorColorBuffer, ctx);
 	//for (size_t i = 0; i < 500; ++i)
 	//{
 	//	for (size_t j = 0; j < 200; ++j)

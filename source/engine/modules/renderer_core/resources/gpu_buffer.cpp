@@ -54,9 +54,17 @@ void GpuBufferAllocator::Free(GpuResource& resource) noexcept
 	// TODO: MemorySegment
 }
 
-void GpuBuffer::Create(GpuBufferDescription& desc) noexcept
+void GpuBuffer::Create(GpuBufferDescription& desc, pcstr debugName) noexcept
 {
-	*dynamic_cast<GpuResource*>(this) = gBufferAllocator.Allocate(desc);
+	*dynamic_cast<GpuResource*>(this) = std::move(gBufferAllocator.Allocate(desc));
+
+#if defined(RAY_DEBUG) || defined(RAY_DEVELOPMENT)
+	size_t debugNameSize = strlen(debugName);
+	WCHAR dest[128];
+	MultiByteToWideChar(0, 0, debugName, debugNameSize, dest, debugNameSize);
+	dest[debugNameSize] = '\0';
+	_resource->SetName(dest);
+#endif
 
 	if (desc.UploadBufferData)
 	{

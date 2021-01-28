@@ -294,7 +294,7 @@ size_t GpuTexture::BytesPerPixel(DXGI_FORMAT Format)
 	}
 }
 
-GpuResource&& GpuTextureAllocator::Allocate(GpuResourceDescription& textureDesc) noexcept
+NODISCARD GpuResource&& GpuTextureAllocator::Allocate(GpuResourceDescription& textureDesc) noexcept
 {
 	D3D12_RESOURCE_DESC resourceDesc = {};
 	resourceDesc.Width = textureDesc.Width;
@@ -342,7 +342,7 @@ void GpuTextureAllocator::Free(GpuResource& resource) noexcept
 	// TODO: MemorySegment
 }
 
-bool GpuTexture::Create(GpuTextureDescription& textureDesc) noexcept
+bool GpuTexture::Create(GpuTextureDescription& textureDesc, pcstr debugName) noexcept
 {
 	ray_assert(textureDesc.Dimension == D3D12_RESOURCE_DIMENSION_TEXTURE1D ||
 		textureDesc.Dimension == D3D12_RESOURCE_DIMENSION_TEXTURE2D ||
@@ -350,7 +350,14 @@ bool GpuTexture::Create(GpuTextureDescription& textureDesc) noexcept
 		"Resource dimension must be texture!")
 
 		* dynamic_cast<GpuResource*>(this) = std::move(gTextureAllocator.Allocate(textureDesc));
-	// TODO
+	
+#if defined(RAY_DEBUG) || defined(RAY_DEVELOPMENT)
+	size_t debugNameSize = strlen(debugName);
+	WCHAR dest[128];
+	MultiByteToWideChar(0, 0, debugName, debugNameSize, dest, debugNameSize);
+	dest[debugNameSize] = '\0';
+	_resource->SetName(dest);
+#endif
 
 	if (textureDesc.UploadBufferData)
 	{

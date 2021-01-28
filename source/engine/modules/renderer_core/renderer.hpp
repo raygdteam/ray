@@ -77,9 +77,9 @@ private:
 	GraphicsPipeline _presentPipeline;
 	RootSignature _presentSignature;
 	DescriptorHeap _srvDescriptorHeap;
-	GpuBuffer _vertexBuffer;
+	GpuBuffer _presentVB;
 	BufferView _vbView;
-	GpuBuffer _indexBuffer;
+	GpuBuffer _presentIB;
 	BufferView _ibView;
 
 private:
