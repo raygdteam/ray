@@ -54,7 +54,7 @@ void UiRootObject::Tick()
 	ImGui::EndFrame();
 }
 
-void UiRootObject::RenderAll()
+void UiRootObject::RenderAll(GraphicsContext& gfxContext)
 {
 	ImGui::Render();
 	ImDrawData* data = ImGui::GetDrawData();
@@ -73,7 +73,6 @@ void UiRootObject::RenderAll()
 	};
 	FMatrix4x4 vp = *(FMatrix4x4*)&mvp;
 	
-	GraphicsContext& ctx = GraphicsContext::Begin();
 	UiRenderer::Begin();
 	
 	ImDrawList* cmd = nullptr;
@@ -91,11 +90,11 @@ void UiRootObject::RenderAll()
 			
 			static_assert(sizeof(ImDrawVert) == sizeof(UiVertex), "size mismatch");
 
-			UiRenderer::Draw((UiVertex*)cmd->VtxBuffer.Data + vtxOffset, draw->ElemCount / 3, cmd->IdxBuffer.Data + idxOffset, draw->ElemCount, ctx);
+			UiRenderer::Draw((UiVertex*)cmd->VtxBuffer.Data + vtxOffset, draw->ElemCount / 3, cmd->IdxBuffer.Data + idxOffset, draw->ElemCount, gfxContext);
 		}
 		vtxOffset += cmd->VtxBuffer.Size;
 		idxOffset += cmd->IdxBuffer.Size;
 	}
 	
-	UiRenderer::End(ctx);
+	UiRenderer::End(gfxContext);
 }
