@@ -4,6 +4,8 @@
 #include <app_framework/base/platform_window.hpp>
 #include <renderer_core/command_context.hpp>
 
+class GraphicsContext;
+
 class UiObject
 {
 public:
