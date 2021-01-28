@@ -118,20 +118,26 @@ void IRenderer::Initialize(IPlatformWindow* window) noexcept
 	PreparePresentObjects();
 }
 
+struct PresentVertex
+{
+	FVector3 Position;
+	FVector2 TexCoords;
+};
+
 void IRenderer::PreparePresentObjects() noexcept
 {
 	_srvDescriptorHeap.Create();
 
-	f32 vertices[] =
+	PresentVertex vertices[] =
 	{
-		-1.f, -1.f, 1.f,
-		-1.f, 1.f, 1.f,
-		1.f, 1.f, 1.f,
-		1.f, -1.f, 1.f
+		{ {-1.f, -1.f, 1.f}, {0.f, 1.f} },
+		{ {-1.f, 1.f, 1.f}, {0.f, 0.f} },
+		{ {1.f, 1.f, 1.f}, {1.f, 0.f} },
+		{ {1.f, -1.f, 1.f}, {1.f, 1.f} }
 	};
 
-	auto vbDesc = GpuBufferDescription::Vertex(sizeof(vertices) / sizeof(f32), sizeof(f32));
-	vbDesc.UploadBufferData = gUploadBuffer->SetBufferData(vertices, sizeof(vertices) / sizeof(f32), sizeof(f32));
+	auto vbDesc = GpuBufferDescription::Vertex(4, sizeof(PresentVertex));
+	vbDesc.UploadBufferData = gUploadBuffer->SetBufferData(vertices, 4, sizeof(PresentVertex));
 	vbDesc.Flags = D3D12_RESOURCE_FLAG_DENY_SHADER_RESOURCE;
 	_presentVB.Create(vbDesc, "IRenderer::_presentVB");
 	_vbView.Create(_presentVB);
@@ -191,7 +197,7 @@ void IRenderer::PreparePresentObjects() noexcept
 	_presentPipeline.SetBlendState(CD3DX12_BLEND_DESC(D3D12_DEFAULT));
 
 	_presentPipeline.SetDepthStencilState(CD3DX12_DEPTH_STENCIL_DESC(D3D12_DEFAULT));
-	_presentPipeline.SetDSVFormat(gDepthBuffer.GetDesc().Format);
+	//_presentPipeline.SetDSVFormat(gDepthBuffer.GetDesc().Format);
 
 	_presentPipeline.Finalize();
 }
@@ -229,7 +235,7 @@ void IRenderer::Present(ColorBuffer& finalFrame, GraphicsContext& gfxContext) no
 	gfxContext.SetPipelineState(_presentPipeline);
 	gfxContext.SetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
-	gfxContext.SetRenderTarget(gDisplayPlane[gCurrentBuffer].GetRTV(), gDepthBuffer.GetDSV());
+	gfxContext.SetRenderTarget(gDisplayPlane[gCurrentBuffer].GetRTV());
 
 	gfxContext.SetDescriptorHeap(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV, _srvDescriptorHeap.GetHeapPointer());
 	gfxContext.SetDescriptorTable(0, _srvDescriptorHeap.GetDescriptorAtOffset(0).GetGpuHandle());
