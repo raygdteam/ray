@@ -10,10 +10,17 @@
 UiObject::UiObject()
 { }
 
+extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
+static void ImguiCallback(void* hWnd, u32 msg, u64 wParam, s64 lParam)
+{
+	ImGui_ImplWin32_WndProcHandler((HWND)hWnd, msg, wParam, lParam);
+}
 void UiRootObject::Initialize(IPlatformWindow* window)
 {
 	ImGui::CreateContext();
 	ImGui_ImplWin32_Init(window->GetWindowHandleRaw());
+
+	window->RegisterEventCallback(ImguiCallback);
 
 	unsigned char* pixels = nullptr;
 	int width, height;
@@ -53,6 +60,19 @@ void UiRootObject::RenderAll()
 	ImDrawData* data = ImGui::GetDrawData();
 	if (data->TotalVtxCount < 0) return;
 	
+	float L = data->DisplayPos.x;
+	float R = data->DisplayPos.x + data->DisplaySize.x;
+	float T = data->DisplayPos.y;
+	float B = data->DisplayPos.y + data->DisplaySize.y;
+	float mvp[4][4] =
+	{
+		{ 2.0f / (R - L),   0.0f,           0.0f,       0.0f },
+		{ 0.0f,         2.0f / (T - B),     0.0f,       0.0f },
+		{ 0.0f,         0.0f,           0.5f,       0.0f },
+		{ (R + L) / (L - R),  (T + B) / (B - T),    0.5f,       1.0f },
+	};
+	FMatrix4x4 vp = *(FMatrix4x4*)&mvp;
+	
 	GraphicsContext& ctx = GraphicsContext::Begin();
 	UiRenderer::Begin();
 	
@@ -60,7 +80,7 @@ void UiRootObject::RenderAll()
 
 	u32 vtxOffset = 0;
 	u32 idxOffset = 0;
-
+	
 	for (int i = 0; i < data->CmdListsCount; ++i)
 	{
 		cmd = data->CmdLists[i];
@@ -70,7 +90,7 @@ void UiRootObject::RenderAll()
 			ImDrawCmd* draw = &cmd->CmdBuffer[n];
 			
 			static_assert(sizeof(ImDrawVert) == sizeof(UiVertex), "size mismatch");
-			
+
 			UiRenderer::Draw((UiVertex*)cmd->VtxBuffer.Data + vtxOffset, draw->ElemCount / 3, cmd->IdxBuffer.Data + idxOffset, draw->ElemCount, ctx);
 		}
 		vtxOffset += cmd->VtxBuffer.Size;

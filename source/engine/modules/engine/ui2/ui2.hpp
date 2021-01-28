@@ -3,6 +3,8 @@
 #include <core/lib/array.hpp>
 #include <app_framework/base/platform_window.hpp>
 
+class GraphicsContext;
+
 class UiObject
 {
 public:
