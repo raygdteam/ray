@@ -16,7 +16,7 @@
 
 struct LocalUiVertex
 {
-	UiVertex Vertex;
+	ImDrawVert Vertex;
 	u32 TextureIndex;
 };
 
@@ -34,10 +34,10 @@ struct UiRendererData
 	ColorBuffer* SceneRenderTarget = nullptr;
 
 	u32* IndexBufferBase = nullptr;
-	u32* IndexBufferPtr = nullptr;
+	size_t IndexCount = 0;
 
 	LocalUiVertex* VertexBufferBase = nullptr;
-	LocalUiVertex* VertexBufferPtr = nullptr;
+	size_t VertexCount = 0;
 
 	FVector3 VertexPositions[4];
 
@@ -58,6 +58,7 @@ DescriptorHeap UiRenderer::_descriptorHeap(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UA
 void UiRenderer::Initialize(u32 w, u32 h, void* data) noexcept
 {
 	sUiData.IndexBufferBase = new uint32_t[sUiData.MAX_INDICES];
+	sUiData.VertexBufferBase = new LocalUiVertex[sUiData.MAX_VERTICES];
 
 	_descriptorHeap.Create();
 
@@ -67,8 +68,6 @@ void UiRenderer::Initialize(u32 w, u32 h, void* data) noexcept
 	sUiData.TextureAtlas.Create(textureAtlasDesc, "UiRendererData::TextureAtlas");
 
 	sUiData.TextureAtlasView.Create(sUiData.TextureAtlas, &_descriptorHeap);
-
-	sUiData.VertexBufferBase = new LocalUiVertex[sUiData.MAX_QUADS];
 
 	sUiData.VertexPositions[0] = { -100.5f, -100.5f, 0.5f }; // bottom left
 	sUiData.VertexPositions[1] = { -100.5f,  100.5f, 0.5f }; // top left
@@ -132,8 +131,8 @@ void UiRenderer::Begin(const FMatrix4x4& vp) noexcept
 	
 	sUiData.SceneRenderTarget = &gSceneColorBuffer;
 
-	sUiData.IndexBufferPtr = sUiData.IndexBufferBase;
-	sUiData.VertexBufferPtr = sUiData.VertexBufferBase;
+	sUiData.IndexCount = 0;
+	sUiData.VertexCount = 0;
 
 	u32 range[] = { 1 };
 	auto destHandle = _descriptorHeap.GetDescriptorAtOffset(1).GetCpuHandle();
@@ -141,9 +140,9 @@ void UiRenderer::Begin(const FMatrix4x4& vp) noexcept
 	gDevice->CopyDescriptors(1, &destHandle, range, 1, &srcHandle, range, D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
 }
 
-void UiRenderer::Draw(UiVertex* vertices, size_t verticesCount, u32* indices, size_t indicesCount, GraphicsContext& gfxContext) noexcept
+void UiRenderer::Draw(ImDrawVert* vertices, size_t verticesCount, u32* indices, size_t indicesCount, GraphicsContext& gfxContext) noexcept
 {	
-	if (reinterpret_cast<size_t>(reinterpret_cast<size_t*>(sUiData.IndexBufferPtr - sUiData.IndexBufferBase + indicesCount)) > sUiData.MAX_INDICES)
+	if (sUiData.IndexCount + indicesCount > sUiData.MAX_INDICES)
 		FlushAndReset(gfxContext);
 
 	for (size_t i = 0; i < verticesCount; ++i)
@@ -151,22 +150,19 @@ void UiRenderer::Draw(UiVertex* vertices, size_t verticesCount, u32* indices, si
 		/*sUiData.VertexBufferPtr->Vertex.Position = vertices[i].Position;
 		sUiData.VertexBufferPtr->Vertex.Color = vertices[i].Color;
 		sUiData.VertexBufferPtr->Vertex.TexCoords = vertices[i].TexCoords;*/
-		sUiData.VertexBufferPtr->Vertex = vertices[i];
-		sUiData.VertexBufferPtr->TextureIndex = 0;
-		sUiData.VertexBufferPtr++;
+		sUiData.VertexBufferBase[sUiData.VertexCount + i].Vertex = vertices[i];
+		sUiData.VertexBufferBase[sUiData.VertexCount + i].TextureIndex = 0;
 	}
 
-	memcpy(sUiData.IndexBufferPtr, indices, indicesCount * sizeof(u32));
-	sUiData.IndexBufferPtr += indicesCount * sizeof(u32);
+	sUiData.VertexCount += verticesCount;
+
+	memcpy(&sUiData.IndexBufferBase[sUiData.IndexCount], indices, indicesCount * sizeof(u32));
+	sUiData.IndexCount += indicesCount;
 }
-
-
 
 void UiRenderer::DrawSceneRenderTarget(const FVector3& pos, const FVector2& size, GraphicsContext& gfxContext) noexcept
 {
-	size_t indexCount = sUiData.IndexBufferPtr - sUiData.IndexBufferBase;
-
-	if (reinterpret_cast<size_t>(reinterpret_cast<size_t*>(sUiData.IndexBufferPtr - sUiData.IndexBufferBase + indexCount)) > sUiData.MAX_INDICES)
+	if (sUiData.IndexCount + 6 > sUiData.MAX_INDICES)
 		FlushAndReset(gfxContext);
 
 	constexpr size_t quadVertexCount = 4;
@@ -176,23 +172,23 @@ void UiRenderer::DrawSceneRenderTarget(const FVector3& pos, const FVector2& size
 		FVector3 vertexPos = sUiData.VertexPositions[i] * FVector3{ size.x, size.y, 1.f };
 		FVector3 newPosition = pos + vertexPos;
 
-		sUiData.VertexBufferPtr->Vertex.Position = FVector2{ newPosition.x, newPosition.y };
-		sUiData.VertexBufferPtr->TextureIndex = 1;
-		sUiData.VertexBufferPtr++;
+		sUiData.VertexBufferBase[sUiData.VertexCount + i].Vertex.pos.x = newPosition.x;
+		sUiData.VertexBufferBase[sUiData.VertexCount + i].Vertex.pos.y = newPosition.y;
+		sUiData.VertexBufferBase[sUiData.VertexCount + i].TextureIndex = 1;
 	}
 
-	*  sUiData.IndexBufferPtr = indexCount + 0;
-	*++sUiData.IndexBufferPtr = indexCount + 1;
-	*++sUiData.IndexBufferPtr = indexCount + 2;
+	sUiData.IndexBufferBase[sUiData.IndexCount] = sUiData.IndexCount + 0;
+	sUiData.IndexBufferBase[sUiData.IndexCount + 1] = sUiData.IndexCount + 1;
+	sUiData.IndexBufferBase[sUiData.IndexCount + 2] = sUiData.IndexCount + 2;
 
-	*++sUiData.IndexBufferPtr = indexCount + 2;
-	*++sUiData.IndexBufferPtr = indexCount + 3;
-	*++sUiData.IndexBufferPtr = indexCount + 0;
+	sUiData.IndexBufferBase[sUiData.IndexCount + 3] = sUiData.IndexCount + 2;
+	sUiData.IndexBufferBase[sUiData.IndexCount + 4] = sUiData.IndexCount + 3;
+	sUiData.IndexBufferBase[sUiData.IndexCount + 5] = sUiData.IndexCount + 0;
 }
 
 void UiRenderer::End(GraphicsContext& gfxContext) noexcept
 {
-	if (sUiData.VertexBufferBase != sUiData.VertexBufferPtr)
+	if (sUiData.VertexCount != 0)
 	{
 		Flush(gfxContext);
 	}
@@ -219,12 +215,10 @@ void UiRenderer::Flush(GraphicsContext& gfxContext) noexcept
 
 	UiConstantBuffer cb = { sUiData.ViewProjection.Transpose() };
 	
-	size_t bufferSize = sUiData.VertexBufferPtr - sUiData.VertexBufferBase;
-	size_t indexBufferSize = sUiData.IndexBufferPtr - sUiData.IndexBufferBase;
-	gfxContext.SetDynamicVB(gRingBuffer, 0, bufferSize, sizeof(LocalUiVertex), sUiData.VertexBufferBase);
-	gfxContext.SetDynamicIB(gRingBuffer, indexBufferSize / sizeof(u32), sUiData.IndexBufferBase, true);
+	gfxContext.SetDynamicVB(gRingBuffer, 0, sUiData.VertexCount, sizeof(LocalUiVertex), sUiData.VertexBufferBase);
+	gfxContext.SetDynamicIB(gRingBuffer, sUiData.IndexCount, sUiData.IndexBufferBase, true);
 	gfxContext.SetDynamicCBV(gRingBuffer, 1, sizeof(cb), &cb);
-	gfxContext.DrawIndexedInstanced(indexBufferSize / sizeof(u32), 1, 0, 0, 0);
+	gfxContext.DrawIndexedInstanced(sUiData.IndexCount, 1, 0, 0, 0);
 
 	gfxContext.Flush();
 }

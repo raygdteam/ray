@@ -90,7 +90,7 @@ void UiRootObject::RenderAll(GraphicsContext& gfxContext)
 			
 			static_assert(sizeof(ImDrawVert) == sizeof(UiVertex), "size mismatch");
 
-			UiRenderer::Draw((UiVertex*)cmd->VtxBuffer.Data + draw->VtxOffset + vtxOffset, draw->ElemCount / 3, cmd->IdxBuffer.Data + draw->IdxOffset + idxOffset, draw->ElemCount, gfxContext);
+			UiRenderer::Draw(cmd->VtxBuffer.Data + draw->VtxOffset + vtxOffset, draw->ElemCount / 3, cmd->IdxBuffer.Data + draw->IdxOffset + idxOffset, draw->ElemCount, gfxContext);
 		}
 		vtxOffset += cmd->VtxBuffer.Size;
 		idxOffset += cmd->IdxBuffer.Size;
