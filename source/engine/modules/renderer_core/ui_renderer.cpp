@@ -116,10 +116,53 @@ void UiRenderer::Initialize(u32 w, u32 h, void* data) noexcept
 	_uiPipelineState.SetPrimitiveTopologyType(D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE);
 	_uiPipelineState.SetRenderTargetFormat(DXGI_FORMAT_R8G8B8A8_UNORM, DXGI_FORMAT_UNKNOWN);
 	_uiPipelineState.SetSampleMask(0xffffffff);
-	_uiPipelineState.SetRasterizerState(CD3DX12_RASTERIZER_DESC(D3D12_DEFAULT));
-	_uiPipelineState.SetBlendState(CD3DX12_BLEND_DESC(D3D12_DEFAULT));
 
-	_uiPipelineState.SetDepthStencilState(CD3DX12_DEPTH_STENCIL_DESC(D3D12_DEFAULT));
+	// Create the blending setup
+	{
+		D3D12_BLEND_DESC desc = {};
+		desc.AlphaToCoverageEnable = false;
+		desc.RenderTarget[0].BlendEnable = true;
+		desc.RenderTarget[0].SrcBlend = D3D12_BLEND_SRC_ALPHA;
+		desc.RenderTarget[0].DestBlend = D3D12_BLEND_INV_SRC_ALPHA;
+		desc.RenderTarget[0].BlendOp = D3D12_BLEND_OP_ADD;
+		desc.RenderTarget[0].SrcBlendAlpha = D3D12_BLEND_INV_SRC_ALPHA;
+		desc.RenderTarget[0].DestBlendAlpha = D3D12_BLEND_ZERO;
+		desc.RenderTarget[0].BlendOpAlpha = D3D12_BLEND_OP_ADD;
+		desc.RenderTarget[0].RenderTargetWriteMask = D3D12_COLOR_WRITE_ENABLE_ALL;
+		_uiPipelineState.SetBlendState(desc);
+
+	}
+
+	// Create the rasterizer state
+	{
+		D3D12_RASTERIZER_DESC desc = {};
+		desc.FillMode = D3D12_FILL_MODE_SOLID;
+		desc.CullMode = D3D12_CULL_MODE_NONE;
+		desc.FrontCounterClockwise = FALSE;
+		desc.DepthBias = D3D12_DEFAULT_DEPTH_BIAS;
+		desc.DepthBiasClamp = D3D12_DEFAULT_DEPTH_BIAS_CLAMP;
+		desc.SlopeScaledDepthBias = D3D12_DEFAULT_SLOPE_SCALED_DEPTH_BIAS;
+		desc.DepthClipEnable = true;
+		desc.MultisampleEnable = FALSE;
+		desc.AntialiasedLineEnable = FALSE;
+		desc.ForcedSampleCount = 0;
+		desc.ConservativeRaster = D3D12_CONSERVATIVE_RASTERIZATION_MODE_OFF;
+		_uiPipelineState.SetRasterizerState(desc);
+	}
+
+	// Create depth-stencil State
+	{
+		D3D12_DEPTH_STENCIL_DESC desc = {};
+		desc.DepthEnable = false;
+		desc.DepthWriteMask = D3D12_DEPTH_WRITE_MASK_ALL;
+		desc.DepthFunc = D3D12_COMPARISON_FUNC_ALWAYS;
+		desc.StencilEnable = false;
+		desc.FrontFace.StencilFailOp = desc.FrontFace.StencilDepthFailOp = desc.FrontFace.StencilPassOp = D3D12_STENCIL_OP_KEEP;
+		desc.FrontFace.StencilFunc = D3D12_COMPARISON_FUNC_ALWAYS;
+		desc.BackFace = desc.FrontFace;
+		_uiPipelineState.SetDepthStencilState(desc);
+	}
+
 	_uiPipelineState.SetDSVFormat(gDepthBuffer.GetDesc().Format);
 
 	_uiPipelineState.Finalize();
