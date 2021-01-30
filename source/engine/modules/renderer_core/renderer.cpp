@@ -113,7 +113,7 @@ void IRenderer::Initialize(IPlatformWindow* window) noexcept
 	gSceneColorBuffer.Create(window->GetWidth(), window->GetHeight(), 1, DXGI_FORMAT_R8G8B8A8_UNORM, D3D12_RESOURCE_FLAG_ALLOW_RENDER_TARGET, "gSceneColorBuffer");
 	gEditorColorBuffer.Create(window->GetWidth(), window->GetHeight(), 1, DXGI_FORMAT_R8G8B8A8_UNORM, D3D12_RESOURCE_FLAG_ALLOW_RENDER_TARGET, "gEditorColorBuffer");
 	
-	gRingBuffer.Initialize(MB(10));
+	gRingBuffer.Initialize(MB(15));
 
 	PreparePresentObjects();
 }

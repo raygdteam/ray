@@ -48,10 +48,12 @@ bool RingBuffer::TryToSetResource(u64 alignedSize, u64 alignment) noexcept
 		return false;
 	}
 
+	TryToFreeUpMemory(gCommandListManager.GetGraphicsQueue().GetLastCompletedValue());
+
 	u8* currentPointer = reinterpret_cast<u8*>(AlignUp(reinterpret_cast<size_t>(_uploadBuffer._currentPointer), alignment));
-	if (_frameOffsetQueue.empty())
+	if (_frameOffsetQueue.IsEmpty())
 	{
-		_uploadBuffer._currentPointer = currentPointer;
+		_uploadBuffer._currentPointer = reinterpret_cast<u8*>(AlignUp(reinterpret_cast<size_t>(_uploadBuffer._begin), alignment));
 
 		return true;
 	}
@@ -76,9 +78,8 @@ bool RingBuffer::TryToSetResource(u64 alignedSize, u64 alignment) noexcept
 	while (!IsMemoryEnough(currentPointer, nextResource, alignedSize))
 	{
 		gCommandListManager.GetGraphicsQueue().WaitForFence(frontElement.FrameIndex);
-		u64 lastCompletedFence = gCommandListManager.GetGraphicsQueue().GetLastCompletedValue();
 
-		TryToFreeUpMemory(lastCompletedFence);
+		TryToFreeUpMemory(gCommandListManager.GetGraphicsQueue().GetLastCompletedValue());
 
 		if (_frameOffsetQueue.IsEmpty())
 		{
@@ -97,7 +98,10 @@ bool RingBuffer::TryToSetResource(u64 alignedSize, u64 alignment) noexcept
 
 void RingBuffer::TryToFreeUpMemory(u64 lastCompletedFrame) noexcept
 {
-	while (!_frameOffsetQueue.empty() && _frameOffsetQueue.front().FrameIndex <= lastCompletedFrame)
+	if (_frameOffsetQueue.IsEmpty())
+		return;
+
+	while (!_frameOffsetQueue.IsEmpty() && _frameOffsetQueue.front().FrameIndex <= lastCompletedFrame)
 	{
 		FrameResourceOffset& offset = _frameOffsetQueue.front();
 		_uploadBuffer._currentPointer = offset.ResourceOffset;

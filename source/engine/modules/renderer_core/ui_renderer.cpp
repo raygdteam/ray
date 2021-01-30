@@ -75,6 +75,16 @@ void UiRenderer::Initialize(u32 w, u32 h, void* data) noexcept
 	sUiData.VertexPositions[3] = { 100.5f, -100.5f, 0.5f }; // bottom right
 
 	SamplerDesc defaultSampler;
+	defaultSampler.Filter = D3D12_FILTER_MIN_MAG_MIP_LINEAR;
+	defaultSampler.AddressU = D3D12_TEXTURE_ADDRESS_MODE_WRAP;
+	defaultSampler.AddressV = D3D12_TEXTURE_ADDRESS_MODE_WRAP;
+	defaultSampler.AddressW = D3D12_TEXTURE_ADDRESS_MODE_WRAP;
+	defaultSampler.MipLODBias = 0.f;
+	defaultSampler.MaxAnisotropy = 0;
+	defaultSampler.ComparisonFunc = D3D12_COMPARISON_FUNC_ALWAYS;
+	defaultSampler.MinLOD = 0.f;
+	defaultSampler.MaxLOD = 0.f;
+
 	_uiRootSignature.Begin(2, 1);
 	_uiRootSignature.InitStaticSampler(0, defaultSampler, D3D12_SHADER_VISIBILITY_PIXEL);
 	_uiRootSignature.Slot(0).InitAsDescriptorRange(0, D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 2, D3D12_SHADER_VISIBILITY_PIXEL);
