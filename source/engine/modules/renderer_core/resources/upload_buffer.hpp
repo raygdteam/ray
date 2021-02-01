@@ -8,6 +8,7 @@
 class RAY_RENDERERCORE_API UploadBuffer
 {
 	friend class RingBuffer;
+	friend class UiRenderer;
 private:
 	u8* _begin;
 	u8* _end;

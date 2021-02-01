@@ -7,6 +7,8 @@
 #include "gpu_memory_pool.hpp"
 #include <renderer_core/descriptor_heap.hpp>
 
+class UploadBuffer;
+
 enum class ResourceMappingMode
 {
 	eReadAccess,
@@ -167,8 +169,8 @@ public:
 	}
 
 public:
-	// loads data to allocated memory in gpu.
-	virtual bool Load(const void* initialData) noexcept { return initialData != nullptr; }
+	// loads data to allocated memory in gpu from upload buffer.
+	virtual bool Load(UploadBuffer& uploadBuffer, const void* initialData) noexcept { return initialData != nullptr; }
 
 	// called when resource is being destroyed. Release() must clean up allocated memory 
 	// by calling GpuResourceAllocator::Free.

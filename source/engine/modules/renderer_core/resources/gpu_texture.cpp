@@ -361,17 +361,17 @@ bool GpuTexture::Create(GpuTextureDescription& textureDesc, pcstr debugName) noe
 
 	if (textureDesc.UploadBufferData)
 	{
-		return Load(textureDesc.UploadBufferData);
+		return Load(*gUploadBuffer, textureDesc.UploadBufferData);
 	}
 
 	return true;
 }
 
-bool GpuTexture::Load(const void* uploadBufferData) noexcept
+bool GpuTexture::Load(UploadBuffer& uploadBuffer, const void* uploadBufferData) noexcept
 {
 	check(uploadBufferData != nullptr)
 
-	CommandContext::InitializeTexture(*this, *gUploadBuffer);
+	CommandContext::InitializeTexture(*this, uploadBuffer);
 	return true;
 }
 

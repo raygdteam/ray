@@ -68,15 +68,16 @@ void GpuBuffer::Create(GpuBufferDescription& desc, pcstr debugName) noexcept
 
 	if (desc.UploadBufferData)
 	{
-		Load(desc.UploadBufferData);
+		Load(*gUploadBuffer, desc.UploadBufferData);
 	}
 }
 
-bool GpuBuffer::Load(const void* uploadBufferData) noexcept
+bool GpuBuffer::Load(UploadBuffer& uploadBuffer, const void* uploadBufferData) noexcept
 {
 	check(uploadBufferData != nullptr)
 
-	CommandContext::InitializeBuffer(*this, *gUploadBuffer);
+	_desc.UploadBufferData = uploadBufferData;
+	CommandContext::InitializeBuffer(*this, uploadBuffer);
 
 	return true;
 }

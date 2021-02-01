@@ -76,7 +76,7 @@ public:
 	void Create(GpuBufferDescription& desc, pcstr debugName) noexcept;
 
 public:
-	bool Load(const void* initialData) noexcept override;
+	bool Load(UploadBuffer& uploadBuffer, const void* initialData) noexcept override;
 	void Release() noexcept override;
 
 };

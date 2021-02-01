@@ -87,7 +87,7 @@ public:
 	bool Create(GpuTextureDescription& desc, pcstr debugName) noexcept;
 
 public:
-	bool Load(const void* uploadBufferData) noexcept override;
+	bool Load(UploadBuffer& uploadBuffer, const void* uploadBufferData) noexcept override;
 	void Release() noexcept override;
 
 public:
