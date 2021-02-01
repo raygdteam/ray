@@ -38,9 +38,15 @@ void UiRootObject::Tick()
 {
 	ImGui_ImplWin32_NewFrame();
 	ImGui::NewFrame();
+
+	bool data = {};
 	
 	ImGui::Begin("aaa");
-	ImGui::Text("aaaaa");
+	ImGui::Text("text");
+	ImGui::Button("button");
+	ImGui::Checkbox("checkbox", &data);
+	ImGui::Separator();
+	ImGui::RadioButton("RadioButton", true);
 	ImGui::End();
 	
 	/*for (UiWindow* window : _windows)
@@ -77,9 +83,6 @@ void UiRootObject::RenderAll(GraphicsContext& gfxContext)
 	
 	ImDrawList* cmd = nullptr;
 
-	u32 vtxOffset = 0;
-	u32 idxOffset = 0;
-	
 	for (int i = 0; i < data->CmdListsCount; ++i)
 	{
 		cmd = data->CmdLists[i];
@@ -89,12 +92,10 @@ void UiRootObject::RenderAll(GraphicsContext& gfxContext)
 			ImDrawCmd* draw = &cmd->CmdBuffer[n];
 			
 			static_assert(sizeof(ImDrawVert) == sizeof(UiVertex), "size mismatch");
-
-			UiRenderer::Draw(cmd->VtxBuffer.Data + draw->VtxOffset + vtxOffset, draw->ElemCount / 3, cmd->IdxBuffer.Data + draw->IdxOffset + idxOffset, draw->ElemCount, gfxContext);
+			static_assert(sizeof(ImDrawIdx) == sizeof(u32), "size mismatch");
+			
+			UiRenderer::Draw(cmd->VtxBuffer.Data + (draw->VtxOffset * sizeof(ImDrawVert)), draw->ElemCount / 3, cmd->IdxBuffer.Data + (draw->IdxOffset * sizeof(ImDrawIdx)), draw->ElemCount, gfxContext);
 		}
-		vtxOffset += cmd->VtxBuffer.Size;
-		idxOffset += cmd->IdxBuffer.Size;
-	}
-	
+	}	
 	UiRenderer::End(gfxContext);
 }
