@@ -40,6 +40,8 @@ void UiRootObject::Tick()
 	ImGui::NewFrame();
 
 	bool data = {};
+
+	ImGui::ShowDemoWindow();
 	
 	ImGui::Begin("aaa");
 	ImGui::Text("text");
