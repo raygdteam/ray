@@ -83,6 +83,8 @@ void UiRootObject::RenderAll(GraphicsContext& gfxContext)
 	
 	ImDrawList* cmd = nullptr;
 
+	size_t vertexOffset = 0;
+	size_t indexOffset = 0;
 	for (int i = 0; i < data->CmdListsCount; ++i)
 	{
 		cmd = data->CmdLists[i];
@@ -94,7 +96,9 @@ void UiRootObject::RenderAll(GraphicsContext& gfxContext)
 			static_assert(sizeof(ImDrawVert) == sizeof(UiVertex), "size mismatch");
 			static_assert(sizeof(ImDrawIdx) == sizeof(u32), "size mismatch");
 			
-			UiRenderer::Draw(cmd->VtxBuffer.Data + (draw->VtxOffset * sizeof(ImDrawVert)), draw->ElemCount / 3, cmd->IdxBuffer.Data + (draw->IdxOffset * sizeof(ImDrawIdx)), draw->ElemCount, gfxContext);
+			UiRenderer::Draw(&cmd->VtxBuffer.Data[vertexOffset], draw->ElemCount * 1.5f, &cmd->IdxBuffer.Data[indexOffset], draw->ElemCount, gfxContext);
+			vertexOffset += draw->ElemCount * 1.5f;
+			indexOffset += draw->ElemCount;
 		}
 	}	
 	UiRenderer::End(gfxContext);

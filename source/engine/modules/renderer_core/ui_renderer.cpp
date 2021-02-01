@@ -269,7 +269,7 @@ void UiRenderer::Flush(GraphicsContext& gfxContext) noexcept
 	UiConstantBuffer cb = { sUiData.ViewProjection.Transpose() };
 	
 	gfxContext.SetDynamicVB(gRingBuffer, 0, sUiData.VertexCount, sizeof(LocalUiVertex), sUiData.VertexBufferBase);
-	gfxContext.SetDynamicIB(gRingBuffer, sUiData.IndexCount, sUiData.IndexBufferBase, true);
+	gfxContext.SetDynamicIB(gRingBuffer, sUiData.IndexCount - 3, sUiData.IndexBufferBase, true);
 	gfxContext.SetDynamicCBV(gRingBuffer, 1, sizeof(cb), &cb);
 	gfxContext.DrawIndexedInstanced(sUiData.IndexCount, 1, 0, 0, 0);
 
