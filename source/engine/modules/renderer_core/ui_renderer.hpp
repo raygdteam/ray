@@ -6,6 +6,9 @@
 #include "renderer_core.hpp"
 #include <engine/ui2/ext/imgui.h>
 
+#define TEXTURE_ATLAS_INDEX 0
+#define ENGINE_RENDER_TARGET_INDEX 1
+
 class GraphicsContext;
 class ColorBuffer;
 class RootSignature;
@@ -19,8 +22,18 @@ struct RAY_RENDERERCORE_API UiVertex
 	u32 Color;
 };
 
+/*
+	SEQUENCE OF CALLS
 
+	SetVertices(...)
+	SetIndices(...)
 
+	Begin(...)
+
+	Draw calls...
+
+	End(...)
+*/
 class RAY_RENDERERCORE_API UiRenderer
 {
 private:
@@ -32,14 +45,20 @@ private:
 public:
 	static void Initialize(u32 w, u32 h, void* data) noexcept;
 
-	static void Begin(const FMatrix4x4& vp) noexcept;
-	static void Draw(ImDrawVert* vertices, size_t verticesCount, u32* indices, size_t indicesCount, GraphicsContext& gfxContext) noexcept;
+	// after vertices and indices got set we must invoke Begin()
+	static void Begin(const FMatrix4x4& vp, GraphicsContext& gfxContext) noexcept;
+	
+	// draw calls
+	static void Draw(size_t indexCount, size_t vertexOffset, size_t indexOffset, GraphicsContext& gfxContext) noexcept;
 	static void DrawSceneRenderTarget(const FVector3& pos, const FVector2& size, GraphicsContext& gfxContext) noexcept;
+	
+	// it must be invoked after all draw calls
 	static void End(GraphicsContext& gfxContext) noexcept;
 
-private:
-	static void Flush(GraphicsContext& gfxContext) noexcept;
-	static void FlushAndReset(GraphicsContext& gfxContext) noexcept;
+public:
+	// it must be invoked first of all to provide vertices and indices
+	static void SetVertices(ImDrawVert* vertices, size_t count) noexcept;
+	static void SetIndices(u32* indices, size_t count) noexcept;
 
 };
 
