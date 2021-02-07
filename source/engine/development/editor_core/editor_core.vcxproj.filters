@@ -10,4 +10,9 @@
       <Filter>caches</Filter>
     </ClCompile>
   </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="caches\component_cache.hpp">
+      <Filter>caches</Filter>
+    </ClInclude>
+  </ItemGroup>
 </Project>

@@ -55,14 +55,14 @@
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
-    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>ClangCL</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
     <EnableUnitySupport>true</EnableUnitySupport>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
-    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <PlatformToolset>ClangCL</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
@@ -70,7 +70,7 @@
     <EnableUnitySupport>true</EnableUnitySupport>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Development|x64'" Label="Configuration">
-    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <PlatformToolset>ClangCL</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
@@ -179,6 +179,7 @@
       <TreatWarningAsError>true</TreatWarningAsError>
       <DiagnosticsFormat>Caret</DiagnosticsFormat>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <AdditionalIncludeDirectories>$(SolutionDir)\source\engine\modules;$(SolutionDir)\source\engine\thirdparty;$(SolutionDir)\source\engine\development</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -197,6 +198,7 @@
       <TreatWarningAsError>true</TreatWarningAsError>
       <DiagnosticsFormat>Caret</DiagnosticsFormat>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <AdditionalIncludeDirectories>$(SolutionDir)\source\engine\modules;$(SolutionDir)\source\engine\thirdparty;$(SolutionDir)\source\engine\development</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -217,6 +219,7 @@
       <TreatWarningAsError>true</TreatWarningAsError>
       <DiagnosticsFormat>Caret</DiagnosticsFormat>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <AdditionalIncludeDirectories>$(SolutionDir)\source\engine\modules;$(SolutionDir)\source\engine\thirdparty;$(SolutionDir)\source\engine\development</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -227,6 +230,26 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="caches\component_cache.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="caches\component_cache.hpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\modules\core\core.vcxproj">
+      <Project>{134c88c3-3c53-4b8b-8884-95f2a2283cea}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\..\modules\engine\engine.vcxproj">
+      <Project>{cafbff96-4ad5-443b-a462-fd5b34c0ebac}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\..\modules\resources\resources.vcxproj">
+      <Project>{dc6d5790-bd21-4dba-b811-3f28f4e5689b}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\..\thirdparty\eastl\eastl.vcxproj">
+      <Project>{34ff6296-b8e5-43b8-a8a1-b57163615e2a}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\..\thirdparty\mimalloc\mimalloc.vcxproj">
+      <Project>{615c925d-85a3-4099-85bc-6bbb744c128e}</Project>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
