@@ -39,27 +39,13 @@ void UiRootObject::Tick()
 	ImGui_ImplWin32_NewFrame();
 	ImGui::NewFrame();
 
-	bool data = {};
-
-	ImGui::ShowDemoWindow();
-	
-	ImGui::Begin("aaa");
-	ImGui::Text("text");
-	ImGui::Button("button");
-	ImGui::Checkbox("checkbox", &data);
-	ImGui::Separator();
-	ImGui::RadioButton("RadioButton", true);
-	ImGui::End();
-
-	ImGuiIO& io = ImGui::GetIO();
-	ImGui::GetOverlayDrawList()->AddCircleFilled(io.MousePos, 10.f, IM_COL32_WHITE);
-	/*for (UiWindow* window : _windows)
+	for (UiWindow* window : _windows)
 	{
 		for (UiObject* object : window->_objects)
 		{
 			object->Tick();
 		}
-	}*/
+	}
 	
 	ImGui::EndFrame();
 }
@@ -73,9 +59,6 @@ void UiRootObject::RenderAll(GraphicsContext& gfxContext)
 	ImDrawData* data = ImGui::GetDrawData();
 	if (data->TotalVtxCount < 0) return;
 	
-	//u32 framebufferWidth = (u32)(data->DisplaySize.x * data->FramebufferScale.x);
-	//u32 framebufferHeight = (u32)(data->DisplaySize.y * data->FramebufferScale.y);
-
 	float L = data->DisplayPos.x;
 	float R = data->DisplayPos.x + data->DisplaySize.x;
 	float T = data->DisplayPos.y;
@@ -111,13 +94,13 @@ void UiRootObject::RenderAll(GraphicsContext& gfxContext)
 		{
 			ImDrawCmd* draw = &cmd->CmdBuffer[n];
 			
-			ImVec4 clipRect;
-			clipRect.x = (draw->ClipRect.x - clipOff.x);
-			clipRect.y = (draw->ClipRect.y - clipOff.y);
-			clipRect.z = (draw->ClipRect.z - clipOff.x);
-			clipRect.w = (draw->ClipRect.w - clipOff.y);
-
-			D3D12_RECT r = { (LONG)(draw->ClipRect.x - clipOff.x), (LONG)(draw->ClipRect.y - clipOff.y), (LONG)(draw->ClipRect.z - clipOff.x), (LONG)(draw->ClipRect.w - clipOff.y) };
+			D3D12_RECT r = {
+				.left = (LONG)(draw->ClipRect.x - clipOff.x),
+				.top = (LONG)(draw->ClipRect.y - clipOff.y),
+				.right = (LONG)(draw->ClipRect.z - clipOff.x),
+				.bottom = (LONG)(draw->ClipRect.w - clipOff.y)
+			};
+			
 			if (!(r.right > r.left && r.bottom > r.top))
 				continue;
 			
@@ -127,6 +110,7 @@ void UiRootObject::RenderAll(GraphicsContext& gfxContext)
 
 		vertexOffset += cmd->VtxBuffer.Size;
 		indexOffset += cmd->IdxBuffer.Size;
-	}	
+	}
+	
 	UiRenderer::End(gfxContext);
 }

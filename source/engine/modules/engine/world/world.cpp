@@ -149,6 +149,7 @@ void World::Initialize(IPlatformWindow* window)
 
 	//_pool = gThreadPoolManager->Allocate();
 
+	gRootObject = new UiRootObject;
 	gRootObject->Initialize(window);
 
 	RenderingFinished.Signal();
