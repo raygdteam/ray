@@ -21,10 +21,10 @@ void World::Render()
 {
 	GraphicsContext& ctx = GraphicsContext::Begin();
 
-	//_renderer->Begin(gSceneColorBuffer, ctx);
+	_renderer->Begin(gSceneColorBuffer, ctx);
 
-	//Renderer2D::Begin(_primaryCameraActor->GetCameraComponent()->GetViewProjection());
-	/*for (size_t i = 0; i < 500; ++i)
+	Renderer2D::Begin(_primaryCameraActor->GetCameraComponent()->GetViewProjection());
+	for (size_t i = 0; i < 500; ++i)
 	{
 		for (size_t j = 0; j < 200; ++j)
 		{
@@ -35,10 +35,10 @@ void World::Render()
 			FVector<4> color = { r, g, r * g, 1.f };
 			Renderer2D::DrawQuad(pos, size, color, ctx);
 		}
-	}*/
-	//Renderer2D::End(ctx);
+	}
+	Renderer2D::End(ctx);
 
-	//_renderer->End(gSceneColorBuffer, ctx);
+	_renderer->End(gSceneColorBuffer, ctx);
 
 	if (true)
 	{

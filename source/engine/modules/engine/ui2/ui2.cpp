@@ -112,5 +112,9 @@ void UiRootObject::RenderAll(GraphicsContext& gfxContext)
 		indexOffset += cmd->IdxBuffer.Size;
 	}
 	
+	FVector3 pos = { 500.f, 100.f, 0.f };
+	FVector2 size = { 4.f, 3.f };
+	UiRenderer::DrawSceneRenderTarget(pos, size, gfxContext);
+
 	UiRenderer::End(gfxContext);
 }
