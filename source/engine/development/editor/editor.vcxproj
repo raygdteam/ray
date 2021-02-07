@@ -140,35 +140,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="context\cache\component_cache.cpp" />
     <ClCompile Include="engine\engine.cpp" />
     <ClCompile Include="engine\engine_interface.cpp" />
-    <ClCompile Include="imgui\imgui.cpp">
-      <IncludeInUnityFile Condition="'$(Configuration)|$(Platform)'=='Development|x64'">true</IncludeInUnityFile>
-      <IncludeInUnityFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</IncludeInUnityFile>
-      <IncludeInUnityFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</IncludeInUnityFile>
-      <OrderInUnityFile Condition="'$(Configuration)|$(Platform)'=='Development|x64'">101</OrderInUnityFile>
-      <OrderInUnityFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">101</OrderInUnityFile>
-      <OrderInUnityFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">101</OrderInUnityFile>
-    </ClCompile>
-    <ClCompile Include="imgui\imgui_demo.cpp">
-      <IncludeInUnityFile Condition="'$(Configuration)|$(Platform)'=='Development|x64'">true</IncludeInUnityFile>
-      <IncludeInUnityFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</IncludeInUnityFile>
-      <IncludeInUnityFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</IncludeInUnityFile>
-    </ClCompile>
-    <ClCompile Include="imgui\imgui_draw.cpp">
-      <IncludeInUnityFile Condition="'$(Configuration)|$(Platform)'=='Development|x64'">true</IncludeInUnityFile>
-      <IncludeInUnityFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</IncludeInUnityFile>
-      <IncludeInUnityFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</IncludeInUnityFile>
-    </ClCompile>
-    <ClCompile Include="imgui\imgui_impl_vulkan.cpp" />
-    <ClCompile Include="imgui\imgui_impl_win32.cpp" />
-    <ClCompile Include="imgui\imgui_tables.cpp" />
-    <ClCompile Include="imgui\imgui_widgets.cpp">
-      <IncludeInUnityFile Condition="'$(Configuration)|$(Platform)'=='Development|x64'">true</IncludeInUnityFile>
-      <IncludeInUnityFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</IncludeInUnityFile>
-      <IncludeInUnityFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</IncludeInUnityFile>
-    </ClCompile>
     <ClCompile Include="module_editor.cpp" />
     <ClCompile Include="project\project.cpp" />
     <ClCompile Include="renderer\descriptor_pool.cpp" />
@@ -179,24 +152,16 @@
     <ClCompile Include="renderer\shader.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="context\cache\component_cache.hpp" />
     <ClInclude Include="context\context.hpp" />
     <ClInclude Include="engine\engine.hpp" />
     <ClInclude Include="engine\engine_interface.hpp" />
-    <ClInclude Include="imgui\imconfig.h" />
-    <ClInclude Include="imgui\imgui.h" />
-    <ClInclude Include="imgui\imgui_impl_vulkan.h" />
-    <ClInclude Include="imgui\imgui_impl_win32.h" />
-    <ClInclude Include="imgui\imgui_internal.h" />
-    <ClInclude Include="imgui\imstb_rectpack.h" />
-    <ClInclude Include="imgui\imstb_textedit.h" />
-    <ClInclude Include="imgui\imstb_truetype.h" />
     <ClInclude Include="project\project.hpp" />
     <ClInclude Include="renderer\descriptor_pool.hpp" />
     <ClInclude Include="renderer\loader\volk.h" />
     <ClInclude Include="renderer\pipeline.hpp" />
     <ClInclude Include="renderer\renderer.hpp" />
     <ClInclude Include="renderer\shader.hpp" />
+    <ClInclude Include="ui\editor_ui.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\modules\app_framework\app_framework.vcxproj">
@@ -211,11 +176,17 @@
     <ProjectReference Include="..\..\modules\kernel\kernel.vcxproj">
       <Project>{481e9d9e-4af6-4693-96ab-660b91dd8b57}</Project>
     </ProjectReference>
+    <ProjectReference Include="..\..\modules\renderer_core\renderer_core.vcxproj">
+      <Project>{1575e148-c79e-402e-ac64-89e9f37b477b}</Project>
+    </ProjectReference>
     <ProjectReference Include="..\..\thirdparty\eastl\eastl.vcxproj">
       <Project>{34ff6296-b8e5-43b8-a8a1-b57163615e2a}</Project>
     </ProjectReference>
     <ProjectReference Include="..\..\thirdparty\mimalloc\mimalloc.vcxproj">
       <Project>{615c925d-85a3-4099-85bc-6bbb744c128e}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\editor_core\editor_core.vcxproj">
+      <Project>{15618af6-5192-43b1-a0b9-dd774bad9a29}</Project>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

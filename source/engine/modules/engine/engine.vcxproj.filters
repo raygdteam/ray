@@ -160,6 +160,9 @@
     <ClCompile Include="ui2\objects\button.cpp">
       <Filter>ui2\objects</Filter>
     </ClCompile>
+    <ClCompile Include="ui2\ext\imgui_tables.cpp">
+      <Filter>ui2\ext</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="ui2\objects\label.cpp">

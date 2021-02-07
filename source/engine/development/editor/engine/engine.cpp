@@ -2,17 +2,23 @@
 #include <core/log/log.hpp>
 
 #define IMGUI_DEFINE_MATH_OPERATORS
-#include <editor/imgui/imgui.h>
-#include <editor/imgui/imgui_internal.h>
+#include <engine/ui2/ext/imgui.h>
+#include <engine/ui2/ext/imgui_internal.h>
 
 #include <chrono>
 #include <engine/world/actors/static_quad_actor.hpp>
-#include <editor/context/cache/component_cache.hpp>
+#include <editor_core/caches/component_cache.hpp>
+#include <renderer_core/resources/buffer_manager.hpp>
+#include <renderer_core/command_context.hpp>
 
 #undef CreateWindow
 
+IRenderer* gRenderer;
+
+
 void EditorEngine::Initialize(IEngineLoop* engineLoop)
 {
+	check(false);
 	_window = IPlatformWindow::CreateInstance();
 
 	_window->Initialize();
@@ -22,6 +28,9 @@ void EditorEngine::Initialize(IEngineLoop* engineLoop)
 	gComponentCache->Rebuild();
 	
 	_level = new Level;
+
+	gRenderer = new IRenderer();
+	gRenderer->Initialize(_window);
 	
 	_renderer = new IVkRenderer();
 	_renderer->Initialize(_window);
@@ -45,7 +54,7 @@ void EditorEngine::Tick()
 	
 	//ImGui::ShowDemoWindow();
 	
-	ImGuiViewport* viewport = ImGui::GetMainViewport();
+	/*ImGuiViewport* viewport = ImGui::GetMainViewport();
 	if (ImGui::DockBuilderGetNode(1) == nullptr)
 	{
 		ImGui::DockBuilderAddNode(1, ImGuiDockNodeFlags_DockSpace);
@@ -174,10 +183,15 @@ void EditorEngine::Tick()
 		ImGui::PopID();
 	}
 	
-	ImGui::End();
+	ImGui::End();*/
 	
 	_renderer->EndScene();
 	
+	GraphicsContext& ctx = GraphicsContext::Begin();
+
+	gRenderer->Begin(gSceneColorBuffer, ctx);
+	gRenderer->End(gSceneColorBuffer, ctx);
+
 	auto elapsed = std::chrono::high_resolution_clock::now() - __start;
 	delta = std::chrono::duration_cast<std::chrono::microseconds>(elapsed).count() / 1000.f;
 }

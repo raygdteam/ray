@@ -8,9 +8,6 @@
 #include <windows.h>
 #undef CreateSemaphore
 
-#include <editor/imgui/imgui_impl_win32.h>
-#include <editor/imgui/imgui_impl_vulkan.h>
-
 static Logger gLog("vulkan");
 
 bool IVkRenderer::InitInstance()
@@ -326,12 +323,6 @@ void IVkRenderer::TransitionResource(VkImage image, VkFormat format, VkImageLayo
 		1, &barrier);
 }
 
-extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
-static void ImguiCallback(void* hWnd, u32 msg, u64 wParam, s64 lParam)
-{
-	ImGui_ImplWin32_WndProcHandler((HWND)hWnd, msg, wParam, lParam);
-}
-
 bool IVkRenderer::Initialize(IPlatformWindow* window)
 {
 	gLog.Log(" -------------------- BEGIN VULKAN INIT --------------------");
@@ -343,10 +334,7 @@ bool IVkRenderer::Initialize(IPlatformWindow* window)
 	if (!InitSurface(window)) return false;
 	if (!InitSwapchain(window)) return false;
 	if (!InitCommandPool()) return false;
-	
-	ImGui::CreateContext();
-	ImGui_ImplWin32_Init(window->GetWindowHandleRaw());
-	
+		
 	_acqSemaphore = CreateSemaphore();
 	_relSemaphore = CreateSemaphore();
 
@@ -359,22 +347,6 @@ bool IVkRenderer::Initialize(IPlatformWindow* window)
 	InitFramebuffer();
 	
 	vkGetDeviceQueue(_device, familyIndex, 0, &_queue);
-
-	ImGui_ImplVulkan_InitInfo initInfo = {
-		.Instance = _instance,
-		.PhysicalDevice = _physicalDevice,
-		.Device = _device,
-		.QueueFamily = familyIndex,
-		.Queue = _queue,
-		.PipelineCache = nullptr,
-		.DescriptorPool = DescriptorPool::CreateDescriptorPool(_device),
-		.MinImageCount = 2,
-		.ImageCount = 2,
-		.MSAASamples = VkSampleCountFlagBits::VK_SAMPLE_COUNT_1_BIT,
-		.Allocator = nullptr,
-		.CheckVkResultFn = nullptr
-	};
-	ImGui_ImplVulkan_Init(&initInfo, _renderPass);
 	
 
 	VkCommandBufferAllocateInfo allocateInfo = {
@@ -397,7 +369,6 @@ bool IVkRenderer::Initialize(IPlatformWindow* window)
 	};
 
 	vkBeginCommandBuffer(_cmdBuf, &beginInfo);
-	ImGui_ImplVulkan_CreateFontsTexture(_cmdBuf);
 
 	vkEndCommandBuffer(_cmdBuf);
 	VkSubmitInfo submitInfo = {
@@ -414,20 +385,12 @@ bool IVkRenderer::Initialize(IPlatformWindow* window)
 	vkQueueSubmit(_queue, 1, &submitInfo, nullptr);
 	vkDeviceWaitIdle(_device);
 	
-	ImGui_ImplVulkan_DestroyFontUploadObjects();
-
-	window->RegisterEventCallback(ImguiCallback);
-
 	gLog.Log(" --------------------- END VULKAN INIT ---------------------");
 	return true;
 }
 
 void IVkRenderer::BeginScene()
 {
-	ImGui_ImplWin32_NewFrame();
-	ImGui::NewFrame();
-	// ImGui::ShowDemoWindow();
-
 	vkDeviceWaitIdle(_device);
 
 	vkAcquireNextImageKHR(_device, _swapchain, ~0ull, _acqSemaphore, nullptr, &_imageIdx);
@@ -479,12 +442,6 @@ void IVkRenderer::BeginScene()
 
 void IVkRenderer::EndScene()
 {
-	ImGui::EndFrame();
-	ImGui::Render();
-	ImGui::UpdatePlatformWindows();
-	ImDrawData* drawData = ImGui::GetDrawData();
-
-	ImGui_ImplVulkan_RenderDrawData(drawData, _cmdBuf);
 	vkCmdEndRenderPass(_cmdBuf);
 
 	TransitionResource(_swapchainImages[_imageIdx], _swapchainFormat, VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL, VK_IMAGE_LAYOUT_PRESENT_SRC_KHR);

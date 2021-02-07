@@ -9,7 +9,7 @@ class ComponentCache
 	struct ComponentCacheEntry;
 	Array<ComponentCacheEntry> _cache;
 	Logger _log;
-	
+
 public:
 	ComponentCache();
 	void Rebuild();
