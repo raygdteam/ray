@@ -31,7 +31,7 @@ void UiRootObject::Initialize(IPlatformWindow* window)
 
 	io.BackendRendererName = "imgui_impl_vulkan";
 	io.BackendFlags |= ImGuiBackendFlags_RendererHasVtxOffset;  // We can honor the ImDrawCmd::VtxOffset field, allowing for large meshes.
-
+	(void)io.DisplaySize;
 }
 
 void UiRootObject::Tick()
@@ -50,7 +50,9 @@ void UiRootObject::Tick()
 	ImGui::Separator();
 	ImGui::RadioButton("RadioButton", true);
 	ImGui::End();
-	
+
+	ImGuiIO& io = ImGui::GetIO();
+	ImGui::GetOverlayDrawList()->AddCircleFilled(io.MousePos, 10.f, IM_COL32_WHITE);
 	/*for (UiWindow* window : _windows)
 	{
 		for (UiObject* object : window->_objects)
@@ -64,10 +66,16 @@ void UiRootObject::Tick()
 
 void UiRootObject::RenderAll(GraphicsContext& gfxContext)
 {
+	static_assert(sizeof(ImDrawVert) == sizeof(UiVertex), "size mismatch");
+	static_assert(sizeof(ImDrawIdx) == sizeof(u32), "size mismatch");
+
 	ImGui::Render();
 	ImDrawData* data = ImGui::GetDrawData();
 	if (data->TotalVtxCount < 0) return;
 	
+	//u32 framebufferWidth = (u32)(data->DisplaySize.x * data->FramebufferScale.x);
+	//u32 framebufferHeight = (u32)(data->DisplaySize.y * data->FramebufferScale.y);
+
 	float L = data->DisplayPos.x;
 	float R = data->DisplayPos.x + data->DisplaySize.x;
 	float T = data->DisplayPos.y;
@@ -91,6 +99,8 @@ void UiRootObject::RenderAll(GraphicsContext& gfxContext)
 
 	UiRenderer::Begin(vp, gfxContext);
 
+	ImVec2 clipOff = data->DisplayPos;
+	
 	size_t vertexOffset = 0;
 	size_t indexOffset = 0;
 	for (int i = 0; i < data->CmdListsCount; ++i)
@@ -101,9 +111,17 @@ void UiRootObject::RenderAll(GraphicsContext& gfxContext)
 		{
 			ImDrawCmd* draw = &cmd->CmdBuffer[n];
 			
-			static_assert(sizeof(ImDrawVert) == sizeof(UiVertex), "size mismatch");
-			static_assert(sizeof(ImDrawIdx) == sizeof(u32), "size mismatch");
+			ImVec4 clipRect;
+			clipRect.x = (draw->ClipRect.x - clipOff.x);
+			clipRect.y = (draw->ClipRect.y - clipOff.y);
+			clipRect.z = (draw->ClipRect.z - clipOff.x);
+			clipRect.w = (draw->ClipRect.w - clipOff.y);
+
+			D3D12_RECT r = { (LONG)(draw->ClipRect.x - clipOff.x), (LONG)(draw->ClipRect.y - clipOff.y), (LONG)(draw->ClipRect.z - clipOff.x), (LONG)(draw->ClipRect.w - clipOff.y) };
+			if (!(r.right > r.left && r.bottom > r.top))
+				continue;
 			
+			gfxContext.SetScissor(r);
 			UiRenderer::Draw(draw->ElemCount, draw->VtxOffset + vertexOffset, draw->IdxOffset + indexOffset, gfxContext);
 		}
 

@@ -195,8 +195,8 @@ void UiRenderer::Begin(const FMatrix4x4& vp, GraphicsContext& gfxContext) noexce
 	}
 
 	gfxContext.SetRootSignature(_uiRootSignature);
-	gfxContext.SetScissor(0, 0, 1280, 720);
-	gfxContext.SetViewport(0.f, 0.f, 1280.f, 720.f);
+	gfxContext.SetScissor(0, 0, gDisplayPlane->GetDesc().Width, gDisplayPlane->GetDesc().Height);
+	gfxContext.SetViewport(0.f, 0.f, gDisplayPlane->GetDesc().Width, gDisplayPlane->GetDesc().Height);
 
 	gfxContext.SetPipelineState(_uiPipelineState);
 	gfxContext.SetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);

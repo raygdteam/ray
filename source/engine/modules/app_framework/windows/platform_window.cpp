@@ -15,8 +15,13 @@ class PlatformWindow : public IPlatformWindow
 {
 	HWND _windowHandle = nullptr;
 	MSG _lastMsg;
+
 	u16 _width = 1280;
 	u16 _height = 720;
+
+	u16 _clientWidth = 0.f;
+	u16 _clientHeight = 0.f;
+
 	bool _osRequestedClose = false;
 	MulticastDelegate<void(void*, u32, u64, s64)> _cb;
 public:
@@ -28,6 +33,10 @@ public:
 	void* GetWindowHandleRaw() override;
 	u16 GetWidth() override;
 	u16 GetHeight() override;
+
+	u16 GetClientWidth() override;
+	u16 GetClientHeight() override;
+
 	void Destroy() override;
 	void Shutdown() override;
 	void RegisterEventCallback(Function<void(void*, u32, u64, s64)> callback) override;
@@ -59,6 +68,11 @@ bool PlatformWindow::CreateWindow(const char* name)
 								_height, nullptr, nullptr, GetModuleHandleA(0), 0);
 
 	UpdateWindow(_windowHandle);
+
+	RECT rect = {};
+	GetClientRect(_windowHandle, &rect);
+	_clientWidth = rect.right;
+	_clientHeight = rect.bottom;
 
 	return _windowHandle != nullptr;
 }
@@ -103,6 +117,16 @@ u16 PlatformWindow::GetWidth()
 u16 PlatformWindow::GetHeight()
 {
 	return _height;
+}
+
+u16 PlatformWindow::GetClientWidth()
+{
+	return _clientWidth;
+}
+
+u16 PlatformWindow::GetClientHeight()
+{
+	return _clientHeight;
 }
 
 void PlatformWindow::Destroy()

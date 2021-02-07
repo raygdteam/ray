@@ -63,6 +63,9 @@ public:
 	*/
 	virtual u16 GetHeight() = 0;
 
+	virtual u16 GetClientWidth() = 0;
+	virtual u16 GetClientHeight() = 0;
+
 	/**
 	 *  Destroy the window.
 	 */

@@ -77,8 +77,8 @@ void IRenderer::Initialize(IPlatformWindow* window) noexcept
 	gCommandListManager.Create(gDevice);
 
 	DXGI_SWAP_CHAIN_DESC1 swapChainDesc = {};
-	swapChainDesc.Width = window->GetWidth();
-	swapChainDesc.Height = window->GetHeight();
+	swapChainDesc.Width = window->GetClientWidth();
+	swapChainDesc.Height = window->GetClientHeight();
 	swapChainDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
 	swapChainDesc.Scaling = DXGI_SCALING_NONE;
 	swapChainDesc.SampleDesc.Quality = 0;
@@ -110,8 +110,8 @@ void IRenderer::Initialize(IPlatformWindow* window) noexcept
 	gBufferAllocator.Initialize(MB(10));
 
 	gDepthBuffer.Create(gDisplayPlane->GetDesc().Width, gDisplayPlane->GetDesc().Height, DXGI_FORMAT_D32_FLOAT, "gDepthBuffer");
-	gSceneColorBuffer.Create(window->GetWidth(), window->GetHeight(), 1, DXGI_FORMAT_R8G8B8A8_UNORM, D3D12_RESOURCE_FLAG_ALLOW_RENDER_TARGET, "gSceneColorBuffer");
-	gEditorColorBuffer.Create(window->GetWidth(), window->GetHeight(), 1, DXGI_FORMAT_R8G8B8A8_UNORM, D3D12_RESOURCE_FLAG_ALLOW_RENDER_TARGET, "gEditorColorBuffer");
+	gSceneColorBuffer.Create(window->GetClientWidth(), window->GetClientHeight(), 1, DXGI_FORMAT_R8G8B8A8_UNORM, D3D12_RESOURCE_FLAG_ALLOW_RENDER_TARGET, "gSceneColorBuffer");
+	gEditorColorBuffer.Create(window->GetClientWidth(), window->GetClientHeight(), 1, DXGI_FORMAT_R8G8B8A8_UNORM, D3D12_RESOURCE_FLAG_ALLOW_RENDER_TARGET, "gEditorColorBuffer");
 	
 	gRingBuffer.Initialize(MB(15));
 
@@ -229,8 +229,8 @@ void IRenderer::Present(ColorBuffer& finalFrame, GraphicsContext& gfxContext) no
 	gDevice->CopyDescriptors(1, &destSrv, &rangeSize, 1, &frameSrv, &rangeSize, D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
 
 	gfxContext.SetRootSignature(_presentSignature);
-	gfxContext.SetScissor(0, 0, 1280, 720);
-	gfxContext.SetViewport(0.f, 0.f, 1280.f, 720.f);
+	gfxContext.SetScissor(0, 0, gDisplayPlane->GetDesc().Width, gDisplayPlane->GetDesc().Height);
+	gfxContext.SetViewport(0.f, 0.f, gDisplayPlane->GetDesc().Width, gDisplayPlane->GetDesc().Height);
 
 	gfxContext.SetPipelineState(_presentPipeline);
 	gfxContext.SetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
