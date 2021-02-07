@@ -8,6 +8,8 @@ class GraphicsPipeline;
 class RootSignature;
 class GraphicsContext;
 class DescriptorHeap;
+class DescriptorHandle;
+class TextureView;
 
 class RAY_RENDERERCORE_API Renderer2D
 {
@@ -28,9 +30,8 @@ public:
 	static void End(GraphicsContext& gfxContext);
 
 public:
-	//static void DrawQuad(const FVector<3>& pos, FVector<2>* textureCoords, GraphicsContext& gfxContext);
-	static void DrawQuad(const FVector3& pos, const FVector2& size, u32 textureIndex, FVector2* textureCoords, GraphicsContext& gfxContext);
-	static void DrawQuad(const FVector3& pos, const FVector2& size, u32 textureIndex, GraphicsContext& gfxContext);
+	static void DrawQuad(const FVector3& pos, const FVector2& size, const TextureView& textureHandle, FVector2* textureCoords, GraphicsContext& gfxContext);
+	static void DrawQuad(const FVector3& pos, const FVector2& size, const TextureView& textureHandle, GraphicsContext& gfxContext);
 	
 	static void DrawQuad(const FVector3& pos, const FVector2& size, const FVector4& color, GraphicsContext& gfxContext);
 

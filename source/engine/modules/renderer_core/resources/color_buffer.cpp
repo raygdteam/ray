@@ -2,8 +2,6 @@
 #include <renderer_core/renderer.hpp>
 #include <core/debug/assert.hpp>
 
-DescriptorHeap ColorBuffer::sMainRTV_DescriptorHeap(D3D12_DESCRIPTOR_HEAP_TYPE_RTV, D3D12_DESCRIPTOR_HEAP_FLAG_NONE, 256);
-
 void ColorBuffer::CreateFromSwapChain(ID3D12Resource* inResource, pcstr debugName)
 {
 	auto desc = inResource->GetDesc();
@@ -41,7 +39,7 @@ void ColorBuffer::Create(u32 width, u32 height, u32 numMips, DXGI_FORMAT format,
 
 	desc.ClearValue = &clearValue;
 	GpuPixelBuffer::Create(desc, debugName);
-	_view.Create(*this, nullptr, &sMainRTV_DescriptorHeap);
+	_view.Create(*this);
 }
 
 void ColorBuffer::CreateArray(u32 width, u32 height, u32 numMips, u32 arrayCount, DXGI_FORMAT format, D3D12_RESOURCE_FLAGS flags, pcstr debugName)

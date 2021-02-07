@@ -7,6 +7,29 @@
 
 #define D3D12_GPU_VIRTUAL_ADDRESS_UNKNOWN static_cast<D3D12_GPU_VIRTUAL_ADDRESS>(-1)
 
+class DescriptorAllocator
+{
+public:
+	DescriptorAllocator(D3D12_DESCRIPTOR_HEAP_TYPE type) : _currentHeap(nullptr), _type(type) {}
+
+	D3D12_CPU_DESCRIPTOR_HANDLE Allocate(size_t count = 1);
+	static void DestroyAll();
+
+private:
+	static const uint32_t sNumDescriptorsPerHeap = 256;
+	static CriticalSection sAllocationMutex;
+	static Array<ID3D12DescriptorHeap*> sDescriptorHeapPool;
+	static ID3D12DescriptorHeap* RequestNewHeap(D3D12_DESCRIPTOR_HEAP_TYPE Type);
+
+	ID3D12DescriptorHeap* _currentHeap;
+	D3D12_DESCRIPTOR_HEAP_TYPE _type;
+	Array<ID3D12DescriptorHeap*> _descriptorHeapPool;
+	size_t _remainingFreeHandles;
+	size_t _descriptorSize;
+	D3D12_CPU_DESCRIPTOR_HANDLE _currentHandle;
+
+};
+
 class DescriptorHandle
 {
 public:

@@ -30,6 +30,14 @@ GpuPixelBufferAllocator gPixelBufferAllocator;
 RingBuffer gRingBuffer;
 RAY_RENDERERCORE_API UploadBuffer* gUploadBuffer;
 
+DescriptorAllocator gDescriptorAllocator[D3D12_DESCRIPTOR_HEAP_TYPE_NUM_TYPES] =
+{
+	D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV,
+	D3D12_DESCRIPTOR_HEAP_TYPE_SAMPLER,
+	D3D12_DESCRIPTOR_HEAP_TYPE_RTV,
+	D3D12_DESCRIPTOR_HEAP_TYPE_DSV
+};
+
 bool IRenderer::_sbReady = false;
 
 void IRenderer::Initialize(IPlatformWindow* window) noexcept
@@ -89,8 +97,6 @@ void IRenderer::Initialize(IPlatformWindow* window) noexcept
 	swapChainDesc.SwapEffect = DXGI_SWAP_EFFECT_FLIP_SEQUENTIAL;
 
 	gMainDescriptorHeap.Create();
-	DepthBuffer::sMainDSV_DescriptorHeap.Create();
-	ColorBuffer::sMainRTV_DescriptorHeap.Create();
 
 	hr = dxgiFactory->CreateSwapChainForHwnd(gCommandListManager.GetCommandQueue(), static_cast<HWND>(window->GetWindowHandleRaw()), &swapChainDesc, nullptr, nullptr, &_swapChain);
 	for (u32 i = 0; i < SWAP_CHAIN_BUFFER_COUNT; ++i)

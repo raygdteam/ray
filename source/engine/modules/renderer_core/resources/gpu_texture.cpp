@@ -385,10 +385,6 @@ void TextureView::Create(GpuResource& resource, DescriptorHeap* cbvSrvUavHeap, D
 	auto desc = resource.GetDesc();
 	auto nativeResource = resource.GetNativeResource();
 
-	_rtvHeap = rtvHeap != nullptr ? rtvHeap : &gDescriptorHeapsManager.GetCurrentRTV_Heap(true);
-	_dsvHeap = dsvHeap != nullptr ? dsvHeap : &gDescriptorHeapsManager.GetCurrentDSV_Heap(true);
-	_cbvSrvUavHeap = cbvSrvUavHeap != nullptr ? cbvSrvUavHeap : &gDescriptorHeapsManager.GetCurrentCBV_SRV_UAV_Heap(true);
-
 	// ========================== RENDER TARGET VIEW ========================== //
 	if (desc.Flags & D3D12_RESOURCE_FLAG_ALLOW_RENDER_TARGET)
 	{
@@ -398,7 +394,7 @@ void TextureView::Create(GpuResource& resource, DescriptorHeap* cbvSrvUavHeap, D
 		rtvDesc.Texture2D.MipSlice = 0;
 		rtvDesc.Texture2D.PlaneSlice = 0;
 
-		_rtvHandle = _rtvHeap->Allocate(1);
+		_rtvHandle = AllocateDescriptor(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
 		gDevice->CreateRenderTargetView(nativeResource, &rtvDesc, _rtvHandle.GetCpuHandle());
 	}
 
@@ -410,8 +406,8 @@ void TextureView::Create(GpuResource& resource, DescriptorHeap* cbvSrvUavHeap, D
 		dsvDesc.ViewDimension = D3D12_DSV_DIMENSION_TEXTURE2D;
 		dsvDesc.Texture2D.MipSlice = 0;
 
-		_dsvHandle[0] = _dsvHeap->Allocate(1);
-		_dsvHandle[1] = _dsvHeap->Allocate(1);
+		_dsvHandle[0] = AllocateDescriptor(D3D12_DESCRIPTOR_HEAP_TYPE_DSV);
+		_dsvHandle[1] = AllocateDescriptor(D3D12_DESCRIPTOR_HEAP_TYPE_DSV);
 
 		dsvDesc.Flags = D3D12_DSV_FLAG_NONE;
 		gDevice->CreateDepthStencilView(nativeResource, &dsvDesc, _dsvHandle[0].GetCpuHandle());
@@ -432,7 +428,7 @@ void TextureView::Create(GpuResource& resource, DescriptorHeap* cbvSrvUavHeap, D
 		srvDesc.Texture2D.PlaneSlice = 0;
 		srvDesc.Texture2D.ResourceMinLODClamp = 0.f;
 
-		_srvHandle = _cbvSrvUavHeap->Allocate(1);
+		_srvHandle = AllocateDescriptor(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
 		gDevice->CreateShaderResourceView(nativeResource, &srvDesc, _srvHandle.GetCpuHandle());
 	}
 
@@ -445,7 +441,7 @@ void TextureView::Create(GpuResource& resource, DescriptorHeap* cbvSrvUavHeap, D
 		uavDesc.Texture2D.PlaneSlice = 0;
 		uavDesc.Texture2D.MipSlice = 0;
 
-		_uavHandle = _cbvSrvUavHeap->Allocate(1);
+		_uavHandle = AllocateDescriptor(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
 		gDevice->CreateUnorderedAccessView(nativeResource, nullptr, &uavDesc, _uavHandle.GetCpuHandle());
 	}
 }

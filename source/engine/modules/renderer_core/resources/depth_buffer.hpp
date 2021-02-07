@@ -13,7 +13,4 @@ public:
 	D3D12_CPU_DESCRIPTOR_HANDLE GetDSV() const { return _view.GetDSV(); }
 	D3D12_CPU_DESCRIPTOR_HANDLE GetDSV_Readonly() const { return _view.GetDSV_ReadOnly(); }
 
-public:
-	static DescriptorHeap sMainDSV_DescriptorHeap;
-
 };

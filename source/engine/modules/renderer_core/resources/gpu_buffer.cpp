@@ -95,8 +95,6 @@ void BufferView::Create(GpuResource& resource, DescriptorHeap* cbvSrvUavHeap, De
 	auto gpuVirtualAddress = nativeResource->GetGPUVirtualAddress();
 	u32 numElements = desc.SizeInBytes / desc.Stride;
 
-	_cbvSrvUavHeap = cbvSrvUavHeap != nullptr ? cbvSrvUavHeap : &gDescriptorHeapsManager.GetCurrentCBV_SRV_UAV_Heap(true);
-
 	// ========================== VERTEX BUFFER VIEW ========================== //
 	_vbView.BufferLocation = gpuVirtualAddress;
 	_vbView.SizeInBytes = desc.SizeInBytes;
@@ -122,7 +120,7 @@ void BufferView::Create(GpuResource& resource, DescriptorHeap* cbvSrvUavHeap, De
 		srvDesc.Buffer.NumElements = numElements;
 		srvDesc.Buffer.StructureByteStride = desc.Stride;
 
-		_srvHandle = _cbvSrvUavHeap->Allocate(1);
+		_srvHandle = AllocateDescriptor(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
 		gDevice->CreateShaderResourceView(nativeResource, &srvDesc, _srvHandle.GetCpuHandle());
 	}
 
@@ -138,7 +136,7 @@ void BufferView::Create(GpuResource& resource, DescriptorHeap* cbvSrvUavHeap, De
 		uavDesc.Buffer.NumElements = numElements;
 		uavDesc.Buffer.StructureByteStride = desc.Stride;
 
-		_uavHandle = _cbvSrvUavHeap->Allocate(1);
+		_uavHandle = AllocateDescriptor(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
 		gDevice->CreateUnorderedAccessView(nativeResource, nullptr, &uavDesc, _uavHandle.GetCpuHandle());
 	}
 }

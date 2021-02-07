@@ -52,9 +52,6 @@ public:
 public:
 	void GenerateMipMaps(CommandContext& context);
 
-public:
-	static DescriptorHeap sMainRTV_DescriptorHeap;
-
 protected:
 	static inline u32 ComputeNumMips(u32 width, u32 height)
 	{
