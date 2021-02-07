@@ -18,6 +18,7 @@ IRenderer* gRenderer;
 
 void EditorEngine::Initialize(IEngineLoop* engineLoop)
 {
+	check(false);
 	_window = IPlatformWindow::CreateInstance();
 
 	_window->Initialize();

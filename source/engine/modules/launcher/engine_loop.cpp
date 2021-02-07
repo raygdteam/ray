@@ -40,7 +40,7 @@ void EngineLoop::PreInitialize()
 	if (
 #ifndef RAY_RELEASE
 		/*strcmp(GetCommandLineA(), "-editor") != 0
-		|| strcmp(GetCommandLineA(), "-project=") == 0*/ true
+		|| strcmp(GetCommandLineA(), "-project=") == 0*/ false
 #else
 		false
 #endif
