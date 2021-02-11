@@ -30,7 +30,7 @@ void EngineLoop::PreInitialize()
 	IRayState* state = RayState();
 	state->ObjectDb = new ObjectDb();
 	state->ModuleManager = new ModuleManager();
-	state->FileSystem = new FileSystem();
+	gFileSystem.Initialize();
 	state->Debug = new Debug();
 	state->Input = new Input();
 	state->ResourceManager = new ResourceManager(state);
