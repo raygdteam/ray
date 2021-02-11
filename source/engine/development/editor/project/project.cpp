@@ -22,13 +22,16 @@ Project* ProjectManager::LoadProjectInternal(IFile* file)
 	if (!IsProjectCompatible(version))
 		return nullptr;
 	
-	Project project = { version };
+	Project project = { };
+	project.Version = version;
 	file->Read(project.EngineVersion);
 
 	u64 nameSize = 0;
 	file->Read(nameSize);
 	project.Name.resize(nameSize);
 	file->Read((u8*)project.Name.AsRawStr(), nameSize);
+
+	return nullptr;
 }
 
 void ProjectManager::LoadProject(String& path)

@@ -4,7 +4,7 @@
 
 VkShaderModule Shader::LoadShader(VkDevice device, pcstr path)
 {
-	IFile* shader = RayState()->FileSystem->OpenFile(path, ReadBinary);
+	IFile* shader = gFileSystem.OpenFile(path, ReadBinary);
 
 	u8* buffer = new u8[shader->Size()];
 	shader->Read(buffer, shader->Size());

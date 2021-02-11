@@ -160,7 +160,7 @@ IRResource* ResourceManager::LoadResourceResolved(pcstr path, pcstr resorcePath,
 		}
 	}*/
 	
-	IFile* file = _state->FileSystem->OpenFile(path, ReadBinary);
+	IFile* file = gFileSystem.OpenFile(path, ReadBinary);
 	check(file != nullptr);
 	
 	RTexture* texture = new RTexture;
@@ -210,7 +210,7 @@ void ResourceManager::SetResourceDirectory(pcstr directory, pcstr mapping)
 	String path = {};
 	path += "resource_info.ray";
 	
-	IFile* info = _state->FileSystem->OpenFile(path.c_str(), Read);
+	IFile* info = gFileSystem.OpenFile(path.c_str(), Read);
 	ray_assert(info != nullptr, "Invalid mapping");
 	ray_assert(info->Size() != 0, "Invalid mapping");
 
