@@ -24,7 +24,7 @@ struct IRayState
 	/* core */
 	ModuleManager* ModuleManager;
 	ObjectDb* ObjectDb;
-	FileSystem* FileSystem;
+	DEPRECATED(0.0.0, "Use gFileSystem") FileSystem* FileSystem;
 	Debug* Debug;
 
 	/* input */

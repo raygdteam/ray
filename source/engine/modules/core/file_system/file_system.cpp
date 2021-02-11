@@ -7,9 +7,17 @@ extern "C"
 #include <kernel/kernel_file.h>
 }
 
+RAY_CORE_API FileSystem gFileSystem;
+
 FileSystem::FileSystem()
 {
+	
+}
+
+bool FileSystem::Initialize() const
+{
 	palFileSysSwitchToExeDirectory();
+	return true;
 }
 
 /**

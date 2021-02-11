@@ -17,6 +17,8 @@ class RAY_CORE_API FileSystem
 public:
 	FileSystem();
 
+	bool Initialize() const;
+	
 	/*
 	 * Open the file.
 	 * Path is relative to the folder .exe is in.
@@ -33,3 +35,5 @@ public:
 	 */
 	void CreateAllDirectories(pcstr path);
 };
+
+extern RAY_CORE_API FileSystem gFileSystem;

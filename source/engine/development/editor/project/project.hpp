@@ -2,12 +2,15 @@
 #include <core/core.hpp>
 #include <core/lib/string.hpp>
 
+class IFile;
+
 enum ProjectFileVersion
 {
-	Invalid = 0,
-	Initial = 1,
-	
-	Max
+	eInvalid = 0,
+	eInitial = 1,
+
+	eMaxCompatible = eInitial,
+	eMax
 };
 
 struct Project
@@ -27,6 +30,9 @@ struct Project
 
 class ProjectManager
 {
+	bool SanityCheckProject(Project& project);
+	bool IsProjectCompatible(ProjectFileVersion version);
+	Project* LoadProjectInternal(IFile* file);
 public:
 	void LoadProject(String& path);
 };
