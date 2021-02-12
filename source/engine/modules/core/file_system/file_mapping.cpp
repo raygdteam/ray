@@ -2,30 +2,27 @@
 
 #include <windows.h>
 
-char* MapFile(const char* path)
+u8* MapFile(const char* path)
 {
 	auto file = CreateFile(path, GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
 
 	if (file == INVALID_HANDLE_VALUE)
-		return NULL;
-
-	auto size = GetFileSize(file, NULL);
-
-	if (size == INVALID_FILE_SIZE || size == 0)
 	{
 		CloseHandle(file);
 		return NULL;
 	}
 
-	auto map = CreateFileMapping(file, NULL, PAGE_READONLY, 0, size, NULL);
+	auto map = CreateFileMapping(file, NULL, PAGE_READONLY, 0, GetFileSize(file, NULL), NULL);
+
+	CloseHandle(file);
 
 	if (!map)
 	{
-		CloseHandle(file);
+		CloseHandle(map);
 		return NULL;
 	}
 
-	auto data = (char*)MapViewOfFile(map, FILE_MAP_READ, 0, 0, size);
+	auto data = (u8*)MapViewOfFile(map, FILE_MAP_READ, 0, 0, 1);
 
 	CloseHandle(map);
 
