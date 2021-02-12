@@ -101,6 +101,9 @@
     <ClInclude Include="new_lib\array.hpp">
       <Filter>lib</Filter>
     </ClInclude>
+    <ClInclude Include="file_system\file_mapping.hpp">
+      <Filter>file_system</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="core_entry_point.cpp" />
@@ -148,6 +151,9 @@
     </ClCompile>
     <ClCompile Include="context\context.cpp">
       <Filter>context</Filter>
+    </ClCompile>
+    <ClCompile Include="file_system\file_mapping.cpp">
+      <Filter>file_system</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

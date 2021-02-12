@@ -1,5 +1,6 @@
 #pragma once
 
+#include <memory>
 #include <core/core.hpp>
 
 template <typename Type>//, typename Allocator>
