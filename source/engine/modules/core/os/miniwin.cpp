@@ -24,7 +24,7 @@ Array<RawInputDeviceList> WinApi::GetRawInputDeviceList()
 	Array<RawInputDeviceList> list;
 	
 	::GetRawInputDeviceList(nullptr, &numDevices, sizeof(RawInputDeviceList));
-	list.resize(numDevices);
+	list.Resize(numDevices);
 
 	::GetRawInputDeviceList((RAWINPUTDEVICELIST*)list.GetData(), &numDevices, sizeof(RawInputDeviceList));
 	return list;

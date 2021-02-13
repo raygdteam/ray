@@ -89,7 +89,7 @@ void RTexture::Deserialize(Archive& ar)
 {
 	ar.Read(_dimensions);
 	u64 size = _dimensions.x * _dimensions.y;
-	_data.resize(size);
+	_data.Resize(size);
 	ar.Read((u8*)_data.GetData(), size * sizeof(FVector4));
 }
 

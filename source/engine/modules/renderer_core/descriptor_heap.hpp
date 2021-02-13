@@ -128,36 +128,3 @@ private:
 
 };
 
-class DescriptorHeapsManager
-{
-private:
-	Array<DescriptorHeap> _heaps[D3D12_DESCRIPTOR_HEAP_TYPE_NUM_TYPES];
-	u32 _currentHeaps[D3D12_DESCRIPTOR_HEAP_TYPE_NUM_TYPES];
-
-public:
-	DescriptorHeap& CreateHeap(D3D12_DESCRIPTOR_HEAP_TYPE type, D3D12_DESCRIPTOR_HEAP_FLAGS flag, u32 elementsCount) noexcept;
-
-public:
-	DescriptorHeap& GetCurrentHeap(D3D12_DESCRIPTOR_HEAP_TYPE type, bool bAllowCreateNewHeap) noexcept;
-
-	DescriptorHeap& GetCurrentRTV_Heap(bool bAllowCreateNewHeap) noexcept
-	{
-		return GetCurrentHeap(D3D12_DESCRIPTOR_HEAP_TYPE_RTV, bAllowCreateNewHeap);
-	}
-
-	DescriptorHeap& GetCurrentCBV_SRV_UAV_Heap(bool bAllowCreateNewHeap) noexcept
-	{
-		return GetCurrentHeap(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV, bAllowCreateNewHeap);
-	}
-
-	DescriptorHeap& GetCurrentSamplerHeap(bool bAllowCreateNewHeap) noexcept
-	{
-		return GetCurrentHeap(D3D12_DESCRIPTOR_HEAP_TYPE_SAMPLER, bAllowCreateNewHeap);
-	}
-
-	DescriptorHeap& GetCurrentDSV_Heap(bool bAllowCreateNewHeap) noexcept
-	{
-		return GetCurrentHeap(D3D12_DESCRIPTOR_HEAP_TYPE_DSV, bAllowCreateNewHeap);
-	}
-
-};

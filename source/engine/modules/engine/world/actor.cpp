@@ -19,7 +19,7 @@ Actor::~Actor()
 {
 	for (u32 i = 0; i < _components.Size(); ++i)
 	{
-		delete _components[i];
+		delete _components.At(i);
 	}
 }
 
@@ -41,7 +41,7 @@ void Actor::Deserialize(Archive& ar)
 {
 	u64 numComponents = 0;
 	ar.Read<u64>(numComponents);
-	_components.clear();
+	_components.Clear();
 	
 	// TODO: not like this!
 	Transform* transform = new Transform();
