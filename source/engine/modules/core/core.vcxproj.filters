@@ -152,9 +152,6 @@
     <ClCompile Include="context\context.cpp">
       <Filter>context</Filter>
     </ClCompile>
-    <ClCompile Include="file_system\file_mapping.cpp">
-      <Filter>file_system</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="log">
