@@ -46,7 +46,7 @@ public:
 
 	bool IsReadOnly() const override
 	{
-		return !(_mode & FileMode::Write);
+		return !(_mode & FileMode::eWrite);
 	}
 
 	void Close() override
