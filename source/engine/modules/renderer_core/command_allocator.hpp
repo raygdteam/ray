@@ -13,7 +13,7 @@ public:
 
 	void Shutdown();
 
-	size_t Size() { return _allocatorPool.size(); }
+	size_t Size() { return _allocatorPool.Size(); }
 
 	ID3D12CommandAllocator* RequestAllocator(u64 completedFenceValue);
 	void DiscardAllocator(ID3D12CommandAllocator* allocator, u64 fenceValue);

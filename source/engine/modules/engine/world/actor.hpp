@@ -63,7 +63,7 @@ protected:
 	{
 		for (u32 i = 0; i < _components.Size(); ++i)
 		{
-			Component* target = dynamic_cast<Component*>(_components[i]);
+			Component* target = dynamic_cast<Component*>(_components.At(i));
 			if (target != nullptr) return target;
 		}
 

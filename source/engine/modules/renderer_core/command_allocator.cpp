@@ -30,7 +30,7 @@ ID3D12CommandAllocator* CommandAllocatorPool::RequestAllocator(u64 completedFenc
 	{
 		if (gDevice->CreateCommandAllocator(_type, IID_PPV_ARGS(&ret)) != S_OK)
 			return nullptr;
-		_allocatorPool.push_back(ret);
+		_allocatorPool.PushBack(ret);
 	}
 
 	_allocatorMutex.Leave();
@@ -49,8 +49,8 @@ void CommandAllocatorPool::DiscardAllocator(ID3D12CommandAllocator* allocator, u
 
 void CommandAllocatorPool::Shutdown()
 {
-	for (size_t i = 0; i < _allocatorPool.size(); i++)
-		_allocatorPool[i]->Release();
+	for (size_t i = 0; i < _allocatorPool.Size(); i++)
+		_allocatorPool.At(i)->Release();
 
-	_allocatorPool.clear();
+	_allocatorPool.Clear();
 }

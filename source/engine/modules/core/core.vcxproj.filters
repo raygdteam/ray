@@ -104,6 +104,9 @@
     <ClInclude Include="file_system\file_mapping.hpp">
       <Filter>file_system</Filter>
     </ClInclude>
+    <ClInclude Include="memory\default_allocator.hpp">
+      <Filter>memory</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="core_entry_point.cpp" />

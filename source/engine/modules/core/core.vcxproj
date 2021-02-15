@@ -35,6 +35,7 @@
     <ClInclude Include="math\matrix.hpp" />
     <ClInclude Include="math\vector.hpp" />
     <ClInclude Include="memory\allocator.hpp" />
+    <ClInclude Include="memory\default_allocator.hpp" />
     <ClInclude Include="memory\memory_debug.hpp" />
     <ClInclude Include="memory\memory_manager.hpp" />
     <ClInclude Include="memory\memory_pool.hpp" />
