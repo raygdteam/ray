@@ -104,6 +104,9 @@
     <ClInclude Include="file_system\file_mapping.hpp">
       <Filter>file_system</Filter>
     </ClInclude>
+    <ClInclude Include="json\json.hpp">
+      <Filter>json</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="core_entry_point.cpp" />
@@ -155,6 +158,9 @@
     <ClCompile Include="file_system\file_mapping.cpp">
       <Filter>file_system</Filter>
     </ClCompile>
+    <ClCompile Include="json\json.cpp">
+      <Filter>json</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="log">
@@ -198,6 +204,9 @@
     </Filter>
     <Filter Include="context">
       <UniqueIdentifier>{270f60cf-9d36-4c69-9e1d-790febffd157}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="json">
+      <UniqueIdentifier>{7c2e6ffa-ec26-4cf6-b6a1-67ea46636721}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

@@ -29,6 +29,9 @@
     <ClCompile Include="project\project.cpp">
       <Filter>project</Filter>
     </ClCompile>
+    <ClCompile Include="windows\level_outline.cpp">
+      <Filter>windows</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="renderer">

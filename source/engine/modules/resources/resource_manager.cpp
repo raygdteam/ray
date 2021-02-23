@@ -93,6 +93,26 @@ void RTexture::Deserialize(Archive& ar)
 	ar.Read((u8*)_data.GetData(), size * sizeof(FVector4));
 }
 
+void RLevel::Serialize(Archive&)
+{	
+}
+
+void RLevel::Deserialize(Archive&)
+{
+}
+
+bool RLevel::LoadFrom(IFile* path)
+{
+	String data = {};
+	data.resize(path->Size());
+	path->Read((u8*)data.data(), path->Size());
+}
+
+ResourceType RLevel::GetResourceType() const noexcept
+{
+	return eLevel;
+}
+
 RAYOBJECT_DESCRIPTION_BEGIN(RTexture)
 RAYOBJECT_DESCRIPTION_NAME("engine://resources/Texture")
 RAYOBJECT_DESCRIPTION_END(RTexture);

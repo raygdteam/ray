@@ -229,9 +229,11 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="caches\actor_cache.cpp" />
     <ClCompile Include="caches\component_cache.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="caches\actor_cache.hpp" />
     <ClInclude Include="caches\component_cache.hpp" />
   </ItemGroup>
   <ItemGroup>

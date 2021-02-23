@@ -9,4 +9,6 @@ enum ResourceType
 	eTexture,
 	eShader,
 	eMaterial,
+
+	eLevel
 };

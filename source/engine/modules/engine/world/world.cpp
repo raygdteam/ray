@@ -151,7 +151,7 @@ void World::Initialize(IPlatformWindow* window)
 
 	gRootObject = new UiRootObject;
 	gRootObject->Initialize(window);
-
+	
 	RenderingFinished.Signal();
 	TickFinished.Signal();
 }
