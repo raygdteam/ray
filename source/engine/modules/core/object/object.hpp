@@ -45,7 +45,7 @@ public:
 		if (type != nullptr) \
 			return type; \
 		type = new ::Type(); \
-		type->Fields.clear(); \
+		type->Fields.Clear(); \
 		type->Abstract = true;
 
 #define RAYOBJECT_DESCRIPTION_CREATEABLE() type->Abstract = false; \

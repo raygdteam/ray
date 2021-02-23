@@ -63,9 +63,9 @@ bool IVkRenderer::InitDevice()
 	vkEnumeratePhysicalDevices(_instance, &physicalDeviceCount, nullptr);
 
 	Array<VkPhysicalDevice> physicalDevices;
-	physicalDevices.resize(physicalDeviceCount);
+	physicalDevices.Resize(physicalDeviceCount);
 
-	if (VK_FAILED(vkEnumeratePhysicalDevices(_instance, &physicalDeviceCount, physicalDevices.data())))
+	if (VK_FAILED(vkEnumeratePhysicalDevices(_instance, &physicalDeviceCount, physicalDevices.GetData())))
 	{
 		return false;
 	}
@@ -73,22 +73,22 @@ bool IVkRenderer::InitDevice()
 	for (uint32_t i = 0; i < physicalDeviceCount; ++i)
 	{
 		VkPhysicalDeviceProperties props;
-		vkGetPhysicalDeviceProperties(physicalDevices[i], &props);
+		vkGetPhysicalDeviceProperties(physicalDevices.At(i), &props);
 
 		if (props.deviceType == VK_PHYSICAL_DEVICE_TYPE_DISCRETE_GPU)
 		{
 			gLog.Log("Picking discrete GPU: %s", props.deviceName);
-			_physicalDevice = physicalDevices[i];
+			_physicalDevice = physicalDevices.At(i);
 		}
 	}
 
 	if (physicalDeviceCount > 0 && _physicalDevice == nullptr)
 	{
 		VkPhysicalDeviceProperties props;
-		vkGetPhysicalDeviceProperties(physicalDevices[0], &props);
+		vkGetPhysicalDeviceProperties(physicalDevices.At(0), &props);
 
 		gLog.Log("Picking fallback GPU: %s", props.deviceName);
-		_physicalDevice = physicalDevices[0];
+		_physicalDevice = physicalDevices.At(0);
 	}
 
 	familyIndex = 0; // SHORTCUT: this needs to be computed from queue properties // TODO: this produces a validation error

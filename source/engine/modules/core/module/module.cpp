@@ -44,7 +44,7 @@ ModuleManager::~ModuleManager()
 			FreeLibrary(static_cast<HMODULE>(mod.RawOsHandle));
 	}
 
-	_modules.clear();
+	_modules.Clear();
 	_log.Log("Bye.");
 }
 
@@ -89,7 +89,7 @@ Result<IModule*, ModuleLoadError> ModuleManager::LoadModule(pcstr name)
 	mod->OnLoad();
 
 	/* 4. Add to the linked list. */
-	_modules.push_back(ModuleDef { mod, rawHandle });
+	_modules.PushBack(ModuleDef { mod, rawHandle });
 
 	return { mod, eSuccess };
 }

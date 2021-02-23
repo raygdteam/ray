@@ -22,7 +22,6 @@
 CommandListManager gCommandListManager;
 ContextManager gContextManager;
 ID3D12Device* gDevice;
-DescriptorHeapsManager gDescriptorHeapsManager;
 DescriptorHeap gMainDescriptorHeap(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV, D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE, 256);
 GpuTextureAllocator gTextureAllocator;
 GpuBufferAllocator gBufferAllocator;

@@ -89,7 +89,7 @@ void RTexture::Deserialize(Archive& ar)
 {
 	ar.Read(_dimensions);
 	u64 size = _dimensions.x * _dimensions.y;
-	_data.resize(size);
+	_data.Resize(size);
 	ar.Read((u8*)_data.GetData(), size * sizeof(FVector4));
 }
 
@@ -180,7 +180,7 @@ IRResource* ResourceManager::LoadResourceResolved(pcstr path, pcstr resorcePath,
 		}
 	}*/
 	
-	IFile* file = gFileSystem.OpenFile(path, ReadBinary);
+	IFile* file = gFileSystem.OpenFile(path, eReadBinary);
 	check(file != nullptr);
 	
 	RTexture* texture = new RTexture;
@@ -230,7 +230,7 @@ void ResourceManager::SetResourceDirectory(pcstr directory, pcstr mapping)
 	String path = {};
 	path += "resource_info.ray";
 	
-	IFile* info = gFileSystem.OpenFile(path.c_str(), Read);
+	IFile* info = gFileSystem.OpenFile(path.c_str(), eRead);
 	ray_assert(info != nullptr, "Invalid mapping");
 	ray_assert(info->Size() != 0, "Invalid mapping");
 

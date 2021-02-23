@@ -48,7 +48,7 @@ public:
 	
 	bool IsReadOnly() const override
 	{
-		return !(_mode & FileMode::Write);
+		return !(_mode & FileMode::eWrite);
 	}
 	
 	void Close() override
@@ -83,22 +83,22 @@ IFile* FileSystem::OpenFile(pcstr name, FileMode mode)
 	pcstr mode_ = "";
 	switch (mode)
 	{
-	case Read:
+	case eRead:
 		mode_ = "r";
 		break;
-	case ReadWrite:
+	case eReadWrite:
 		mode_ = "r+";
 		break;
-	case Write:
+	case eWrite:
 		mode_ = "w";
 		break;
-	case Append:
+	case eAppend:
 		mode_ = "a";
 		break;
-	case ReadBinary:
+	case eReadBinary:
 		mode_ = "rb";
 		break;
-	case WriteBinary:
+	case eWriteBinary:
 		mode_ = "wb";
 		break;
 	default:
@@ -116,4 +116,3 @@ void FileSystem::CreateAllDirectories(pcstr path)
 {
 	(void)path;
 }
-

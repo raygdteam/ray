@@ -52,7 +52,7 @@ void Level::SpawnActor(Actor* actor)
 		_jobCurrentSize = 0;
 		_jobs.PushBack(new ActorTickJob());
 	}
-	_jobs[_jobCurrentNum]->Actors.PushBack(actor);
+	_jobs.At(_jobCurrentNum)->Actors.PushBack(actor);
 	
 	_atd.PushBack(ActorData { actor, actor->ATD, proxy });
 	actor->BeginPlay(); // ??

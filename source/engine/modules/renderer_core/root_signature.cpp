@@ -29,9 +29,9 @@ void RootSignature::Finalize(D3D12_ROOT_SIGNATURE_FLAGS flags)
 	 */
 	D3D12_ROOT_SIGNATURE_DESC rootSignatureDesc = {};
 	rootSignatureDesc.NumParameters = u32(_rootParameters.Size());
-	rootSignatureDesc.pParameters = reinterpret_cast<D3D12_ROOT_PARAMETER*>(_rootParameters.data());
+	rootSignatureDesc.pParameters = reinterpret_cast<D3D12_ROOT_PARAMETER*>(_rootParameters.GetData());
 	rootSignatureDesc.NumStaticSamplers = _numInitializedStaticSamplers;
-	rootSignatureDesc.pStaticSamplers = _staticSampler.data();
+	rootSignatureDesc.pStaticSamplers = _staticSampler.GetData();
 	rootSignatureDesc.Flags = flags;
 
 	ID3DBlob* signature = nullptr;
@@ -45,7 +45,7 @@ void RootSignature::Finalize(D3D12_ROOT_SIGNATURE_FLAGS flags)
 void RootSignature::InitStaticSampler(u32 shaderRegister, const D3D12_SAMPLER_DESC& samplerDesc, D3D12_SHADER_VISIBILITY visibility)
 {
 	check(_numInitializedStaticSamplers < _staticSampler.Size());
-	D3D12_STATIC_SAMPLER_DESC& staticSamplerDesc = _staticSampler[_numInitializedStaticSamplers++];
+	D3D12_STATIC_SAMPLER_DESC& staticSamplerDesc = _staticSampler.At(_numInitializedStaticSamplers++);
 
 	staticSamplerDesc.Filter = samplerDesc.Filter;
 	staticSamplerDesc.AddressU = samplerDesc.AddressU;

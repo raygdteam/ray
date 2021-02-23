@@ -29,7 +29,7 @@ D3D12_CPU_DESCRIPTOR_HANDLE DescriptorAllocator::Allocate(size_t count)
 
 void DescriptorAllocator::DestroyAll()
 {
-	sDescriptorHeapPool.clear();
+	sDescriptorHeapPool.Clear();
 }
 
 ID3D12DescriptorHeap* DescriptorAllocator::RequestNewHeap(D3D12_DESCRIPTOR_HEAP_TYPE type)
@@ -44,7 +44,7 @@ ID3D12DescriptorHeap* DescriptorAllocator::RequestNewHeap(D3D12_DESCRIPTOR_HEAP_
 
 	ID3D12DescriptorHeap* heap = nullptr;
 	gDevice->CreateDescriptorHeap(&desc, IID_PPV_ARGS(&heap));
-	sDescriptorHeapPool.push_back(heap);
+	sDescriptorHeapPool.PushBack(heap);
 
 	sAllocationMutex.Leave();
 
@@ -90,33 +90,4 @@ bool DescriptorHeap::ValidateHandle(const DescriptorHandle& handle) const noexce
 		return false;
 
 	return true;
-}
-
-// ------------------------------- DESCRIPTOR HEAPS MANAGER ------------------------------- //
-
-DescriptorHeap& DescriptorHeapsManager::CreateHeap(D3D12_DESCRIPTOR_HEAP_TYPE type, D3D12_DESCRIPTOR_HEAP_FLAGS flag, u32 elementsCount) noexcept
-{
-	DescriptorHeap heap { type, flag, elementsCount };
-	heap.Create();
-	
-	_heaps[type].EmplaceBack(heap);
-	_currentHeaps[type] = _heaps[type].Size() - 1;
-
-	return _heaps[type].At(_currentHeaps[type]);
-}
-
-DescriptorHeap& DescriptorHeapsManager::GetCurrentHeap(D3D12_DESCRIPTOR_HEAP_TYPE type, bool bAllowCreateNewHeap) noexcept
-{
-	// TODO:
-	// too many kostils
-	auto& heaps = _heaps[type];
-	u32 currentHeap = _currentHeaps[type];
-
-	if (heaps.empty())
-		return CreateHeap(type, D3D12_DESCRIPTOR_HEAP_FLAG_NONE, 64); //heaps.At(currentHeap).GetMaxDescriptorsCount());
-
-	if (!bAllowCreateNewHeap || heaps.At(currentHeap).HasAvailableSpace(1))
-		return heaps.At(currentHeap);
-
-	return CreateHeap(type, D3D12_DESCRIPTOR_HEAP_FLAG_NONE, heaps.At(currentHeap).GetMaxDescriptorsCount());
 }

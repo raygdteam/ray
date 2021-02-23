@@ -90,7 +90,7 @@ void ThreadPool::ResubmitWork()
 
 void ThreadPool::Reset()
 {
-	_data->Work.clear();
+	_data->Work.Clear();
 }
 
 ThreadPoolManager::ThreadPoolManager()
