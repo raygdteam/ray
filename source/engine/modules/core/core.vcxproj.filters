@@ -107,6 +107,7 @@
     <ClInclude Include="json\json.hpp">
       <Filter>json</Filter>
     </ClInclude>
+    <ClInclude Include="memory\default_allocator.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="core_entry_point.cpp" />
@@ -154,12 +155,6 @@
     </ClCompile>
     <ClCompile Include="context\context.cpp">
       <Filter>context</Filter>
-    </ClCompile>
-    <ClCompile Include="file_system\file_mapping.cpp">
-      <Filter>file_system</Filter>
-    </ClCompile>
-    <ClCompile Include="json\json.cpp">
-      <Filter>json</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

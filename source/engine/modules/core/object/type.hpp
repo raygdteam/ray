@@ -3,6 +3,8 @@
 #include <core/lib/array.hpp>
 #include <functional>
 
+#include "core/lib/string.hpp"
+
 struct RayObject;
 
 enum FieldType
@@ -32,6 +34,7 @@ enum FieldType
 struct FieldInfo
 {
 	FieldType Type;
+	String Name;
 	u32 Offset;
 	u32 Size;
 };

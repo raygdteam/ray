@@ -3,6 +3,7 @@
 #include <core/object/file_archive.hpp>
 #include <core/log/log.hpp>
 #include <core/extended_instuctions/sse/common.hpp>
+#include <core/json/json.hpp>
 
 #include <resources/resource.hpp>
 #include <resources/resource_manager.hpp>
@@ -93,6 +94,8 @@ void RTexture::Deserialize(Archive& ar)
 	ar.Read((u8*)_data.GetData(), size * sizeof(FVector4));
 }
 
+/* ------------------------ LEVEL ----------------------- */
+
 void RLevel::Serialize(Archive&)
 {	
 }
@@ -106,6 +109,9 @@ bool RLevel::LoadFrom(IFile* path)
 	String data = {};
 	data.resize(path->Size());
 	path->Read((u8*)data.data(), path->Size());
+
+	nlohmann::json file = data.AsRawStr();
+	file["name"]
 }
 
 ResourceType RLevel::GetResourceType() const noexcept

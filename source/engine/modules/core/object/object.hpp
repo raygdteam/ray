@@ -52,7 +52,7 @@ public:
 		type->CreateFn = []() -> RayObject* { return new ObjectType(); }; 
 			
 #define RAYOBJECT_DESCRIPTION_NAME(name) type->Name = name;
-#define RAYOBJECT_DESCRIPTION_FIELD(name, ttype, etype) type->Fields.PushBack(FieldInfo { etype, offsetof(ObjectType, name), sizeof(ttype) });
+#define RAYOBJECT_DESCRIPTION_FIELD(name, ttype, etype) type->Fields.PushBack(FieldInfo { etype, String(#name), offsetof(ObjectType, name), sizeof(ttype) });
 
 #define RAYOBJECT_DESCRIPTION_END(TType) return type; \
 	} \
