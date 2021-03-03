@@ -35,14 +35,13 @@
     <ClInclude Include="math\matrix.hpp" />
     <ClInclude Include="math\vector.hpp" />
     <ClInclude Include="memory\allocator.hpp" />
-    <ClInclude Include="memory\default_allocator.hpp" />
+    <ClInclude Include="memory\system_allocator.hpp" />
     <ClInclude Include="memory\memory_debug.hpp" />
     <ClInclude Include="memory\memory_manager.hpp" />
     <ClInclude Include="memory\memory_pool.hpp" />
     <ClInclude Include="memory\new_delete_override.hpp" />
     <ClInclude Include="module\module.hpp" />
     <ClInclude Include="module\module_meta.hpp" />
-    <ClInclude Include="new_lib\array.hpp" />
     <ClInclude Include="object\archive.hpp" />
     <ClInclude Include="object\file_archive.hpp" />
     <ClInclude Include="object\object.hpp" />

@@ -59,7 +59,7 @@ public:
 #include <core/memory/default_allocator.hpp>
 #pragma clang diagnostic ignored "-Wreorder-ctor"
 
-template<typename Type, typename Allocator = DefaultAllocator>
+template<typename Type, typename Allocator = SystemAllocator>
 class Array
 {
 private:
