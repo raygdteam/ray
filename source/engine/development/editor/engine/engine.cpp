@@ -8,6 +8,7 @@
 #include <chrono>
 #include <engine/world/actors/static_quad_actor.hpp>
 #include <editor_core/caches/component_cache.hpp>
+#include <editor_core/caches/actor_cache.hpp>
 #include <renderer_core/resources/buffer_manager.hpp>
 #include <renderer_core/command_context.hpp>
 
@@ -15,10 +16,8 @@
 
 IRenderer* gRenderer;
 
-
 void EditorEngine::Initialize(IEngineLoop* engineLoop)
 {
-	check(false);
 	_window = IPlatformWindow::CreateInstance();
 
 	_window->Initialize();
@@ -26,14 +25,17 @@ void EditorEngine::Initialize(IEngineLoop* engineLoop)
 
 	gComponentCache = new ComponentCache;
 	gComponentCache->Rebuild();
+
+	gActorCache = new ActorCache();
+	gActorCache->Rebuild();
 	
 	_level = new Level;
 
 	gRenderer = new IRenderer();
 	gRenderer->Initialize(_window);
 	
-	_renderer = new IVkRenderer();
-	_renderer->Initialize(_window);
+	//_renderer = new IVkRenderer();
+	//_renderer->Initialize(_window);
 
 	_window->SetWindowVisibility(true);
 }
@@ -50,7 +52,7 @@ void EditorEngine::Tick()
 		return;
 	}
 
-	_renderer->BeginScene();
+	//_renderer->BeginScene();
 	
 	//ImGui::ShowDemoWindow();
 	
@@ -185,13 +187,15 @@ void EditorEngine::Tick()
 	
 	ImGui::End();*/
 	
-	_renderer->EndScene();
+	//_renderer->EndScene();
 	
 	GraphicsContext& ctx = GraphicsContext::Begin();
 
 	gRenderer->Begin(gSceneColorBuffer, ctx);
-	gRenderer->End(gSceneColorBuffer, ctx);
 
+	gRenderer->End(gSceneColorBuffer, ctx);
+	gRenderer->Present(gSceneColorBuffer, ctx);
+	
 	auto elapsed = std::chrono::high_resolution_clock::now() - __start;
 	delta = std::chrono::duration_cast<std::chrono::microseconds>(elapsed).count() / 1000.f;
 }

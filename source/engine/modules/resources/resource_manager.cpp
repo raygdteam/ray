@@ -3,6 +3,7 @@
 #include <core/object/file_archive.hpp>
 #include <core/log/log.hpp>
 #include <core/extended_instuctions/sse/common.hpp>
+#include <core/json/json.hpp>
 
 #include <resources/resource.hpp>
 #include <resources/resource_manager.hpp>
@@ -93,6 +94,31 @@ void RTexture::Deserialize(Archive& ar)
 	ar.Read((u8*)_data.GetData(), size * sizeof(FVector4));
 }
 
+/* ------------------------ LEVEL ----------------------- */
+
+void RLevel::Serialize(Archive&)
+{	
+}
+
+void RLevel::Deserialize(Archive&)
+{
+}
+
+bool RLevel::LoadFrom(IFile* path)
+{
+	String data = {};
+	data.resize(path->Size());
+	path->Read((u8*)data.data(), path->Size());
+
+	nlohmann::json file = data.AsRawStr();
+	file["name"]
+}
+
+ResourceType RLevel::GetResourceType() const noexcept
+{
+	return eLevel;
+}
+
 RAYOBJECT_DESCRIPTION_BEGIN(RTexture)
 RAYOBJECT_DESCRIPTION_NAME("engine://resources/Texture")
 RAYOBJECT_DESCRIPTION_END(RTexture);
@@ -160,7 +186,7 @@ IRResource* ResourceManager::LoadResourceResolved(pcstr path, pcstr resorcePath,
 		}
 	}*/
 	
-	IFile* file = gFileSystem.OpenFile(path, ReadBinary);
+	IFile* file = gFileSystem.OpenFile(path, eReadBinary);
 	check(file != nullptr);
 	
 	RTexture* texture = new RTexture;
@@ -210,7 +236,7 @@ void ResourceManager::SetResourceDirectory(pcstr directory, pcstr mapping)
 	String path = {};
 	path += "resource_info.ray";
 	
-	IFile* info = gFileSystem.OpenFile(path.c_str(), Read);
+	IFile* info = gFileSystem.OpenFile(path.c_str(), eRead);
 	ray_assert(info != nullptr, "Invalid mapping");
 	ray_assert(info->Size() != 0, "Invalid mapping");
 

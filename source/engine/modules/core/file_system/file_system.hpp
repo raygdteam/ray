@@ -4,12 +4,12 @@
 
 enum FileMode
 {
-    Read = 0x01,
-    Write = 0x02,
-    ReadWrite = Read | Write,
-    Append = 0x04,
-	WriteBinary,
-	ReadBinary,
+    eRead = 0x01,
+    eWrite = 0x02,
+    eReadWrite = eRead | eWrite,
+    eAppend = 0x04,
+	eWriteBinary,
+	eReadBinary,
 };
 
 class RAY_CORE_API FileSystem

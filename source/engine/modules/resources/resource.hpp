@@ -45,3 +45,14 @@ public:
 	void Serialize(Archive&) override;
 	void Deserialize(Archive&) override;
 };
+
+class RAY_RESOURCES_API RLevel final : public IRResource
+{
+public:
+	void Serialize(Archive&) override;
+	void Deserialize(Archive&) override;
+protected:
+	bool LoadFrom(IFile* path) override;
+public:
+	ResourceType GetResourceType() const noexcept override;
+};

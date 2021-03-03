@@ -13,7 +13,7 @@
 class EDITOR_API EditorEngine : public IEngine
 {
 	IPlatformWindow* _window = nullptr;
-	IVkRenderer* _renderer = nullptr;
+	//IVkRenderer* _renderer = nullptr;
 	Level* _level = nullptr;
 public:
 	void Initialize(IEngineLoop* engineLoop) override;

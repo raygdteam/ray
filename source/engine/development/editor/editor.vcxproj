@@ -150,6 +150,7 @@
     <ClCompile Include="renderer\renderer.cpp" />
     <ClCompile Include="renderer\render_pass.cpp" />
     <ClCompile Include="renderer\shader.cpp" />
+    <ClCompile Include="windows\level_outline.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="context\context.hpp" />

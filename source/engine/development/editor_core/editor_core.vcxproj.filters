@@ -9,9 +9,15 @@
     <ClCompile Include="caches\component_cache.cpp">
       <Filter>caches</Filter>
     </ClCompile>
+    <ClCompile Include="caches\actor_cache.cpp">
+      <Filter>caches</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="caches\component_cache.hpp">
+      <Filter>caches</Filter>
+    </ClInclude>
+    <ClInclude Include="caches\actor_cache.hpp">
       <Filter>caches</Filter>
     </ClInclude>
   </ItemGroup>
