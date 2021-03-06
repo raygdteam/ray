@@ -159,6 +159,8 @@
     <ClInclude Include="ui2\ext\imstb_truetype.h" />
     <ClInclude Include="ui2\objects\button.hpp" />
     <ClInclude Include="ui2\objects\label.hpp" />
+    <ClInclude Include="ui2\objects\tree.hpp" />
+    <ClInclude Include="ui2\objects\tree_node.hpp" />
     <ClInclude Include="ui2\ui2.hpp" />
     <ClInclude Include="world\actor.hpp" />
     <ClInclude Include="world\actors\camera_actor.hpp" />
@@ -217,7 +219,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <None Include="ui2\objects\label.cpp" />
+    <ClCompile Include="ui2\objects\label.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

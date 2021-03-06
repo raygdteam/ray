@@ -7,6 +7,7 @@
 #include <core/core.hpp>
 #include "resources/depth_buffer.hpp"
 #include "renderer_core.hpp"
+#include "root_signature.hpp"
 
 class CommandContext;
 class ComputeContext;

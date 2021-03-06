@@ -42,7 +42,7 @@ void EngineLoop::PreInitialize()
 		/*strcmp(GetCommandLineA(), "-editor") != 0
 		|| strcmp(GetCommandLineA(), "-project=") == 0*/ true
 #else
-		false
+		true
 #endif
 		)
 	{

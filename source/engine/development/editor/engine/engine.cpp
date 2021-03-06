@@ -12,9 +12,14 @@
 #include <renderer_core/resources/buffer_manager.hpp>
 #include <renderer_core/command_context.hpp>
 
+
+#include "editor/windows/debug_window.hpp"
+#include "engine/ui2/ui2.hpp"
+
 #undef CreateWindow
 
 IRenderer* gRenderer;
+UiRootObject* gRootObject;
 
 void EditorEngine::Initialize(IEngineLoop* engineLoop)
 {
@@ -30,12 +35,17 @@ void EditorEngine::Initialize(IEngineLoop* engineLoop)
 	gActorCache->Rebuild();
 	
 	_level = new Level;
-
+	gRootObject = new UiRootObject();
+	
 	gRenderer = new IRenderer();
 	gRenderer->Initialize(_window);
+
+	gRootObject->Initialize(_window);
 	
 	//_renderer = new IVkRenderer();
 	//_renderer->Initialize(_window);
+
+	gRootObject->AddWindow(new EdDebugWindow());
 
 	_window->SetWindowVisibility(true);
 }
@@ -192,7 +202,7 @@ void EditorEngine::Tick()
 	GraphicsContext& ctx = GraphicsContext::Begin();
 
 	gRenderer->Begin(gSceneColorBuffer, ctx);
-
+	gRootObject->RenderAll(ctx);
 	gRenderer->End(gSceneColorBuffer, ctx);
 	gRenderer->Present(gSceneColorBuffer, ctx);
 	

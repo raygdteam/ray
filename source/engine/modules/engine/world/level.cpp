@@ -74,7 +74,7 @@ void Level::LoadTestLevel()
 
 bool Level::LoadLevel()
 {
-	IFile* path = gFileSystem.OpenFile("level_test.json", eRead);
+	/*IFile* path = gFileSystem.OpenFile("level_test.json", eRead);
 	String data = {};
 	data.resize(path->Size());
 	path->Read((u8*)data.data(), path->Size());
@@ -86,7 +86,7 @@ bool Level::LoadLevel()
 
 	for (auto actorJson : file["actors"])
 	{
-		String typeName(actorJson["type"]);
+		String typeName(actorJson["type"].get<std::string>().c_str());
 		Type* type = RayState()->ObjectDb->GetTypeByName(typeName.AsRawStr()); // TODO
 		check(type != nullptr);
 
@@ -141,7 +141,7 @@ bool Level::LoadLevel()
 	}
 	
 	path->Close();
-	delete path;
+	delete path;*/
 
 	return true;
 }

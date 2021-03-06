@@ -118,3 +118,8 @@ void UiRootObject::RenderAll(GraphicsContext& gfxContext)
 
 	UiRenderer::End(gfxContext);
 }
+
+void UiRootObject::AddWindow(UiWindow* window)
+{
+	_windows.PushBack(window);
+}

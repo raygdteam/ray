@@ -111,7 +111,8 @@ bool RLevel::LoadFrom(IFile* path)
 	path->Read((u8*)data.data(), path->Size());
 
 	nlohmann::json file = data.AsRawStr();
-	file["name"]
+	//file["name"]
+	return false;
 }
 
 ResourceType RLevel::GetResourceType() const noexcept

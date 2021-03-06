@@ -71,6 +71,12 @@
     <ClInclude Include="ui2\objects\button.hpp">
       <Filter>ui2\objects</Filter>
     </ClInclude>
+    <ClInclude Include="ui2\objects\tree.hpp">
+      <Filter>ui2\objects</Filter>
+    </ClInclude>
+    <ClInclude Include="ui2\objects\tree_node.hpp">
+      <Filter>ui2\objects</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="engine">

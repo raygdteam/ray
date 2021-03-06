@@ -32,6 +32,9 @@
     <ClCompile Include="windows\level_outline.cpp">
       <Filter>windows</Filter>
     </ClCompile>
+    <ClCompile Include="windows\debug_window.cpp">
+      <Filter>windows</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="renderer">
@@ -86,6 +89,9 @@
     </ClInclude>
     <ClInclude Include="ui\editor_ui.hpp">
       <Filter>ui</Filter>
+    </ClInclude>
+    <ClInclude Include="windows\debug_window.hpp">
+      <Filter>windows</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
