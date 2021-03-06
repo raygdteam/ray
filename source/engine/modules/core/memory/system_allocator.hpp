@@ -3,7 +3,7 @@
 #include <new>
 
 // Default allocator which uses malloc and free from standart library
-class DefaultAllocator
+class SystemAllocator
 {
 public:
 	NODISCARD void* Allocate(size_t sizeInBytes) noexcept

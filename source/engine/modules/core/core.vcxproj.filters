@@ -98,16 +98,14 @@
     <ClInclude Include="context\context.hpp">
       <Filter>context</Filter>
     </ClInclude>
-    <ClInclude Include="new_lib\array.hpp">
-      <Filter>lib</Filter>
-    </ClInclude>
     <ClInclude Include="file_system\file_mapping.hpp">
       <Filter>file_system</Filter>
     </ClInclude>
     <ClInclude Include="json\json.hpp">
       <Filter>json</Filter>
+    <ClInclude Include="memory\system_allocator.hpp">
+      <Filter>memory</Filter>
     </ClInclude>
-    <ClInclude Include="memory\default_allocator.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="core_entry_point.cpp" />
