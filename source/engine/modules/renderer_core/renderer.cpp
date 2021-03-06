@@ -142,7 +142,7 @@ void IRenderer::PreparePresentObjects() noexcept
 	};
 
 	auto vbDesc = GpuBufferDescription::Vertex(4, sizeof(PresentVertex));
-	vbDesc.UploadBufferData = gUploadBuffer->SetBufferData(vertices, 4, sizeof(PresentVertex));
+	gUploadBuffer->SetBufferData(vbDesc, vertices);
 	vbDesc.Flags = D3D12_RESOURCE_FLAG_DENY_SHADER_RESOURCE;
 	_presentVB.Create(vbDesc, "IRenderer::_presentVB");
 	_vbView.Create(_presentVB);
@@ -154,7 +154,7 @@ void IRenderer::PreparePresentObjects() noexcept
 	};
 
 	auto ibDesc = GpuBufferDescription::Index(sizeof(indices) / sizeof(u32), sizeof(u32));
-	ibDesc.UploadBufferData = gUploadBuffer->SetBufferData(indices, sizeof(indices) / sizeof(u32), sizeof(u32));
+	gUploadBuffer->SetBufferData(ibDesc, indices);
 	ibDesc.Flags = D3D12_RESOURCE_FLAG_DENY_SHADER_RESOURCE;
 	_presentIB.Create(ibDesc, "IRenderer::_presentIB");
 	_ibView.Create(_presentIB);

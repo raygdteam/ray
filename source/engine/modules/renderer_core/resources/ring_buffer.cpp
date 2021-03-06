@@ -20,7 +20,7 @@ u8* RingBuffer::SetTextureData(RTexture& texture) noexcept
 	size_t textureSize = height * rowPitch;
 
 	ray_assert(TryToSetResource(textureSize, D3D12_TEXTURE_DATA_PLACEMENT_ALIGNMENT), "Out of memory! Create new ring buffer!");
-	u8* ret = _uploadBuffer.SetTextureData(texture);
+	u8* ret = _uploadBuffer.SetTextureData(texture.GetData().GetData(), texture.GetDimensions().x, texture.GetDimensions().y, DXGI_FORMAT_R32G32B32A32_FLOAT);
 	_frameOffsetQueue.push(FrameResourceOffset{ gCommandListManager.GetGraphicsQueue().GetNextFenceValue(), ret });
 	return ret;
 }

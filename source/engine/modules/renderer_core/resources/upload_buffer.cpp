@@ -2,6 +2,7 @@
 #include <renderer_core/renderer.hpp>
 #include <renderer_core/dx12_helper_functions.hpp>
 #include "gpu_texture.hpp"
+#include "gpu_buffer.hpp"
 #include <core/math/common.hpp>
 
 void UploadBuffer::Initialize(u64 size) noexcept
@@ -45,34 +46,44 @@ void UploadBuffer::Destroy() noexcept
 	}
 }
 
-u8* UploadBuffer::SetBufferData(void* buffer, size_t elementsCount, size_t elementSize) noexcept
+void UploadBuffer::SetBufferData(GpuBufferDescription& desc, const void* data) noexcept
 {
-	return SetBufferDataToUploadBuffer(buffer, elementsCount * elementSize, 4);
+	desc.UploadBufferData = SetBufferDataToUploadBuffer(const_cast<void*>(data), desc.SizeInBytes, 4);
 }
 
-u8* UploadBuffer::SetConstantBufferData(void* buffer, size_t bufferSize) noexcept
+u8* UploadBuffer::SetBufferData(const void* data, size_t elementsCount, size_t elementSize) noexcept
 {
-	return SetBufferDataToUploadBuffer(buffer, bufferSize, D3D12_CONSTANT_BUFFER_DATA_PLACEMENT_ALIGNMENT);
+	return SetBufferDataToUploadBuffer(const_cast<void*>(data), elementsCount * elementSize, 4);
 }
 
-u8* UploadBuffer::SetTextureData(RTexture& texture) noexcept
+void UploadBuffer::SetConstantBufferData(GpuBufferDescription& desc, const void* data) noexcept
 {
-	return SetTextureData(reinterpret_cast<const void*>(texture.GetData().GetData()), texture.GetDimensions().x, texture.GetDimensions().y);
+	desc.UploadBufferData = SetBufferDataToUploadBuffer(const_cast<void*>(data), desc.SizeInBytes, D3D12_CONSTANT_BUFFER_DATA_PLACEMENT_ALIGNMENT);
 }
 
-u8* UploadBuffer::SetTextureData(const void* textureBuffer, size_t w, size_t h) noexcept
+u8* UploadBuffer::SetConstantBufferData(const void* data, size_t sizeInBites) noexcept
 {
-	size_t bitesPerPixel = GpuTexture::BytesPerPixel(DXGI_FORMAT_R32G32B32A32_FLOAT);
-	size_t rowPitch = AlignUp(bitesPerPixel * w, D3D12_TEXTURE_DATA_PITCH_ALIGNMENT);
-	size_t textureSize = h * rowPitch;
+	return SetBufferDataToUploadBuffer(const_cast<void*>(data), sizeInBites, D3D12_CONSTANT_BUFFER_DATA_PLACEMENT_ALIGNMENT);
+}
+
+void UploadBuffer::SetTextureData(GpuTextureDescription& desc, const void* data) noexcept
+{
+	desc.UploadBufferData = SetTextureData(data, desc.Width, desc.Height, desc.Format);
+}
+
+u8* UploadBuffer::SetTextureData(const void* data, u32 width, u32 height, DXGI_FORMAT pixelFormat) noexcept
+{
+	size_t bitesPerPixel = GpuTexture::BytesPerPixel(pixelFormat);
+	size_t rowPitch = AlignUp(bitesPerPixel * width, D3D12_TEXTURE_DATA_PITCH_ALIGNMENT);
+	size_t textureSize = height * rowPitch;
 
 	_currentPointer = reinterpret_cast<u8*>(AlignUp(reinterpret_cast<size_t>(_currentPointer), D3D12_TEXTURE_DATA_PLACEMENT_ALIGNMENT));
 	check(_currentPointer + textureSize <= _end)
 
-		for (size_t i = 0; i < h; ++i)
+		for (size_t i = 0; i < height; ++i)
 		{
 			void* dest = _currentPointer + i * rowPitch;
-			memcpy(dest, textureBuffer, w * bitesPerPixel);
+			memcpy(dest, data, width * bitesPerPixel);
 		}
 
 	u8* ret = _currentPointer;

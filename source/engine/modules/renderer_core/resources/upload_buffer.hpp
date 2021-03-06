@@ -5,6 +5,9 @@
 #include <d3d12.h>
 #include <renderer_core/renderer_core.hpp>
 
+struct GpuBufferDescription;
+struct GpuTextureDescription;
+
 class RAY_RENDERERCORE_API UploadBuffer
 {
 	friend class RingBuffer;
@@ -28,10 +31,12 @@ public:
 	void Destroy() noexcept;
 
 public:
-	u8* SetTextureData(RTexture& texture) noexcept;
-	u8* SetTextureData(const void* textureBuffer, size_t w, size_t h) noexcept;
-	u8* SetBufferData(void* buffer, size_t elementsCount, size_t elementSize) noexcept;
-	u8* SetConstantBufferData(void* buffer, size_t bufferSize) noexcept;
+	void SetTextureData(GpuTextureDescription& desc, const void* data) noexcept;
+	u8* SetTextureData(const void* data, u32 width, u32 height, DXGI_FORMAT pixelFormat) noexcept;
+	void SetBufferData(GpuBufferDescription& desc, const void* data) noexcept;
+	u8* SetBufferData(const void* data, size_t elementsCount, size_t elementSize) noexcept;
+	void SetConstantBufferData(GpuBufferDescription& desc, const void* data) noexcept;
+	u8* SetConstantBufferData(const void* data, size_t sizeInBites) noexcept;
 
 	u8* GetBeginPointer() const noexcept { return _begin; }
 	ID3D12Resource* GetNativePool() const noexcept { return _pool; }
