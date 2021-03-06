@@ -29,7 +29,7 @@ void RootSignature::Finalize(D3D12_ROOT_SIGNATURE_FLAGS flags)
 	 */
 	D3D12_ROOT_SIGNATURE_DESC rootSignatureDesc = {};
 	rootSignatureDesc.NumParameters = u32(_rootParameters.Size());
-	rootSignatureDesc.pParameters = reinterpret_cast<D3D12_ROOT_PARAMETER*>(_rootParameters.GetData());
+	rootSignatureDesc.pParameters = reinterpret_cast<const D3D12_ROOT_PARAMETER*>(_rootParameters.GetData());
 	rootSignatureDesc.NumStaticSamplers = _numInitializedStaticSamplers;
 	rootSignatureDesc.pStaticSamplers = _staticSampler.GetData();
 	rootSignatureDesc.Flags = flags;

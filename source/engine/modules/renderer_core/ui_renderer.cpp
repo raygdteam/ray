@@ -73,7 +73,7 @@ void UiRenderer::Initialize(u32 w, u32 h, void* data) noexcept
 
 	//auto textureResolution = FVector2 { w, h };
 	auto textureAtlasDesc = GpuTextureDescription::Texture2D(w, h, DXGI_FORMAT_R8G8B8A8_UNORM, 1, D3D12_RESOURCE_FLAG_NONE);
-	textureAtlasDesc.UploadBufferData = gUploadBuffer->SetBufferData(data, w * h, sizeof(u32));
+	textureAtlasDesc.UploadBufferData = gUploadBuffer->SetTextureData(data, w, h);
 	sUiData.TextureAtlas.Create(textureAtlasDesc, "UiRendererData::TextureAtlas");
 
 	sUiData.TextureAtlasView.Create(sUiData.TextureAtlas, &_descriptorHeap);

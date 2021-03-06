@@ -65,7 +65,8 @@ bool IVkRenderer::InitDevice()
 	Array<VkPhysicalDevice> physicalDevices;
 	physicalDevices.Resize(physicalDeviceCount);
 
-	if (VK_FAILED(vkEnumeratePhysicalDevices(_instance, &physicalDeviceCount, physicalDevices.GetData())))
+	auto data = physicalDevices.GetData();
+	if (VK_FAILED(vkEnumeratePhysicalDevices(_instance, &physicalDeviceCount, const_cast<VkPhysicalDevice*>(data))))
 	{
 		return false;
 	}

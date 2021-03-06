@@ -4,6 +4,8 @@
 #include <core/math/common.hpp>
 #include <cstring>
 
+#define RAY_USE_EA_STL
+
 #ifdef RAY_USE_EA_STL
 
 #include <eastl/vector.h>
@@ -52,11 +54,21 @@ public:
 	{
 		return this->at(index);
 	}
+
+	void Clear() noexcept
+	{
+		this->clear();
+	}
+
+	void Resize(size_t newSize) noexcept
+	{
+		this->resize(newSize);
+	}
 };
 
 #else
 
-#include <core/memory/default_allocator.hpp>
+#include <core/memory/system_allocator.hpp>
 #pragma clang diagnostic ignored "-Wreorder-ctor"
 
 template<typename Type, typename Allocator = SystemAllocator>
