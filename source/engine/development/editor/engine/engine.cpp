@@ -62,6 +62,8 @@ void EditorEngine::Tick()
 		return;
 	}
 
+	gRootObject->Tick();
+	
 	//_renderer->BeginScene();
 	
 	//ImGui::ShowDemoWindow();
@@ -201,10 +203,10 @@ void EditorEngine::Tick()
 	
 	GraphicsContext& ctx = GraphicsContext::Begin();
 
-	gRenderer->Begin(gSceneColorBuffer, ctx);
+	gRenderer->Begin(gEditorColorBuffer, ctx);
 	gRootObject->RenderAll(ctx);
-	gRenderer->End(gSceneColorBuffer, ctx);
-	gRenderer->Present(gSceneColorBuffer, ctx);
+	gRenderer->End(gEditorColorBuffer, ctx);
+	gRenderer->Present(gEditorColorBuffer, ctx);
 	
 	auto elapsed = std::chrono::high_resolution_clock::now() - __start;
 	delta = std::chrono::duration_cast<std::chrono::microseconds>(elapsed).count() / 1000.f;

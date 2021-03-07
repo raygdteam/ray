@@ -41,13 +41,13 @@ void UiRootObject::Tick()
 
 	for (UiWindow* window : _windows)
 	{
+		ImGui::Begin(window->Title.AsRawStr());
 		for (UiObject* object : window->_objects)
 		{
 			object->Tick();
 		}
+		ImGui::End();
 	}
-	
-	ImGui::EndFrame();
 }
 
 void UiRootObject::RenderAll(GraphicsContext& gfxContext)
@@ -57,7 +57,7 @@ void UiRootObject::RenderAll(GraphicsContext& gfxContext)
 
 	ImGui::Render();
 	ImDrawData* data = ImGui::GetDrawData();
-	if (data->TotalVtxCount < 0) return;
+	if (data->TotalVtxCount <= 0) return;
 	
 	float L = data->DisplayPos.x;
 	float R = data->DisplayPos.x + data->DisplaySize.x;

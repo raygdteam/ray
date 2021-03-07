@@ -4,6 +4,7 @@
 
 EdDebugWindow::EdDebugWindow()
 {
+	Title = String("EdDebugWindow");
 	String text("AAAAAAAAAAAAAAAAAAAA");
 	this->_objects.PushBack(new UiLabel(text));
 }

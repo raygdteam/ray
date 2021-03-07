@@ -20,6 +20,7 @@ class RAY_ENGINE_API UiWindow
 	friend class UiRootObject;
 protected:
 	Array<UiObject*> _objects;
+	String Title;
 public:
 	UiWindow() {}
 };
