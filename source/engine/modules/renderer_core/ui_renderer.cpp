@@ -78,10 +78,10 @@ void UiRenderer::Initialize(u32 w, u32 h, void* data) noexcept
 
 	sUiData.TextureAtlasView.Create(sUiData.TextureAtlas, &_descriptorHeap);
 
-	u32 range[] = { 1 };
+	/*u32 range[] = { 1 };
 	auto destHandle = _descriptorHeap.GetDescriptorAtOffset(0).GetCpuHandle();
 	auto srcHandle = sUiData.TextureAtlasView.GetSRV();
-	gDevice->CopyDescriptors(1, &destHandle, range, 1, &srcHandle, range, D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
+	gDevice->CopyDescriptors(1, &destHandle, range, 1, &srcHandle, range, D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);*/
 
 	sUiData.SceneRenderTargetTexCoords[0] = { 0.f, 1.f }; // bottom left
 	sUiData.SceneRenderTargetTexCoords[1] = { 0.f, 0.f }; // top left

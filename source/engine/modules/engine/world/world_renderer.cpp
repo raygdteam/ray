@@ -40,7 +40,7 @@ void World::Render()
 
 	_renderer->End(gSceneColorBuffer, ctx);
 
-	bool g_bEditor = true;
+	bool g_bEditor = false;
 	if (g_bEditor)
 	{
 		_renderer->Begin(gEditorColorBuffer, ctx);

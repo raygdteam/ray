@@ -394,7 +394,14 @@ void TextureView::Create(GpuResource& resource, DescriptorHeap* cbvSrvUavHeap, D
 		rtvDesc.Texture2D.MipSlice = 0;
 		rtvDesc.Texture2D.PlaneSlice = 0;
 
-		_rtvHandle = AllocateDescriptor(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
+		if (rtvHeap == nullptr)
+		{
+			_rtvHandle = AllocateDescriptor(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
+		}
+		else
+		{
+			_rtvHandle = rtvHeap->Allocate(1);
+		}
 		gDevice->CreateRenderTargetView(nativeResource, &rtvDesc, _rtvHandle.GetCpuHandle());
 	}
 
@@ -406,9 +413,17 @@ void TextureView::Create(GpuResource& resource, DescriptorHeap* cbvSrvUavHeap, D
 		dsvDesc.ViewDimension = D3D12_DSV_DIMENSION_TEXTURE2D;
 		dsvDesc.Texture2D.MipSlice = 0;
 
-		_dsvHandle[0] = AllocateDescriptor(D3D12_DESCRIPTOR_HEAP_TYPE_DSV);
-		_dsvHandle[1] = AllocateDescriptor(D3D12_DESCRIPTOR_HEAP_TYPE_DSV);
-
+		if (dsvHeap == nullptr)
+		{
+			_dsvHandle[0] = AllocateDescriptor(D3D12_DESCRIPTOR_HEAP_TYPE_DSV);
+			_dsvHandle[1] = AllocateDescriptor(D3D12_DESCRIPTOR_HEAP_TYPE_DSV);
+		}
+		else
+		{
+			_dsvHandle[0] = dsvHeap->Allocate(1);
+			_dsvHandle[1] = dsvHeap->Allocate(1);
+		}
+		
 		dsvDesc.Flags = D3D12_DSV_FLAG_NONE;
 		gDevice->CreateDepthStencilView(nativeResource, &dsvDesc, _dsvHandle[0].GetCpuHandle());
 
@@ -428,7 +443,14 @@ void TextureView::Create(GpuResource& resource, DescriptorHeap* cbvSrvUavHeap, D
 		srvDesc.Texture2D.PlaneSlice = 0;
 		srvDesc.Texture2D.ResourceMinLODClamp = 0.f;
 
-		_srvHandle = AllocateDescriptor(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
+		if (cbvSrvUavHeap == nullptr)
+		{
+			_srvHandle = AllocateDescriptor(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
+		}
+		else
+		{
+			_srvHandle = cbvSrvUavHeap->Allocate(1);
+		}
 		gDevice->CreateShaderResourceView(nativeResource, &srvDesc, _srvHandle.GetCpuHandle());
 	}
 
@@ -441,8 +463,16 @@ void TextureView::Create(GpuResource& resource, DescriptorHeap* cbvSrvUavHeap, D
 		uavDesc.Texture2D.PlaneSlice = 0;
 		uavDesc.Texture2D.MipSlice = 0;
 
-		_uavHandle = AllocateDescriptor(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
+		if (cbvSrvUavHeap == nullptr)
+		{
+			_uavHandle = AllocateDescriptor(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
+		}
+		else
+		{
+			_uavHandle = cbvSrvUavHeap->Allocate(1);
+		}
 		gDevice->CreateUnorderedAccessView(nativeResource, nullptr, &uavDesc, _uavHandle.GetCpuHandle());
+
 	}
 }
 

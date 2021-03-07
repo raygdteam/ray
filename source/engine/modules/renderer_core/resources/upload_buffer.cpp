@@ -83,7 +83,7 @@ u8* UploadBuffer::SetTextureData(const void* data, u32 width, u32 height, DXGI_F
 		for (size_t i = 0; i < height; ++i)
 		{
 			void* dest = _currentPointer + i * rowPitch;
-			memcpy(dest, data, width * bitesPerPixel);
+			memcpy(dest, static_cast<u8*>(const_cast<void*>(data)) + (i * width * bitesPerPixel), width * bitesPerPixel);
 		}
 
 	u8* ret = _currentPointer;
