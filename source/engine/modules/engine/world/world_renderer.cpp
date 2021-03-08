@@ -40,7 +40,7 @@ void World::Render()
 
 	_renderer->End(gSceneColorBuffer, ctx);
 
-	bool g_bEditor = false;
+	/*bool g_bEditor = false;
 	if (g_bEditor)
 	{
 		_renderer->Begin(gEditorColorBuffer, ctx);
@@ -49,12 +49,12 @@ void World::Render()
 
 		_renderer->End(gEditorColorBuffer, ctx);
 
-		_renderer->Present(gEditorColorBuffer, ctx);
+		//_renderer->Present(gEditorColorBuffer, ctx);
 	}
 	else
 	{
-		_renderer->Present(gSceneColorBuffer, ctx);
-	}
+		//_renderer->Present(gSceneColorBuffer, ctx);
+	}*/
 	
 	//Renderer2D::Begin(_primaryCameraActor->GetCameraComponent()->GetViewProjection());
 
@@ -117,9 +117,30 @@ void World::Render()
 	//Renderer2D::End(ctx);
 }
 
+void World::RenderEditor(GraphicsContext& ctx)
+{
+	_renderer->Begin(gSceneColorBuffer, ctx);
+
+	Renderer2D::Begin(_primaryCameraActor->GetCameraComponent()->GetViewProjection());
+	for (size_t i = 0; i < 100; ++i)
+	{
+		for (size_t j = 0; j < 100; ++j)
+		{
+			FVector<3> pos = { -1500.f + i * 40, 900.f - j * 40, static_cast<f32>(1.0f) };
+			FVector<2> size = { 0.15f, 0.15f };
+			f32 r = 1.f; //  Sin(Pi() / 2 + (i * _delta))
+			f32 g = 0.5f; //  Cos(Pi() / 2 + (j * _delta))
+			FVector<4> color = { r, g, r * g, 1.f };
+			Renderer2D::DrawQuad(pos, size, color, ctx);
+		}
+	}
+	Renderer2D::End(ctx);
+
+	_renderer->End(gSceneColorBuffer, ctx);
+}
+
 void World::RendererInitialize(IPlatformWindow* window)
 {
-	_primaryCameraActor = new CameraActor();
 	_levelData->Level->SpawnActor(_primaryCameraActor);
 	/*_renderer = new IRenderer;
 	_renderer->Initialize(window);*/

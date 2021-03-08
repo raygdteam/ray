@@ -152,6 +152,7 @@
     <ClCompile Include="renderer\shader.cpp" />
     <ClCompile Include="windows\debug_window.cpp" />
     <ClCompile Include="windows\level_outline.cpp" />
+    <ClCompile Include="windows\level_viewport.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="context\context.hpp" />
@@ -165,6 +166,7 @@
     <ClInclude Include="renderer\shader.hpp" />
     <ClInclude Include="ui\editor_ui.hpp" />
     <ClInclude Include="windows\debug_window.hpp" />
+    <ClInclude Include="windows\level_viewport.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\modules\app_framework\app_framework.vcxproj">

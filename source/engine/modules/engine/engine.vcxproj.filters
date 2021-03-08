@@ -77,6 +77,9 @@
     <ClInclude Include="ui2\objects\tree_node.hpp">
       <Filter>ui2\objects</Filter>
     </ClInclude>
+    <ClInclude Include="ui2\objects\image.hpp">
+      <Filter>ui2\objects</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="engine">
@@ -169,10 +172,9 @@
     <ClCompile Include="ui2\ext\imgui_tables.cpp">
       <Filter>ui2\ext</Filter>
     </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="ui2\objects\label.cpp">
+    <ClCompile Include="ui2\objects\label.cpp" />
+    <ClCompile Include="ui2\objects\image.cpp">
       <Filter>ui2\objects</Filter>
-    </None>
+    </ClCompile>
   </ItemGroup>
 </Project>

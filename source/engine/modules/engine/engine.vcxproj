@@ -158,6 +158,7 @@
     <ClInclude Include="ui2\ext\imstb_textedit.h" />
     <ClInclude Include="ui2\ext\imstb_truetype.h" />
     <ClInclude Include="ui2\objects\button.hpp" />
+    <ClInclude Include="ui2\objects\image.hpp" />
     <ClInclude Include="ui2\objects\label.hpp" />
     <ClInclude Include="ui2\objects\tree.hpp" />
     <ClInclude Include="ui2\objects\tree_node.hpp" />
@@ -183,6 +184,7 @@
     <ClCompile Include="ui2\ext\imgui_tables.cpp" />
     <ClCompile Include="ui2\ext\imgui_widgets.cpp" />
     <ClCompile Include="ui2\objects\button.cpp" />
+    <ClCompile Include="ui2\objects\image.cpp" />
     <ClCompile Include="ui2\ui2.cpp" />
     <ClCompile Include="world\actor.cpp" />
     <ClCompile Include="world\actors\camera_actor.cpp" />

@@ -35,6 +35,9 @@
     <ClCompile Include="windows\debug_window.cpp">
       <Filter>windows</Filter>
     </ClCompile>
+    <ClCompile Include="windows\level_viewport.cpp">
+      <Filter>windows</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="renderer">
@@ -91,6 +94,9 @@
       <Filter>ui</Filter>
     </ClInclude>
     <ClInclude Include="windows\debug_window.hpp">
+      <Filter>windows</Filter>
+    </ClInclude>
+    <ClInclude Include="windows\level_viewport.hpp">
       <Filter>windows</Filter>
     </ClInclude>
   </ItemGroup>

@@ -85,8 +85,9 @@ void World::LoadLevel(pcstr name)
 	_levelData = new WorldLevelData;
 	_levelData->Level = new Level();
 	_levelData->Level->_owningWorld = this;
-	// _levelData->Level->LoadTestLevel();
-	
+	//_levelData->Level->LoadTestLevel();
+	_primaryCameraActor = new CameraActor();
+
 	(void)name;
 
 	//decltype(StaticQuadActor())* actor1 = new StaticQuadActor();
@@ -135,11 +136,16 @@ void World::Destroy() noexcept
 
 void World::Initialize(IPlatformWindow* window)
 {
-	_renderer = new IRenderer;
-	_renderer->Initialize(window);
-
+	if (window != nullptr)
+	{
+		_renderer = new IRenderer;
+		_renderer->Initialize(window);
+	}
+	
 	// load level
 	LoadLevel("\0");
+	
+	if (window == nullptr) return;
 
 	/* BUG: assuming no server build */
 	RendererInitialize(window);
@@ -148,7 +154,6 @@ void World::Initialize(IPlatformWindow* window)
 	IThread::Start([this] { this->RenderingThread(); })->Start();
 
 	//_pool = gThreadPoolManager->Allocate();
-
 	gRootObject = new UiRootObject;
 	gRootObject->Initialize(window);
 	

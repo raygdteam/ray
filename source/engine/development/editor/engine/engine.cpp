@@ -7,6 +7,7 @@
 
 #include <chrono>
 #include <engine/world/actors/static_quad_actor.hpp>
+#include <engine/world/world.hpp>
 #include <editor_core/caches/component_cache.hpp>
 #include <editor_core/caches/actor_cache.hpp>
 #include <renderer_core/resources/buffer_manager.hpp>
@@ -14,7 +15,9 @@
 
 
 #include "editor/windows/debug_window.hpp"
+#include <editor/windows/level_viewport.hpp>
 #include "engine/ui2/ui2.hpp"
+#include "renderer_core/renderer_2d.hpp"
 
 #undef CreateWindow
 
@@ -34,18 +37,24 @@ void EditorEngine::Initialize(IEngineLoop* engineLoop)
 	gActorCache = new ActorCache();
 	gActorCache->Rebuild();
 	
-	_level = new Level;
-	gRootObject = new UiRootObject();
-	
 	gRenderer = new IRenderer();
 	gRenderer->Initialize(_window);
+
+	_world = new World();
+	_world->Initialize(nullptr);
+	_level = _world->_levelData->Level;
+	gRootObject = new UiRootObject();
+
+	_world->RendererInitialize(nullptr);
+	
 
 	gRootObject->Initialize(_window);
 	
 	//_renderer = new IVkRenderer();
 	//_renderer->Initialize(_window);
 
-	gRootObject->AddWindow(new EdDebugWindow());
+	//gRootObject->AddWindow(new EdDebugWindow());
+	gRootObject->AddWindow(new EdLevelViewport());
 
 	_window->SetWindowVisibility(true);
 }
@@ -203,6 +212,12 @@ void EditorEngine::Tick()
 	
 	GraphicsContext& ctx = GraphicsContext::Begin();
 
+	gRenderer->Begin(gSceneColorBuffer, ctx);
+	{
+		_world->RenderEditor(ctx);
+	}
+	gRenderer->End(gSceneColorBuffer, ctx);
+	
 	gRenderer->Begin(gEditorColorBuffer, ctx);
 	gRootObject->RenderAll(ctx);
 	gRenderer->End(gEditorColorBuffer, ctx);

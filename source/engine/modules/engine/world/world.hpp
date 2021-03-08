@@ -21,8 +21,10 @@ struct WorldLevelData
 
 class RAY_RENDERERCORE_API UploadBuffer;
 
-class World final
+class RAY_ENGINE_API World final
 {
+	friend class EditorEngine;
+	
 	/* Delta is calculated by Engine and passed in Tick. */
 	f64 _delta = 0.f;
 	
@@ -46,6 +48,7 @@ class World final
 
 	/* Render the level. */
 	void Render();
+	void RenderEditor(GraphicsContext& ctx);
 
 	void RendererInitialize(IPlatformWindow* window);
 
