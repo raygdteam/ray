@@ -9,6 +9,7 @@ struct VertexInput
 cbuffer ConstantBuffer : register(b0)
 {
 	float4x4 ViewProjMatrix;
+	uint TextureIndex;
 }
 
 struct VertexOutput
@@ -26,7 +27,7 @@ VertexOutput main(VertexInput vertex)
 	//output.pos = mul(ViewProjMatrix, float4(vertex.pos, 0.f, 1.f));
 	output.color = vertex.color;
 	output.texcoord0 = vertex.texcoord0;
-	output.textureIndex = vertex.textureIndex;
+	output.textureIndex = TextureIndex;
 
 	return output;
 }

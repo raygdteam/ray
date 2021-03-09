@@ -3,6 +3,6 @@
 
 void UiImage::Tick()
 {
-	ImGui::Image((ImTextureID)0, ImVec2(100.f, 100.f));
+	ImGui::Image((ImTextureID)1, ImVec2(100.f, 100.f));
 }
 

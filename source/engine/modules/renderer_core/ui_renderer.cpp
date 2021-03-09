@@ -58,6 +58,7 @@ struct UiRendererData
 struct UiConstantBuffer
 {
 	FMatrix4x4 ViewProjMatrix;
+	u32 TextureIndex;
 };
 
 static UiRendererData sUiData;
@@ -79,7 +80,7 @@ void UiRenderer::Initialize(u32 w, u32 h, void* data) noexcept
 	sUiData.TextureAtlas.Create(textureAtlasDesc, "UiRendererData::TextureAtlas");
 
 	sUiData.TextureAtlasView.Create(sUiData.TextureAtlas);
-	sUiData.AttachedTextures[1] = sUiData.TextureAtlasView.GetSRV();
+	sUiData.AttachedTextures[0] = sUiData.TextureAtlasView.GetSRV();
 
 	/*u32 range[] = { 1 };
 	auto destHandle = _descriptorHeap.GetDescriptorAtOffset(0).GetCpuHandle();
@@ -270,7 +271,7 @@ void UiRenderer::Begin(const FMatrix4x4& vp, GraphicsContext& gfxContext) noexce
 	u32 destRange[] = { 2 };
 	u32 srcRange[] = { 1, 1 };
 	auto destHandle = _descriptorHeap.GetDescriptorAtOffset(0).GetCpuHandle();
-	sUiData.AttachedTextures[0] = gSceneColorBuffer.GetTextureView().GetSRV();
+	sUiData.AttachedTextures[1] = gSceneColorBuffer.GetTextureView().GetSRV();
 	gDevice->CopyDescriptors(1, &destHandle, destRange, 2, sUiData.AttachedTextures, srcRange, D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
 
 	gfxContext.TransitionResource(*sUiData.SceneRenderTarget, D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE, true);
@@ -292,15 +293,15 @@ void UiRenderer::Begin(const FMatrix4x4& vp, GraphicsContext& gfxContext) noexce
 	gfxContext.SetDescriptorHeap(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV, _descriptorHeap.GetHeapPointer());
 	gfxContext.SetDescriptorTable(0, _descriptorHeap.GetDescriptorAtOffset(0).GetGpuHandle());
 
-	UiConstantBuffer cb = { sUiData.ViewProjection.Transpose() };
 
 	gfxContext.SetDynamicVB(gRingBuffer, 0, sUiData.VertexCount + 6, sizeof(LocalUiVertex), sUiData.VertexBufferBase);
 	gfxContext.SetDynamicIB(gRingBuffer, sUiData.IndexCount, sUiData.IndexBufferBase, true);
-	gfxContext.SetDynamicCBV(gRingBuffer, 1, sizeof(cb), &cb);
 }
 
-void UiRenderer::Draw(size_t indexCount, size_t vertexOffset, size_t indexOffset, GraphicsContext& gfxContext) noexcept
-{	
+void UiRenderer::Draw(size_t indexCount, size_t vertexOffset, size_t indexOffset, u32 texId, GraphicsContext& gfxContext) noexcept
+{
+	UiConstantBuffer cb = { sUiData.ViewProjection.Transpose(), texId };
+	gfxContext.SetDynamicCBV(gRingBuffer, 1, sizeof(cb), &cb);
 	gfxContext.DrawIndexedInstanced(indexCount, 1, indexOffset, vertexOffset, 0);
 }
 
@@ -335,12 +336,12 @@ void UiRenderer::End(GraphicsContext& gfxContext) noexcept
 	sUiData.VertexCount = 0;
 }
 
-void UiRenderer::SetVertices(ImDrawVert* vertices, size_t count, size_t textureIndex) noexcept
+void UiRenderer::SetVertices(ImDrawVert* vertices, size_t count) noexcept
 {
 	for (size_t i = 0; i < count; ++i)
 	{
 		sUiData.VertexBufferBase[sUiData.VertexCount + i].Vertex = vertices[i];
-		sUiData.VertexBufferBase[sUiData.VertexCount + i].TextureIndex = textureIndex;
+		sUiData.VertexBufferBase[sUiData.VertexCount + i].TextureIndex = 0;
 	}
 
 	sUiData.VertexCount += count;

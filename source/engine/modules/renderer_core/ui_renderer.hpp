@@ -49,7 +49,7 @@ public:
 	static void Begin(const FMatrix4x4& vp, GraphicsContext& gfxContext) noexcept;
 	
 	// draw calls
-	static void Draw(size_t indexCount, size_t vertexOffset, size_t indexOffset, GraphicsContext& gfxContext) noexcept;
+	static void Draw(size_t indexCount, size_t vertexOffset, size_t indexOffset, u32 texId, GraphicsContext& gfxContext) noexcept;
 	static void DrawSceneRenderTarget(const FVector3& pos, const FVector2& size, GraphicsContext& gfxContext) noexcept;
 	
 	// it must be invoked after all draw calls
@@ -57,7 +57,7 @@ public:
 
 public:
 	// it must be invoked first of all to provide vertices and indices
-	static void SetVertices(ImDrawVert* vertices, size_t count, size_t textureIndex = 1) noexcept;
+	static void SetVertices(ImDrawVert* vertices, size_t count) noexcept;
 	static void SetIndices(u32* indices, size_t count) noexcept;
 
 };

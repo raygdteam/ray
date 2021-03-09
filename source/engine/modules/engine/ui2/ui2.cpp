@@ -76,7 +76,7 @@ void UiRootObject::RenderAll(GraphicsContext& gfxContext)
 	for (int i = 0; i < data->CmdListsCount; ++i)
 	{
 		cmd = data->CmdLists[i];
-		UiRenderer::SetVertices(cmd->VtxBuffer.Data, cmd->VtxBuffer.Size, (size_t)cmd->_CmdHeader.TextureId);
+		UiRenderer::SetVertices(cmd->VtxBuffer.Data, cmd->VtxBuffer.Size);
 		UiRenderer::SetIndices(cmd->IdxBuffer.Data, cmd->IdxBuffer.Size);
 	}
 
@@ -105,15 +105,12 @@ void UiRootObject::RenderAll(GraphicsContext& gfxContext)
 				continue;
 			
 			gfxContext.SetScissor(r);
-			UiRenderer::Draw(draw->ElemCount, draw->VtxOffset + vertexOffset, draw->IdxOffset + indexOffset, gfxContext);
+			UiRenderer::Draw(draw->ElemCount, draw->VtxOffset + vertexOffset, draw->IdxOffset + indexOffset, (u32)draw->TextureId, gfxContext);
 		}
 
 		vertexOffset += cmd->VtxBuffer.Size;
 		indexOffset += cmd->IdxBuffer.Size;
 	}
-	
-	UiRenderer::End(gfxContext);
-	UiRenderer::Begin(vp, gfxContext);
 
 	//FVector3 pos = { 500.f, 100.f, 0.f };
 	//FVector2 size = { 4.f, 3.f };
