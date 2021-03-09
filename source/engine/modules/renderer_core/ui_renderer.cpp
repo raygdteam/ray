@@ -51,6 +51,8 @@ struct UiRendererData
 	u32 SceneRenderTargetColor = 0xffffffff;
 
 	FMatrix4x4 ViewProjection;
+
+	D3D12_CPU_DESCRIPTOR_HANDLE AttachedTextures[2];
 };
 
 struct UiConstantBuffer
@@ -76,7 +78,8 @@ void UiRenderer::Initialize(u32 w, u32 h, void* data) noexcept
 	textureAtlasDesc.UploadBufferData = gUploadBuffer->SetTextureData(data, w, h, DXGI_FORMAT_R8G8B8A8_UNORM);
 	sUiData.TextureAtlas.Create(textureAtlasDesc, "UiRendererData::TextureAtlas");
 
-	sUiData.TextureAtlasView.Create(sUiData.TextureAtlas, &_descriptorHeap);
+	sUiData.TextureAtlasView.Create(sUiData.TextureAtlas);
+	sUiData.AttachedTextures[1] = sUiData.TextureAtlasView.GetSRV();
 
 	/*u32 range[] = { 1 };
 	auto destHandle = _descriptorHeap.GetDescriptorAtOffset(0).GetCpuHandle();
@@ -97,7 +100,7 @@ void UiRenderer::Initialize(u32 w, u32 h, void* data) noexcept
 		},
 		  sUiData.SceneRenderTargetColor 
 	}; // bottom left
-	sUiData.SceneRenderTargetVertices[0].TextureIndex = 1;
+	sUiData.SceneRenderTargetVertices[0].TextureIndex = 0;
 
 	sUiData.SceneRenderTargetVertices[1].Vertex =
 	{
@@ -108,7 +111,7 @@ void UiRenderer::Initialize(u32 w, u32 h, void* data) noexcept
 		},
 		  sUiData.SceneRenderTargetColor
 	}; // top left
-	sUiData.SceneRenderTargetVertices[1].TextureIndex = 1;
+	sUiData.SceneRenderTargetVertices[1].TextureIndex = 0;
 
 	sUiData.SceneRenderTargetVertices[2].Vertex =
 	{
@@ -119,7 +122,7 @@ void UiRenderer::Initialize(u32 w, u32 h, void* data) noexcept
 		},
 		  sUiData.SceneRenderTargetColor
 	}; // top right
-	sUiData.SceneRenderTargetVertices[2].TextureIndex = 1;
+	sUiData.SceneRenderTargetVertices[2].TextureIndex = 0;
 
 	sUiData.SceneRenderTargetVertices[3].Vertex =
 	{
@@ -130,7 +133,7 @@ void UiRenderer::Initialize(u32 w, u32 h, void* data) noexcept
 		},
 		  sUiData.SceneRenderTargetColor
 	}; // bottom left
-	sUiData.SceneRenderTargetVertices[3].TextureIndex = 1;
+	sUiData.SceneRenderTargetVertices[3].TextureIndex = 0;
 
 	sUiData.SceneRenderTargetVertices[4].Vertex =
 	{
@@ -141,7 +144,7 @@ void UiRenderer::Initialize(u32 w, u32 h, void* data) noexcept
 		},
 		  sUiData.SceneRenderTargetColor
 	}; // bottom right
-	sUiData.SceneRenderTargetVertices[4].TextureIndex = 1;
+	sUiData.SceneRenderTargetVertices[4].TextureIndex = 0;
 
 	sUiData.SceneRenderTargetVertices[5].Vertex =
 	{
@@ -152,7 +155,7 @@ void UiRenderer::Initialize(u32 w, u32 h, void* data) noexcept
 		},
 		  sUiData.SceneRenderTargetColor
 	}; // top right
-	sUiData.SceneRenderTargetVertices[5].TextureIndex = 1;
+	sUiData.SceneRenderTargetVertices[5].TextureIndex = 0;
 
 	SamplerDesc defaultSampler;
 	defaultSampler.Filter = D3D12_FILTER_MIN_MAG_MIP_LINEAR;
@@ -264,10 +267,11 @@ void UiRenderer::Begin(const FMatrix4x4& vp, GraphicsContext& gfxContext) noexce
 	
 	sUiData.SceneRenderTarget = &gSceneColorBuffer;
 
-	u32 range[] = { 1 };
-	auto destHandle = _descriptorHeap.GetDescriptorAtOffset(1).GetCpuHandle();
-	auto srcHandle = gSceneColorBuffer.GetTextureView().GetSRV();
-	gDevice->CopyDescriptors(1, &destHandle, range, 1, &srcHandle, range, D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
+	u32 destRange[] = { 2 };
+	u32 srcRange[] = { 1, 1 };
+	auto destHandle = _descriptorHeap.GetDescriptorAtOffset(0).GetCpuHandle();
+	sUiData.AttachedTextures[0] = gSceneColorBuffer.GetTextureView().GetSRV();
+	gDevice->CopyDescriptors(1, &destHandle, destRange, 2, sUiData.AttachedTextures, srcRange, D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
 
 	gfxContext.TransitionResource(*sUiData.SceneRenderTarget, D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE, true);
 
@@ -331,12 +335,12 @@ void UiRenderer::End(GraphicsContext& gfxContext) noexcept
 	sUiData.VertexCount = 0;
 }
 
-void UiRenderer::SetVertices(ImDrawVert* vertices, size_t count) noexcept
+void UiRenderer::SetVertices(ImDrawVert* vertices, size_t count, size_t textureIndex) noexcept
 {
 	for (size_t i = 0; i < count; ++i)
 	{
 		sUiData.VertexBufferBase[sUiData.VertexCount + i].Vertex = vertices[i];
-		sUiData.VertexBufferBase[sUiData.VertexCount + i].TextureIndex = 0;
+		sUiData.VertexBufferBase[sUiData.VertexCount + i].TextureIndex = textureIndex;
 	}
 
 	sUiData.VertexCount += count;

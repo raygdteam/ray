@@ -287,7 +287,7 @@ void Renderer2D::Flush(GraphicsContext& gfxContext)
 	ConstantBuffer cb;
 	cb.ViewProjMatrix = sData.ViewProjectionMatrix.Transpose();
 
-	gfxContext.SetDescriptorHeap(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV, gMainDescriptorHeap.GetHeapPointer());
+	gfxContext.SetDescriptorHeap(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV, _descriptorHeap.GetHeapPointer());
 	gfxContext.SetDescriptorTable(0, _descriptorHeap.GetDescriptorAtOffset(0).GetGpuHandle());
 
 	size_t bufferSize = sData.QuadVertexBufferPtr - sData.QuadVertexBufferBase;

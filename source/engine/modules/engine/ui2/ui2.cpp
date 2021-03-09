@@ -76,7 +76,7 @@ void UiRootObject::RenderAll(GraphicsContext& gfxContext)
 	for (int i = 0; i < data->CmdListsCount; ++i)
 	{
 		cmd = data->CmdLists[i];
-		UiRenderer::SetVertices(cmd->VtxBuffer.Data, cmd->VtxBuffer.Size);
+		UiRenderer::SetVertices(cmd->VtxBuffer.Data, cmd->VtxBuffer.Size, (size_t)cmd->_CmdHeader.TextureId);
 		UiRenderer::SetIndices(cmd->IdxBuffer.Data, cmd->IdxBuffer.Size);
 	}
 
@@ -89,7 +89,7 @@ void UiRootObject::RenderAll(GraphicsContext& gfxContext)
 	for (int i = 0; i < data->CmdListsCount; ++i)
 	{
 		cmd = data->CmdLists[i];
-
+		
 		for (int n = 0; n < cmd->CmdBuffer.Size; n++)
 		{
 			ImDrawCmd* draw = &cmd->CmdBuffer[n];
@@ -112,9 +112,12 @@ void UiRootObject::RenderAll(GraphicsContext& gfxContext)
 		indexOffset += cmd->IdxBuffer.Size;
 	}
 	
-	FVector3 pos = { 500.f, 100.f, 0.f };
-	FVector2 size = { 4.f, 3.f };
-	UiRenderer::DrawSceneRenderTarget(pos, size, gfxContext);
+	UiRenderer::End(gfxContext);
+	UiRenderer::Begin(vp, gfxContext);
+
+	//FVector3 pos = { 500.f, 100.f, 0.f };
+	//FVector2 size = { 4.f, 3.f };
+	//UiRenderer::DrawSceneRenderTarget(pos, size, gfxContext);
 
 	UiRenderer::End(gfxContext);
 }

@@ -57,7 +57,7 @@ public:
 
 public:
 	// it must be invoked first of all to provide vertices and indices
-	static void SetVertices(ImDrawVert* vertices, size_t count) noexcept;
+	static void SetVertices(ImDrawVert* vertices, size_t count, size_t textureIndex = 1) noexcept;
 	static void SetIndices(u32* indices, size_t count) noexcept;
 
 };
