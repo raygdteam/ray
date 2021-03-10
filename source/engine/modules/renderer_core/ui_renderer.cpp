@@ -14,19 +14,6 @@
 #include "resources/depth_buffer.hpp"
 #include "command_context.hpp"
 
-struct LocalUiVertex
-{
-	LocalUiVertex() = default;
-
-	LocalUiVertex(const ImDrawVert& vertex, u32 textureIndex)
-		: Vertex(vertex)
-		, TextureIndex(textureIndex)
-	{}
-
-	ImDrawVert Vertex;
-	u32 TextureIndex;
-};
-
 struct UiRendererData
 {
 	UiRendererData() {}
@@ -43,12 +30,8 @@ struct UiRendererData
 	u32* IndexBufferBase = nullptr;
 	size_t IndexCount = 0;
 
-	LocalUiVertex* VertexBufferBase = nullptr;
+	ImDrawVert* VertexBufferBase = nullptr;
 	size_t VertexCount = 0;
-
-	LocalUiVertex SceneRenderTargetVertices[6];
-	FVector2 SceneRenderTargetTexCoords[4];
-	u32 SceneRenderTargetColor = 0xffffffff;
 
 	FMatrix4x4 ViewProjection;
 
@@ -70,93 +53,16 @@ DescriptorHeap UiRenderer::_descriptorHeap(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UA
 void UiRenderer::Initialize(u32 w, u32 h, void* data) noexcept
 {
 	sUiData.IndexBufferBase = new uint32_t[sUiData.MAX_INDICES];
-	sUiData.VertexBufferBase = new LocalUiVertex[sUiData.MAX_VERTICES];
+	sUiData.VertexBufferBase = new ImDrawVert[sUiData.MAX_VERTICES];
 
 	_descriptorHeap.Create();
 
-	//auto textureResolution = FVector2 { w, h };
 	auto textureAtlasDesc = GpuTextureDescription::Texture2D(w, h, DXGI_FORMAT_R8G8B8A8_UNORM, 1, D3D12_RESOURCE_FLAG_NONE);
 	textureAtlasDesc.UploadBufferData = gUploadBuffer->SetTextureData(data, w, h, DXGI_FORMAT_R8G8B8A8_UNORM);
 	sUiData.TextureAtlas.Create(textureAtlasDesc, "UiRendererData::TextureAtlas");
 
 	sUiData.TextureAtlasView.Create(sUiData.TextureAtlas);
 	sUiData.AttachedTextures[0] = sUiData.TextureAtlasView.GetSRV();
-
-	/*u32 range[] = { 1 };
-	auto destHandle = _descriptorHeap.GetDescriptorAtOffset(0).GetCpuHandle();
-	auto srcHandle = sUiData.TextureAtlasView.GetSRV();
-	gDevice->CopyDescriptors(1, &destHandle, range, 1, &srcHandle, range, D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);*/
-
-	sUiData.SceneRenderTargetTexCoords[0] = { 0.f, 1.f }; // bottom left
-	sUiData.SceneRenderTargetTexCoords[1] = { 0.f, 0.f }; // top left
-	sUiData.SceneRenderTargetTexCoords[2] = { 1.f, 0.f }; // top right
-	sUiData.SceneRenderTargetTexCoords[3] = { 1.f, 1.f }; // bottom right
-
-	sUiData.SceneRenderTargetVertices[0].Vertex = 
-	{ 
-		{ -100.5f, -100.5f }, 
-		{ 
-			sUiData.SceneRenderTargetTexCoords[0].x,
-			sUiData.SceneRenderTargetTexCoords[0].y
-		},
-		  sUiData.SceneRenderTargetColor 
-	}; // bottom left
-	sUiData.SceneRenderTargetVertices[0].TextureIndex = 0;
-
-	sUiData.SceneRenderTargetVertices[1].Vertex =
-	{
-		{ -100.5f,  100.5f },
-		{
-			sUiData.SceneRenderTargetTexCoords[1].x,
-			sUiData.SceneRenderTargetTexCoords[1].y
-		},
-		  sUiData.SceneRenderTargetColor
-	}; // top left
-	sUiData.SceneRenderTargetVertices[1].TextureIndex = 0;
-
-	sUiData.SceneRenderTargetVertices[2].Vertex =
-	{
-		{ 100.5f,  100.5f },
-		{
-			sUiData.SceneRenderTargetTexCoords[2].x,
-			sUiData.SceneRenderTargetTexCoords[2].y
-		},
-		  sUiData.SceneRenderTargetColor
-	}; // top right
-	sUiData.SceneRenderTargetVertices[2].TextureIndex = 0;
-
-	sUiData.SceneRenderTargetVertices[3].Vertex =
-	{
-		{ -100.5f, -100.5f },
-		{
-			sUiData.SceneRenderTargetTexCoords[0].x,
-			sUiData.SceneRenderTargetTexCoords[0].y
-		},
-		  sUiData.SceneRenderTargetColor
-	}; // bottom left
-	sUiData.SceneRenderTargetVertices[3].TextureIndex = 0;
-
-	sUiData.SceneRenderTargetVertices[4].Vertex =
-	{
-		{ 100.5f, -100.5f },
-		{
-			sUiData.SceneRenderTargetTexCoords[3].x,
-			sUiData.SceneRenderTargetTexCoords[3].y
-		},
-		  sUiData.SceneRenderTargetColor
-	}; // bottom right
-	sUiData.SceneRenderTargetVertices[4].TextureIndex = 0;
-
-	sUiData.SceneRenderTargetVertices[5].Vertex =
-	{
-		{ 100.5f,  100.5f },
-		{
-			sUiData.SceneRenderTargetTexCoords[2].x,
-			sUiData.SceneRenderTargetTexCoords[2].y
-		},
-		  sUiData.SceneRenderTargetColor
-	}; // top right
-	sUiData.SceneRenderTargetVertices[5].TextureIndex = 0;
 
 	SamplerDesc defaultSampler;
 	defaultSampler.Filter = D3D12_FILTER_MIN_MAG_MIP_LINEAR;
@@ -276,11 +182,6 @@ void UiRenderer::Begin(const FMatrix4x4& vp, GraphicsContext& gfxContext) noexce
 
 	gfxContext.TransitionResource(*sUiData.SceneRenderTarget, D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE, true);
 
-	for (size_t i = 0; i < 6; ++i)
-	{
-		sUiData.VertexBufferBase[sUiData.VertexCount + i] = sUiData.SceneRenderTargetVertices[i];
-	}
-
 	gfxContext.SetRootSignature(_uiRootSignature);
 	gfxContext.SetScissor(0, 0, gDisplayPlane->GetDesc().Width, gDisplayPlane->GetDesc().Height);
 	gfxContext.SetViewport(0.f, 0.f, gDisplayPlane->GetDesc().Width, gDisplayPlane->GetDesc().Height);
@@ -293,8 +194,7 @@ void UiRenderer::Begin(const FMatrix4x4& vp, GraphicsContext& gfxContext) noexce
 	gfxContext.SetDescriptorHeap(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV, _descriptorHeap.GetHeapPointer());
 	gfxContext.SetDescriptorTable(0, _descriptorHeap.GetDescriptorAtOffset(0).GetGpuHandle());
 
-
-	gfxContext.SetDynamicVB(gRingBuffer, 0, sUiData.VertexCount + 6, sizeof(LocalUiVertex), sUiData.VertexBufferBase);
+	gfxContext.SetDynamicVB(gRingBuffer, 0, sUiData.VertexCount, sizeof(ImDrawVert), sUiData.VertexBufferBase);
 	gfxContext.SetDynamicIB(gRingBuffer, sUiData.IndexCount, sUiData.IndexBufferBase, true);
 }
 
@@ -303,29 +203,6 @@ void UiRenderer::Draw(size_t indexCount, size_t vertexOffset, size_t indexOffset
 	UiConstantBuffer cb = { sUiData.ViewProjection.Transpose(), texId };
 	gfxContext.SetDynamicCBV(gRingBuffer, 1, sizeof(cb), &cb);
 	gfxContext.DrawIndexedInstanced(indexCount, 1, indexOffset, vertexOffset, 0);
-}
-
-void UiRenderer::DrawSceneRenderTarget(const FVector3& pos, const FVector2& size, GraphicsContext& gfxContext) noexcept
-{
-	// TODO: calculates wrong position
-
-	for (size_t i = 0; i < 6; i++)
-	{
-		FVector3 p =
-		{
-			sUiData.SceneRenderTargetVertices[i].Vertex.pos.x,
-			sUiData.SceneRenderTargetVertices[i].Vertex.pos.y,
-			1.f
-		};
-		FVector3 vertexPos = p * FVector3{ size.x, size.y, 1.f };
-		FVector3 newPosition = pos + vertexPos;
-
-		sUiData.VertexBufferBase[sUiData.VertexCount + i] = sUiData.SceneRenderTargetVertices[i];
-		sUiData.VertexBufferBase[sUiData.VertexCount + i].Vertex.pos = { newPosition.x, newPosition.y };
-	}
-
-	gfxContext.SetDynamicVB(gRingBuffer, 0, 6, sizeof(LocalUiVertex), &sUiData.VertexBufferBase[sUiData.VertexCount]);
-	gfxContext.Draw(6, 0);
 }
 
 void UiRenderer::End(GraphicsContext& gfxContext) noexcept
@@ -340,8 +217,7 @@ void UiRenderer::SetVertices(ImDrawVert* vertices, size_t count) noexcept
 {
 	for (size_t i = 0; i < count; ++i)
 	{
-		sUiData.VertexBufferBase[sUiData.VertexCount + i].Vertex = vertices[i];
-		sUiData.VertexBufferBase[sUiData.VertexCount + i].TextureIndex = 0;
+		sUiData.VertexBufferBase[sUiData.VertexCount + i] = vertices[i];
 	}
 
 	sUiData.VertexCount += count;

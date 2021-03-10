@@ -48,9 +48,8 @@ public:
 	// after vertices and indices got set we must invoke Begin()
 	static void Begin(const FMatrix4x4& vp, GraphicsContext& gfxContext) noexcept;
 	
-	// draw calls
+	// draw call
 	static void Draw(size_t indexCount, size_t vertexOffset, size_t indexOffset, u32 texId, GraphicsContext& gfxContext) noexcept;
-	static void DrawSceneRenderTarget(const FVector3& pos, const FVector2& size, GraphicsContext& gfxContext) noexcept;
 	
 	// it must be invoked after all draw calls
 	static void End(GraphicsContext& gfxContext) noexcept;
