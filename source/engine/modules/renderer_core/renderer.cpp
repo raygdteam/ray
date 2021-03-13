@@ -22,7 +22,6 @@
 CommandListManager gCommandListManager;
 ContextManager gContextManager;
 ID3D12Device* gDevice;
-DescriptorHeap gMainDescriptorHeap(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV, D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE, 256);
 GpuTextureAllocator gTextureAllocator;
 GpuBufferAllocator gBufferAllocator;
 GpuPixelBufferAllocator gPixelBufferAllocator;
@@ -41,6 +40,7 @@ DescriptorAllocator gDescriptorAllocator[D3D12_DESCRIPTOR_HEAP_TYPE_NUM_TYPES] =
 
 bool IRenderer::_sbReady = false;
 RendererStats_t IRenderer::sRendererStats;
+RendererInfo_t IRenderer::sRendererInfo;
 
 void IRenderer::Initialize(IPlatformWindow* window) noexcept
 {
@@ -57,13 +57,13 @@ void IRenderer::Initialize(IPlatformWindow* window) noexcept
 
 	IDXGIFactory4* dxgiFactory;
 	auto hr = CreateDXGIFactory2(0, IID_PPV_ARGS(&dxgiFactory));
-	assert(hr == S_OK);
+	check(hr == S_OK);
 	IDXGIAdapter1* adapter;
 	ID3D12Device* device;
 
 	size_t maxSize = 0;
 
-	for (uint32_t i = 0; DXGI_ERROR_NOT_FOUND != dxgiFactory->EnumAdapters1(i, &adapter); ++i)
+	for (u32 i = 0; DXGI_ERROR_NOT_FOUND != dxgiFactory->EnumAdapters1(i, &adapter); ++i)
 	{
 		DXGI_ADAPTER_DESC1 desc;
 		adapter->GetDesc1(&desc);
@@ -77,14 +77,20 @@ void IRenderer::Initialize(IPlatformWindow* window) noexcept
 		}
 	}
 
-	if (maxSize >= 0)
+	if (maxSize > 0)
+	{
 		gDevice = device;
+	}
+	else
+	{
+		ray_assert(false, "There are no any supported devices.")
+	}
 
-	sRendererStats.MaxGpuMemorySize = maxSize;
+	sRendererInfo.MaxGpuMemorySize = maxSize;
 
 	D3D12_FEATURE_DATA_D3D12_OPTIONS  options;
 	gDevice->CheckFeatureSupport(D3D12_FEATURE_D3D12_OPTIONS, &options, sizeof(options));
-	(void)options.ResourceHeapTier;
+	sRendererInfo.bHeapTier2 = options.ResourceHeapTier == D3D12_RESOURCE_HEAP_TIER_2;
 
 	gCommandListManager.Create(gDevice);
 
@@ -99,8 +105,6 @@ void IRenderer::Initialize(IPlatformWindow* window) noexcept
 	swapChainDesc.BufferCount = SWAP_CHAIN_BUFFER_COUNT;
 	swapChainDesc.Flags = DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH;
 	swapChainDesc.SwapEffect = DXGI_SWAP_EFFECT_FLIP_SEQUENTIAL;
-
-	gMainDescriptorHeap.Create();
 
 	hr = dxgiFactory->CreateSwapChainForHwnd(gCommandListManager.GetCommandQueue(), static_cast<HWND>(window->GetWindowHandleRaw()), &swapChainDesc, nullptr, nullptr, &_swapChain);
 	for (u32 i = 0; i < SWAP_CHAIN_BUFFER_COUNT; ++i)

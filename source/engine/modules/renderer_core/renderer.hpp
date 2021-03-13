@@ -44,7 +44,6 @@ extern GpuTextureAllocator gTextureAllocator;
 extern GpuBufferAllocator gBufferAllocator;
 extern GpuPixelBufferAllocator gPixelBufferAllocator;
 
-extern DescriptorHeap gMainDescriptorHeap;
 extern RingBuffer gRingBuffer;
 extern RAY_RENDERERCORE_API UploadBuffer* gUploadBuffer;
 extern DescriptorAllocator gDescriptorAllocator[];
@@ -65,8 +64,6 @@ enum RendererName : u8
 typedef struct RAY_RENDERERCORE_API RendererStats
 {
 	size_t DrawCallsCount = 0u;
-	
-	size_t MaxGpuMemorySize = 0u;
 
 	size_t AllocatedGpuMemory = 0u;
 	size_t UsedGpuMemory = 0u;
@@ -77,10 +74,13 @@ typedef struct RAY_RENDERERCORE_API RendererStats
 
 typedef struct RAY_RENDERERCORE_API RendererInfo
 {
+	size_t MaxGpuMemorySize = 0u;
+
 	bool bMultiEngine;
-	bool bRayTracing;
+	bool bHardwareRayTracing;
 	bool bReservedResources;
 	bool bArgsBuffer;
+	bool bHeapTier2; // dx 12
 	// TODO: 
 
 	RendererName Name;
@@ -101,6 +101,7 @@ private:
 
 public:
 	static RendererStats_t sRendererStats;
+	static RendererInfo_t sRendererInfo;
 
 private:
 	void PreparePresentObjects() noexcept;
