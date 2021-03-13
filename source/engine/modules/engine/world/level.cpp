@@ -50,8 +50,6 @@ void Level::SpawnActor(Actor* actor)
 	}
 	else
 	{
-		proxy = new PrimitiveSceneProxy;
-		proxy->Transform = actor->GetTransform();
 	}
 
 	if (_jobCurrentSize >= ChunkSize)
@@ -70,11 +68,9 @@ void Level::LoadTestLevel()
 {
 	StaticQuadActor* actor1 = new StaticQuadActor();
 	actor1->GetTransform()->Position = FVector2 { 100, 100 };
-	actor1->Material.TextureName = "/engine/hero.png";
 	
 	StaticQuadActor* actor2 = new StaticQuadActor();
-	actor2->GetTransform()->Position = FVector2 { 500, 500 }; 
-	actor2->Material.TextureName = "/engine/atlas2.png";
+	actor2->GetTransform()->Position = FVector2 { 500, 500 };
 
 	SpawnActor(actor1);
 	SpawnActor(actor2);

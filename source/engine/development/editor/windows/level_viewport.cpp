@@ -16,8 +16,6 @@ void EdLevelViewport::Tick()
 {
 	//float width = static_cast<float>(ImGui::GetWindowContentRegionMax().x - ImGui::GetWindowContentRegionMin().x);
 	//float height = static_cast<float>(ImGui::GetWindowContentRegionMax().y - ImGui::GetWindowContentRegionMin().y);
-
-	//FVector2 offset = FVector2(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y);
 }
 
 void EdLevelViewport::LateTick()

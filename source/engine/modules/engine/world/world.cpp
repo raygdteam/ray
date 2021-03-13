@@ -85,7 +85,7 @@ void World::LoadLevel(pcstr name)
 	_levelData = new WorldLevelData;
 	_levelData->Level = new Level();
 	_levelData->Level->_owningWorld = this;
-	//_levelData->Level->LoadTestLevel();
+	_levelData->Level->LoadTestLevel();
 	_primaryCameraActor = new CameraActor();
 
 	(void)name;
@@ -113,6 +113,7 @@ void World::LoadLevel(pcstr name)
 			Transform* transform = actor->GetTransform();
 
 			transform->Position = FVector2 { -1500.f + i * 40, 900.f - j * 40 };
+			transform->Scale = FVector2{ 0.5f, 0.5f };
 			_levelData->Level->SpawnActor(actor);
 		}
 	}*/
