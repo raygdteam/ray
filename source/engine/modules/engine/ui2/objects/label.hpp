@@ -7,6 +7,7 @@ class RAY_ENGINE_API UiLabel : public UiObject
 {
 	String _text;
 public:
-	UiLabel(String& text);
+	UiLabel(UiWindow* window, String& text);
+	
 	void Tick() override;
 };

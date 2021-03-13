@@ -7,14 +7,51 @@
 #include "renderer_core/resources/buffer_manager.hpp"
 
 
-UiObject::UiObject()
-{ }
+UiObject::UiObject(UiWindow* window)
+{
+	_parent = window;
+}
 
 extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 static void ImguiCallback(void* hWnd, u32 msg, u64 wParam, s64 lParam)
 {
 	ImGui_ImplWin32_WndProcHandler((HWND)hWnd, msg, wParam, lParam);
 }
+
+void UiWindow::TickBegin()
+{
+	u32 pushCount = 0x0;
+	
+	if (Size.x != 0.0f && Size.y != 0.0f)
+	{
+		ImGui::SetNextWindowSize({ Size.x, Size.y }, ImGuiCond_FirstUseEver);
+	}
+	
+	if (Padding.x != -1.0f && Padding.y != -1.0f)
+	{
+		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(Padding.x, Padding.y));
+		pushCount++;
+	}
+
+	ImGui::Begin(Title.AsRawStr());
+	{
+		Size.x = ImGui::GetWindowWidth();
+		Size.y = ImGui::GetWindowHeight();
+		
+		Tick();
+
+		for (UiObject* object : _objects)
+		{
+			object->Tick();
+		}
+
+		LateTick();
+	}
+	
+	ImGui::End();
+	ImGui::PopStyleVar(pushCount);
+}
+
 void UiRootObject::Initialize(IPlatformWindow* window)
 {
 	ImGui::CreateContext();
@@ -41,12 +78,7 @@ void UiRootObject::Tick()
 
 	for (UiWindow* window : _windows)
 	{
-		ImGui::Begin(window->Title.AsRawStr());
-		for (UiObject* object : window->_objects)
-		{
-			object->Tick();
-		}
-		ImGui::End();
+		window->TickBegin();
 	}
 }
 

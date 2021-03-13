@@ -7,6 +7,7 @@
 class RAY_ENGINE_API UiImage : public UiObject
 {
 public:
+	UiImage(UiWindow* window);
 	void Tick() override;
 };
 
