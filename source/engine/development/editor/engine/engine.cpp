@@ -232,6 +232,8 @@ void EditorEngine::ApplyMouseDragOnViewport(FVector2 drag)
 {
 	//float sensitivity = 1.5f;
 	
-	_world->_primaryCameraActor->GetTransform()->Position.x += drag.x;
-	_world->_primaryCameraActor->GetTransform()->Position.y -= drag.y;
+	_world->_primaryCameraActor->GetTransform()->Position.y += drag.y * _delta;
+	//_world->_primaryCameraActor->GetTransform()->Position.y += drag.y;
+
+	_world->_primaryCameraActor->GetCameraComponent()->UpdateMVP();
 }

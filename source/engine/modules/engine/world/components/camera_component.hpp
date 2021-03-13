@@ -1,9 +1,10 @@
 #pragma once
+#include <engine/engine/engine_def.hpp>
 #include <engine/world/components/component_base.hpp>
 #include <core/math/vector.hpp>
 #include <core/math/matrix.hpp>
 
-class CameraComponent : public IComponent
+class RAY_ENGINE_API CameraComponent : public IComponent
 {
 	RAYOBJECT_BODY(CameraComponent, IComponent);
 
