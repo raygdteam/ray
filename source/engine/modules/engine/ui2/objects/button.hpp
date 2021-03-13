@@ -6,6 +6,6 @@ class UiButton : public UiObject
 {
 	String _text;
 public:
-	UiButton(String& text);
+	UiButton(UiWindow* window, String& text);
 	void Tick() override;
 };

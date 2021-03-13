@@ -5,4 +5,7 @@ class EdLevelViewport : public UiWindow
 {
 public:
 	EdLevelViewport();
+
+	void Tick() override;
+	void LateTick() override;
 };

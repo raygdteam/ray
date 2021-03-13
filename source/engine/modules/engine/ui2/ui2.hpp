@@ -2,27 +2,45 @@
 #include <core/core.hpp>
 #include <engine/engine/engine_def.hpp>
 #include <core/lib/array.hpp>
+#include <core/math/vector.hpp>
 #include <app_framework/base/platform_window.hpp>
 #include <renderer_core/command_context.hpp>
 
+
 class GraphicsContext;
+class UiWindow;
+class UiObject;
 
 class RAY_ENGINE_API UiObject
 {
+protected:
+	UiWindow* _parent;
 public:
 	virtual ~UiObject() = default;
-	UiObject();
+	UiObject(UiWindow* parent);
 	virtual void Tick() = 0;
 };
 
 class RAY_ENGINE_API UiWindow
 {
 	friend class UiRootObject;
+	friend class UiObject;
+	void TickBegin();
 protected:
-	Array<UiObject*> _objects;
 	String Title;
+	Array<UiObject*> _objects;
+	FVector2 Size;
+	FVector2 Padding = {-1.f, -1.f};
 public:
 	UiWindow() {}
+
+	virtual void Tick() {}
+	virtual void LateTick() {}
+	
+	FVector2 GetSize() const noexcept
+	{
+		return Size;
+	}
 };
 
 class RAY_ENGINE_API UiRootObject

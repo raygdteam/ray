@@ -122,17 +122,26 @@ void World::RenderEditor(GraphicsContext& ctx)
 	_renderer->Begin(gSceneColorBuffer, ctx);
 
 	Renderer2D::Begin(_primaryCameraActor->GetCameraComponent()->GetViewProjection());
-	for (size_t i = 0; i < 100; ++i)
+	Level* level = _levelData->Level;
+	
+	for (size_t i = 0; i < level->_atd.Size(); ++i)
 	{
-		for (size_t j = 0; j < 100; ++j)
+		const ActorData& actorData = level->_atd[i];
+		
+		StaticQuadSceneProxy* proxy = static_cast<StaticQuadSceneProxy*>(actorData.SceneProxy);
+
+		if (proxy == nullptr) continue;
+		
+		FVector<3> position =
 		{
-			FVector<3> pos = { -1500.f + i * 40, 900.f - j * 40, static_cast<f32>(1.0f) };
-			FVector<2> size = { 0.15f, 0.15f };
-			f32 r = 1.f; //  Sin(Pi() / 2 + (i * _delta))
-			f32 g = 0.5f; //  Cos(Pi() / 2 + (j * _delta))
-			FVector<4> color = { r, g, r * g, 1.f };
-			Renderer2D::DrawQuad(pos, size, color, ctx);
-		}
+			proxy->Transform->Position.x,
+			proxy->Transform->Position.y,
+			1.f
+		};
+		
+		FVector2 size = { 0.75f, 0.75f };
+		FVector4 color = { 1.f, 1.f, 0.f, 1.f };
+		Renderer2D::DrawQuad(position, size, color, ctx);
 	}
 	Renderer2D::End(ctx);
 

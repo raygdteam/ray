@@ -24,8 +24,11 @@
 IRenderer* gRenderer;
 UiRootObject* gRootObject;
 
+EditorEngine* gEditorEngine;
+
 void EditorEngine::Initialize(IEngineLoop* engineLoop)
 {
+	gEditorEngine = this;
 	_window = IPlatformWindow::CreateInstance();
 
 	_window->Initialize();
@@ -47,7 +50,6 @@ void EditorEngine::Initialize(IEngineLoop* engineLoop)
 
 	_world->RendererInitialize(nullptr);
 	
-
 	gRootObject->Initialize(_window);
 	
 	//_renderer = new IVkRenderer();
@@ -225,4 +227,12 @@ void EditorEngine::Tick()
 	
 	auto elapsed = std::chrono::high_resolution_clock::now() - __start;
 	delta = std::chrono::duration_cast<std::chrono::microseconds>(elapsed).count() / 1000.f;
+}
+
+void EditorEngine::ApplyMouseDragOnViewport(FVector2 drag)
+{
+	float sensitivity = 3.0f;
+	
+	_world->_primaryCameraActor->GetTransform()->Position.x += drag.x * sensitivity;
+	_world->_primaryCameraActor->GetTransform()->Position.y -= drag.y * sensitivity;
 }

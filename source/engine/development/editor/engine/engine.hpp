@@ -19,4 +19,8 @@ class EDITOR_API EditorEngine : public IEngine
 public:
 	void Initialize(IEngineLoop* engineLoop) override;
 	void Tick() override;
+
+	void ApplyMouseDragOnViewport(FVector2 drag);
 };
+
+extern EditorEngine* gEditorEngine;
