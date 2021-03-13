@@ -55,7 +55,7 @@ void EditorEngine::Initialize(IEngineLoop* engineLoop)
 	//_renderer = new IVkRenderer();
 	//_renderer->Initialize(_window);
 
-	//gRootObject->AddWindow(new EdDebugWindow());
+	gRootObject->AddWindow(new EdDebugWindow());
 	gRootObject->AddWindow(new EdLevelViewport());
 
 	_window->SetWindowVisibility(true);
@@ -73,7 +73,8 @@ void EditorEngine::Tick()
 	}
 
 	gRootObject->Tick();
-	
+
+	//_level->GetActors()[0]->GetTransform()->Position.x -= 1.f * _delta;
 	//_renderer->BeginScene();
 	
 	//ImGui::ShowDemoWindow();
@@ -236,4 +237,9 @@ void EditorEngine::ApplyMouseDragOnViewport(FVector2 drag)
 	//_world->_primaryCameraActor->GetTransform()->Position.y += drag.y;
 
 	_world->_primaryCameraActor->GetCameraComponent()->UpdateMVP();
+}
+
+FVector2& EditorEngine::GetCameraPos()
+{
+	return _world->_primaryCameraActor->GetTransform()->Position;
 }
