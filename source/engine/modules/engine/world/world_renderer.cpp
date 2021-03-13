@@ -139,8 +139,8 @@ void World::RenderEditor(GraphicsContext& ctx)
 			1.f
 		};
 		
-		FVector4 color = { 1.f, 1.f, 0.f, 1.f };
-		Renderer2D::DrawQuad(position, proxy->Transform->Scale, color, ctx);
+		//FVector4 color = { 1.f, 1.f, 0.f, 1.f };
+		Renderer2D::DrawQuad(position, proxy->Transform->Scale, proxy->RenderData->Texture, ctx);
 	}
 	Renderer2D::End(ctx);
 

@@ -281,7 +281,6 @@ void IRenderer::Shutdown() noexcept
 	gCommandListManager.Shutdown();
 	gTextureAllocator.Destroy();
 	gBufferAllocator.Destroy();
-	gRingBuffer.Destroy();
 
 	_swapChain->Release();
 	_swapChain = nullptr;

@@ -21,7 +21,6 @@
 
 RootSignature Renderer2D::_2DSignature;
 GraphicsPipeline Renderer2D::_2DPipeline;
-DescriptorHeap Renderer2D::_descriptorHeap(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV, D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE, 1);
 
 struct ConstantBuffer
 {
@@ -61,6 +60,8 @@ struct Renderer2DData
 
 	FMatrix4x4 ViewProjectionMatrix;
 };
+
+DescriptorHeap Renderer2D::_descriptorHeap(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV, D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE, Renderer2DData::MAX_TEXTURES_COUNT);
 
 static Renderer2DData sData;
 
@@ -210,11 +211,13 @@ void Renderer2D::DrawQuad(const FVector3& pos, const FVector2& size, const Textu
 		sData.QuadVertexBufferPtr->Position = FVector4{ newPosition.x, newPosition.y, newPosition.z, 1.f };
 		
 		sData.QuadVertexBufferPtr->TexCoord = textureCoords[i];
-		sData.QuadVertexBufferPtr->TextureIndex = sData.TextureCount++;
+		sData.QuadVertexBufferPtr->Color = FVector4{ 1.f, 1.f, 1.f, 1.f };
+		sData.QuadVertexBufferPtr->TextureIndex = sData.TextureCount;
 
 		sData.QuadVertexBufferPtr++;
 	}
 
+	sData.TextureCount++;
 	sData.QuadIndexCount += 6;
 }
 
@@ -267,7 +270,7 @@ void Renderer2D::Flush(GraphicsContext& gfxContext)
 
 	u32 srcRange[Renderer2DData::MAX_TEXTURES_COUNT];
 	u32 destRange = sData.TextureCount;
-	for (size_t i = 0; i < Renderer2DData::MAX_TEXTURES_COUNT; ++i)
+	for (size_t i = 0; i < sData.TextureCount; ++i)
 	{
 		srcRange[i] = 1;
 	}

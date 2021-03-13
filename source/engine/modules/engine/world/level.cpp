@@ -67,10 +67,12 @@ void Level::SpawnActor(Actor* actor)
 void Level::LoadTestLevel()
 {
 	StaticQuadActor* actor1 = new StaticQuadActor();
-	actor1->GetTransform()->Position = FVector2 { 100, 100 };
-	
+	actor1->GetTransform()->Position = FVector2{ 100, 100 };
+	actor1->GetTransform()->Scale = FVector2{ 1.f, 1.f };
+
 	StaticQuadActor* actor2 = new StaticQuadActor();
-	actor2->GetTransform()->Position = FVector2 { 500, 500 };
+	actor2->GetTransform()->Position = FVector2{ 500, 500 };
+	actor2->GetTransform()->Scale = FVector2{ 1.f, 1.f };
 
 	SpawnActor(actor1);
 	SpawnActor(actor2);
