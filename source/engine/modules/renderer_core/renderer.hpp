@@ -62,7 +62,20 @@ enum RendererName : u8
 	eDirectX12
 };
 
-struct RAY_RENDERERCORE_API RendererInfo
+typedef struct RAY_RENDERERCORE_API RendererStats
+{
+	size_t DrawCallsCount = 0u;
+	
+	size_t MaxGpuMemorySize = 0u;
+
+	size_t AllocatedGpuMemory = 0u;
+	size_t UsedGpuMemory = 0u;
+
+	size_t AllocatedVirtualMemory = 0u;
+	size_t UsedVirtualMemory = 0u;
+} RendererStats_t;
+
+typedef struct RAY_RENDERERCORE_API RendererInfo
 {
 	bool bMultiEngine;
 	bool bRayTracing;
@@ -71,7 +84,7 @@ struct RAY_RENDERERCORE_API RendererInfo
 	// TODO: 
 
 	RendererName Name;
-};
+} RendererInfo_t;
 
 struct RAY_RENDERERCORE_API IRenderer final
 {
@@ -86,6 +99,9 @@ private:
 	GpuBuffer _presentIB;
 	BufferView _ibView;
 
+public:
+	static RendererStats_t sRendererStats;
+
 private:
 	void PreparePresentObjects() noexcept;
 
@@ -95,15 +111,22 @@ public:
 		, _srvDescriptorHeap(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV, D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE, 1)
 	{}
 
+	IRenderer(IRenderer&& rhs) = default;
+	IRenderer& operator = (IRenderer&& rhs) = default;
+
+public:
 	void Initialize(IPlatformWindow* window) noexcept;
 	void Shutdown() noexcept;
 
+public:
 	void Begin(ColorBuffer& renderTarget, GraphicsContext& gfxContext) noexcept;
 	void End(ColorBuffer& renderTarget, GraphicsContext& gfxContext) noexcept;
 
+public:
 	void Present(ColorBuffer& finalFrame, GraphicsContext& gfxContext) noexcept;
 
-	static bool IsReady() { return _sbReady; }
+public:
+	static bool IsReady() noexcept { return _sbReady; }
 
 };
 

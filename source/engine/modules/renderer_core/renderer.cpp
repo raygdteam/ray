@@ -29,6 +29,8 @@ GpuPixelBufferAllocator gPixelBufferAllocator;
 RingBuffer gRingBuffer;
 RAY_RENDERERCORE_API UploadBuffer* gUploadBuffer;
 
+RendererStats_t sRendererStats;
+
 DescriptorAllocator gDescriptorAllocator[D3D12_DESCRIPTOR_HEAP_TYPE_NUM_TYPES] =
 {
 	D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV,
@@ -38,6 +40,7 @@ DescriptorAllocator gDescriptorAllocator[D3D12_DESCRIPTOR_HEAP_TYPE_NUM_TYPES] =
 };
 
 bool IRenderer::_sbReady = false;
+RendererStats_t IRenderer::sRendererStats;
 
 void IRenderer::Initialize(IPlatformWindow* window) noexcept
 {
@@ -76,6 +79,8 @@ void IRenderer::Initialize(IPlatformWindow* window) noexcept
 
 	if (maxSize >= 0)
 		gDevice = device;
+
+	_sRendererStats.MaxGpuMemorySize = maxSize;
 
 	D3D12_FEATURE_DATA_D3D12_OPTIONS  options;
 	gDevice->CheckFeatureSupport(D3D12_FEATURE_D3D12_OPTIONS, &options, sizeof(options));

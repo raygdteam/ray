@@ -543,27 +543,27 @@ void GraphicsContext::SetDescriptorTable(u32 rootIndex, D3D12_GPU_DESCRIPTOR_HAN
 
 void GraphicsContext::Draw(u32 vertexCount, u32 vertexStartOffset)
 {
+	IRenderer::sRendererStats.DrawCallsCount++;
 	DrawInstanced(vertexCount, 1, vertexStartOffset);
 }
 
 void GraphicsContext::DrawIndexed(u32 indexCount, u32 startIndexLocation, s32 baseVertexLocation)
 {
+	IRenderer::sRendererStats.DrawCallsCount++;
 	DrawIndexedInstanced(indexCount, 1, startIndexLocation, baseVertexLocation, 0);
 }
 
 void GraphicsContext::DrawInstanced(u32 vertexCountPerInstance, u32 instanceCount, u32 startVertexLocation, u32 startInstanceLocation)
 {
+	IRenderer::sRendererStats.DrawCallsCount++;
 	FlushResourceBarriers();
-	// TODO: 
-	// still not supported
 	_commandList->DrawInstanced(vertexCountPerInstance, instanceCount, startVertexLocation, startInstanceLocation);
 }
 
 void GraphicsContext::DrawIndexedInstanced(u32 indexCountPerInstance, u32 instanceCount, u32 startIndexLocation, s32 baseVertexLocation, u32 startInstanceLocation)
 {
+	IRenderer::sRendererStats.DrawCallsCount++;
 	FlushResourceBarriers();
-	// TODO: 
-	// still not supported
 	_commandList->DrawIndexedInstanced(indexCountPerInstance, instanceCount, startIndexLocation, baseVertexLocation, startInstanceLocation);
 }
 
