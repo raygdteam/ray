@@ -141,16 +141,32 @@ void World::RenderEditor(GraphicsContext& ctx)
 		
 		FVector2 size = { 0.75f, 0.75f };
 		FVector4 color = { 1.f, 1.f, 0.f, 1.f };
+		
 		Renderer2D::DrawQuad(position, size, color, ctx);
+
 	}
 	Renderer2D::End(ctx);
 
 	_renderer->End(gSceneColorBuffer, ctx);
 }
 
+#include <engine/world/actors/static_quad_actor.hpp>
+
 void World::RendererInitialize(IPlatformWindow* window)
 {
 	_levelData->Level->SpawnActor(_primaryCameraActor);
+
+	//StaticQuadActor* actor1 = new StaticQuadActor();
+	//actor1->GetTransform()->Position = FVector2{ 100, 100 };
+	//actor1->Material.TextureName = "/engine/hero.png";
+
+	//StaticQuadActor* actor2 = new StaticQuadActor();
+	//actor2->GetTransform()->Position = FVector2{ 500, 500 };
+	//actor2->Material.TextureName = "/engine/atlas2.png";
+
+	//_levelData->Level->SpawnActor(actor1);
+	//_levelData->Level->SpawnActor(actor2);
+
 	/*_renderer = new IRenderer;
 	_renderer->Initialize(window);*/
 	RTexture* whiteTexture = dynamic_cast<RTexture*>(RayState()->ResourceManager->LoadResourceSync("/engine/white_texture.jpg", eTexture));

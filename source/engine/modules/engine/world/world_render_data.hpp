@@ -1,5 +1,6 @@
 #pragma once
 #include <core/core.hpp>
+#include <renderer_core/resources/gpu_texture.hpp>
 
 #include <engine\world\components\transform.hpp>
 
@@ -9,7 +10,7 @@ struct RenderData
 
 struct StaticQuadRenderData : RenderData
 {
-	u64 TextureId;
+	TextureView Texture;
 };
 
 // ------------- SCENE PROXY ------------

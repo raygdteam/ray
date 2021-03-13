@@ -6,6 +6,7 @@
 #include <core/memory/memory_manager.hpp>
 #include "gpu_memory_pool.hpp"
 #include <renderer_core/descriptor_heap.hpp>
+#include <renderer_core/renderer_core.hpp>
 
 class UploadBuffer;
 
@@ -15,7 +16,7 @@ enum class ResourceMappingMode
 	eWriteAccess,
 };
 
-struct GpuResourceDescription
+struct RAY_RENDERERCORE_API GpuResourceDescription
 {
 public:
 	// buffer properties
@@ -61,7 +62,7 @@ public:
 class GpuResource;
 
 template <typename TGpuMemoryPool>
-class GpuResourceAllocator
+class RAY_RENDERERCORE_API GpuResourceAllocator
 {
 protected:
 	MemoryManager<TGpuMemoryPool> _memoryManager;
@@ -89,7 +90,7 @@ public:
 
 };
 
-class GpuResource
+class RAY_RENDERERCORE_API GpuResource
 {
 	friend class CommandContext;
 	friend class GraphicsContext;
@@ -186,7 +187,7 @@ public:
 
 };
 
-class IResourceView
+class RAY_RENDERERCORE_API IResourceView
 {
 protected:
 	DescriptorHandle _srvHandle;

@@ -5,7 +5,7 @@
 #include <core/memory/memory_pool.hpp>
 #include <core/memory/memory_manager.hpp>
 
-struct GpuTextureDescription : public GpuResourceDescription
+struct RAY_RENDERERCORE_API GpuTextureDescription : public GpuResourceDescription
 {
 public:
 	GpuTextureDescription()
@@ -55,7 +55,7 @@ public:
 
 class GpuTexture;
 
-class GpuTextureAllocator : public GpuResourceAllocator<GpuTextureMemoryPool>
+class RAY_RENDERERCORE_API GpuTextureAllocator : public GpuResourceAllocator<GpuTextureMemoryPool>
 {
 public:
 	void Initialize(size_t preferredSize) noexcept override
@@ -74,7 +74,7 @@ public:
 };
 
 // represents texture resource in gpu memory
-class GpuTexture : public GpuResource
+class RAY_RENDERERCORE_API GpuTexture : public GpuResource
 {
 	friend GpuTextureAllocator;
 
@@ -100,7 +100,7 @@ public:
 
 };
 
-class TextureView : public IResourceView
+class RAY_RENDERERCORE_API TextureView : public IResourceView
 {
 private:
 	DescriptorHandle _rtvHandle;

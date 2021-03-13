@@ -4,6 +4,7 @@
 #include "resources/resource_manager.hpp"
 #include <renderer_core/renderer.hpp>
 #include <renderer_core/command_context.hpp>
+#include <renderer_core/resources/upload_buffer.hpp>
 
 #include "core/json/json.hpp"
 
@@ -32,12 +33,17 @@ void Level::SpawnActor(Actor* actor)
 
 		if (texture == nullptr) *(u64*)0xFFFFFFFFFFFFFFFF = 0xDED;
 
-		// TODO
+		auto textureDesc = GpuTextureDescription::Texture2D(texture->GetDimensions().x, texture->GetDimensions().y, DXGI_FORMAT_R32G32B32A32_FLOAT, 1, D3D12_RESOURCE_FLAG_NONE);
+		gUploadBuffer->SetTextureData(textureDesc, texture->GetData().GetData());
+		GpuTexture actorTexture;
+		actorTexture.Create(textureDesc, "actor texture");
 
-		//TextureManager textureManager;
-		//textureManager.PrepareTextures(ctx, &texture, 1, true);
+		TextureView actorTextureView;
+		actorTextureView.Create(actorTexture);
+
 		sqProxy->RenderData = new StaticQuadRenderData;
-		sqProxy->RenderData->TextureId = texture->GetId();
+		sqProxy->RenderData->Texture = std::move(actorTextureView);
+		//sqProxy->RenderData->TextureId = texture->GetId();
 		sqProxy->Transform = actor->GetTransform();
 
 		proxy = sqProxy;
@@ -64,9 +70,11 @@ void Level::LoadTestLevel()
 {
 	StaticQuadActor* actor1 = new StaticQuadActor();
 	actor1->GetTransform()->Position = FVector2 { 100, 100 };
+	actor1->Material.TextureName = "/engine/hero.png";
 	
 	StaticQuadActor* actor2 = new StaticQuadActor();
-	actor2->GetTransform()->Position = FVector2 { 500, 500 };
+	actor2->GetTransform()->Position = FVector2 { 500, 500 }; 
+	actor2->Material.TextureName = "/engine/atlas2.png";
 
 	SpawnActor(actor1);
 	SpawnActor(actor2);
