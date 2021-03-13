@@ -5,7 +5,7 @@
 
 class RAY_ENGINE_API UiLabel : public UiObject
 {
-	String _text;
+	String& _text;
 public:
 	UiLabel(UiWindow* window, String& text);
 	

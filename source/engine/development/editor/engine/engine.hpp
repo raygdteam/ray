@@ -22,6 +22,7 @@ public:
 	void Tick() override;
 
 	void ApplyMouseDragOnViewport(FVector2 drag);
+	FVector2& GetCameraPos();
 };
 
 extern EditorEngine* gEditorEngine;

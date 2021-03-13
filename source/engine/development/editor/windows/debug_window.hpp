@@ -5,4 +5,5 @@ class EdDebugWindow : public UiWindow
 {
 public:
 	EdDebugWindow();
+	void Tick() override;
 };
