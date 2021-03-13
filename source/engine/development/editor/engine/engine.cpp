@@ -63,7 +63,6 @@ void EditorEngine::Initialize(IEngineLoop* engineLoop)
 
 void EditorEngine::Tick()
 {
-	static f64 delta = 1;
 	auto __start = std::chrono::high_resolution_clock::now();
 
 	_window->Update();
@@ -226,13 +225,13 @@ void EditorEngine::Tick()
 	gRenderer->Present(gEditorColorBuffer, ctx);
 	
 	auto elapsed = std::chrono::high_resolution_clock::now() - __start;
-	delta = std::chrono::duration_cast<std::chrono::microseconds>(elapsed).count() / 1000.f;
+	_delta = std::chrono::duration_cast<std::chrono::microseconds>(elapsed).count() / 1000.f;
 }
 
 void EditorEngine::ApplyMouseDragOnViewport(FVector2 drag)
 {
-	float sensitivity = 3.0f;
+	//float sensitivity = 1.5f;
 	
-	_world->_primaryCameraActor->GetTransform()->Position.x += drag.x * sensitivity;
-	_world->_primaryCameraActor->GetTransform()->Position.y -= drag.y * sensitivity;
+	_world->_primaryCameraActor->GetTransform()->Position.x += drag.x;
+	_world->_primaryCameraActor->GetTransform()->Position.y -= drag.y;
 }

@@ -44,8 +44,6 @@ void Level::SpawnActor(Actor* actor)
 	}
 	else
 	{
-		proxy = new PrimitiveSceneProxy;
-		proxy->Transform = actor->GetTransform();
 	}
 
 	if (_jobCurrentSize >= ChunkSize)

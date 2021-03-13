@@ -13,6 +13,7 @@
 class EDITOR_API EditorEngine : public IEngine
 {
 	IPlatformWindow* _window = nullptr;
+	float _delta = .0f;
 	//IVkRenderer* _renderer = nullptr;
 	World* _world = nullptr;
 	Level* _level = nullptr;

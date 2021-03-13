@@ -105,7 +105,7 @@ void World::LoadLevel(pcstr name)
 	//_levelData->Level->SpawnActor(actor2);
 	//_levelData->Level->SpawnActor(actor3);
 
-	/*for (u32 i = 0; i < 500; ++i)
+	for (u32 i = 0; i < 500; ++i)
 	{
 		for (u32 j = 0; j < 500; ++j)
 		{
@@ -115,7 +115,7 @@ void World::LoadLevel(pcstr name)
 			transform->Position = FVector2 { -1500.f + i * 40, 900.f - j * 40 };
 			_levelData->Level->SpawnActor(actor);
 		}
-	}*/
+	}
 }
 
 World::World() : _pool(gThreadPoolManager->Allocate())
