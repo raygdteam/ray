@@ -80,7 +80,7 @@ void IRenderer::Initialize(IPlatformWindow* window) noexcept
 	if (maxSize >= 0)
 		gDevice = device;
 
-	_sRendererStats.MaxGpuMemorySize = maxSize;
+	sRendererStats.MaxGpuMemorySize = maxSize;
 
 	D3D12_FEATURE_DATA_D3D12_OPTIONS  options;
 	gDevice->CheckFeatureSupport(D3D12_FEATURE_D3D12_OPTIONS, &options, sizeof(options));
@@ -262,6 +262,7 @@ void IRenderer::Present(ColorBuffer& finalFrame, GraphicsContext& gfxContext) no
 
 	_swapChain->Present(0, 0);
 	gCurrentBuffer = (gCurrentBuffer + 1) % SWAP_CHAIN_BUFFER_COUNT;
+	sRendererStats.DrawCallsCount = 0u;
 }
 
 void IRenderer::Shutdown() noexcept
