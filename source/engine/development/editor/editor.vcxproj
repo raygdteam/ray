@@ -166,6 +166,7 @@
     <ClInclude Include="renderer\shader.hpp" />
     <ClInclude Include="ui\editor_ui.hpp" />
     <ClInclude Include="windows\debug_window.hpp" />
+    <ClInclude Include="windows\level_outline.hpp" />
     <ClInclude Include="windows\level_viewport.hpp" />
   </ItemGroup>
   <ItemGroup>

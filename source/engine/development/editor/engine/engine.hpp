@@ -25,6 +25,11 @@ public:
 	FVector2& GetCameraPos();
 
 	float MouseDragSensitivity = 1.75f;
+
+	Level* GetLevel()
+	{
+		return _level;
+	}
 };
 
 extern EditorEngine* gEditorEngine;

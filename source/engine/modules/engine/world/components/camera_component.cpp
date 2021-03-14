@@ -8,7 +8,7 @@ using namespace DirectX;
 void CameraComponent::UpdateMVP()
 {
 	Transform* transform = _parent->GetTransform();
-	FVector3 pos = FVector3 { -transform->Position.x, -transform->Position.y, .0f };
+	FVector3 pos = FVector3 { transform->Position.x, transform->Position.y, .0f };
 
 
 	// TODO: assumes 1280x720

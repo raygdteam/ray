@@ -99,6 +99,9 @@
     <ClInclude Include="windows\level_viewport.hpp">
       <Filter>windows</Filter>
     </ClInclude>
+    <ClInclude Include="windows\level_outline.hpp">
+      <Filter>windows</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="renderer\render_pass.hpp">

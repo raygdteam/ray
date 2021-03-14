@@ -134,8 +134,8 @@ void World::RenderEditor(GraphicsContext& ctx)
 		
 		FVector<3> position =
 		{
-			proxy->Transform->Position.x,
 			proxy->Transform->Position.y,
+			proxy->Transform->Position.x,
 			1.f
 		};
 		

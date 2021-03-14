@@ -16,6 +16,8 @@
 
 #include "editor/windows/debug_window.hpp"
 #include <editor/windows/level_viewport.hpp>
+
+#include "editor/windows/level_outline.hpp"
 #include "engine/ui2/ui2.hpp"
 #include "renderer_core/renderer_2d.hpp"
 
@@ -57,6 +59,7 @@ void EditorEngine::Initialize(IEngineLoop* engineLoop)
 
 	gRootObject->AddWindow(new EdDebugWindow());
 	gRootObject->AddWindow(new EdLevelViewport());
+	gRootObject->AddWindow(new EdLevelOutline());
 
 	_window->SetWindowVisibility(true);
 }
