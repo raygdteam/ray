@@ -23,6 +23,8 @@ public:
 
 	void ApplyMouseDragOnViewport(FVector2 drag);
 	FVector2& GetCameraPos();
+
+	float MouseDragSensitivity = 1.75f;
 };
 
 extern EditorEngine* gEditorEngine;

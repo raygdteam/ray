@@ -29,5 +29,7 @@ void EdDebugWindow::Tick()
 	{
 		gEditorEngine->ApplyMouseDragOnViewport(FVector2{ 0,0 });
 	}
+
+	ImGui::SliderFloat("Sensitivity", &gEditorEngine->MouseDragSensitivity, 1.f, 10.f);
 }
 

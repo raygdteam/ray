@@ -206,7 +206,7 @@ void Renderer2D::DrawQuad(const FVector3& pos, const FVector2& size, const Textu
 		/*FVector4 transformed = FMatrix4x4::Scale(1).Transform({ vertexPos.x, vertexPos.y, vertexPos.z, 1.f });
 		vertexPos = { transformed.x, transformed.y, transformed.z };*/
 
-		FVector3 newPosition = pos + vertexPos;
+		FVector3 newPosition =/* pos + */vertexPos;
 
 		sData.QuadVertexBufferPtr->Position = FVector4{ newPosition.x, newPosition.y, newPosition.z, 1.f };
 		
@@ -219,6 +219,13 @@ void Renderer2D::DrawQuad(const FVector3& pos, const FVector2& size, const Textu
 
 	sData.TextureCount++;
 	sData.QuadIndexCount += 6;
+	
+	ConstantBuffer cb;
+	FMatrix4x4 transposed = FMatrix4x4::Identity().Translate(pos);
+	cb.ViewProjMatrix = (transposed * sData.ViewProjectionMatrix).Transpose();
+	gfxContext.SetRootSignature(_2DSignature);
+	gfxContext.SetDynamicCBV(gRingBuffer, 1, sizeof(cb), &cb);
+	FlushAndReset(gfxContext);
 }
 
 void Renderer2D::DrawQuad(const FVector3& pos, const FVector2& size, const TextureView& textureHandle, GraphicsContext& gfxContext)
@@ -262,6 +269,12 @@ void Renderer2D::DrawQuad(const FVector3& pos, const FVector2& size, const FVect
 	}
 
 	sData.QuadIndexCount += 6;
+	
+	ConstantBuffer cb;
+	FMatrix4x4 transposed = FMatrix4x4::Identity().Translate(pos);
+	cb.ViewProjMatrix = (transposed * sData.ViewProjectionMatrix).Transpose();
+	gfxContext.SetDynamicCBV(gRingBuffer, 1, sizeof(cb), &cb);
+	FlushAndReset(gfxContext);
 }
 
 void Renderer2D::Flush(GraphicsContext& gfxContext)
@@ -287,15 +300,15 @@ void Renderer2D::Flush(GraphicsContext& gfxContext)
 
 	gfxContext.SetRenderTarget(gSceneColorBuffer.GetRTV(), gDepthBuffer.GetDSV());
 
-	ConstantBuffer cb;
-	cb.ViewProjMatrix = sData.ViewProjectionMatrix.Transpose();
+	//ConstantBuffer cb;
+	//cb.ViewProjMatrix = sData.ViewProjectionMatrix.Transpose();
 
 	gfxContext.SetDescriptorHeap(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV, _descriptorHeap.GetHeapPointer());
 	gfxContext.SetDescriptorTable(0, _descriptorHeap.GetDescriptorAtOffset(0).GetGpuHandle());
 
 	size_t bufferSize = sData.QuadVertexBufferPtr - sData.QuadVertexBufferBase;
 	gfxContext.SetDynamicVB(gRingBuffer, 0, bufferSize, sizeof(QuadVertex), sData.QuadVertexBufferBase);
-	gfxContext.SetDynamicCBV(gRingBuffer, 1, sizeof(cb), &cb);
+	//gfxContext.SetDynamicCBV(gRingBuffer, 1, sizeof(cb), &cb);
 	gfxContext.SetIndexBuffer(sData.IndexBufferView);
 	gfxContext.DrawIndexedInstanced(sData.QuadIndexCount, 1, 0, 0, 0);
 
