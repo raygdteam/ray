@@ -9,6 +9,7 @@ Actor::Actor()
 	transform->Position = FVector<2>();
 	transform->Position.x = 0.f;
 	transform->Position.y = 0.f;
+	transform->Scale = FVector2{ 1,1 };
 	_components.PushBack(transform);
 
 	Name = String("Actor #");
