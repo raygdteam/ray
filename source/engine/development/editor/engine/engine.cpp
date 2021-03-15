@@ -18,6 +18,7 @@
 #include <editor/windows/level_viewport.hpp>
 
 #include "editor/windows/level_outline.hpp"
+#include "editor/windows/log_window.hpp"
 #include "engine/ui2/ui2.hpp"
 #include "renderer_core/renderer_2d.hpp"
 
@@ -60,6 +61,7 @@ void EditorEngine::Initialize(IEngineLoop* engineLoop)
 	gRootObject->AddWindow(new EdDebugWindow());
 	gRootObject->AddWindow(new EdLevelViewport());
 	gRootObject->AddWindow(new EdLevelOutline());
+	gRootObject->AddWindow(new EdLogWindow());
 
 	_window->SetWindowVisibility(true);
 }
@@ -234,8 +236,8 @@ void EditorEngine::Tick()
 
 void EditorEngine::ApplyMouseDragOnViewport(FVector2 drag)
 {	
-	_world->_primaryCameraActor->GetTransform()->Position.x += drag.x * _delta * MouseDragSensitivity;
-	_world->_primaryCameraActor->GetTransform()->Position.y -= drag.y * _delta * MouseDragSensitivity;
+	_world->_primaryCameraActor->GetTransform()->Position.x -= drag.x * _delta * MouseDragSensitivity;
+	_world->_primaryCameraActor->GetTransform()->Position.y += drag.y * _delta * MouseDragSensitivity;
 
 	_world->_primaryCameraActor->GetCameraComponent()->UpdateMVP();
 }

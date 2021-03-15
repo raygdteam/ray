@@ -38,6 +38,9 @@
     <ClCompile Include="windows\level_viewport.cpp">
       <Filter>windows</Filter>
     </ClCompile>
+    <ClCompile Include="windows\log_window.cpp">
+      <Filter>windows</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="renderer">
@@ -100,6 +103,9 @@
       <Filter>windows</Filter>
     </ClInclude>
     <ClInclude Include="windows\level_outline.hpp">
+      <Filter>windows</Filter>
+    </ClInclude>
+    <ClInclude Include="windows\log_window.hpp">
       <Filter>windows</Filter>
     </ClInclude>
   </ItemGroup>
