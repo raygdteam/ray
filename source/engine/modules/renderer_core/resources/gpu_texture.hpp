@@ -12,18 +12,25 @@ public:
 		: GpuResourceDescription()
 	{}
 
-	GpuTextureDescription(D3D12_RESOURCE_DIMENSION dimension, u32 width, u32 height, u32 depth, u32 arraySize, DXGI_FORMAT format, DXGI_SAMPLE_DESC sampleDesc, u32 mipLevels, D3D12_RESOURCE_FLAGS flags)
+	GpuTextureDescription
+	(
+		D3D12_RESOURCE_DIMENSION dimension, 
+		u32 width, 
+		u32 height, 
+		u32 depth, 
+		u32 arraySize, 
+		DXGI_FORMAT format,
+		DXGI_SAMPLE_DESC sampleDesc, 
+		u32 mipLevels, 
+		D3D12_RESOURCE_FLAGS flags
+	) noexcept
 	{
-		Dimension = dimension;
 		Width = width;
 		Height = height;
 		Depth = depth;
 		ArraySize = arraySize;
-		Format = format;
 		SampleDesc = sampleDesc;
 		MipLevels = mipLevels;
-		Flags = flags;
-		UploadBufferData = nullptr;
 	}
 
 public:

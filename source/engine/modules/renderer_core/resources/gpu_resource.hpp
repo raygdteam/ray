@@ -16,40 +16,49 @@ enum class ResourceMappingMode
 	eWriteAccess,
 };
 
+enum class GpuBufferType : u8
+{
+	eIndex = 0,
+	eVertex = 1,
+	eStructured = 2,
+	eByteAddress = 3,
+};
+
 struct RAY_RENDERERCORE_API GpuResourceDescription
 {
 public:
-	// buffer properties
-	u32 SizeInBytes;
-	u32 Stride;
-
 	// texture properties
-	D3D12_RESOURCE_DIMENSION Dimension;
 	u32 Width;
 	u32 Height;
 	u32 Depth;
 	u32 ArraySize;
 	DXGI_SAMPLE_DESC SampleDesc;
 	u32 MipLevels;
-	D3D12_RESOURCE_FLAGS Flags;
 	D3D12_CLEAR_VALUE* ClearValue;
 
+	// buffer properties
+	GpuBufferType Type;
+	u32 SizeInBites;
+	u32 Stride;
+
 	// common properties
+	D3D12_RESOURCE_DIMENSION Dimension;
 	DXGI_FORMAT Format;
 	const void* UploadBufferData;
+	D3D12_RESOURCE_FLAGS Flags;
 
 public:
-	GpuResourceDescription()
-		: Dimension(D3D12_RESOURCE_DIMENSION_UNKNOWN)
-		, Width(1)
-		, Height(1)
-		, Depth(1)
-		, ArraySize(1)
-		, MipLevels(1)
-		, Flags(D3D12_RESOURCE_FLAG_NONE)
-		, ClearValue(nullptr)
-		, Format(DXGI_FORMAT_UNKNOWN)
-		, UploadBufferData(nullptr)
+	GpuResourceDescription
+	(
+		D3D12_RESOURCE_DIMENSION dimension = D3D12_RESOURCE_DIMENSION_UNKNOWN, 
+		DXGI_FORMAT format = DXGI_FORMAT_UNKNOWN, 
+		D3D12_RESOURCE_FLAGS flags = D3D12_RESOURCE_FLAG_NONE, 
+		const void* uploadBufferData = nullptr
+	)
+		: Dimension(dimension)
+		, Format(format)
+		, Flags(flags)
+		, UploadBufferData(uploadBufferData)
 	{}
 
 	GpuResourceDescription(GpuResourceDescription&& rhs) = default;

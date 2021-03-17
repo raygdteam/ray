@@ -5,37 +5,85 @@
 struct GpuBufferDescription : public GpuResourceDescription
 {
 public:
-	GpuBufferDescription()
+	GpuBufferDescription() noexcept
 		: GpuResourceDescription()
 	{}
 
-	GpuBufferDescription(u32 sizeInBytes, u32 stride, const void* initialData, DXGI_FORMAT format)
-		: GpuBufferDescription()
+	GpuBufferDescription
+	(
+		GpuBufferType type, 
+		u32 sizeInBites, 
+		u32 stride, 
+		DXGI_FORMAT format, 
+		D3D12_RESOURCE_FLAGS flags = D3D12_RESOURCE_FLAG_NONE, 
+		const void* initialData = nullptr
+	) noexcept
 	{
-		SizeInBytes = sizeInBytes;
+		Type = type;
+		SizeInBites = sizeInBites;
 		Stride = stride;
-		UploadBufferData = initialData;
-		Format = format;
-		Dimension = D3D12_RESOURCE_DIMENSION_BUFFER;
 	}
 
 public:
-	static GpuBufferDescription Buffer(u32 sizeInBytes, u32 stride = 0, const void* data = nullptr, DXGI_FORMAT format = DXGI_FORMAT_UNKNOWN) noexcept
+	static GpuBufferDescription Buffer
+	(
+		GpuBufferType type, 
+		u32 sizeInBytes, 
+		u32 stride = 0, 
+		DXGI_FORMAT format = DXGI_FORMAT_UNKNOWN, 
+		D3D12_RESOURCE_FLAGS flags = D3D12_RESOURCE_FLAG_NONE, 
+		const void* data = nullptr
+	) noexcept
 	{
-		return GpuBufferDescription(sizeInBytes, stride, data, format);
+		return GpuBufferDescription(type, sizeInBytes, stride, format, flags, data);
 	}
 
 	static GpuBufferDescription Vertex(u32 elementsCount, u32 stride, const void* data = nullptr) noexcept
 	{
-		return Buffer(elementsCount * stride, stride, data);
+		return Buffer
+		(
+			GpuBufferType::eVertex, 
+			elementsCount * stride, 
+			stride,
+			DXGI_FORMAT_UNKNOWN, 
+			D3D12_RESOURCE_FLAG_DENY_SHADER_RESOURCE, 
+			data
+		);
 	}
 
 	static GpuBufferDescription Index(u32 elementsCount, u32 stride, const void* data = nullptr) noexcept
 	{
-		return Buffer(elementsCount * stride, stride, data, DXGI_FORMAT_UNKNOWN);
+		return Buffer
+		(
+			GpuBufferType::eIndex, 
+			elementsCount * stride, 
+			stride, 
+			DXGI_FORMAT_UNKNOWN, 
+			D3D12_RESOURCE_FLAG_DENY_SHADER_RESOURCE,
+			data
+		);
 	}
 
-	// TODO: Typed, Argument, Raw, Structured
+	static GpuBufferDescription Structured
+	(
+		u32 elementsCount, 
+		u32 stride, 
+		bool bWritable = false, 
+		const void* data = nullptr
+	) noexcept
+	{
+		return Buffer
+		(
+			GpuBufferType::eStructured, 
+			elementsCount * stride, 
+			stride, 
+			DXGI_FORMAT_UNKNOWN, 
+			bWritable ? 
+			D3D12_RESOURCE_FLAG_ALLOW_UNORDERED_ACCESS : 
+			D3D12_RESOURCE_FLAG_NONE, 
+			data
+		);
+	}
 
 };
 
