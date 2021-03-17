@@ -12,15 +12,16 @@ public:
 	GpuBufferDescription
 	(
 		GpuBufferType type, 
-		u32 sizeInBites, 
+		u32 sizeInBytes, 
 		u32 stride, 
 		DXGI_FORMAT format, 
 		D3D12_RESOURCE_FLAGS flags = D3D12_RESOURCE_FLAG_NONE, 
 		const void* initialData = nullptr
 	) noexcept
+		: GpuResourceDescription(D3D12_RESOURCE_DIMENSION_BUFFER, format, flags, initialData)
 	{
 		Type = type;
-		SizeInBites = sizeInBites;
+		SizeInBytes = sizeInBytes;
 		Stride = stride;
 	}
 

@@ -38,7 +38,7 @@ public:
 
 	// buffer properties
 	GpuBufferType Type;
-	u32 SizeInBites;
+	u32 SizeInBytes;
 	u32 Stride;
 
 	// common properties
@@ -57,8 +57,8 @@ public:
 	)
 		: Dimension(dimension)
 		, Format(format)
-		, Flags(flags)
 		, UploadBufferData(uploadBufferData)
+		, Flags(flags)
 	{}
 
 	GpuResourceDescription(GpuResourceDescription&& rhs) = default;

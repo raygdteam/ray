@@ -10,7 +10,7 @@ GpuResource&& GpuBufferAllocator::Allocate(GpuResourceDescription& desc) noexcep
 {
 	auto bufferDesc = static_cast<GpuBufferDescription&>(desc);
 	D3D12_RESOURCE_DESC resourceDesc = {};
-	resourceDesc.Width = bufferDesc.SizeInBites;
+	resourceDesc.Width = bufferDesc.SizeInBytes;
 	resourceDesc.Height = 1;
 	resourceDesc.MipLevels = 1;
 	resourceDesc.DepthOrArraySize = 1;
@@ -94,17 +94,17 @@ void BufferView::Create(GpuResource& resource, DescriptorHeap* cbvSrvUavHeap, De
 	auto desc = resource.GetDesc();
 	auto nativeResource = resource.GetNativeResource();
 	auto gpuVirtualAddress = nativeResource->GetGPUVirtualAddress();
-	u32 numElements = desc.SizeInBites / desc.Stride;
+	u32 numElements = desc.SizeInBytes / desc.Stride;
 
 	// ========================== VERTEX BUFFER VIEW ========================== //
 	_vbView.BufferLocation = gpuVirtualAddress;
-	_vbView.SizeInBytes = desc.SizeInBites;
+	_vbView.SizeInBytes = desc.SizeInBytes;
 	_vbView.StrideInBytes = desc.Stride;
 
 	// ========================== INDEX BUFFER VIEW ========================== //
 	_ibView.BufferLocation = gpuVirtualAddress;
 	_ibView.Format = desc.Stride == 4 ? DXGI_FORMAT_R32_UINT : DXGI_FORMAT_R16_UINT;
-	_ibView.SizeInBytes = desc.SizeInBites;
+	_ibView.SizeInBytes = desc.SizeInBytes;
 
 	// ========================== CONSTANT BUFFER VIEW ========================== //
 	_cbView = gpuVirtualAddress;
@@ -119,9 +119,14 @@ void BufferView::Create(GpuResource& resource, DescriptorHeap* cbvSrvUavHeap, De
 		srvDesc.Buffer.FirstElement = 0;
 		srvDesc.Buffer.Flags = D3D12_BUFFER_SRV_FLAG_NONE;
 		srvDesc.Buffer.NumElements = numElements;
+		
 		if (desc.Type == GpuBufferType::eStructured)
 		{
 			srvDesc.Buffer.StructureByteStride = desc.Stride;
+		}
+		else
+		{
+			srvDesc.Buffer.StructureByteStride = 0;
 		}
 
 		if (cbvSrvUavHeap == nullptr)

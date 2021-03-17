@@ -33,16 +33,16 @@ public:
 public:
 	void SetTextureData(GpuTextureDescription& desc, const void* data) noexcept;
 	u8* SetTextureData(const void* data, u32 width, u32 height, DXGI_FORMAT pixelFormat) noexcept;
+
 	void SetBufferData(GpuBufferDescription& desc, const void* data) noexcept;
 	u8* SetBufferData(const void* data, size_t elementsCount, size_t elementSize) noexcept;
+	u8* SetRawBufferData(const void* buffer, size_t bufferSize, size_t alignment) noexcept;
+
 	void SetConstantBufferData(GpuBufferDescription& desc, const void* data) noexcept;
 	u8* SetConstantBufferData(const void* data, size_t sizeInBites) noexcept;
 
 	u8* GetBeginPointer() const noexcept { return _begin; }
 	ID3D12Resource* GetNativePool() const noexcept { return _pool; }
 	u64 GetMaxPoolSize() const noexcept { return  _maxPoolSize; }
-
-private:
-	u8* SetBufferDataToUploadBuffer(void* buffer, size_t bufferSize, size_t alignment) noexcept;
 
 };

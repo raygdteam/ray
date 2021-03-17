@@ -27,12 +27,18 @@ struct ConstantBuffer
 	FMatrix4x4 ViewProjMatrix;
 };
 
+struct QuadInstance
+{
+	FMatrix4x4 Model;
+};
+
 struct QuadVertex
 {
 	FVector4 Position;
 	FVector4 Color;
 	FVector2 TexCoord;
 	u32 TextureIndex;
+	u32 InstanceId;
 };
 
 struct Renderer2DData
@@ -52,6 +58,10 @@ struct Renderer2DData
 	u32 QuadIndexCount = 0;
 	QuadVertex* QuadVertexBufferBase = nullptr;
 	QuadVertex* QuadVertexBufferPtr = nullptr;
+	
+	QuadInstance* QuadInstanceBufferBase = nullptr;
+	QuadInstance* QuadInstanceBufferPtr = nullptr;
+	u32 QuadInstancesCount = 0;
 
 	D3D12_CPU_DESCRIPTOR_HANDLE AttachedTextures[MAX_TEXTURES_COUNT];
 	u32 TextureCount = 0;
@@ -84,13 +94,15 @@ void Renderer2D::Initialize(RTexture& whiteTexture)
 
 	auto ibDesc = GpuBufferDescription::Index(sData.MAX_INDICES, sizeof(u32));
 	gUploadBuffer->SetBufferData(ibDesc, quadIndices);
-	ibDesc.Flags = D3D12_RESOURCE_FLAG_DENY_SHADER_RESOURCE;
 	sData.IndexBuffer.Create(ibDesc, "Renderer2DData::IndexBuffer");
 
 	BufferView ibView;
 	ibView.Create(sData.IndexBuffer);
 	sData.IndexBufferView = ibView.GetIndexBufferView();
 	delete[] quadIndices;
+
+	sData.QuadVertexBufferBase = new QuadVertex[sData.MAX_VERTICES];
+	sData.QuadInstanceBufferBase = new QuadInstance[sData.MAX_QUADS];
 
 	auto textureResolution = whiteTexture.GetDimensions();
 	auto whiteTextureDesc = GpuTextureDescription::Texture2D(textureResolution.x, textureResolution.y, DXGI_FORMAT_R32G32B32A32_FLOAT, 1, D3D12_RESOURCE_FLAG_NONE);
@@ -103,18 +115,17 @@ void Renderer2D::Initialize(RTexture& whiteTexture)
 
 	_descriptorHeap.Create();
 
-	sData.QuadVertexBufferBase = new QuadVertex[sData.MAX_QUADS];
-
 	sData.QuadVertexPositions[0] = { -100.5f, -100.5f, 0.5f }; // bottom left
 	sData.QuadVertexPositions[1] = { -100.5f,  100.5f, 0.5f }; // top left
 	sData.QuadVertexPositions[2] = { 100.5f,  100.5f, 0.5f }; // top right
 	sData.QuadVertexPositions[3] = { 100.5f, -100.5f, 0.5f }; // bottom right
 
 	SamplerDesc defaultSampler;
-	_2DSignature.Begin(2, 1);
+	_2DSignature.Begin(3, 1);
 	_2DSignature.InitStaticSampler(0, defaultSampler, D3D12_SHADER_VISIBILITY_PIXEL);
 	_2DSignature.Slot(0).InitAsDescriptorRange(0, D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 64, D3D12_SHADER_VISIBILITY_PIXEL);
 	_2DSignature.Slot(1).InitAsConstantBuffer(0, D3D12_SHADER_VISIBILITY_VERTEX);
+	_2DSignature.Slot(2).InitAsSRVBuffer(2, D3D12_SHADER_VISIBILITY_VERTEX);
 
 	_2DSignature.Finalize(D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT);
 	_2DPipeline.SetRootSignature(_2DSignature);
@@ -146,7 +157,8 @@ void Renderer2D::Initialize(RTexture& whiteTexture)
 		{ "POSITION", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 0, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
 		{ "COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 16, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0},
 		{ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 32, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
-		{ "TEXINDEX", 0, DXGI_FORMAT_R32_UINT, 0, 40, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 }
+		{ "TEXINDEX", 0, DXGI_FORMAT_R32_UINT, 0, 40, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
+		{ "INSTANCE", 0, DXGI_FORMAT_R32_UINT, 0, 44, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0},
 	};
 	_2DPipeline.SetInputLayout(sizeof(inputLayout) / sizeof(D3D12_INPUT_ELEMENT_DESC), inputLayout);
 	_2DPipeline.SetPrimitiveTopologyType(D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE);
@@ -173,6 +185,8 @@ void Renderer2D::Begin()
 	sData.TextureCount = 1;
 	sData.QuadIndexCount = 0;
 	sData.QuadVertexBufferPtr = sData.QuadVertexBufferBase;
+	sData.QuadInstanceBufferPtr = sData.QuadInstanceBufferBase;
+	sData.QuadInstancesCount = 0;
 }
 
 void Renderer2D::End(GraphicsContext& gfxContext)
@@ -213,19 +227,17 @@ void Renderer2D::DrawQuad(const FVector3& pos, const FVector2& size, const Textu
 		sData.QuadVertexBufferPtr->TexCoord = textureCoords[i];
 		sData.QuadVertexBufferPtr->Color = FVector4{ 1.f, 1.f, 1.f, 1.f };
 		sData.QuadVertexBufferPtr->TextureIndex = sData.TextureCount;
+		sData.QuadVertexBufferPtr->InstanceId = sData.QuadInstancesCount;
 
 		sData.QuadVertexBufferPtr++;
 	}
+	FMatrix4x4 transposed = FMatrix4x4::Identity().Translate(pos);
+	sData.QuadInstanceBufferPtr->Model = transposed.Transpose();
 
 	sData.TextureCount++;
 	sData.QuadIndexCount += 6;
-	
-	ConstantBuffer cb;
-	FMatrix4x4 transposed = FMatrix4x4::Identity().Translate(pos);
-	cb.ViewProjMatrix = (transposed * sData.ViewProjectionMatrix).Transpose();
-	gfxContext.SetRootSignature(_2DSignature);
-	gfxContext.SetDynamicCBV(gRingBuffer, 1, sizeof(cb), &cb);
-	FlushAndReset(gfxContext);
+	sData.QuadInstanceBufferPtr++;
+	sData.QuadInstancesCount++;
 }
 
 void Renderer2D::DrawQuad(const FVector3& pos, const FVector2& size, const TextureView& textureHandle, GraphicsContext& gfxContext)
@@ -265,21 +277,20 @@ void Renderer2D::DrawQuad(const FVector3& pos, const FVector2& size, const FVect
 		sData.QuadVertexBufferPtr->TexCoord = textureCoords[i];
 		sData.QuadVertexBufferPtr->Color = color;
 		sData.QuadVertexBufferPtr->TextureIndex = 0;
+		sData.QuadVertexBufferPtr->InstanceId = sData.QuadInstancesCount;
 		sData.QuadVertexBufferPtr++;
 	}
-
-	sData.QuadIndexCount += 6;
-	
-	ConstantBuffer cb;
 	FMatrix4x4 transposed = FMatrix4x4::Identity().Translate(pos);
-	cb.ViewProjMatrix = (transposed * sData.ViewProjectionMatrix).Transpose();
-	gfxContext.SetDynamicCBV(gRingBuffer, 1, sizeof(cb), &cb);
-	FlushAndReset(gfxContext);
+	sData.QuadInstanceBufferPtr->Model = transposed.Transpose();
+	
+	sData.QuadIndexCount += 6;
+	sData.QuadInstanceBufferPtr++;
+	sData.QuadInstancesCount++;
 }
 
 void Renderer2D::Flush(GraphicsContext& gfxContext)
 {
-	// assuming that RTV is already transferred to D3D12_RESOURCE_STATE_RENDER_TARGET
+	// assuming that RTV has already been transferred to D3D12_RESOURCE_STATE_RENDER_TARGET
 
 	u32 srcRange[Renderer2DData::MAX_TEXTURES_COUNT];
 	u32 destRange = sData.TextureCount;
@@ -300,16 +311,20 @@ void Renderer2D::Flush(GraphicsContext& gfxContext)
 
 	gfxContext.SetRenderTarget(gSceneColorBuffer.GetRTV(), gDepthBuffer.GetDSV());
 
-	//ConstantBuffer cb;
-	//cb.ViewProjMatrix = sData.ViewProjectionMatrix.Transpose();
-
 	gfxContext.SetDescriptorHeap(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV, _descriptorHeap.GetHeapPointer());
 	gfxContext.SetDescriptorTable(0, _descriptorHeap.GetDescriptorAtOffset(0).GetGpuHandle());
 
 	size_t bufferSize = sData.QuadVertexBufferPtr - sData.QuadVertexBufferBase;
 	gfxContext.SetDynamicVB(gRingBuffer, 0, bufferSize, sizeof(QuadVertex), sData.QuadVertexBufferBase);
-	//gfxContext.SetDynamicCBV(gRingBuffer, 1, sizeof(cb), &cb);
+
+	ConstantBuffer cb;
+	cb.ViewProjMatrix = sData.ViewProjectionMatrix.Transpose();
+	gfxContext.SetDynamicCBV(gRingBuffer, 1, sizeof(cb), &cb);
 	gfxContext.SetIndexBuffer(sData.IndexBufferView);
+
+	size_t elementsCount = sData.QuadInstanceBufferPtr - sData.QuadInstanceBufferBase;
+	gfxContext.SetDynamicSRV(gRingBuffer, 2, elementsCount * sizeof(QuadInstance), sData.QuadInstanceBufferBase);
+
 	gfxContext.DrawIndexedInstanced(sData.QuadIndexCount, 1, 0, 0, 0);
 
 	gfxContext.Flush();

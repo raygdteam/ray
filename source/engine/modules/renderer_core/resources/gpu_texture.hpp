@@ -22,8 +22,11 @@ public:
 		DXGI_FORMAT format,
 		DXGI_SAMPLE_DESC sampleDesc, 
 		u32 mipLevels, 
-		D3D12_RESOURCE_FLAGS flags
+		D3D12_RESOURCE_FLAGS flags,
+		D3D12_CLEAR_VALUE* clearValue = nullptr,
+		const void* initialData = nullptr
 	) noexcept
+		: GpuResourceDescription(dimension, format, flags, initialData)
 	{
 		Width = width;
 		Height = height;
@@ -31,31 +34,90 @@ public:
 		ArraySize = arraySize;
 		SampleDesc = sampleDesc;
 		MipLevels = mipLevels;
+		ClearValue = clearValue;
 	}
 
 public:
-	static GpuTextureDescription Texture1D(u32 width, DXGI_FORMAT format, u32 arraySize, D3D12_RESOURCE_FLAGS flags) noexcept
+	static GpuTextureDescription Texture1D
+	(
+		u32 width, 
+		DXGI_FORMAT format, 
+		u32 arraySize, 
+		D3D12_RESOURCE_FLAGS flags, 
+		D3D12_CLEAR_VALUE* clearValue = nullptr,
+		const void* data = nullptr
+	) noexcept
 	{
 		DXGI_SAMPLE_DESC sampleDesc;
 		sampleDesc.Count = 1;
 		sampleDesc.Quality = 0;
-		return GpuTextureDescription(D3D12_RESOURCE_DIMENSION_TEXTURE1D, width, 1, 1, arraySize, format, sampleDesc, 1, flags);
+		return GpuTextureDescription
+		(
+			D3D12_RESOURCE_DIMENSION_TEXTURE1D, 
+			width, 1, 1, 
+			arraySize, 
+			format, 
+			sampleDesc, 1, 
+			flags, 
+			clearValue,
+			data
+		);
 	}
 
-	static GpuTextureDescription Texture2D(u32 width, u32 height, DXGI_FORMAT format, u32 arraySize, D3D12_RESOURCE_FLAGS flags = D3D12_RESOURCE_FLAG_ALLOW_RENDER_TARGET) noexcept
+	static GpuTextureDescription Texture2D
+	(
+		u32 width, 
+		u32 height, 
+		DXGI_FORMAT format, 
+		u32 arraySize, 
+		D3D12_RESOURCE_FLAGS flags = D3D12_RESOURCE_FLAG_ALLOW_RENDER_TARGET, 
+		D3D12_CLEAR_VALUE* clearValue = nullptr,
+		const void* data = nullptr
+	) noexcept
 	{
 		DXGI_SAMPLE_DESC sampleDesc;
 		sampleDesc.Count = 1;
 		sampleDesc.Quality = 0;
-		return GpuTextureDescription(D3D12_RESOURCE_DIMENSION_TEXTURE2D, width, height, 1, arraySize, format, sampleDesc, 1, flags);
+		return GpuTextureDescription
+		(
+			D3D12_RESOURCE_DIMENSION_TEXTURE2D, 
+			width, 
+			height, 1, 
+			arraySize, 
+			format, 
+			sampleDesc, 1, 
+			flags, 
+			clearValue,
+			data
+		);
 	}
 
-	static GpuTextureDescription Texture3D(u32 width, u32 height, u32 depth, DXGI_FORMAT format, D3D12_RESOURCE_FLAGS flags) noexcept
+	static GpuTextureDescription Texture3D
+	(
+		u32 width, 
+		u32 height, 
+		u32 depth, 
+		DXGI_FORMAT format, 
+		D3D12_RESOURCE_FLAGS flags, 
+		D3D12_CLEAR_VALUE* clearValue = nullptr,
+		const void* data = nullptr
+	) noexcept
 	{
 		DXGI_SAMPLE_DESC sampleDesc;
 		sampleDesc.Count = 1;
 		sampleDesc.Quality = 0;
-		return GpuTextureDescription(D3D12_RESOURCE_DIMENSION_TEXTURE3D, width, height, depth, 1, format, sampleDesc, 1, flags);
+		return GpuTextureDescription
+		(
+			D3D12_RESOURCE_DIMENSION_TEXTURE3D, 
+			width, 
+			height, 
+			depth, 1, 
+			format, 
+			sampleDesc, 1, 
+			flags, 
+			clearValue,
+			data
+		);
 	}
 
 };

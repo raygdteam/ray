@@ -46,6 +46,7 @@ public:
 public:
 	u8* SetTextureData(RTexture& texture) noexcept;
 	u8* SetBufferData(void* buffer, size_t elementsCount, size_t elementSize) noexcept;
+	u8* SetRawBufferData(const void* buffer, size_t bufferSize, size_t alignment) noexcept;
 	u8* SetConstantBufferData(void* buffer, size_t bufferSize) noexcept;
 
 	u8* GetBeginPointer() const noexcept
