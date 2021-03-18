@@ -25,9 +25,13 @@ class DescriptorHeap;
 class GraphicsPipeline;
 class RootSignature;
 
-class GpuTextureAllocator;
+
+template<typename TGpuMemoryPool>
+class GpuResourceAllocator;
+
+class GpuTextureMemoryPool;
 class GpuBufferAllocator;
-class GpuPixelBufferAllocator;
+class GpuPixelBufferMemoryPool;
 
 class GpuBuffer;
 class RingBuffer;
@@ -40,9 +44,9 @@ extern CommandListManager gCommandListManager;
 extern ContextManager gContextManager;
 extern ID3D12Device* gDevice;
 
-extern GpuTextureAllocator gTextureAllocator;
-extern GpuBufferAllocator gBufferAllocator;
-extern GpuPixelBufferAllocator gPixelBufferAllocator;
+extern GpuResourceAllocator<GpuTextureMemoryPool> gTextureAllocator;
+extern GpuResourceAllocator<GpuBufferMemoryPool> gBufferAllocator;
+extern GpuResourceAllocator<GpuPixelBufferMemoryPool> gPixelBufferAllocator;
 
 extern RingBuffer gRingBuffer;
 extern RAY_RENDERERCORE_API UploadBuffer* gUploadBuffer;

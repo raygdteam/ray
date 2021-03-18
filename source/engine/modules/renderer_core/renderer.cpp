@@ -4,6 +4,7 @@
 #include "resources/buffer_manager.hpp"
 #include "resources/gpu_texture.hpp"
 #include "resources/gpu_buffer.hpp"
+#include "resources/gpu_resource.hpp"
 #include "resources/ring_buffer.hpp"
 #include "resources/color_buffer.hpp"
 #include "resources/upload_buffer.hpp"
@@ -22,9 +23,9 @@
 CommandListManager gCommandListManager;
 ContextManager gContextManager;
 ID3D12Device* gDevice;
-GpuTextureAllocator gTextureAllocator;
-GpuBufferAllocator gBufferAllocator;
-GpuPixelBufferAllocator gPixelBufferAllocator;
+GpuResourceAllocator<GpuTextureMemoryPool> gTextureAllocator;
+GpuResourceAllocator<GpuBufferMemoryPool> gBufferAllocator;
+GpuResourceAllocator<GpuPixelBufferMemoryPool> gPixelBufferAllocator;
 RingBuffer gRingBuffer;
 RAY_RENDERERCORE_API UploadBuffer* gUploadBuffer;
 

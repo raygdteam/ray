@@ -23,6 +23,10 @@ public:
 		Type = type;
 		SizeInBytes = sizeInBytes;
 		Stride = stride;
+		Height = 1;
+		ArraySize = 1;
+		SampleDesc.Count = 1;
+		SampleDesc.Quality = 0;
 	}
 
 public:
@@ -88,30 +92,11 @@ public:
 
 };
 
-class GpuBufferAllocator : public GpuResourceAllocator<GpuBufferMemoryPool>
-{
-public:
-	void Initialize(size_t preferredSize) noexcept override
-	{
-		GpuResourceAllocator::Initialize(preferredSize);
-	}
-
-	void Destroy() noexcept override
-	{
-		GpuResourceAllocator::Destroy();
-	}
-
-	NODISCARD GpuResource&& Allocate(GpuResourceDescription& bufferDesc) noexcept override;
-	void Free(GpuResource& resource) noexcept override;
-
-};
-
 // represents buffer resource in gpu memory
 class GpuBuffer : public GpuResource
 {
 	friend struct IRenderer;
 	friend struct Renderer2DData;
-	friend GpuBufferAllocator;
 
 public:
 	GpuBuffer() = default;

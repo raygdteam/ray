@@ -4,6 +4,13 @@
 // temporary
 #include <Windows.h>
 
+template<typename TGpuMemoryPool>
+class GpuResourceAllocator;
+
+class GpuTextureMemoryPool;
+class GpuBufferMemoryPool;
+class GpuPixelBufferMemoryPool;
+
 namespace ray
 {
 	struct MemorySegment
@@ -14,6 +21,10 @@ namespace ray
 
 	class IMemoryPool
 	{
+		friend class GpuResourceAllocator<GpuTextureMemoryPool>;
+		friend class GpuResourceAllocator<GpuBufferMemoryPool>;
+		friend class GpuResourceAllocator<GpuPixelBufferMemoryPool>;
+
 	public:
 		virtual ~IMemoryPool() { Destroy(); }
 

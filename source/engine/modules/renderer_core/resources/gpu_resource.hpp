@@ -30,7 +30,6 @@ public:
 	// texture properties
 	u32 Width;
 	u32 Height;
-	u32 Depth;
 	u32 ArraySize;
 	DXGI_SAMPLE_DESC SampleDesc;
 	u32 MipLevels;
@@ -55,7 +54,10 @@ public:
 		D3D12_RESOURCE_FLAGS flags = D3D12_RESOURCE_FLAG_NONE, 
 		const void* uploadBufferData = nullptr
 	)
-		: Dimension(dimension)
+		: ArraySize(1)
+		, MipLevels(1)
+		, ClearValue(nullptr)
+		, Dimension(dimension)
 		, Format(format)
 		, UploadBufferData(uploadBufferData)
 		, Flags(flags)
@@ -83,7 +85,7 @@ public:
 	GpuResourceAllocator(GpuResourceAllocator&& rhs) = default;
 	GpuResourceAllocator& operator = (GpuResourceAllocator&& rhs) = default;
 
-	virtual void Initialize(size_t preferredSize) noexcept
+	void Initialize(size_t preferredSize) noexcept
 	{
 		_memoryManager.Initialize(preferredSize);
 		_currentPool = &_memoryManager.RequestPool(preferredSize);
@@ -94,8 +96,8 @@ public:
 		_memoryManager.Destroy();
 	}
 
-	NODISCARD virtual GpuResource&& Allocate(GpuResourceDescription& desc) noexcept = 0;
-	virtual void Free(GpuResource& resource) noexcept = 0;
+	NODISCARD GpuResource&& Allocate(GpuResourceDescription& desc) noexcept;
+	void Free(GpuResource& resource) noexcept;
 
 };
 
@@ -104,10 +106,9 @@ class RAY_RENDERERCORE_API GpuResource
 	friend class CommandContext;
 	friend class GraphicsContext;
 	friend class ComputeContext;
-	friend GpuResourceAllocator<GpuBufferMemoryPool>;
 	friend GpuResourceAllocator<GpuTextureMemoryPool>;
+	friend GpuResourceAllocator<GpuBufferMemoryPool>;
 	friend GpuResourceAllocator<GpuPixelBufferMemoryPool>;
-	friend class GpuTextureAllocator;
 
 protected:
 	ID3D12Resource* _resource;

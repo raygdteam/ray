@@ -87,6 +87,9 @@
       <Filter>resources</Filter>
     </ClCompile>
     <ClCompile Include="ui_renderer.cpp" />
+    <ClCompile Include="resources\gpu_resource.cpp">
+      <Filter>resources</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="resources">

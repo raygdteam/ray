@@ -17,7 +17,6 @@ public:
 		D3D12_RESOURCE_DIMENSION dimension, 
 		u32 width, 
 		u32 height, 
-		u32 depth, 
 		u32 arraySize, 
 		DXGI_FORMAT format,
 		DXGI_SAMPLE_DESC sampleDesc, 
@@ -30,7 +29,6 @@ public:
 	{
 		Width = width;
 		Height = height;
-		Depth = depth;
 		ArraySize = arraySize;
 		SampleDesc = sampleDesc;
 		MipLevels = mipLevels;
@@ -54,7 +52,7 @@ public:
 		return GpuTextureDescription
 		(
 			D3D12_RESOURCE_DIMENSION_TEXTURE1D, 
-			width, 1, 1, 
+			width, 1,
 			arraySize, 
 			format, 
 			sampleDesc, 1, 
@@ -82,7 +80,7 @@ public:
 		(
 			D3D12_RESOURCE_DIMENSION_TEXTURE2D, 
 			width, 
-			height, 1, 
+			height,  
 			arraySize, 
 			format, 
 			sampleDesc, 1, 
@@ -96,7 +94,7 @@ public:
 	(
 		u32 width, 
 		u32 height, 
-		u32 depth, 
+		u32 arraySize, 
 		DXGI_FORMAT format, 
 		D3D12_RESOURCE_FLAGS flags, 
 		D3D12_CLEAR_VALUE* clearValue = nullptr,
@@ -111,7 +109,7 @@ public:
 			D3D12_RESOURCE_DIMENSION_TEXTURE3D, 
 			width, 
 			height, 
-			depth, 1, 
+			arraySize,
 			format, 
 			sampleDesc, 1, 
 			flags, 
@@ -122,31 +120,9 @@ public:
 
 };
 
-class GpuTexture;
-
-class RAY_RENDERERCORE_API GpuTextureAllocator : public GpuResourceAllocator<GpuTextureMemoryPool>
-{
-public:
-	void Initialize(size_t preferredSize) noexcept override
-	{
-		GpuResourceAllocator::Initialize(preferredSize);
-	}
-
-	void Destroy() noexcept override
-	{
-		GpuResourceAllocator::Destroy();
-	}
-
-	NODISCARD GpuResource&& Allocate(GpuResourceDescription& textureDesc) noexcept override;
-	void Free(GpuResource& resource) noexcept override;
-
-};
-
 // represents texture resource in gpu memory
 class RAY_RENDERERCORE_API GpuTexture : public GpuResource
 {
-	friend GpuTextureAllocator;
-
 public:
 	GpuTexture() = default;
 
