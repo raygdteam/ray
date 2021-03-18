@@ -34,12 +34,15 @@ void UploadBuffer::Initialize(u64 size) noexcept
 	_pool->Map(0, &range, &data);
 	_currentPointer = _begin = reinterpret_cast<u8*>(data);
 	_end = _begin + size;
+	IRenderer::sRendererStats.AllocatedVirtualMemory += size;
 }
 
 void UploadBuffer::Destroy() noexcept
 {
 	if (_begin != nullptr)
 	{
+		IRenderer::sRendererStats.AllocatedVirtualMemory -= (_end - _begin);
+
 		_pool->Unmap(0, nullptr);
 		_pool->Release();
 		_begin = _end = _currentPointer = nullptr;
@@ -89,6 +92,7 @@ u8* UploadBuffer::SetTextureData(const void* data, u32 width, u32 height, DXGI_F
 	u8* ret = _currentPointer;
 	_currentPointer += textureSize;
 
+	IRenderer::sRendererStats.UsedVirtualMemory += textureSize;
 	return ret;
 }
 
@@ -101,10 +105,13 @@ u8* UploadBuffer::SetRawBufferData(const void* buffer, size_t bufferSize, size_t
 	u8* ret = _currentPointer;
 	_currentPointer += bufferSize;
 
+	IRenderer::sRendererStats.UsedVirtualMemory += bufferSize;
 	return ret;
 }
 
 void UploadBuffer::Reset() noexcept
 {
+	IRenderer::sRendererStats.UsedVirtualMemory -= (_currentPointer - _begin);
+
 	_currentPointer = _begin;
 }

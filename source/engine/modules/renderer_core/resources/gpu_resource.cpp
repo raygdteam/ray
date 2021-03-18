@@ -1,5 +1,6 @@
 #include "gpu_resource.hpp"
-#include "../dx12_helper_functions.hpp"
+#include <renderer_core/dx12_helper_functions.hpp>
+#include <renderer_core/renderer.hpp>
 
 template<typename TGpuMemoryPool>
 NODISCARD GpuResource&& GpuResourceAllocator<TGpuMemoryPool>::Allocate(GpuResourceDescription& desc) noexcept
@@ -22,6 +23,8 @@ NODISCARD GpuResource&& GpuResourceAllocator<TGpuMemoryPool>::Allocate(GpuResour
 	_currentPool->_offset += resourceAllocationInfo.SizeInBytes;
 	_currentPool->_availableSize = _currentPool->_maxMemoryPoolSize - _currentPool->_offset;
 
+	IRenderer::sRendererStats.UsedGpuMemory += resourceAllocationInfo.SizeInBytes;
+
 	GpuResource ret;
 	ret._desc = std::move(desc);
 	ret._underlyingPool = _currentPool;
@@ -40,6 +43,7 @@ void GpuResourceAllocator<TGpuMemoryPool>::Free(GpuResource& resource) noexcept
 	if (resource.IsManaged())
 	{
 		resource._underlyingPool->_availableSize += resource._resourceSize;
+		IRenderer::sRendererStats.UsedGpuMemory -= resource._resourceSize;
 	}
 	// TODO: MemorySegment
 }

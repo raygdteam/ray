@@ -30,7 +30,6 @@ public:
 
 public:
 	void Create(size_t maxMemoryPoolSize, size_t index) noexcept override;
-	void Destroy() noexcept override;
 
 };
 
@@ -46,7 +45,6 @@ public:
 
 public:
 	void Create(size_t maxMemoryPoolSize, size_t index) noexcept override;
-	void Destroy() noexcept override;
 
 };
 
@@ -62,6 +60,5 @@ public:
 
 public:
 	void Create(size_t maxMemoryPoolSize, size_t index) noexcept override;
-	void Destroy() noexcept override;
 
 };
