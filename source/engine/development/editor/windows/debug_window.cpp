@@ -15,6 +15,8 @@ EdDebugWindow::EdDebugWindow()
 	this->_objects.PushBack(new UiLabel(this, gText));
 }
 
+f32 gFrametimeFrames[256];
+
 void EdDebugWindow::Tick()
 {
 	gText.clear();
@@ -31,5 +33,13 @@ void EdDebugWindow::Tick()
 	}
 
 	ImGui::SliderFloat("Sensitivity", &gEditorEngine->MouseDragSensitivity, 1.f, 10.f);
+
+	memcpy(&gFrametimeFrames[1], &gFrametimeFrames[0], 255 * sizeof(f32));
+	gFrametimeFrames[0] = gEditorEngine->GetDelta();
+	f32 avg = 0;
+	for (f32 frametimeFrame : gFrametimeFrames)
+		avg += frametimeFrame;
+	avg /= 256;
+	ImGui::PlotHistogram("Frametime dt", &gFrametimeFrames[0], 256, 0,0,avg - 10.f, avg + 10.f, ImVec2(0, 80.0f));
 }
 

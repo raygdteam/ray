@@ -30,6 +30,11 @@ public:
 	{
 		return _level;
 	}
+
+	f32 GetDelta()
+	{
+		return _delta;
+	}
 };
 
 extern EditorEngine* gEditorEngine;

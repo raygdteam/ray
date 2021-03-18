@@ -231,13 +231,13 @@ void EditorEngine::Tick()
 	gRenderer->Present(gEditorColorBuffer, ctx);
 	
 	auto elapsed = std::chrono::high_resolution_clock::now() - __start;
-	_delta = std::chrono::duration_cast<std::chrono::milliseconds>(elapsed).count();// / 1000.f;
+	_delta = std::chrono::duration_cast<std::chrono::microseconds>(elapsed).count() / 1000.f;
 }
 
 void EditorEngine::ApplyMouseDragOnViewport(FVector2 drag)
 {	
-	_world->_primaryCameraActor->GetTransform()->Position.x -= drag.x * _delta * MouseDragSensitivity;
-	_world->_primaryCameraActor->GetTransform()->Position.y += drag.y * _delta * MouseDragSensitivity;
+	_world->_primaryCameraActor->GetTransform()->Position.x -= drag.x * MouseDragSensitivity;
+	_world->_primaryCameraActor->GetTransform()->Position.y += drag.y * MouseDragSensitivity;
 
 	_world->_primaryCameraActor->GetCameraComponent()->UpdateMVP();
 }
