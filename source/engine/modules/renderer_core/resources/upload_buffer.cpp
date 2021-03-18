@@ -103,3 +103,8 @@ u8* UploadBuffer::SetRawBufferData(const void* buffer, size_t bufferSize, size_t
 
 	return ret;
 }
+
+void UploadBuffer::Reset() noexcept
+{
+	_currentPointer = _begin;
+}

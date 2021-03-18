@@ -45,4 +45,6 @@ public:
 	ID3D12Resource* GetNativePool() const noexcept { return _pool; }
 	u64 GetMaxPoolSize() const noexcept { return  _maxPoolSize; }
 
+	void Reset() noexcept;
+
 };
