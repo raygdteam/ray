@@ -43,3 +43,20 @@ void GpuResourceAllocator<TGpuMemoryPool>::Free(GpuResource& resource) noexcept
 	}
 	// TODO: MemorySegment
 }
+
+template<typename TGpuMemoryPool>
+void GpuResource::Create(GpuResourceAllocator<TGpuMemoryPool>& allocator, GpuResourceDescription& desc, pcstr debugName) noexcept
+{
+	*this = std::move(allocator.Allocate(desc));
+
+#if defined(RAY_DEBUG) || defined(RAY_DEVELOPMENT)
+	if (debugName == nullptr)
+		return;
+
+	size_t debugNameSize = strlen(debugName);
+	WCHAR dest[128];
+	MultiByteToWideChar(0, 0, debugName, debugNameSize, dest, debugNameSize);
+	dest[debugNameSize] = '\0';
+	_resource->SetName(dest);
+#endif
+}

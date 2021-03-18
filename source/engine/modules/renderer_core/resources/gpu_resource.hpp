@@ -150,6 +150,9 @@ public:
 	}
 
 public:
+	template<typename TGpuMemoryPool>
+	void Create(GpuResourceAllocator<TGpuMemoryPool>& allocator, GpuResourceDescription& desc, pcstr debugName) noexcept;
+
 	// destroys and releases allocated memory
 	void Destroy() noexcept
 	{

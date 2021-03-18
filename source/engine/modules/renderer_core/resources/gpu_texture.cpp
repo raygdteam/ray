@@ -299,17 +299,9 @@ bool GpuTexture::Create(GpuTextureDescription& textureDesc, pcstr debugName) noe
 	ray_assert(textureDesc.Dimension == D3D12_RESOURCE_DIMENSION_TEXTURE1D ||
 		textureDesc.Dimension == D3D12_RESOURCE_DIMENSION_TEXTURE2D ||
 		textureDesc.Dimension == D3D12_RESOURCE_DIMENSION_TEXTURE3D,
-		"Resource dimension must be texture!")
+		"Resource dimension must be texture!");
 
-		* dynamic_cast<GpuResource*>(this) = std::move(gTextureAllocator.Allocate(textureDesc));
-	
-#if defined(RAY_DEBUG) || defined(RAY_DEVELOPMENT)
-	size_t debugNameSize = strlen(debugName);
-	WCHAR dest[128];
-	MultiByteToWideChar(0, 0, debugName, debugNameSize, dest, debugNameSize);
-	dest[debugNameSize] = '\0';
-	_resource->SetName(dest);
-#endif
+	GpuResource::Create(gTextureAllocator, textureDesc, debugName);
 
 	if (textureDesc.UploadBufferData)
 	{
