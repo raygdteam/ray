@@ -213,7 +213,7 @@ public:
 	void SetVertexBuffer(u32 startSlot, const D3D12_VERTEX_BUFFER_VIEW& vbView) { SetVertexBuffers(startSlot, 1, &vbView); }
 	void SetDynamicVB(RingBuffer& ringBuffer, u32 startSlot, size_t numVertices, size_t vertexStride, const void* data);
 	void SetDynamicIB(RingBuffer& ringBuffer, size_t indexCount, const u32* data, bool b32Bit = false);
-	void SetDynamicSRV() {}
+	void SetDynamicSRV(RingBuffer& ringBuffer, u32 slotIndex, size_t bufferSize, const void* data);
 	void SetDynamicCBV(RingBuffer& ringBuffer, u32 rootIndex, size_t bufferSize, void* data);
 
 	void SetDescriptorTable(u32 rootIndex, D3D12_GPU_DESCRIPTOR_HANDLE handle);

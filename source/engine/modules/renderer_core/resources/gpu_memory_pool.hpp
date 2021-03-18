@@ -6,9 +6,6 @@
 
 class GpuMemoryPool : public ray::IMemoryPool
 {
-	friend class GpuTextureAllocator;
-	friend class GpuBufferAllocator;
-
 private:
 	ID3D12Heap* _heap;
 
@@ -23,7 +20,7 @@ public:
 
 class GpuTextureMemoryPool : public ray::IMemoryPool
 {
-	friend class GpuTextureAllocator;
+	friend class GpuResourceAllocator<GpuTextureMemoryPool>;
 
 private:
 	ID3D12Heap* _heap;
@@ -33,13 +30,12 @@ public:
 
 public:
 	void Create(size_t maxMemoryPoolSize, size_t index) noexcept override;
-	void Destroy() noexcept override;
 
 };
 
 class GpuBufferMemoryPool : public ray::IMemoryPool
 {
-	friend class GpuBufferAllocator;
+	friend class GpuResourceAllocator<GpuBufferMemoryPool>;
 
 private:
 	ID3D12Heap* _heap;
@@ -49,13 +45,12 @@ public:
 
 public:
 	void Create(size_t maxMemoryPoolSize, size_t index) noexcept override;
-	void Destroy() noexcept override;
 
 };
 
 class GpuPixelBufferMemoryPool : public ray::IMemoryPool
 {
-	friend class GpuPixelBufferAllocator;
+	friend class GpuResourceAllocator<GpuPixelBufferMemoryPool>;
 
 private:
 	ID3D12Heap* _heap;
@@ -65,6 +60,5 @@ public:
 
 public:
 	void Create(size_t maxMemoryPoolSize, size_t index) noexcept override;
-	void Destroy() noexcept override;
 
 };

@@ -34,12 +34,15 @@ void UploadBuffer::Initialize(u64 size) noexcept
 	_pool->Map(0, &range, &data);
 	_currentPointer = _begin = reinterpret_cast<u8*>(data);
 	_end = _begin + size;
+	IRenderer::sRendererStats.AllocatedVirtualMemory += size;
 }
 
 void UploadBuffer::Destroy() noexcept
 {
 	if (_begin != nullptr)
 	{
+		IRenderer::sRendererStats.AllocatedVirtualMemory -= (_end - _begin);
+
 		_pool->Unmap(0, nullptr);
 		_pool->Release();
 		_begin = _end = _currentPointer = nullptr;
@@ -48,22 +51,22 @@ void UploadBuffer::Destroy() noexcept
 
 void UploadBuffer::SetBufferData(GpuBufferDescription& desc, const void* data) noexcept
 {
-	desc.UploadBufferData = SetBufferDataToUploadBuffer(const_cast<void*>(data), desc.SizeInBytes, 4);
+	desc.UploadBufferData = SetRawBufferData(const_cast<void*>(data), desc.SizeInBytes, 4);
 }
 
 u8* UploadBuffer::SetBufferData(const void* data, size_t elementsCount, size_t elementSize) noexcept
 {
-	return SetBufferDataToUploadBuffer(const_cast<void*>(data), elementsCount * elementSize, 4);
+	return SetRawBufferData(const_cast<void*>(data), elementsCount * elementSize, 4);
 }
 
 void UploadBuffer::SetConstantBufferData(GpuBufferDescription& desc, const void* data) noexcept
 {
-	desc.UploadBufferData = SetBufferDataToUploadBuffer(const_cast<void*>(data), desc.SizeInBytes, D3D12_CONSTANT_BUFFER_DATA_PLACEMENT_ALIGNMENT);
+	desc.UploadBufferData = SetRawBufferData(const_cast<void*>(data), desc.SizeInBytes, D3D12_CONSTANT_BUFFER_DATA_PLACEMENT_ALIGNMENT);
 }
 
 u8* UploadBuffer::SetConstantBufferData(const void* data, size_t sizeInBites) noexcept
 {
-	return SetBufferDataToUploadBuffer(const_cast<void*>(data), sizeInBites, D3D12_CONSTANT_BUFFER_DATA_PLACEMENT_ALIGNMENT);
+	return SetRawBufferData(const_cast<void*>(data), sizeInBites, D3D12_CONSTANT_BUFFER_DATA_PLACEMENT_ALIGNMENT);
 }
 
 void UploadBuffer::SetTextureData(GpuTextureDescription& desc, const void* data) noexcept
@@ -89,10 +92,11 @@ u8* UploadBuffer::SetTextureData(const void* data, u32 width, u32 height, DXGI_F
 	u8* ret = _currentPointer;
 	_currentPointer += textureSize;
 
+	IRenderer::sRendererStats.UsedVirtualMemory += textureSize;
 	return ret;
 }
 
-u8* UploadBuffer::SetBufferDataToUploadBuffer(void* buffer, size_t bufferSize, size_t alignment) noexcept
+u8* UploadBuffer::SetRawBufferData(const void* buffer, size_t bufferSize, size_t alignment) noexcept
 {
 	_currentPointer = reinterpret_cast<u8*>(AlignUp(reinterpret_cast<size_t>(_currentPointer), alignment));
 	check(_currentPointer + bufferSize <= _end)
@@ -101,6 +105,13 @@ u8* UploadBuffer::SetBufferDataToUploadBuffer(void* buffer, size_t bufferSize, s
 	u8* ret = _currentPointer;
 	_currentPointer += bufferSize;
 
+	IRenderer::sRendererStats.UsedVirtualMemory += bufferSize;
 	return ret;
 }
 
+void UploadBuffer::Reset() noexcept
+{
+	IRenderer::sRendererStats.UsedVirtualMemory -= (_currentPointer - _begin);
+
+	_currentPointer = _begin;
+}

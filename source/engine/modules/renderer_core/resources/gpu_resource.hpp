@@ -16,40 +16,51 @@ enum class ResourceMappingMode
 	eWriteAccess,
 };
 
+enum class GpuBufferType : u8
+{
+	eIndex = 0,
+	eVertex = 1,
+	eStructured = 2,
+	eByteAddress = 3,
+};
+
 struct RAY_RENDERERCORE_API GpuResourceDescription
 {
 public:
-	// buffer properties
-	u32 SizeInBytes;
-	u32 Stride;
-
 	// texture properties
-	D3D12_RESOURCE_DIMENSION Dimension;
 	u32 Width;
 	u32 Height;
-	u32 Depth;
 	u32 ArraySize;
 	DXGI_SAMPLE_DESC SampleDesc;
 	u32 MipLevels;
-	D3D12_RESOURCE_FLAGS Flags;
 	D3D12_CLEAR_VALUE* ClearValue;
 
+	// buffer properties
+	GpuBufferType Type;
+	u32 SizeInBytes;
+	u32 Stride;
+
 	// common properties
+	D3D12_RESOURCE_DIMENSION Dimension;
 	DXGI_FORMAT Format;
 	const void* UploadBufferData;
+	D3D12_RESOURCE_FLAGS Flags;
 
 public:
-	GpuResourceDescription()
-		: Dimension(D3D12_RESOURCE_DIMENSION_UNKNOWN)
-		, Width(1)
-		, Height(1)
-		, Depth(1)
-		, ArraySize(1)
+	GpuResourceDescription
+	(
+		D3D12_RESOURCE_DIMENSION dimension = D3D12_RESOURCE_DIMENSION_UNKNOWN, 
+		DXGI_FORMAT format = DXGI_FORMAT_UNKNOWN, 
+		D3D12_RESOURCE_FLAGS flags = D3D12_RESOURCE_FLAG_NONE, 
+		const void* uploadBufferData = nullptr
+	)
+		: ArraySize(1)
 		, MipLevels(1)
-		, Flags(D3D12_RESOURCE_FLAG_NONE)
 		, ClearValue(nullptr)
-		, Format(DXGI_FORMAT_UNKNOWN)
-		, UploadBufferData(nullptr)
+		, Dimension(dimension)
+		, Format(format)
+		, UploadBufferData(uploadBufferData)
+		, Flags(flags)
 	{}
 
 	GpuResourceDescription(GpuResourceDescription&& rhs) = default;
@@ -74,7 +85,7 @@ public:
 	GpuResourceAllocator(GpuResourceAllocator&& rhs) = default;
 	GpuResourceAllocator& operator = (GpuResourceAllocator&& rhs) = default;
 
-	virtual void Initialize(size_t preferredSize) noexcept
+	void Initialize(size_t preferredSize) noexcept
 	{
 		_memoryManager.Initialize(preferredSize);
 		_currentPool = &_memoryManager.RequestPool(preferredSize);
@@ -85,8 +96,8 @@ public:
 		_memoryManager.Destroy();
 	}
 
-	NODISCARD virtual GpuResource&& Allocate(GpuResourceDescription& desc) noexcept = 0;
-	virtual void Free(GpuResource& resource) noexcept = 0;
+	NODISCARD GpuResource&& Allocate(GpuResourceDescription& desc) noexcept;
+	void Free(GpuResource& resource) noexcept;
 
 };
 
@@ -95,10 +106,9 @@ class RAY_RENDERERCORE_API GpuResource
 	friend class CommandContext;
 	friend class GraphicsContext;
 	friend class ComputeContext;
-	friend GpuResourceAllocator<GpuBufferMemoryPool>;
 	friend GpuResourceAllocator<GpuTextureMemoryPool>;
+	friend GpuResourceAllocator<GpuBufferMemoryPool>;
 	friend GpuResourceAllocator<GpuPixelBufferMemoryPool>;
-	friend class GpuTextureAllocator;
 
 protected:
 	ID3D12Resource* _resource;
@@ -140,6 +150,9 @@ public:
 	}
 
 public:
+	template<typename TGpuMemoryPool>
+	void Create(GpuResourceAllocator<TGpuMemoryPool>& allocator, GpuResourceDescription& desc, pcstr debugName) noexcept;
+
 	// destroys and releases allocated memory
 	void Destroy() noexcept
 	{

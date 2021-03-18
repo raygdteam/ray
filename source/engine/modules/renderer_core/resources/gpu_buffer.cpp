@@ -6,65 +6,9 @@
 #include <core/debug/assert.hpp>
 #include <core/math/common.hpp>
 
-GpuResource&& GpuBufferAllocator::Allocate(GpuResourceDescription& bufferDesc) noexcept
-{
-	D3D12_RESOURCE_DESC resourceDesc = {};
-	resourceDesc.Width = bufferDesc.SizeInBytes;
-	resourceDesc.Height = 1;
-	resourceDesc.MipLevels = 1;
-	resourceDesc.DepthOrArraySize = 1;
-	resourceDesc.Dimension = D3D12_RESOURCE_DIMENSION_BUFFER;
-	resourceDesc.Flags = bufferDesc.Flags;
-	resourceDesc.Format = bufferDesc.Format;
-	resourceDesc.Layout = D3D12_TEXTURE_LAYOUT_ROW_MAJOR;
-	resourceDesc.SampleDesc.Count = 1;
-	resourceDesc.SampleDesc.Quality = 0;
-
-	auto resourceAllocationInfo = gDevice->GetResourceAllocationInfo(1, 1, &resourceDesc);
-	resourceDesc.Alignment = resourceAllocationInfo.Alignment;
-
-	if (!_currentPool->IsEnough(resourceAllocationInfo.SizeInBytes))
-		_currentPool = &_memoryManager.RequestPool(resourceAllocationInfo.SizeInBytes);
-
-	ID3D12Resource* resource;
-	auto hr = gDevice->CreatePlacedResource(_currentPool->_heap, _currentPool->_offset, &resourceDesc, D3D12_RESOURCE_STATE_COPY_DEST, nullptr, IID_PPV_ARGS(&resource));
-
-	check(hr == S_OK)
-
-	_currentPool->_offset += resourceAllocationInfo.SizeInBytes;
-	_currentPool->_availableSize = _currentPool->_maxMemoryPoolSize - _currentPool->_offset;
-
-	GpuBuffer ret;
-	ret._desc = std::move(bufferDesc);
-	ret._underlyingPool = _currentPool;
-	ret._resource = resource;
-	ret._resourceSize = resourceAllocationInfo.SizeInBytes;
-	ret._usageState = D3D12_RESOURCE_STATE_COPY_DEST;
-
-	return std::move(ret);
-}
-
-void GpuBufferAllocator::Free(GpuResource& resource) noexcept
-{
-	dynamic_cast<GpuBuffer&>(resource)._resource->Release();
-	if (resource.IsManaged())
-	{
-		dynamic_cast<GpuBufferMemoryPool*>(dynamic_cast<GpuBuffer&>(resource)._underlyingPool)->_availableSize += dynamic_cast<GpuBuffer&>(resource)._resourceSize;
-	}
-	// TODO: MemorySegment
-}
-
 void GpuBuffer::Create(GpuBufferDescription& desc, pcstr debugName) noexcept
 {
-	*dynamic_cast<GpuResource*>(this) = std::move(gBufferAllocator.Allocate(desc));
-
-#if defined(RAY_DEBUG) || defined(RAY_DEVELOPMENT)
-	size_t debugNameSize = strlen(debugName);
-	WCHAR dest[128];
-	MultiByteToWideChar(0, 0, debugName, debugNameSize, dest, debugNameSize);
-	dest[debugNameSize] = '\0';
-	_resource->SetName(dest);
-#endif
+	GpuResource::Create(gBufferAllocator, desc, debugName);
 
 	if (desc.UploadBufferData)
 	{
@@ -118,7 +62,15 @@ void BufferView::Create(GpuResource& resource, DescriptorHeap* cbvSrvUavHeap, De
 		srvDesc.Buffer.FirstElement = 0;
 		srvDesc.Buffer.Flags = D3D12_BUFFER_SRV_FLAG_NONE;
 		srvDesc.Buffer.NumElements = numElements;
-		srvDesc.Buffer.StructureByteStride = desc.Stride;
+		
+		if (desc.Type == GpuBufferType::eStructured)
+		{
+			srvDesc.Buffer.StructureByteStride = desc.Stride;
+		}
+		else
+		{
+			srvDesc.Buffer.StructureByteStride = 0;
+		}
 
 		if (cbvSrvUavHeap == nullptr)
 		{

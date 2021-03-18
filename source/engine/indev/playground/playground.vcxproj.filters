@@ -8,9 +8,6 @@
     <ClCompile Include="mykyta\mykyta.cpp">
       <Filter>mykyta</Filter>
     </ClCompile>
-    <ClCompile Include="nikita\nikita.cpp">
-      <Filter>nikita</Filter>
-    </ClCompile>
     <ClCompile Include="seg_fault__\seg_fault__.cpp">
       <Filter>seg_fault__</Filter>
     </ClCompile>

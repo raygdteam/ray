@@ -12,72 +12,117 @@ public:
 		: GpuResourceDescription()
 	{}
 
-	GpuTextureDescription(D3D12_RESOURCE_DIMENSION dimension, u32 width, u32 height, u32 depth, u32 arraySize, DXGI_FORMAT format, DXGI_SAMPLE_DESC sampleDesc, u32 mipLevels, D3D12_RESOURCE_FLAGS flags)
+	GpuTextureDescription
+	(
+		D3D12_RESOURCE_DIMENSION dimension, 
+		u32 width, 
+		u32 height, 
+		u32 arraySize, 
+		DXGI_FORMAT format,
+		DXGI_SAMPLE_DESC sampleDesc, 
+		u32 mipLevels, 
+		D3D12_RESOURCE_FLAGS flags,
+		D3D12_CLEAR_VALUE* clearValue = nullptr,
+		const void* initialData = nullptr
+	) noexcept
+		: GpuResourceDescription(dimension, format, flags, initialData)
 	{
-		Dimension = dimension;
 		Width = width;
 		Height = height;
-		Depth = depth;
 		ArraySize = arraySize;
-		Format = format;
 		SampleDesc = sampleDesc;
 		MipLevels = mipLevels;
-		Flags = flags;
-		UploadBufferData = nullptr;
+		ClearValue = clearValue;
 	}
 
 public:
-	static GpuTextureDescription Texture1D(u32 width, DXGI_FORMAT format, u32 arraySize, D3D12_RESOURCE_FLAGS flags) noexcept
+	static GpuTextureDescription Texture1D
+	(
+		u32 width, 
+		DXGI_FORMAT format, 
+		u32 arraySize, 
+		D3D12_RESOURCE_FLAGS flags, 
+		D3D12_CLEAR_VALUE* clearValue = nullptr,
+		const void* data = nullptr
+	) noexcept
 	{
 		DXGI_SAMPLE_DESC sampleDesc;
 		sampleDesc.Count = 1;
 		sampleDesc.Quality = 0;
-		return GpuTextureDescription(D3D12_RESOURCE_DIMENSION_TEXTURE1D, width, 1, 1, arraySize, format, sampleDesc, 1, flags);
+		return GpuTextureDescription
+		(
+			D3D12_RESOURCE_DIMENSION_TEXTURE1D, 
+			width, 1,
+			arraySize, 
+			format, 
+			sampleDesc, 1, 
+			flags, 
+			clearValue,
+			data
+		);
 	}
 
-	static GpuTextureDescription Texture2D(u32 width, u32 height, DXGI_FORMAT format, u32 arraySize, D3D12_RESOURCE_FLAGS flags = D3D12_RESOURCE_FLAG_ALLOW_RENDER_TARGET) noexcept
+	static GpuTextureDescription Texture2D
+	(
+		u32 width, 
+		u32 height, 
+		DXGI_FORMAT format, 
+		u32 arraySize, 
+		D3D12_RESOURCE_FLAGS flags = D3D12_RESOURCE_FLAG_ALLOW_RENDER_TARGET, 
+		D3D12_CLEAR_VALUE* clearValue = nullptr,
+		const void* data = nullptr
+	) noexcept
 	{
 		DXGI_SAMPLE_DESC sampleDesc;
 		sampleDesc.Count = 1;
 		sampleDesc.Quality = 0;
-		return GpuTextureDescription(D3D12_RESOURCE_DIMENSION_TEXTURE2D, width, height, 1, arraySize, format, sampleDesc, 1, flags);
+		return GpuTextureDescription
+		(
+			D3D12_RESOURCE_DIMENSION_TEXTURE2D, 
+			width, 
+			height,  
+			arraySize, 
+			format, 
+			sampleDesc, 1, 
+			flags, 
+			clearValue,
+			data
+		);
 	}
 
-	static GpuTextureDescription Texture3D(u32 width, u32 height, u32 depth, DXGI_FORMAT format, D3D12_RESOURCE_FLAGS flags) noexcept
+	static GpuTextureDescription Texture3D
+	(
+		u32 width, 
+		u32 height, 
+		u32 arraySize, 
+		DXGI_FORMAT format, 
+		D3D12_RESOURCE_FLAGS flags, 
+		D3D12_CLEAR_VALUE* clearValue = nullptr,
+		const void* data = nullptr
+	) noexcept
 	{
 		DXGI_SAMPLE_DESC sampleDesc;
 		sampleDesc.Count = 1;
 		sampleDesc.Quality = 0;
-		return GpuTextureDescription(D3D12_RESOURCE_DIMENSION_TEXTURE3D, width, height, depth, 1, format, sampleDesc, 1, flags);
+		return GpuTextureDescription
+		(
+			D3D12_RESOURCE_DIMENSION_TEXTURE3D, 
+			width, 
+			height, 
+			arraySize,
+			format, 
+			sampleDesc, 1, 
+			flags, 
+			clearValue,
+			data
+		);
 	}
-
-};
-
-class GpuTexture;
-
-class RAY_RENDERERCORE_API GpuTextureAllocator : public GpuResourceAllocator<GpuTextureMemoryPool>
-{
-public:
-	void Initialize(size_t preferredSize) noexcept override
-	{
-		GpuResourceAllocator::Initialize(preferredSize);
-	}
-
-	void Destroy() noexcept override
-	{
-		GpuResourceAllocator::Destroy();
-	}
-
-	NODISCARD GpuResource&& Allocate(GpuResourceDescription& textureDesc) noexcept override;
-	void Free(GpuResource& resource) noexcept override;
 
 };
 
 // represents texture resource in gpu memory
 class RAY_RENDERERCORE_API GpuTexture : public GpuResource
 {
-	friend GpuTextureAllocator;
-
 public:
 	GpuTexture() = default;
 

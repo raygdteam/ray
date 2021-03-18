@@ -4,6 +4,7 @@
 #include "resources/buffer_manager.hpp"
 #include "resources/gpu_texture.hpp"
 #include "resources/gpu_buffer.hpp"
+#include "resources/gpu_resource.hpp"
 #include "resources/ring_buffer.hpp"
 #include "resources/color_buffer.hpp"
 #include "resources/upload_buffer.hpp"
@@ -22,9 +23,9 @@
 CommandListManager gCommandListManager;
 ContextManager gContextManager;
 ID3D12Device* gDevice;
-GpuTextureAllocator gTextureAllocator;
-GpuBufferAllocator gBufferAllocator;
-GpuPixelBufferAllocator gPixelBufferAllocator;
+GpuResourceAllocator<GpuTextureMemoryPool> gTextureAllocator;
+GpuResourceAllocator<GpuBufferMemoryPool> gBufferAllocator;
+GpuResourceAllocator<GpuPixelBufferMemoryPool> gPixelBufferAllocator;
 RingBuffer gRingBuffer;
 RAY_RENDERERCORE_API UploadBuffer* gUploadBuffer;
 
@@ -267,6 +268,7 @@ void IRenderer::Present(ColorBuffer& finalFrame, GraphicsContext& gfxContext) no
 	_swapChain->Present(0, 0);
 	gCurrentBuffer = (gCurrentBuffer + 1) % SWAP_CHAIN_BUFFER_COUNT;
 	sRendererStats.DrawCallsCount = 0u;
+	gUploadBuffer->Reset();
 }
 
 void IRenderer::Shutdown() noexcept

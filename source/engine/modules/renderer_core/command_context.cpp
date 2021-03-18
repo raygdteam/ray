@@ -527,6 +527,15 @@ void GraphicsContext::SetDynamicIB(RingBuffer& ringBuffer, size_t indexCount, co
 	_commandList->IASetIndexBuffer(&view);
 }
 
+void GraphicsContext::SetDynamicSRV(RingBuffer& ringBuffer, u32 slotIndex, size_t bufferSize, const void* data)
+{
+	u8* srv = ringBuffer.SetRawBufferData(data, bufferSize, 4);
+	u64 offset = srv - ringBuffer.GetBeginPointer();
+	u64 gpuVirtualAddress = ringBuffer.GetNativePool()->GetGPUVirtualAddress() + offset;
+
+	_commandList->SetGraphicsRootShaderResourceView(slotIndex, gpuVirtualAddress);
+}
+
 void GraphicsContext::SetDynamicCBV(RingBuffer& ringBuffer, u32 rootIndex, size_t bufferSize, void* data)
 {
 	u8* cb = ringBuffer.SetConstantBufferData(const_cast<void*>(data), bufferSize);

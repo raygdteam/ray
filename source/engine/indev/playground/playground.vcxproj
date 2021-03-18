@@ -139,7 +139,6 @@
     <ClCompile Include="dark\ui.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="mykyta\mykyta.cpp" />
-    <ClCompile Include="nikita\nikita.cpp" />
     <ClCompile Include="seg_fault__\seg_fault__.cpp" />
   </ItemGroup>
   <ItemGroup>

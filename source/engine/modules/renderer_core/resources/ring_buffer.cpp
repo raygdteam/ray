@@ -33,6 +33,14 @@ u8* RingBuffer::SetBufferData(void* buffer, size_t elementsCount, size_t element
 	return ret;
 }
 
+u8* RingBuffer::SetRawBufferData(const void* buffer, size_t bufferSize, size_t alignment) noexcept
+{
+	ray_assert(TryToSetResource(bufferSize, alignment), "Out of memory! Create new ring buffer!");
+	u8* ret = _uploadBuffer.SetRawBufferData(buffer, bufferSize, alignment);
+	_frameOffsetQueue.push(FrameResourceOffset{ gCommandListManager.GetGraphicsQueue().GetNextFenceValue(), ret });
+	return ret;
+}
+
 u8* RingBuffer::SetConstantBufferData(void* buffer, size_t bufferSize) noexcept
 {
 	ray_assert(TryToSetResource(bufferSize, D3D12_CONSTANT_BUFFER_DATA_PLACEMENT_ALIGNMENT), "Out of memory! Create new ring buffer!");
