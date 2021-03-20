@@ -4,6 +4,7 @@
 #include <renderer_core/ui_renderer.hpp>
 #include "ext/imgui.h"
 #include "ext/imgui_impl_win32.h"
+#include "ext/imgui_internal.h"
 #include "renderer_core/resources/buffer_manager.hpp"
 
 
@@ -69,17 +70,47 @@ void UiRootObject::Initialize(IPlatformWindow* window)
 	io.BackendRendererName = "imgui_impl_vulkan";
 	io.BackendFlags |= ImGuiBackendFlags_RendererHasVtxOffset;  // We can honor the ImDrawCmd::VtxOffset field, allowing for large meshes.
 	(void)io.DisplaySize;
+
+	io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
+	io.IniFilename = nullptr;
+
+	//ImGui::GetCurrentContext()->SettingsLoaded = true;
 }
 
 void UiRootObject::Tick()
 {
 	ImGui_ImplWin32_NewFrame();
 	ImGui::NewFrame();
+	
+	//ImGui::ShowDemoWindow();
 
+	RunDockspace();
+	
 	for (UiWindow* window : _windows)
 	{
 		window->TickBegin();
 	}
+}
+
+void UiRootObject::RunDockspace()
+{
+	ImGuiViewport* viewport = ImGui::GetMainViewport();
+	ImGuiWindowFlags window_flags = ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoDocking;
+	ImGui::SetNextWindowPos(viewport->GetWorkPos());
+	ImGui::SetNextWindowSize(viewport->GetWorkSize());
+	ImGui::SetNextWindowViewport(viewport->ID);
+	ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 0.0f);
+	ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
+	window_flags |= ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove;
+	window_flags |= ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoNavFocus;
+
+	ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
+	ImGui::Begin("DOCKSPACE", nullptr, window_flags);
+	ImGui::PopStyleVar();
+	ImGui::PopStyleVar(2);
+
+	ImGui::DockSpace(1, ImVec2(0, 0));
+	ImGui::End();
 }
 
 void UiRootObject::RenderAll(GraphicsContext& gfxContext)
@@ -154,4 +185,11 @@ void UiRootObject::RenderAll(GraphicsContext& gfxContext)
 void UiRootObject::AddWindow(UiWindow* window)
 {
 	_windows.PushBack(window);
+	if (window->IsDockingEnabled())
+		window->DockingOneTimeSetup();
+}
+
+void UiRootObject::SetDockspaceEnabled(bool state)
+{
+	_dockspaceEnabled = state;
 }

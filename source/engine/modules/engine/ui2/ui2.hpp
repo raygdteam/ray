@@ -14,7 +14,7 @@ class UiObject;
 class RAY_ENGINE_API UiObject
 {
 protected:
-	UiWindow* _parent;
+	UiWindow* _parent = nullptr;
 public:
 	virtual ~UiObject() = default;
 	UiObject(UiWindow* parent);
@@ -31,6 +31,9 @@ protected:
 	Array<UiObject*> _objects;
 	FVector2 Size;
 	FVector2 Padding = {-1.f, -1.f};
+	bool _dockingEnabled = false;
+	
+	virtual void DockingOneTimeSetup() {}
 public:
 	UiWindow() {}
 
@@ -41,15 +44,24 @@ public:
 	{
 		return Size;
 	}
+
+	bool IsDockingEnabled()
+	{
+		return _dockingEnabled;
+	}
 };
 
 class RAY_ENGINE_API UiRootObject
 {
 	Array<UiWindow*> _windows;
+	bool _dockspaceEnabled = true;
 public:
 	void Initialize(IPlatformWindow* window);
 	void Tick();
+	void RunDockspace();
 	void RenderAll(GraphicsContext& gfxContext);
 
 	void AddWindow(UiWindow* window);
+
+	void SetDockspaceEnabled(bool state);
 };

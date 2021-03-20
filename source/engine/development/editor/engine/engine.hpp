@@ -4,6 +4,8 @@
 #include <app_framework/base/platform_window.hpp>
 #include <editor/renderer/renderer.hpp>
 
+#include <editor/ui/editor_ui.hpp>
+
 #ifdef RAY_BUILD_EDITOR
 #define EDITOR_API RAY_DLLEXPORTS
 #else
@@ -17,6 +19,8 @@ class EDITOR_API EditorEngine : public IEngine
 	//IVkRenderer* _renderer = nullptr;
 	World* _world = nullptr;
 	Level* _level = nullptr;
+
+	EditorUi _editorUi;
 public:
 	void Initialize(IEngineLoop* engineLoop) override;
 	void Tick() override;

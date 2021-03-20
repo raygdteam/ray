@@ -25,7 +25,6 @@
 #undef CreateWindow
 
 IRenderer* gRenderer;
-UiRootObject* gRootObject;
 
 EditorEngine* gEditorEngine;
 
@@ -49,19 +48,10 @@ void EditorEngine::Initialize(IEngineLoop* engineLoop)
 	_world = new World();
 	_world->Initialize(nullptr);
 	_level = _world->_levelData->Level;
-	gRootObject = new UiRootObject();
 
 	_world->RendererInitialize(nullptr);
-	
-	gRootObject->Initialize(_window);
-	
-	//_renderer = new IVkRenderer();
-	//_renderer->Initialize(_window);
 
-	gRootObject->AddWindow(new EdDebugWindow());
-	gRootObject->AddWindow(new EdLevelViewport());
-	gRootObject->AddWindow(new EdLevelOutline());
-	gRootObject->AddWindow(new EdLogWindow());
+	_editorUi.Initialize(_window);
 
 	_window->SetWindowVisibility(true);
 }
@@ -77,8 +67,8 @@ void EditorEngine::Tick()
 		return;
 	}
 
-	gRootObject->Tick();
-
+	_editorUi.Tick();
+	
 	//_level->GetActors()[0]->GetTransform()->Position.x -= 1.f * _delta;
 	//_renderer->BeginScene();
 	
@@ -226,7 +216,7 @@ void EditorEngine::Tick()
 	gRenderer->End(gSceneColorBuffer, ctx);
 	
 	gRenderer->Begin(gEditorColorBuffer, ctx);
-	gRootObject->RenderAll(ctx);
+	_editorUi.Render(ctx);
 	gRenderer->End(gEditorColorBuffer, ctx);
 	gRenderer->Present(gEditorColorBuffer, ctx);
 	

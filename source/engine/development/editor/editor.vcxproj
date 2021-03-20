@@ -140,6 +140,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="context\context.cpp" />
     <ClCompile Include="engine\engine.cpp" />
     <ClCompile Include="engine\engine_interface.cpp" />
     <ClCompile Include="module_editor.cpp" />
@@ -150,6 +151,7 @@
     <ClCompile Include="renderer\renderer.cpp" />
     <ClCompile Include="renderer\render_pass.cpp" />
     <ClCompile Include="renderer\shader.cpp" />
+    <ClCompile Include="ui\editor_ui.cpp" />
     <ClCompile Include="windows\debug_window.cpp" />
     <ClCompile Include="windows\level_outline.cpp" />
     <ClCompile Include="windows\level_viewport.cpp" />

@@ -41,6 +41,12 @@
     <ClCompile Include="windows\log_window.cpp">
       <Filter>windows</Filter>
     </ClCompile>
+    <ClCompile Include="context\context.cpp">
+      <Filter>context</Filter>
+    </ClCompile>
+    <ClCompile Include="ui\editor_ui.cpp">
+      <Filter>ui</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="renderer">
