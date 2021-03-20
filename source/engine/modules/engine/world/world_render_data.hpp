@@ -6,20 +6,18 @@
 
 // ------------- RENDER DATA -------------
 struct RenderData
-{};
-
-struct StaticQuadRenderData : RenderData
 {
-	TextureView Texture;
+	u64 MaterialId;
 };
 
 // ------------- SCENE PROXY ------------
 struct PrimitiveSceneProxy
 {
 	Transform* Transform;
+	u64 MaterialId;
 };
 
 struct StaticQuadSceneProxy : PrimitiveSceneProxy
 {
-	StaticQuadRenderData* RenderData;
+	//StaticQuadRenderData* RenderData;
 };

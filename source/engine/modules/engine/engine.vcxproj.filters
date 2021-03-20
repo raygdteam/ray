@@ -176,5 +176,13 @@
     <ClCompile Include="ui2\objects\image.cpp">
       <Filter>ui2\objects</Filter>
     </ClCompile>
+    <ClCompile Include="world\components\rendering_properties.cpp">
+      <Filter>world\components</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="world\components\rendering_properties.hpp">
+      <Filter>world\components</Filter>
+    </None>
   </ItemGroup>
 </Project>

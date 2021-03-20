@@ -1,6 +1,7 @@
 #pragma once
 #include <core/object/archive.hpp>
 #include <core/object/type.hpp>
+#include <core/json/json.hpp>
 
 struct RayObject
 {
@@ -12,6 +13,8 @@ struct RayObject
 
 	virtual void Serialize(Archive&) = 0;
 	virtual void Deserialize(Archive&) = 0;
+
+	virtual void LoadFromJson(JsonValue& json) {}
 };
 
 class RAY_CORE_API ObjectDb

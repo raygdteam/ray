@@ -82,10 +82,12 @@ void World::RenderingThread()
 
 void World::LoadLevel(pcstr name)
 {
+	String path("../../engine/resources/level.json");
+	
 	_levelData = new WorldLevelData;
 	_levelData->Level = new Level();
 	_levelData->Level->_owningWorld = this;
-	_levelData->Level->LoadTestLevel();
+	_levelData->Level->LoadFrom(path);
 	_primaryCameraActor = new CameraActor();
 
 	(void)name;
@@ -192,4 +194,42 @@ void World::SetPrimaryCamera(CameraActor* camera)
 {
 	// BUG: assuming no concurrency
 	_primaryCameraActor = camera;
+}
+
+u64 World::CompileMaterial(MaterialCompileProperties& props)
+{
+	RTexture* texture = dynamic_cast<RTexture*>(RayState()->ResourceManager->LoadResourceSync(props.Texture.AsRawStr(), eTexture));
+
+	if (texture == nullptr) *(u64*)0xFFFFFFFFFFFFFFFF = 0xDED;
+
+	auto textureDesc = GpuTextureDescription::Texture2D(texture->GetDimensions().x, texture->GetDimensions().y, DXGI_FORMAT_R32G32B32A32_FLOAT, 1, D3D12_RESOURCE_FLAG_NONE);
+	gUploadBuffer->SetTextureData(textureDesc, texture->GetData().GetData());
+	GpuTexture actorTexture;
+	actorTexture.Create(textureDesc, "material texture");
+
+	TextureView actorTextureView;
+	actorTextureView.Create(actorTexture);
+
+	MaterialInstance entry = {
+		.Id = _materialInstances.Size(),
+		.Name = props.Name,
+		.TextureView = actorTextureView
+	};
+	
+	_materialInstances.PushBack(entry);
+	return entry.Id;
+}
+
+MaterialInstance& World::GetMaterialInstance(u64 id)
+{
+	return _materialInstances[id];
+}
+
+u64 World::GetMaterialIdForName(String& name)
+{
+	for (MaterialInstance& materialInstance : _materialInstances)
+	{
+		if (materialInstance.Name == name) return materialInstance.Id;
+	}
+	return -1;
 }

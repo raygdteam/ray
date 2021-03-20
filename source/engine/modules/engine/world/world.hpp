@@ -9,6 +9,8 @@
 #include <engine/world/actors/camera_actor.hpp>
 #include <renderer_core/renderer.hpp>
 
+#include "renderer_core/resources/gpu_texture.hpp"
+
 
 // Internal use only.
 struct WorldLevelData
@@ -17,6 +19,20 @@ struct WorldLevelData
 	/* for level streaming
 	 * FVector3 Position;
 	 */
+};
+
+struct MaterialInstance
+{
+	u64 Id;
+	String Name;
+	TextureView TextureView;
+	// ...
+};
+
+struct MaterialCompileProperties
+{
+	String Name;
+	String Texture;
 };
 
 class RAY_RENDERERCORE_API UploadBuffer;
@@ -36,6 +52,8 @@ class RAY_ENGINE_API World final
 	IRenderer* _renderer = nullptr;
 
 	ThreadPool& _pool;
+
+	Array<MaterialInstance> _materialInstances;
 	
 	/* Functionality to support level reloads on beginning of next frame. */
 	// bool _shouldLoadLevel = false;
@@ -66,6 +84,11 @@ public:
 	void Destroy() noexcept;
 
 	void SetPrimaryCamera(CameraActor* camera);
+
+	u64 CompileMaterial(MaterialCompileProperties& props);
+
+	MaterialInstance& GetMaterialInstance(u64 id);
+	u64 GetMaterialIdForName(String& name);
 	
 	ConditionVariable ReadyToTick;
 	ConditionVariable WorldTickFinished;

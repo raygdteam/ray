@@ -1,8 +1,8 @@
 #include "static_quad_actor.hpp"
+#include <engine/world/components/rendering_properties.hpp>
 
 StaticQuadActor::StaticQuadActor()
 {
-	Material.TextureName = "/engine/tex.png";
 	ATD.Stage = ePrePhysicsUpdate;
 	ATD.Active = true;
 }

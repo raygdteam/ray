@@ -43,6 +43,7 @@ public:
 	// TEMPORARY
 	void LoadTestLevel();
 	bool LoadLevel();
+	void LoadFrom(String& path);
 
 #ifdef RAY_EDITOR
 	Array<Actor*>& GetActors();

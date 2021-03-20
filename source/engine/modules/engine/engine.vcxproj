@@ -191,6 +191,7 @@
     <ClCompile Include="world\actors\static_quad_actor.cpp" />
     <ClCompile Include="world\components\camera_component.cpp" />
     <ClCompile Include="world\components\component_base.cpp" />
+    <ClCompile Include="world\components\rendering_properties.cpp" />
     <ClCompile Include="world\components\transform.cpp" />
     <ClCompile Include="world\level.cpp" />
     <ClCompile Include="world\level_test.cpp" />
@@ -222,6 +223,9 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ui2\objects\label.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="world\components\rendering_properties.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

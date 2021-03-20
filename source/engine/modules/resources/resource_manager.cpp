@@ -106,11 +106,11 @@ void RLevel::Deserialize(Archive&)
 
 bool RLevel::LoadFrom(IFile* path)
 {
-	String data = {};
-	data.resize(path->Size());
-	path->Read((u8*)data.data(), path->Size());
+	//String data = {};
+	//data.resize(path->Size());
+	//path->Read((u8*)data.data(), path->Size());
 
-	nlohmann::json file = data.AsRawStr();
+	//nlohmann::json file = data.AsRawStr();
 	//file["name"]
 	return false;
 }

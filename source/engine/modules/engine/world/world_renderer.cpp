@@ -127,10 +127,11 @@ void World::RenderEditor(GraphicsContext& ctx)
 	for (size_t i = 0; i < level->_atd.Size(); ++i)
 	{
 		const ActorData& actorData = level->_atd[i];
-		
-		StaticQuadSceneProxy* proxy = static_cast<StaticQuadSceneProxy*>(actorData.SceneProxy);
+		PrimitiveSceneProxy* proxy = actorData.SceneProxy;
 
-		if (proxy == nullptr) continue;
+		if (proxy == nullptr || proxy->MaterialId == u64(-1)) continue;
+
+		MaterialInstance& material = level->_owningWorld->GetMaterialInstance(proxy->MaterialId);
 		
 		FVector<3> position =
 		{
@@ -140,7 +141,7 @@ void World::RenderEditor(GraphicsContext& ctx)
 		};
 		
 		//FVector4 color = { 1.f, 1.f, 0.f, 1.f };
-		Renderer2D::DrawQuad(position, proxy->Transform->Scale, proxy->RenderData->Texture, ctx);
+		Renderer2D::DrawQuad(position, proxy->Transform->Scale, material.TextureView, ctx);
 	}
 	Renderer2D::End(ctx);
 

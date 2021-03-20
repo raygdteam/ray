@@ -1,39 +1,60 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClInclude Include="core.hpp" />
-    <ClInclude Include="memory\new_delete_override.hpp">
-      <Filter>memory</Filter>
-    </ClInclude>
-    <ClInclude Include="module\module_meta.hpp">
-      <Filter>module</Filter>
-    </ClInclude>
-    <ClInclude Include="module\module.hpp">
-      <Filter>module</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\thread.hpp">
-      <Filter>lib</Filter>
-    </ClInclude>
-    <ClInclude Include="object\object.hpp">
-      <Filter>object</Filter>
-    </ClInclude>
-    <ClInclude Include="memory\memory_debug.hpp">
-      <Filter>memory</Filter>
-    </ClInclude>
-    <ClInclude Include="file_system\file_system.hpp">
+    <ClCompile Include="core_entry_point.cpp" />
+    <ClCompile Include="context\context.cpp">
+      <Filter>context</Filter>
+    </ClCompile>
+    <ClCompile Include="debug\debug.cpp">
+      <Filter>debug</Filter>
+    </ClCompile>
+    <ClCompile Include="extended_instuctions\sse\common.cpp">
+      <Filter>extended_instructions\sse</Filter>
+    </ClCompile>
+    <ClCompile Include="file_system\file_system.cpp">
       <Filter>file_system</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\scoped_allocation.hpp">
-      <Filter>lib</Filter>
-    </ClInclude>
-    <ClInclude Include="threading\critical_section.hpp">
+    </ClCompile>
+    <ClCompile Include="object\object_db.cpp">
+      <Filter>object</Filter>
+    </ClCompile>
+    <ClCompile Include="math\math_common.cpp">
+      <Filter>math</Filter>
+    </ClCompile>
+    <ClCompile Include="threading\condition_variable.cpp">
       <Filter>threading</Filter>
-    </ClInclude>
-    <ClInclude Include="math\vector.hpp">
-      <Filter>math</Filter>
-    </ClInclude>
-    <ClInclude Include="math\common.hpp">
-      <Filter>math</Filter>
+    </ClCompile>
+    <ClCompile Include="threading\thread_pool.cpp">
+      <Filter>threading</Filter>
+    </ClCompile>
+    <ClCompile Include="threading\critical_section.cpp">
+      <Filter>threading</Filter>
+    </ClCompile>
+    <ClCompile Include="lib\thread.cpp">
+      <Filter>lib</Filter>
+    </ClCompile>
+    <ClCompile Include="log\log.cpp">
+      <Filter>log</Filter>
+    </ClCompile>
+    <ClCompile Include="memory\memory_manager.cpp">
+      <Filter>memory</Filter>
+    </ClCompile>
+    <ClCompile Include="memory\allocator.cpp">
+      <Filter>memory</Filter>
+    </ClCompile>
+    <ClCompile Include="os\miniwin.cpp">
+      <Filter>os</Filter>
+    </ClCompile>
+    <ClCompile Include="module\module.cpp">
+      <Filter>module</Filter>
+    </ClCompile>
+    <ClCompile Include="json\json.cpp">
+      <Filter>json</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="core.hpp" />
+    <ClInclude Include="context\context.hpp">
+      <Filter>context</Filter>
     </ClInclude>
     <ClInclude Include="debug\assert.hpp">
       <Filter>debug</Filter>
@@ -41,47 +62,74 @@
     <ClInclude Include="debug\debug.hpp">
       <Filter>debug</Filter>
     </ClInclude>
-    <ClInclude Include="lib\array.hpp">
-      <Filter>lib</Filter>
-    </ClInclude>
     <ClInclude Include="extended_instuctions\sse\common.hpp">
-      <Filter>extended instructions\sse</Filter>
+      <Filter>extended_instructions\sse</Filter>
     </ClInclude>
     <ClInclude Include="file_system\file.hpp">
       <Filter>file_system</Filter>
     </ClInclude>
-    <ClInclude Include="object\archive.hpp">
+    <ClInclude Include="file_system\file_system.hpp">
+      <Filter>file_system</Filter>
+    </ClInclude>
+    <ClInclude Include="file_system\file_mapping.hpp">
+      <Filter>file_system</Filter>
+    </ClInclude>
+    <ClInclude Include="object\file_archive.hpp">
+      <Filter>object</Filter>
+    </ClInclude>
+    <ClInclude Include="object\object.hpp">
       <Filter>object</Filter>
     </ClInclude>
     <ClInclude Include="object\type.hpp">
       <Filter>object</Filter>
     </ClInclude>
-    <ClInclude Include="lib\queue.hpp">
-      <Filter>lib</Filter>
+    <ClInclude Include="object\archive.hpp">
+      <Filter>object</Filter>
+    </ClInclude>
+    <ClInclude Include="math\common.hpp">
+      <Filter>math</Filter>
+    </ClInclude>
+    <ClInclude Include="math\vector.hpp">
+      <Filter>math</Filter>
     </ClInclude>
     <ClInclude Include="math\matrix.hpp">
       <Filter>math</Filter>
     </ClInclude>
+    <ClInclude Include="threading\condition_variable.hpp">
+      <Filter>threading</Filter>
+    </ClInclude>
+    <ClInclude Include="threading\thread_pool.hpp">
+      <Filter>threading</Filter>
+    </ClInclude>
+    <ClInclude Include="threading\critical_section.hpp">
+      <Filter>threading</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\algorithms.hpp">
+      <Filter>lib</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\array.hpp">
+      <Filter>lib</Filter>
+    </ClInclude>
     <ClInclude Include="lib\delegate.hpp">
+      <Filter>lib</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\scoped_allocation.hpp">
       <Filter>lib</Filter>
     </ClInclude>
     <ClInclude Include="lib\string.hpp">
       <Filter>lib</Filter>
     </ClInclude>
-    <ClInclude Include="object\file_archive.hpp">
-      <Filter>object</Filter>
+    <ClInclude Include="lib\queue.hpp">
+      <Filter>lib</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\thread.hpp">
+      <Filter>lib</Filter>
     </ClInclude>
     <ClInclude Include="log\log.hpp">
       <Filter>log</Filter>
     </ClInclude>
-    <ClInclude Include="memory\allocator.hpp">
+    <ClInclude Include="memory\memory_debug.hpp">
       <Filter>memory</Filter>
-    </ClInclude>
-    <ClInclude Include="threading\condition_variable.hpp">
-      <Filter>threading</Filter>
-    </ClInclude>
-    <ClInclude Include="os\miniwin.hpp">
-      <Filter>os</Filter>
     </ClInclude>
     <ClInclude Include="memory\memory_manager.hpp">
       <Filter>memory</Filter>
@@ -89,117 +137,70 @@
     <ClInclude Include="memory\memory_pool.hpp">
       <Filter>memory</Filter>
     </ClInclude>
-    <ClInclude Include="lib\algorithms.hpp">
-      <Filter>lib</Filter>
-    </ClInclude>
-    <ClInclude Include="threading\thread_pool.hpp">
-      <Filter>threading</Filter>
-    </ClInclude>
-    <ClInclude Include="context\context.hpp">
-      <Filter>context</Filter>
-    </ClInclude>
-    <ClInclude Include="file_system\file_mapping.hpp">
-      <Filter>file_system</Filter>
-    </ClInclude>
-    <ClInclude Include="json\json.hpp">
-      <Filter>json</Filter>
     <ClInclude Include="memory\system_allocator.hpp">
       <Filter>memory</Filter>
     </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="core_entry_point.cpp" />
-    <ClCompile Include="module\module.cpp">
-      <Filter>module</Filter>
-    </ClCompile>
-    <ClCompile Include="lib\thread.cpp">
-      <Filter>lib</Filter>
-    </ClCompile>
-    <ClCompile Include="object\object_db.cpp">
-      <Filter>object</Filter>
-    </ClCompile>
-    <ClCompile Include="file_system\file_system.cpp">
-      <Filter>file_system</Filter>
-    </ClCompile>
-    <ClCompile Include="threading\critical_section.cpp">
-      <Filter>threading</Filter>
-    </ClCompile>
-    <ClCompile Include="debug\debug.cpp">
-      <Filter>debug</Filter>
-    </ClCompile>
-    <ClCompile Include="extended_instuctions\sse\common.cpp">
-      <Filter>extended instructions\sse</Filter>
-    </ClCompile>
-    <ClCompile Include="math\math_common.cpp">
-      <Filter>math</Filter>
-    </ClCompile>
-    <ClCompile Include="memory\allocator.cpp">
+    <ClInclude Include="memory\new_delete_override.hpp">
       <Filter>memory</Filter>
-    </ClCompile>
-    <ClCompile Include="threading\condition_variable.cpp">
-      <Filter>threading</Filter>
-    </ClCompile>
-    <ClCompile Include="os\miniwin.cpp">
+    </ClInclude>
+    <ClInclude Include="memory\allocator.hpp">
+      <Filter>memory</Filter>
+    </ClInclude>
+    <ClInclude Include="os\miniwin.hpp">
       <Filter>os</Filter>
-    </ClCompile>
-    <ClCompile Include="memory\memory_manager.cpp">
-      <Filter>memory</Filter>
-    </ClCompile>
-    <ClCompile Include="log\log.cpp">
-      <Filter>log</Filter>
-    </ClCompile>
-    <ClCompile Include="threading\thread_pool.cpp">
-      <Filter>threading</Filter>
-    </ClCompile>
-    <ClCompile Include="context\context.cpp">
-      <Filter>context</Filter>
-    </ClCompile>
+    </ClInclude>
+    <ClInclude Include="module\module.hpp">
+      <Filter>module</Filter>
+    </ClInclude>
+    <ClInclude Include="module\module_meta.hpp">
+      <Filter>module</Filter>
+    </ClInclude>
+    <ClInclude Include="json\json.hpp">
+      <Filter>json</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <Filter Include="log">
-      <UniqueIdentifier>{1e537b0d-46a6-4cb6-8081-7f9f5f5cfc7c}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="memory">
-      <UniqueIdentifier>{d4e4e43a-4ad3-44ad-81ea-3a7fef35f2f3}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="module">
-      <UniqueIdentifier>{0a8196d5-8b60-417c-8e73-432d6a16ce72}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="lib">
-      <UniqueIdentifier>{8042c20f-e8ea-4910-9c18-8e0c9a020aec}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="object">
-      <UniqueIdentifier>{38f7b246-aad7-4f88-b312-9428bd6b8c4a}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="file_system">
-      <UniqueIdentifier>{f27e7e92-fa19-4022-bc8b-f1ba03579d05}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="math">
-      <UniqueIdentifier>{9d889400-2c3c-44dd-bf1e-1c9ebb16f654}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="threading">
-      <UniqueIdentifier>{1547e6b9-8f70-4623-8685-ad062680d928}</UniqueIdentifier>
+    <Filter Include="context">
+      <UniqueIdentifier>{0c54e0ab-d72a-4019-ba09-56c18c2f1dde}</UniqueIdentifier>
     </Filter>
     <Filter Include="debug">
-      <UniqueIdentifier>{6e0c4758-45f2-4625-a108-e05f3992ef46}</UniqueIdentifier>
+      <UniqueIdentifier>{15fcdf1e-a0b7-4641-8a12-1373a7bf94a9}</UniqueIdentifier>
     </Filter>
-    <Filter Include="extended instructions">
-      <UniqueIdentifier>{0ab4e525-32ba-4e84-a487-c22c3d530283}</UniqueIdentifier>
+    <Filter Include="extended_instructions">
+      <UniqueIdentifier>{725def24-5948-419b-8991-c650155d2066}</UniqueIdentifier>
     </Filter>
-    <Filter Include="extended instructions\sse">
-      <UniqueIdentifier>{4b6e17ab-9d50-44c4-a95c-009b947d0d07}</UniqueIdentifier>
+    <Filter Include="extended_instructions\sse">
+      <UniqueIdentifier>{9228cc4b-e058-4dbb-aa6f-55dd3aef0659}</UniqueIdentifier>
     </Filter>
-    <Filter Include="extended instructions\avx">
-      <UniqueIdentifier>{dc52e1fd-08e1-4c59-ac4b-ffc5b74e7ed6}</UniqueIdentifier>
+    <Filter Include="file_system">
+      <UniqueIdentifier>{a76de7dd-57fb-485c-a7e7-bf508d80ab84}</UniqueIdentifier>
     </Filter>
-    <Filter Include="os">
-      <UniqueIdentifier>{05a29463-fb89-4153-a633-4f05f4930ad9}</UniqueIdentifier>
+    <Filter Include="object">
+      <UniqueIdentifier>{869a49f0-1452-454e-8340-5b94dca67eed}</UniqueIdentifier>
     </Filter>
-    <Filter Include="context">
-      <UniqueIdentifier>{270f60cf-9d36-4c69-9e1d-790febffd157}</UniqueIdentifier>
+    <Filter Include="math">
+      <UniqueIdentifier>{73a25be4-40c9-4d65-9b92-a8849f752657}</UniqueIdentifier>
     </Filter>
     <Filter Include="json">
-      <UniqueIdentifier>{7c2e6ffa-ec26-4cf6-b6a1-67ea46636721}</UniqueIdentifier>
+      <UniqueIdentifier>{90d8a387-e0aa-421e-ba69-d231cff8a8bd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="threading">
+      <UniqueIdentifier>{d8c59c72-7171-4b0f-b1fd-2df9769c3615}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="lib">
+      <UniqueIdentifier>{dd0a02e2-42b3-4b77-acfa-99e208d1ea82}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="log">
+      <UniqueIdentifier>{aecc54af-5e01-4d0b-8f81-2470b344c476}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="memory">
+      <UniqueIdentifier>{19635b13-d175-49da-b631-30f6dc4f46a7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="os">
+      <UniqueIdentifier>{612e9e6d-05a0-4750-86c0-310db84be44c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="module">
+      <UniqueIdentifier>{4019e39c-4e85-4d54-9117-2dc610a4aa6e}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

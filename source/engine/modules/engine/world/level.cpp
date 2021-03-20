@@ -6,6 +6,10 @@
 #include <renderer_core/command_context.hpp>
 #include <renderer_core/resources/upload_buffer.hpp>
 
+
+
+#include "world.hpp"
+#include "components/rendering_properties.hpp"
 #include "core/json/json.hpp"
 
 Level::Level()
@@ -19,39 +23,17 @@ void Level::SpawnActor(Actor* actor)
 	_actors.PushBack(actor);
 
 	// TODO: memory leak and error
-	PrimitiveSceneProxy* proxy = nullptr;
+	StaticQuadSceneProxy* proxy = nullptr;
 
-	StaticQuadActor* sqActor = dynamic_cast<StaticQuadActor*>(actor);
+	RenderingPropertiesComponent* rendering = actor->GetComponent<RenderingPropertiesComponent>();
 
-	if (sqActor != nullptr)
+	if (rendering != nullptr)
 	{
-		StaticQuadSceneProxy* sqProxy = new StaticQuadSceneProxy;
-
-		//CommandContext& ctx = CommandContext::Begin();
-		//(void)ctx;
-		RTexture* texture = dynamic_cast<RTexture*>(RayState()->ResourceManager->LoadResourceSync(sqActor->Material.TextureName, eTexture));
-
-		if (texture == nullptr) *(u64*)0xFFFFFFFFFFFFFFFF = 0xDED;
-
-		auto textureDesc = GpuTextureDescription::Texture2D(texture->GetDimensions().x, texture->GetDimensions().y, DXGI_FORMAT_R32G32B32A32_FLOAT, 1, D3D12_RESOURCE_FLAG_NONE);
-		gUploadBuffer->SetTextureData(textureDesc, texture->GetData().GetData());
-		GpuTexture actorTexture;
-		actorTexture.Create(textureDesc, "actor texture");
-
-		TextureView actorTextureView;
-		actorTextureView.Create(actorTexture);
-
-		sqProxy->RenderData = new StaticQuadRenderData;
-		sqProxy->RenderData->Texture = std::move(actorTextureView);
-		//sqProxy->RenderData->TextureId = texture->GetId();
-		sqProxy->Transform = actor->GetTransform();
-
-		proxy = sqProxy;
+		proxy = new StaticQuadSceneProxy;
+		proxy->Transform = actor->GetTransform();
+		proxy->MaterialId = _owningWorld->GetMaterialIdForName(rendering->GetMaterialName());
 	}
-	else
-	{
-	}
-
+	
 	if (_jobCurrentSize >= ChunkSize)
 	{
 		_jobCurrentNum += 1;
@@ -155,6 +137,57 @@ bool Level::LoadLevel()
 	delete path;*/
 
 	return true;
+}
+
+void Level::LoadFrom(String& path)
+{
+	String text;
+	IFile* file = gFileSystem.OpenFile(path.AsRawStr(), eRead);
+	text.resize(file->Size());
+	file->Read((u8*)text.data(), file->Size());
+	file->Close();
+	delete file;
+
+	JsonValue json = JsonParser::Parse(text);
+	JsonValue& materialInstances = json["material_instances"];
+	for (u32 i = 0; i < materialInstances.Size(); ++i)
+	{
+		JsonValue& materialInstance = materialInstances[i];
+		String name(materialInstance["name"].AsString());
+		String texture(materialInstance["properties"]["texture"].AsString());
+		MaterialCompileProperties props = { name, texture };
+		_owningWorld->CompileMaterial(props);
+	}
+	
+	JsonValue& actors = json["actors"];
+
+	for (u32 i = 0; i < actors.Size(); ++i)
+	{
+		JsonValue& actor = actors[i];
+
+		// TODO: error checking
+		Type* actorType = RayState()->ObjectDb->GetTypeByName(actor["type"].AsString().AsRawStr());
+		Actor* instance = (Actor*)actorType->CreateInstance();
+		instance->Name = actor["name"].AsString();
+
+		for (IComponent* component1 : instance->_components)
+			delete component1;
+		instance->_components.Clear();
+		
+		JsonValue& components = actor["components"];
+		for (u32 j = 0; j < components.Size(); ++j)
+		{
+			JsonValue& component = components[j];
+
+			Type* componentType = RayState()->ObjectDb->GetTypeByName(component["type"].AsString().AsRawStr());
+			IComponent* componentInstance = (IComponent*)componentType->CreateInstance();
+
+			componentInstance->LoadFromJson(component["properties"]);
+			instance->_components.PushBack(componentInstance);
+		}
+
+		SpawnActor(instance);
+	}
 }
 
 Array<Actor*>& Level::GetActors()

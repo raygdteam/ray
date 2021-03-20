@@ -53,3 +53,27 @@ struct Type
 		return CreateFn();
 	}
 };
+
+class TypeHelper
+{
+	Type* _type;
+	RayObject* _instance;
+public:
+	TypeHelper(Type* type, RayObject* object)
+		: _type(type), _instance(object)
+	{
+		
+	}
+
+	template<typename T>
+	T ReadField(u32 idx)
+	{
+		return *static_cast<T*>(reinterpret_cast<u8*>(_instance) + _type->Fields[idx].Offset);
+	}
+
+	template<typename T>
+	T ReadField(FieldInfo& info)
+	{
+		return *static_cast<T*>(reinterpret_cast<u8*>(_instance) + info.Offset);
+	}
+};
