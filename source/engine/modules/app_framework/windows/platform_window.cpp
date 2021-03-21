@@ -155,7 +155,7 @@ void PlatformWindow::ProcessCallback(void* windowHandle, u32 msg, u64 param1, s6
 	if (windowHandle == ::GetActiveWindow())
 		_cb.Invoke(_windowHandle, msg, param1, param2);
 
-	if (msg == WM_SIZE && param1 == 0)
+	if (msg == WM_SIZE && param1 != 1)
 	{
 		_resizes.Invoke(LOWORD(param2), HIWORD(param2));
 	}
