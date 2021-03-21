@@ -22,6 +22,7 @@ Actor::~Actor()
 	{
 		delete _components.At(i);
 	}
+	_components.Clear();
 }
 
 Transform* Actor::GetTransform()

@@ -1,0 +1,72 @@
+{
+	"name": "Lab",
+	"materials": [
+		{
+			"name": "default_material",
+		}
+	],
+	
+	"material_instances": [
+		{
+			"name": "default",
+			"base": "default_material",
+			"properties": {
+				"texture": "/engine/atlas2.png"
+			}
+		},
+		{
+			"name": "default2",
+			"base": "default_material",
+			"properties": {
+				"texture": "/engine/_.png"
+			}
+		}
+	],
+	
+	"actors": [
+		{
+			"name": "wall_1",
+			"type": "engine://world/actors/StaticQuadActor",
+			
+			"components": [
+				{
+					"type": "engine://world/components/Transform",
+					"properties": {
+						"position_x": 1,
+						"position_y": 200,
+						"scale_x": 1,
+						"scale_y": 1
+					}
+				},
+				{
+					"type": "engine://world/components/RenderingProperties",
+					"properties": {
+						"material_name": "default"
+					}
+				}
+			]
+		},
+		{
+			"name": "wall_2",
+			"type": "engine://world/actors/StaticQuadActor",
+			
+			"components": [
+				{
+					"type": "engine://world/components/Transform",
+					"properties": {
+						"position_x": 1,
+						"position_y": -700,
+						"scale_x": 1,
+						"scale_y": 1
+					}
+				},
+				{
+					"type": "engine://world/components/RenderingProperties",
+					"properties": {
+						"material_name": "default2"
+					}
+				}
+			]
+		}
+	]
+}

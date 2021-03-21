@@ -13,6 +13,7 @@
 #include <renderer_core/resources/upload_buffer.hpp>
 #include "core/threading/thread_pool.hpp"
 #include "engine/ui2/ui2.hpp"
+#include "renderer_core/renderer_2d.hpp"
 
 //UploadBuffer* gUploadBuffer;
 
@@ -80,17 +81,13 @@ void World::RenderingThread()
 	}
 }
 
-void World::LoadLevel(pcstr name)
+void World::LoadLevelInternal(String& path)
 {
-	String path("../../engine/resources/level.json");
-	
 	_levelData = new WorldLevelData;
 	_levelData->Level = new Level();
 	_levelData->Level->_owningWorld = this;
 	_levelData->Level->LoadFrom(path);
 	_primaryCameraActor = new CameraActor();
-
-	(void)name;
 
 	//decltype(StaticQuadActor())* actor1 = new StaticQuadActor();
 	//decltype(StaticQuadActor())* actor2 = new StaticQuadActor();
@@ -146,7 +143,8 @@ void World::Initialize(IPlatformWindow* window)
 	}
 	
 	// load level
-	LoadLevel("\0");
+	String name("../../engine/resources/level.json");
+	LoadLevelInternal(name);
 	
 	if (window == nullptr) return;
 
@@ -204,15 +202,16 @@ u64 World::CompileMaterial(MaterialCompileProperties& props)
 
 	auto textureDesc = GpuTextureDescription::Texture2D(texture->GetDimensions().x, texture->GetDimensions().y, DXGI_FORMAT_R32G32B32A32_FLOAT, 1, D3D12_RESOURCE_FLAG_NONE);
 	gUploadBuffer->SetTextureData(textureDesc, texture->GetData().GetData());
-	GpuTexture actorTexture;
-	actorTexture.Create(textureDesc, "material texture");
+	GpuTexture* actorTexture = new GpuTexture();
+	actorTexture->Create(textureDesc, "material texture");
 
 	TextureView actorTextureView;
-	actorTextureView.Create(actorTexture);
+	actorTextureView.Create(*actorTexture);
 
 	MaterialInstance entry = {
 		.Id = _materialInstances.Size(),
 		.Name = props.Name,
+		.Texture = actorTexture,
 		.TextureView = actorTextureView
 	};
 	
@@ -232,4 +231,28 @@ u64 World::GetMaterialIdForName(String& name)
 		if (materialInstance.Name == name) return materialInstance.Id;
 	}
 	return -1;
+}
+
+void World::LoadLevel(String& path)
+{
+	for (MaterialInstance& materialInstance : _materialInstances)
+	{
+		materialInstance.Texture->Release();
+		materialInstance.Texture->Destroy();
+		delete materialInstance.Texture;
+	}
+
+	_materialInstances.Clear();
+	
+	Level* level = _levelData->Level;
+
+	for (Actor* actor : level->GetActors())
+	{
+		actor->OnDestroy();
+		delete actor;
+	}
+
+	delete level;
+	
+	LoadLevelInternal(path);
 }

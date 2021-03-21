@@ -116,3 +116,13 @@ void FileSystem::CreateAllDirectories(pcstr path)
 {
 	(void)path;
 }
+
+void FileSystem::ReadTextFile(const String& path, String& trg)
+{
+	IFile* file = gFileSystem.OpenFile(path.AsRawStr(), eRead);
+	trg.resize(file->Size());
+	file->Read((u8*)trg.data(), file->Size());
+	file->Close();
+	delete file;
+}
+

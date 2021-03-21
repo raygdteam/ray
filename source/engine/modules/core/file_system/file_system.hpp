@@ -2,6 +2,8 @@
 #include <core/core.hpp>
 #include <core/file_system/file.hpp>
 
+#include "core/lib/string.hpp"
+
 enum FileMode
 {
     eRead = 0x01,
@@ -34,6 +36,8 @@ public:
 	 * Create all directories that is missing
 	 */
 	void CreateAllDirectories(pcstr path);
+
+	void ReadTextFile(const String& path, String& trg);
 };
 
 extern RAY_CORE_API FileSystem gFileSystem;

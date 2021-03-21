@@ -1,6 +1,7 @@
 #pragma once
 #include <core/core.hpp>
 #include <core/lib/string.hpp>
+#include <core/json/json.hpp>
 
 class IFile;
 
@@ -13,7 +14,7 @@ enum ProjectFileVersion
 	eMax
 };
 
-struct Project
+struct ProjectFile
 {
 	/**
 	 * Project file version number.
@@ -26,14 +27,19 @@ struct Project
 	u32 EngineVersion;
 	
 	String Name;
+	String Codename;
+	String Description;
+
+	u64 GameVersion;
+	
 };
 
 class ProjectManager
 {
-	bool SanityCheckProject(Project& project);
+	bool SanityCheckProject(ProjectFile& project);
 	bool IsProjectCompatible(ProjectFileVersion version);
-	Project* LoadProjectInternal(IFile* file);
+	ProjectFile* ReadProjectFile(JsonValue& file);
 public:
-	void LoadProject(String& path);
+	ProjectFile* ReadProjectFile(String& path);
 };
 

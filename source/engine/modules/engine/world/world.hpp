@@ -25,6 +25,7 @@ struct MaterialInstance
 {
 	u64 Id;
 	String Name;
+	GpuTexture* Texture;
 	TextureView TextureView;
 	// ...
 };
@@ -73,7 +74,7 @@ class RAY_ENGINE_API World final
 	void WorldTickThread();
 	void RenderingThread();
 
-	void LoadLevel(pcstr name);
+	void LoadLevelInternal(String& name);
 public:
 	World();
 	~World();
@@ -89,6 +90,8 @@ public:
 
 	MaterialInstance& GetMaterialInstance(u64 id);
 	u64 GetMaterialIdForName(String& name);
+
+	void LoadLevel(String& path);
 	
 	ConditionVariable ReadyToTick;
 	ConditionVariable WorldTickFinished;

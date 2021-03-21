@@ -144,7 +144,7 @@
     <ClCompile Include="engine\engine.cpp" />
     <ClCompile Include="engine\engine_interface.cpp" />
     <ClCompile Include="module_editor.cpp" />
-    <ClCompile Include="project\project.cpp" />
+    <ClCompile Include="project\project_file.cpp" />
     <ClCompile Include="renderer\descriptor_pool.cpp" />
     <ClCompile Include="renderer\loader\volk.c" />
     <ClCompile Include="renderer\pipeline.cpp" />
@@ -159,9 +159,10 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="context\context.hpp" />
+    <ClInclude Include="engine\editor_cmd.hpp" />
     <ClInclude Include="engine\engine.hpp" />
     <ClInclude Include="engine\engine_interface.hpp" />
-    <ClInclude Include="project\project.hpp" />
+    <ClInclude Include="project\project_file.hpp" />
     <ClInclude Include="renderer\descriptor_pool.hpp" />
     <ClInclude Include="renderer\loader\volk.h" />
     <ClInclude Include="renderer\pipeline.hpp" />

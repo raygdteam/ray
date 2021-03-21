@@ -6,6 +6,8 @@
 
 #include <editor/ui/editor_ui.hpp>
 
+#include "editor_cmd.hpp"
+
 #ifdef RAY_BUILD_EDITOR
 #define EDITOR_API RAY_DLLEXPORTS
 #else
@@ -21,12 +23,17 @@ class EDITOR_API EditorEngine : public IEngine
 	Level* _level = nullptr;
 
 	EditorUi _editorUi;
+
+	std::queue<EditorCommand*> _pendingEditorCommands;
+
+	void ProcessCommands();
 public:
 	void Initialize(IEngineLoop* engineLoop) override;
 	void Tick() override;
 
 	void ApplyMouseDragOnViewport(FVector2 drag);
 	FVector2& GetCameraPos();
+	void RunCommand(EditorCommand* command);
 
 	float MouseDragSensitivity = 1.75f;
 
