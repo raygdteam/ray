@@ -1,5 +1,4 @@
 #pragma once
-#include <core/core.hpp>
 #include <core/memory/memory_debug.hpp>
 
 #ifndef DEBUG_MEMORY

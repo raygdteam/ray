@@ -1,3 +1,5 @@
+#include <core/core.hpp>
+#include <core/memory/new_delete_override.hpp>
 #include <core/debug/assert.hpp>
 #include <core/file_system/file_system.hpp>
 #include <core/object/file_archive.hpp>

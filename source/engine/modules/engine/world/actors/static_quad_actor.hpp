@@ -6,6 +6,7 @@ class RAY_ENGINE_API StaticQuadActor : public Actor
 	RAYOBJECT_BODY(StaticQuadActor, Actor);
 public:
 	StaticQuadActor();
+	~StaticQuadActor();
 protected:
 	void Awake() override;
 	void BeginPlay() override;

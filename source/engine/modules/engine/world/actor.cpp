@@ -18,10 +18,11 @@ Actor::Actor()
 
 Actor::~Actor()
 {
-	for (u32 i = 0; i < _components.Size(); ++i)
+	for (IComponent* component : _components)
 	{
-		delete _components.At(i);
+		delete component;
 	}
+	
 	_components.Clear();
 }
 

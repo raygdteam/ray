@@ -25,6 +25,9 @@
     <ProjectReference Include="..\..\thirdparty\eastl\eastl.vcxproj">
       <Project>{34ff6296-b8e5-43b8-a8a1-b57163615e2a}</Project>
     </ProjectReference>
+    <ProjectReference Include="..\..\thirdparty\mimalloc\mimalloc.vcxproj">
+      <Project>{615c925d-85a3-4099-85bc-6bbb744c128e}</Project>
+    </ProjectReference>
     <ProjectReference Include="..\app_framework\app_framework.vcxproj">
       <Project>{1f9d6dcb-4d59-4a90-b5c4-95411eda662f}</Project>
     </ProjectReference>

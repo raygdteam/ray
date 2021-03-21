@@ -1,3 +1,3 @@
-#include <core/memory/new_delete_override.hpp>
+#include <core/core.hpp>
 
 void _DllMainCRTStartup() {}

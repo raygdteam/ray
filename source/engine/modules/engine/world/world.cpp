@@ -249,6 +249,7 @@ void World::UnloadLevel()
 	if (_levelData != nullptr && _levelData->Level != nullptr)
 	{
 		Level* level = _levelData->Level;
+		
 		for (Actor* actor : level->GetActors())
 		{
 			actor->OnDestroy();
