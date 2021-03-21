@@ -5,7 +5,7 @@
 
 class IFile;
 
-enum ProjectFileVersion
+enum class ProjectFileVersion
 {
 	eInvalid = 0,
 	eInitial = 1,
