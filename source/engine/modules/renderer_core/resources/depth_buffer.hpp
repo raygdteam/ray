@@ -7,7 +7,8 @@ public:
 	DepthBuffer() = default;
 
 public:
-	void Create(u32 width, u32 height, DXGI_FORMAT format, pcstr debugName);
+	void Create(u32 width, u32 height, DXGI_FORMAT format, pcstr debugName) noexcept;
+	void Reset(u32 width, u32 height, DXGI_FORMAT format, pcstr debugName) noexcept override;
 
 public:
 	D3D12_CPU_DESCRIPTOR_HANDLE GetDSV() const { return _view.GetDSV(); }

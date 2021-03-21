@@ -281,18 +281,25 @@ void IRenderer::Present(ColorBuffer& finalFrame, GraphicsContext& gfxContext) no
 
 void IRenderer::OnResize(u32 width, u32 height)
 {
-	_swapChain->ResizeBuffers(SWAP_CHAIN_BUFFER_COUNT, width, height, DXGI_FORMAT_R8G8B8A8_UNORM, DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH);
 	for (size_t i = 0; i < SWAP_CHAIN_BUFFER_COUNT; ++i)
 	{
 		gDisplayPlane[i].Destroy();
+	}
+
+	_swapChain->ResizeBuffers(SWAP_CHAIN_BUFFER_COUNT, width, height, DXGI_FORMAT_R8G8B8A8_UNORM, DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH);
+	for (size_t i = 0; i < SWAP_CHAIN_BUFFER_COUNT; ++i)
+	{
 		ID3D12Resource* displayPlane;
 		_swapChain->GetBuffer(i, IID_PPV_ARGS(&displayPlane));
 		gDisplayPlane[i].CreateFromSwapChain(displayPlane, "gDisplayPlane");
 	}
 
 	// There is no need to reset gEditorColorBuffer when we don't use Editor
-	gEditorColorBuffer.Reset(width, height, "gEditorColorBuffer");
-	gSceneColorBuffer.Reset(width, height, "gSceneColorBuffer");
+	gEditorColorBuffer.Reset(width, height, DXGI_FORMAT_R8G8B8A8_UNORM, "gEditorColorBuffer");
+	gSceneColorBuffer.Reset(width, height, DXGI_FORMAT_R8G8B8A8_UNORM, "gSceneColorBuffer");
+	gDepthBuffer.Reset(width, height, DXGI_FORMAT_D32_FLOAT, "gDepthBuffer");
+
+	gCurrentBuffer = 0;
 }
 
 void IRenderer::Shutdown() noexcept

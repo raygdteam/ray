@@ -22,7 +22,7 @@ public:
 	void CreateFromSwapChain(ID3D12Resource* inResource, pcstr debugName);
 	void Create(u32 width, u32 height, u32 numMips, DXGI_FORMAT format, D3D12_RESOURCE_FLAGS flags, pcstr debugName);
 	void CreateArray(u32 width, u32 height, u32 numMips, u32 arrayCount, DXGI_FORMAT format, D3D12_RESOURCE_FLAGS flags, pcstr debugName);
-	void Reset(u32 width, u32 height, pcstr debugName) noexcept;
+	void Reset(u32 width, u32 height, DXGI_FORMAT format, pcstr debugName) noexcept override;
 
 public:
 	D3D12_CPU_DESCRIPTOR_HANDLE GetSRV() const noexcept { return _view.GetSRV(); }

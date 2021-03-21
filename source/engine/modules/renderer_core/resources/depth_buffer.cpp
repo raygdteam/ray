@@ -1,7 +1,7 @@
 #include "depth_buffer.hpp"
 #include <renderer_core/renderer.hpp>
 
-void DepthBuffer::Create(u32 width, u32 height, DXGI_FORMAT format, pcstr debugName)
+void DepthBuffer::Create(u32 width, u32 height, DXGI_FORMAT format, pcstr debugName) noexcept
 {
 	D3D12_CLEAR_VALUE clearValue = 
 	{
@@ -17,4 +17,10 @@ void DepthBuffer::Create(u32 width, u32 height, DXGI_FORMAT format, pcstr debugN
 	dsDesc.ClearValue = &clearValue;
 	GpuPixelBuffer::Create(dsDesc, debugName);
 	_view.Create(*this);
+}
+
+void DepthBuffer::Reset(u32 width, u32 height, DXGI_FORMAT format, pcstr debugName) noexcept
+{
+	Destroy();
+	Create(width, height, format, debugName);
 }

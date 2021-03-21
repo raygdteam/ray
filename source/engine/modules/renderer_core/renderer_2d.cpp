@@ -303,8 +303,8 @@ void Renderer2D::Flush(GraphicsContext& gfxContext)
 	gDevice->CopyDescriptors(1, &destHandle, &destRange, sData.TextureCount, srcHandle, srcRange, D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
 
 	gfxContext.SetRootSignature(_2DSignature);
-	gfxContext.SetScissor(0, 0, 1280, 720);
-	gfxContext.SetViewport(0.f, 0.f, 1280.f, 720.f);
+	gfxContext.SetScissor(0, 0, gSceneColorBuffer.GetDesc().Width, gSceneColorBuffer.GetDesc().Height);
+	gfxContext.SetViewport(0.f, 0.f, gSceneColorBuffer.GetDesc().Width, gSceneColorBuffer.GetDesc().Height);
 
 	gfxContext.SetPipelineState(_2DPipeline);
 	gfxContext.SetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);

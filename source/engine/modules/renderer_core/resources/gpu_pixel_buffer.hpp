@@ -12,6 +12,7 @@ public:
 
 public:
 	void Create(GpuTextureDescription& desc, pcstr debugName) noexcept;
+	virtual void Reset(u32 width, u32 height, DXGI_FORMAT format, pcstr debugName) noexcept {}
 
 public:
 	void Release() noexcept override;

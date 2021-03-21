@@ -12,11 +12,12 @@ void ColorBuffer::CreateFromSwapChain(ID3D12Resource* inResource, pcstr debugNam
 	_usageState = D3D12_RESOURCE_STATE_PRESENT;
 	_resource = inResource;
 	_bManaged = false;
+	auto allocationInfo = gDevice->GetResourceAllocationInfo(1, 1, &desc);
+	_resourceSize = allocationInfo.SizeInBytes;
 
 	_desc.MipLevels = 1;
 	_desc.Flags = D3D12_RESOURCE_FLAG_ALLOW_RENDER_TARGET;
 	_view.Create(*this);
-	gDevice->CreateRenderTargetView(inResource, nullptr, GetRTV());
 
 #if defined(RAY_DEBUG) || defined(RAY_DEVELOPMENT)
 	size_t debugNameSize = strlen(debugName);
@@ -57,10 +58,10 @@ void ColorBuffer::CreateArray(u32 width, u32 height, u32 numMips, u32 arrayCount
 	GpuPixelBuffer::Create(desc, debugName);
 }
 
-void ColorBuffer::Reset(u32 width, u32 height, pcstr debugName) noexcept
+void ColorBuffer::Reset(u32 width, u32 height, DXGI_FORMAT format, pcstr debugName) noexcept
 {
 	Destroy();
-	Create(width, height, GetDesc().MipLevels, GetDesc().Format, GetDesc().Flags, debugName);
+	Create(width, height, GetDesc().MipLevels, format, GetDesc().Flags, debugName);
 }
 
 void ColorBuffer::GenerateMipMaps(CommandContext& context)
