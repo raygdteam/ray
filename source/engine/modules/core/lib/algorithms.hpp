@@ -1,7 +1,7 @@
 #pragma once
 
 /// <summary>
-/// Locale function of [void QuickSort(Iterator, Iterator, Predicator)]. 
+/// Local function of [void QuickSort(Iterator, Iterator, Predicator)]. 
 /// Divides container elements to 2 parts. In the left - elements which are less then chosen. In the right - that are bigger.
 /// </summary>
 /// 
@@ -25,7 +25,7 @@ Iterator _MakingParts(Iterator low, Iterator high, Predicator p)
     Iterator left = low;
     Iterator right = high - 1;
 
-    // Hoare partition scheme.
+    // Hoare partition scheme
     while (left < right) {
         while (p(*left, pivot))
         {
@@ -35,7 +35,7 @@ Iterator _MakingParts(Iterator low, Iterator high, Predicator p)
         {
             right--;
         }
-        if (left <= right)
+        if (left < right)
         {
             // swap
             auto t = *left;
@@ -49,6 +49,8 @@ Iterator _MakingParts(Iterator low, Iterator high, Predicator p)
             left++;
         }
     }
+
+
     // right = left after Hoare algorithm
     return right;
 }
@@ -78,7 +80,7 @@ void QuickSort(Iterator begin, Iterator end, Predicator p)
     // recursion. 2 independent QuickSorts for 2 parts of the container.
     if (begin < par)
     {
-        QuickSort(begin, par - 1, p);
+        QuickSort(begin, par, p);
     }
     if (end > par)
     {
