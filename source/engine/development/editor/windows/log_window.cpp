@@ -5,7 +5,7 @@
 EdLogWindow::EdLogWindow()
 {
 	Title = String("Log");
-	//_objects.PushBack(new UiLabel(this, GetLogsAll()));
+	_objects.PushBack(new UiLabel(this, GetLogsAll()));
 }
 
 void EdLogWindow::Tick()

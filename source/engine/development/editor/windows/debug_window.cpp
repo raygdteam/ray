@@ -57,5 +57,10 @@ void EdDebugWindow::Tick()
 		cmd->Path = String("../../engine/resources/level2.json");
 		gEditorEngine->RunCommand(cmd);
 	}
+
+	if(ImGui::DragFloat("Camera zoom", gEditorEngine->GetCameraZoom(), 0.025f))
+	{
+		gEditorEngine->ApplyMouseDragOnViewport(FVector2 { 0,0 });
+	}
 }
 

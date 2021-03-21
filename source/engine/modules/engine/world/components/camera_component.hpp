@@ -24,4 +24,6 @@ public:
 	const FMatrix4x4& GetProjection() { return _projection; }
 	const FMatrix4x4& GetView() { return _view; }
 	const FMatrix4x4& GetViewProjection() { return _viewProjection; }
+
+	float Zoom = 2.f;
 };

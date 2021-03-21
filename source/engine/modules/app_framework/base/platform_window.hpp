@@ -52,7 +52,8 @@ public:
 	virtual void* GetWindowHandleRaw() = 0;
 
 	virtual void RegisterEventCallback(Function<void(void*, u32, u64, s64)> callback) = 0;
-
+	virtual void RegisterWindowResizeEventCallback(Function<void(u32, u32)> callback) = 0;
+	
 	/**
 	*	Returns the window width
 	*/

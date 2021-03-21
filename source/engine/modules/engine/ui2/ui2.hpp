@@ -32,6 +32,7 @@ protected:
 	FVector2 Size;
 	FVector2 Padding = {-1.f, -1.f};
 	bool _dockingEnabled = false;
+	bool bNoScrollbar = false;
 	
 	virtual void DockingOneTimeSetup() {}
 public:

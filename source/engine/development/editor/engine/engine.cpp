@@ -113,8 +113,15 @@ void EditorEngine::Tick()
 
 void EditorEngine::ApplyMouseDragOnViewport(FVector2 drag)
 {	
-	_world->_primaryCameraActor->GetTransform()->Position.x -= drag.x * MouseDragSensitivity;
-	_world->_primaryCameraActor->GetTransform()->Position.y += drag.y * MouseDragSensitivity;
+	_world->_primaryCameraActor->GetTransform()->Position.x -= drag.x * _delta * MouseDragSensitivity;
+	_world->_primaryCameraActor->GetTransform()->Position.y += drag.y * _delta * MouseDragSensitivity;
+
+	_world->_primaryCameraActor->GetCameraComponent()->UpdateMVP();
+}
+
+void EditorEngine::ApplyMouseZoomOnViewport(f32 dz)
+{
+	((CameraActor*)(_world->_primaryCameraActor))->GetCameraComponent()->Zoom += ((dz/10.f) * _delta);
 
 	_world->_primaryCameraActor->GetCameraComponent()->UpdateMVP();
 }
@@ -122,6 +129,11 @@ void EditorEngine::ApplyMouseDragOnViewport(FVector2 drag)
 FVector2& EditorEngine::GetCameraPos()
 {
 	return _world->_primaryCameraActor->GetTransform()->Position;
+}
+
+float* EditorEngine::GetCameraZoom()
+{
+	return &((CameraActor*)(_world->_primaryCameraActor))->GetCameraComponent()->Zoom;
 }
 
 void EditorEngine::RunCommand(EditorCommand* command)

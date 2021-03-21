@@ -9,7 +9,8 @@ EdLevelViewport::EdLevelViewport()
 {
 	Title = String("Level Viewport");
 	this->_objects.PushBack(new UiImage(this));
-	Padding = { 4.f, 4.f };
+	Padding = { 4.f, 0.f };
+	bNoScrollbar = true;
 }
 
 void EdLevelViewport::Tick()
@@ -24,6 +25,15 @@ void EdLevelViewport::LateTick()
 	{
 		ImGuiIO& io = ImGui::GetIO();
 		gEditorEngine->ApplyMouseDragOnViewport({ io.MouseDelta.x, io.MouseDelta.y });
+	}
+	
+	if (ImGui::IsItemHovered())
+	{
+		ImGuiIO& io = ImGui::GetIO();
+		if (io.MouseWheel != 0.0f)
+		{
+			gEditorEngine->ApplyMouseZoomOnViewport(io.MouseWheel);
+		}
 	}
 }
 

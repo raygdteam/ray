@@ -24,6 +24,7 @@ class PlatformWindow : public IPlatformWindow
 
 	bool _osRequestedClose = false;
 	MulticastDelegate<void(void*, u32, u64, s64)> _cb;
+	MulticastDelegate<void(u32, u32)> _resizes;
 public:
 	void Initialize() override;
 	bool CreateWindow(const char* name) override;
@@ -41,6 +42,8 @@ public:
 	void Shutdown() override;
 	void RegisterEventCallback(Function<void(void*, u32, u64, s64)> callback) override;
 	void ProcessCallback(void* wnd, u32 msg, u64  param1, s64 param2);
+
+	void RegisterWindowResizeEventCallback(Function<void(u32, u32)> callback) override;
 };
 
 void PlatformWindow::Initialize()
@@ -151,6 +154,16 @@ void PlatformWindow::ProcessCallback(void* windowHandle, u32 msg, u64 param1, s6
 {
 	if (windowHandle == ::GetActiveWindow())
 		_cb.Invoke(_windowHandle, msg, param1, param2);
+
+	if (msg == WM_SIZE && param1 == 0)
+	{
+		_resizes.Invoke(LOWORD(param2), HIWORD(param2));
+	}
+}
+
+void PlatformWindow::RegisterWindowResizeEventCallback(Function<void(u32, u32)> callback)
+{
+	_resizes.Register(callback);
 }
 
 LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)

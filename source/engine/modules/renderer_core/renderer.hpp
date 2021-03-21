@@ -15,6 +15,8 @@
 #include <d3d12.h>
 #include <dxgi1_4.h>
 
+#include "core/math/vector.hpp"
+
 class CommandListManager;
 class CommandContext;
 class ContextManager;
@@ -132,7 +134,7 @@ public:
 
 public:
 	static bool IsReady() noexcept { return _sbReady; }
-
+	void OnResize(u32 width, u32 height);
 };
 
 // using GetRRCClassHelper_t = IRRCClassHelper* (*)();

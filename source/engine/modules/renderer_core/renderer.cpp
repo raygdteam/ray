@@ -131,6 +131,13 @@ void IRenderer::Initialize(IPlatformWindow* window) noexcept
 	gRingBuffer.Initialize(MB(15));
 
 	PreparePresentObjects();
+	
+	Function<void(u32, u32)> a([this](u32 w, u32 h)
+	{
+		OnResize(w, h);
+	});
+	
+	window->RegisterWindowResizeEventCallback(a);
 }
 
 struct PresentVertex
@@ -269,6 +276,11 @@ void IRenderer::Present(ColorBuffer& finalFrame, GraphicsContext& gfxContext) no
 	gCurrentBuffer = (gCurrentBuffer + 1) % SWAP_CHAIN_BUFFER_COUNT;
 	sRendererStats.DrawCallsCount = 0u;
 	gUploadBuffer->Reset();
+}
+
+void IRenderer::OnResize(u32 width, u32 height)
+{
+	
 }
 
 void IRenderer::Shutdown() noexcept

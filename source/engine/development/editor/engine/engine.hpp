@@ -32,7 +32,9 @@ public:
 	void Tick() override;
 
 	void ApplyMouseDragOnViewport(FVector2 drag);
+	void ApplyMouseZoomOnViewport(f32 dz);
 	FVector2& GetCameraPos();
+	float* GetCameraZoom();
 	void RunCommand(EditorCommand* command);
 
 	float MouseDragSensitivity = 1.75f;

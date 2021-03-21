@@ -34,7 +34,7 @@ void UiWindow::TickBegin()
 		pushCount++;
 	}
 
-	ImGui::Begin(Title.AsRawStr());
+	ImGui::Begin(Title.AsRawStr(), 0, bNoScrollbar ? ImGuiWindowFlags_NoScrollbar : 0);
 	{
 		Size.x = ImGui::GetWindowWidth();
 		Size.y = ImGui::GetWindowHeight();
