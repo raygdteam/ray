@@ -281,6 +281,8 @@ void IRenderer::Present(ColorBuffer& finalFrame, GraphicsContext& gfxContext) no
 
 void IRenderer::OnResize(u32 width, u32 height)
 {
+	gCommandListManager.IdleGPU();
+
 	for (size_t i = 0; i < SWAP_CHAIN_BUFFER_COUNT; ++i)
 	{
 		gDisplayPlane[i].Destroy();
