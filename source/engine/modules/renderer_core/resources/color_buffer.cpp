@@ -57,6 +57,12 @@ void ColorBuffer::CreateArray(u32 width, u32 height, u32 numMips, u32 arrayCount
 	GpuPixelBuffer::Create(desc, debugName);
 }
 
+void ColorBuffer::Reset(u32 width, u32 height, pcstr debugName) noexcept
+{
+	Destroy();
+	Create(width, height, GetDesc().MipLevels, GetDesc().Format, GetDesc().Flags, debugName);
+}
+
 void ColorBuffer::GenerateMipMaps(CommandContext& context)
 {
 	// TODO: RootSignature & ComputeContext
