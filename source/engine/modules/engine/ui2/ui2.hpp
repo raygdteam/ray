@@ -33,11 +33,13 @@ protected:
 	FVector2 Padding = {-1.f, -1.f};
 	bool _dockingEnabled = false;
 	bool bNoScrollbar = false;
+	bool bCenterOnFirstTime = false;
 	
 	virtual void DockingOneTimeSetup() {}
 public:
 	UiWindow() {}
-
+	virtual ~UiWindow() = default;
+	
 	virtual void Tick() {}
 	virtual void LateTick() {}
 	
@@ -63,6 +65,7 @@ public:
 	void RenderAll(GraphicsContext& gfxContext);
 
 	void AddWindow(UiWindow* window);
+	void RemoveWindow(UiWindow* window);
 
 	void SetDockspaceEnabled(bool state);
 };

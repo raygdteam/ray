@@ -112,6 +112,7 @@ void RingBuffer::TryToFreeUpMemory(u64 lastCompletedFrame) noexcept
 	while (!_frameOffsetQueue.IsEmpty() && _frameOffsetQueue.front().FrameIndex <= lastCompletedFrame)
 	{
 		FrameResourceOffset& offset = _frameOffsetQueue.front();
+		IRenderer::sRendererStats.UsedVirtualMemory -= offset.ResourceOffset - _uploadBuffer._currentPointer;
 		_uploadBuffer._currentPointer = offset.ResourceOffset;
 		_frameOffsetQueue.pop();
 	}

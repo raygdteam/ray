@@ -153,6 +153,7 @@
     <ClCompile Include="renderer\shader.cpp" />
     <ClCompile Include="ui\editor_ui.cpp" />
     <ClCompile Include="windows\debug_window.cpp" />
+    <ClCompile Include="windows\level_chooser.cpp" />
     <ClCompile Include="windows\level_outline.cpp" />
     <ClCompile Include="windows\level_viewport.cpp" />
     <ClCompile Include="windows\log_window.cpp" />
@@ -170,6 +171,7 @@
     <ClInclude Include="renderer\shader.hpp" />
     <ClInclude Include="ui\editor_ui.hpp" />
     <ClInclude Include="windows\debug_window.hpp" />
+    <ClInclude Include="windows\level_chooser.hpp" />
     <ClInclude Include="windows\level_outline.hpp" />
     <ClInclude Include="windows\level_viewport.hpp" />
     <ClInclude Include="windows\log_window.hpp" />

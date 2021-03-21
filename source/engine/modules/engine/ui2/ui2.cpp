@@ -34,6 +34,17 @@ void UiWindow::TickBegin()
 		pushCount++;
 	}
 
+	if (bCenterOnFirstTime)
+	{
+		ImGuiIO& io = ImGui::GetIO();
+		ImVec2 size = { io.DisplaySize.x / 3.f, io.DisplaySize.y / 3.f };
+		
+		ImGui::SetNextWindowSize(size, ImGuiCond_FirstUseEver);
+		ImGui::SetNextWindowPos(ImVec2((io.DisplaySize.x * 0.5f) - size.x / 2.f, (io.DisplaySize.y * 0.5f) - size.y / 2.f), ImGuiCond_FirstUseEver, ImVec2(0.0f, 0.0f));
+		
+		bCenterOnFirstTime = false;
+	}
+
 	ImGui::Begin(Title.AsRawStr(), 0, bNoScrollbar ? ImGuiWindowFlags_NoScrollbar : 0);
 	{
 		Size.x = ImGui::GetWindowWidth();
@@ -187,6 +198,11 @@ void UiRootObject::AddWindow(UiWindow* window)
 	_windows.PushBack(window);
 	if (window->IsDockingEnabled())
 		window->DockingOneTimeSetup();
+}
+
+void UiRootObject::RemoveWindow(UiWindow* window)
+{
+	_windows.erase_first(window);
 }
 
 void UiRootObject::SetDockspaceEnabled(bool state)

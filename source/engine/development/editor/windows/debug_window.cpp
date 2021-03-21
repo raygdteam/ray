@@ -16,12 +16,13 @@ EdDebugWindow::EdDebugWindow()
 }
 
 f32 gFrametimeFrames[256];
+bool gShowDemoWindow = false;
 
 void EdDebugWindow::Tick()
 {
 	gText.clear();
 
-	size_t count = IRenderer::sRendererStats.DrawCallsCount;
+	size_t count = IRenderer::sRendererStats.LastFrameDC;
 	gText.append_sprintf("DrawCallsCount = %i\n", count);
 	gText.append_sprintf("AllocatedVirtualMemory = %i\n", IRenderer::sRendererStats.AllocatedVirtualMemory);
 	gText.append_sprintf("UsedVirtualMemory = %llu", IRenderer::sRendererStats.UsedVirtualMemory);
@@ -61,6 +62,15 @@ void EdDebugWindow::Tick()
 	if(ImGui::DragFloat("Camera zoom", gEditorEngine->GetCameraZoom(), 0.025f))
 	{
 		gEditorEngine->ApplyMouseDragOnViewport(FVector2 { 0,0 });
+	}
+
+	ImGui::Checkbox("Show Demo Window", &gShowDemoWindow);
+
+	if (ImGui::Button("Close project"))
+	{
+		EditorCommand* cmd = new EditorCommand;
+		cmd->Type = eCloseLevel;
+		gEditorEngine->RunCommand(cmd);
 	}
 }
 

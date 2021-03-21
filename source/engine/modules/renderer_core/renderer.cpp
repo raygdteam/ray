@@ -274,6 +274,7 @@ void IRenderer::Present(ColorBuffer& finalFrame, GraphicsContext& gfxContext) no
 
 	_swapChain->Present(0, 0);
 	gCurrentBuffer = (gCurrentBuffer + 1) % SWAP_CHAIN_BUFFER_COUNT;
+	sRendererStats.LastFrameDC = sRendererStats.DrawCallsCount;
 	sRendererStats.DrawCallsCount = 0u;
 	gUploadBuffer->Reset();
 }
