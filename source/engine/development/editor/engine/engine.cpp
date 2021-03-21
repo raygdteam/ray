@@ -78,7 +78,6 @@ void EditorEngine::Initialize(IEngineLoop* engineLoop)
 
 	_world = new World();
 	_world->Initialize(nullptr);
-	_level = _world->_levelData->Level;
 
 	_world->RendererInitialize(nullptr);
 

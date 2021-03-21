@@ -142,10 +142,6 @@ void World::Initialize(IPlatformWindow* window)
 		_renderer->Initialize(window);
 	}
 	
-	// load level
-	String name("../../engine/resources/level.json");
-	LoadLevelInternal(name);
-	
 	if (window == nullptr) return;
 
 	/* BUG: assuming no server build */

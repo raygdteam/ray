@@ -266,11 +266,12 @@ IRResource* ResourceManager::LoadResourceSync(pcstr inName, ResourceType desired
 		}
 	}
 
+	gDbgLog->Log("Loading %s", inName);
+
 	u32 mappingEnd = strchr(inName + 1, '/') - inName;
 	check(mappingEnd != 0);
 
 	String mapping(inName, 0, mappingEnd + 1);
-	gDbgLog->Log("Mapping %s", mapping.c_str());
 
 	_mutex.Enter();
 
