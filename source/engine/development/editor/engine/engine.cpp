@@ -148,6 +148,13 @@ float* EditorEngine::GetCameraZoom()
 	return &((CameraActor*)(_world->_primaryCameraActor))->GetCameraComponent()->Zoom;
 }
 
+void EditorEngine::ResizeCameraViewport(FVector2 size)
+{
+	((CameraActor*)(_world->_primaryCameraActor))->GetCameraComponent()->ViewportSize = size;
+
+	_world->_primaryCameraActor->GetCameraComponent()->UpdateMVP();
+}
+
 void EditorEngine::RunCommand(EditorCommand* command)
 {
 	_pendingEditorCommands.push(command);

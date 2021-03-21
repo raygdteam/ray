@@ -21,10 +21,27 @@ public:
 	virtual void Tick() = 0;
 };
 
+class RAY_ENGINE_API UiDockspace
+{
+	friend class UiRootObject;
+	
+protected:
+	UiRootObject* _parent = nullptr;
+public:
+	UiDockspace() {}
+	virtual ~UiDockspace() {}
+	
+	virtual void Tick() = 0;
+};
+
 class RAY_ENGINE_API UiWindow
 {
 	friend class UiRootObject;
 	friend class UiObject;
+
+	UiRootObject* _parent = nullptr;
+	bool _isOpen = true;
+	
 	void TickBegin();
 protected:
 	String Title;
@@ -34,6 +51,7 @@ protected:
 	bool _dockingEnabled = false;
 	bool bNoScrollbar = false;
 	bool bCenterOnFirstTime = false;
+	bool bDestroyOnClose = false;
 	
 	virtual void DockingOneTimeSetup() {}
 public:
@@ -57,7 +75,7 @@ public:
 class RAY_ENGINE_API UiRootObject
 {
 	Array<UiWindow*> _windows;
-	bool _dockspaceEnabled = true;
+	UiDockspace* _dockspace = nullptr;
 public:
 	void Initialize(IPlatformWindow* window);
 	void Tick();
@@ -67,5 +85,5 @@ public:
 	void AddWindow(UiWindow* window);
 	void RemoveWindow(UiWindow* window);
 
-	void SetDockspaceEnabled(bool state);
+	void SetDockspace(UiDockspace*);
 };

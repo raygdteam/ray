@@ -24,7 +24,7 @@ public:
 	void BeginPlay() override {}
 	void Tick(f64) override;
 	void OnDestroy() override {}
-
+	
 	CameraComponent* GetCameraComponent()
 	{
 		return _cameraComponent;

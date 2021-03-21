@@ -10,12 +10,10 @@ void CameraComponent::UpdateMVP()
 	Transform* transform = _parent->GetTransform();
 	FVector3 pos = FVector3 { transform->Position.x, transform->Position.y, .0f };
 
-
-	// TODO: assumes 1280x720
 	FMatrix4x4 translation = FMatrix4x4::Identity().Translate(pos)
 		* FMatrix4x4::Identity().RotationX(0.f)
 		* FMatrix4x4::Identity().Scale(1.f/Zoom);
-	_projection = FMatrix4x4::Orthographic(1280, 720, .0001f, 100000.f);
+	_projection = FMatrix4x4::Orthographic(ViewportSize.x, ViewportSize.y, .0001f, 100000.f);
 	_view = translation.Inverse();
 	_viewProjection = _view * _projection;
 	

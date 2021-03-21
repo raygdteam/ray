@@ -172,12 +172,14 @@
     <ClCompile Include="ui2\ext\imgui_tables.cpp">
       <Filter>ui2\ext</Filter>
     </ClCompile>
-    <ClCompile Include="ui2\objects\label.cpp" />
     <ClCompile Include="ui2\objects\image.cpp">
       <Filter>ui2\objects</Filter>
     </ClCompile>
     <ClCompile Include="world\components\rendering_properties.cpp">
       <Filter>world\components</Filter>
+    </ClCompile>
+    <ClCompile Include="ui2\objects\label.cpp">
+      <Filter>ui2\objects</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

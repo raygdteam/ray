@@ -123,10 +123,22 @@
     <ClInclude Include="windows\level_chooser.hpp">
       <Filter>windows</Filter>
     </ClInclude>
+    <ClInclude Include="windows\about_window.hpp">
+      <Filter>windows</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="renderer\render_pass.hpp">
       <Filter>renderer</Filter>
+    </None>
+    <None Include="windows\dockspace.hpp">
+      <Filter>windows</Filter>
+    </None>
+    <None Include="windows\dockspace.cpp">
+      <Filter>windows</Filter>
+    </None>
+    <None Include="windows\about_window.cpp">
+      <Filter>windows</Filter>
     </None>
   </ItemGroup>
 </Project>

@@ -1,11 +1,11 @@
 #include "editor_ui.hpp"
 
-
-
 #include "editor/context/context.hpp"
 
 #include <engine/ui2/ext/imgui.h>
 #include <engine/ui2/ext/imgui_internal.h>
+
+#include "editor/windows/dockspace.hpp"
 
 EditorUi::EditorUi()
 {
@@ -18,6 +18,7 @@ void EditorUi::Initialize(IPlatformWindow* window)
 	
 	_rootObject = new UiRootObject();
 	_rootObject->Initialize(window);
+	_rootObject->SetDockspace(new EdDockspace());
 
 	_rootObject->Tick();
 	ImGui::DockBuilderRemoveNode(1);

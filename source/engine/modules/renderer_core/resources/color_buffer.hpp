@@ -4,7 +4,7 @@
 
 #pragma clang diagnostic ignored "-Wpessimizing-move"
 
-class ColorBuffer : public GpuPixelBuffer
+class RAY_RENDERERCORE_API ColorBuffer : public GpuPixelBuffer
 {
 private:
 	float _clearColor[4]; // TODO: class Color

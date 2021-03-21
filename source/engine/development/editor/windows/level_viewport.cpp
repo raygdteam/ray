@@ -4,6 +4,7 @@
 #include "editor/engine/engine.hpp"
 #include "engine/ui2/ext/imgui.h"
 #include "engine/ui2/objects/image.hpp"
+#include "renderer_core/resources/buffer_manager.hpp"
 
 EdLevelViewport::EdLevelViewport()
 {
@@ -15,8 +16,21 @@ EdLevelViewport::EdLevelViewport()
 
 void EdLevelViewport::Tick()
 {
-	//float width = static_cast<float>(ImGui::GetWindowContentRegionMax().x - ImGui::GetWindowContentRegionMin().x);
-	//float height = static_cast<float>(ImGui::GetWindowContentRegionMax().y - ImGui::GetWindowContentRegionMin().y);
+	static u32 oldWidth;
+	static u32 oldHeight;
+	
+	u32 width = static_cast<u32>(ImGui::GetWindowContentRegionMax().x - ImGui::GetWindowContentRegionMin().x);
+	u32 height = static_cast<u32>(ImGui::GetWindowContentRegionMax().y - ImGui::GetWindowContentRegionMin().y);
+
+	if ((width != oldWidth || height != oldHeight) && width < 10000 && height < 10000)
+	{
+		gSceneColorBuffer.Reset(width, height, DXGI_FORMAT_R8G8B8A8_UNORM, "gSceneColorBuffer");
+		
+		oldWidth = width;
+		oldHeight = height;
+
+		gEditorEngine->ResizeCameraViewport({ f32(width), f32(height) });
+	}
 }
 
 void EdLevelViewport::LateTick()
