@@ -142,10 +142,6 @@ void World::Initialize(IPlatformWindow* window)
 		_renderer->Initialize(window);
 	}
 	
-	// load level
-	String name("../../engine/resources/level.json");
-	LoadLevelInternal(name);
-	
 	if (window == nullptr) return;
 
 	/* BUG: assuming no server build */
@@ -235,6 +231,12 @@ u64 World::GetMaterialIdForName(String& name)
 
 void World::LoadLevel(String& path)
 {
+	UnloadLevel();
+	LoadLevelInternal(path);
+}
+
+void World::UnloadLevel()
+{
 	for (MaterialInstance& materialInstance : _materialInstances)
 	{
 		materialInstance.Texture->Release();
@@ -243,16 +245,22 @@ void World::LoadLevel(String& path)
 	}
 
 	_materialInstances.Clear();
-	
-	Level* level = _levelData->Level;
 
-	for (Actor* actor : level->GetActors())
+	if (_levelData != nullptr && _levelData->Level != nullptr)
 	{
-		actor->OnDestroy();
-		delete actor;
+		Level* level = _levelData->Level;
+		
+		for (Actor* actor : level->GetActors())
+		{
+			actor->OnDestroy();
+			delete actor;
+		}
+
+		delete level;
 	}
 
-	delete level;
+	delete _levelData;
 	
-	LoadLevelInternal(path);
+	_primaryCameraActor = nullptr;
+	_levelData = nullptr;
 }

@@ -4,7 +4,9 @@
 
 enum EditorCmdType
 {
-	eLoadLevel
+	eInvalid = 0,
+	eLoadLevel,
+	eCloseLevel
 };
 
 struct EditorCommand

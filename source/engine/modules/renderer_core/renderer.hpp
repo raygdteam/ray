@@ -69,6 +69,7 @@ enum RendererName : u8
 
 typedef struct RAY_RENDERERCORE_API RendererStats
 {
+	size_t LastFrameDC = 0u;
 	size_t DrawCallsCount = 0u;
 
 	size_t AllocatedGpuMemory = 0u;

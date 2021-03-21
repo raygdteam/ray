@@ -1,3 +1,5 @@
+#include <core/core.hpp>
+#include <core/memory/new_delete_override.hpp>
 #include <core/debug/assert.hpp>
 #include <core/file_system/file_system.hpp>
 #include <core/object/file_archive.hpp>
@@ -266,11 +268,12 @@ IRResource* ResourceManager::LoadResourceSync(pcstr inName, ResourceType desired
 		}
 	}
 
+	gDbgLog->Log("Loading %s", inName);
+
 	u32 mappingEnd = strchr(inName + 1, '/') - inName;
 	check(mappingEnd != 0);
 
 	String mapping(inName, 0, mappingEnd + 1);
-	gDbgLog->Log("Mapping %s", mapping.c_str());
 
 	_mutex.Enter();
 

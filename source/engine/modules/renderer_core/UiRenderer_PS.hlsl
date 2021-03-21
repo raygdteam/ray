@@ -12,7 +12,7 @@ Texture2D Textures[2] : register(t0);
 SamplerState DefaultSampler : register(s0);
 
 float4 main(VertexOutput input) : SV_TARGET
-{
+{	
 	switch (input.textureIndex)
 	{
 		GET_TEXTURE(0)

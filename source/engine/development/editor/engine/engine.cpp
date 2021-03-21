@@ -42,6 +42,14 @@ void EditorEngine::ProcessCommands()
 			_world->LoadLevel(loadLevelCmd->Path);
 			gEditorLogger->Log(" END  Loading Level !!!");
 			_level = _world->_levelData->Level;
+
+			_editorUi.CmdLevelLoaded();
+		}
+		else if (cmd->Type == eCloseLevel)
+		{
+			_world->UnloadLevel();
+			_level = nullptr;
+			_editorUi.CmdCloseLevel();
 		}
 		
 		_pendingEditorCommands.pop();
@@ -70,7 +78,6 @@ void EditorEngine::Initialize(IEngineLoop* engineLoop)
 
 	_world = new World();
 	_world->Initialize(nullptr);
-	_level = _world->_levelData->Level;
 
 	_world->RendererInitialize(nullptr);
 
@@ -96,14 +103,19 @@ void EditorEngine::Tick()
 		
 	GraphicsContext& ctx = GraphicsContext::Begin();
 
-	gRenderer->Begin(gSceneColorBuffer, ctx);
+	if (_level != nullptr)
 	{
-		_world->RenderEditor(ctx);
+		gRenderer->Begin(gSceneColorBuffer, ctx);
+		{
+			_world->RenderEditor(ctx);
+		}
+		gRenderer->End(gSceneColorBuffer, ctx);
 	}
-	gRenderer->End(gSceneColorBuffer, ctx);
 	
 	gRenderer->Begin(gEditorColorBuffer, ctx);
-	_editorUi.Render(ctx);
+	{
+		_editorUi.Render(ctx);
+	}
 	gRenderer->End(gEditorColorBuffer, ctx);
 	gRenderer->Present(gEditorColorBuffer, ctx);
 	

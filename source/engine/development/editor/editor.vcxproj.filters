@@ -47,6 +47,9 @@
     <ClCompile Include="project\project_file.cpp">
       <Filter>project</Filter>
     </ClCompile>
+    <ClCompile Include="windows\level_chooser.cpp">
+      <Filter>windows</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="renderer">
@@ -116,6 +119,9 @@
     </ClInclude>
     <ClInclude Include="engine\editor_cmd.hpp">
       <Filter>engine</Filter>
+    </ClInclude>
+    <ClInclude Include="windows\level_chooser.hpp">
+      <Filter>windows</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -140,3 +140,5 @@ struct NonCopyable
 	NonCopyable(const NonCopyable&) = delete;
 	NonCopyable& operator = (const NonCopyable&) = delete;
 };
+
+#include <core/memory/new_delete_override.hpp>

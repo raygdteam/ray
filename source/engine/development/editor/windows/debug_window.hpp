@@ -7,3 +7,6 @@ public:
 	EdDebugWindow();
 	void Tick() override;
 };
+
+extern bool gShowDemoWindow;
+

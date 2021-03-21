@@ -1,9 +1,6 @@
 #include "editor_ui.hpp"
 
-#include <editor/windows/debug_window.hpp>
-#include <editor/windows/level_outline.hpp>
-#include <editor/windows/level_viewport.hpp>
-#include <editor/windows/log_window.hpp>
+
 
 #include "editor/context/context.hpp"
 
@@ -45,18 +42,49 @@ void EditorUi::Initialize(IPlatformWindow* window)
 
 	ImGui::EndFrame();
 	
-	_rootObject->AddWindow(new EdDebugWindow());
-	_rootObject->AddWindow(new EdLevelViewport());
-	_rootObject->AddWindow(new EdLevelOutline());
-	_rootObject->AddWindow(new EdLogWindow());
+	_levelChooser = new LevelChooser();
+	_rootObject->AddWindow(_levelChooser);
+
+	_debugWindow = new EdDebugWindow();
+	_levelViewport = new EdLevelViewport();
+	_levelOutline = new EdLevelOutline();
+	_logWindow = new EdLogWindow();
 }
 
 void EditorUi::Tick()
 {
 	_rootObject->Tick();
+	
+	if (gShowDemoWindow)
+		ImGui::ShowDemoWindow(&gShowDemoWindow);
 }
 
 void EditorUi::Render(GraphicsContext& ctx)
 {
 	_rootObject->RenderAll(ctx);
+}
+
+void EditorUi::CmdLevelLoaded()
+{
+	if (_levelChooser == nullptr) return;
+	
+	_rootObject->AddWindow(_debugWindow);
+	_rootObject->AddWindow(_levelViewport);
+	_rootObject->AddWindow(_levelOutline);
+	_rootObject->AddWindow(_logWindow);
+
+	_rootObject->RemoveWindow(_levelChooser);
+	delete _levelChooser;
+	_levelChooser = nullptr;
+}
+
+void EditorUi::CmdCloseLevel()
+{
+	_rootObject->RemoveWindow(_debugWindow);
+	_rootObject->RemoveWindow(_levelViewport);
+	_rootObject->RemoveWindow(_levelOutline);
+	_rootObject->RemoveWindow(_logWindow);
+
+	_levelChooser = new LevelChooser();
+	_rootObject->AddWindow(_levelChooser);
 }

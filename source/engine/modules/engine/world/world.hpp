@@ -92,6 +92,7 @@ public:
 	u64 GetMaterialIdForName(String& name);
 
 	void LoadLevel(String& path);
+	void UnloadLevel();
 	
 	ConditionVariable ReadyToTick;
 	ConditionVariable WorldTickFinished;

@@ -7,6 +7,11 @@ StaticQuadActor::StaticQuadActor()
 	ATD.Active = true;
 }
 
+StaticQuadActor::~StaticQuadActor()
+{
+	
+}
+
 void StaticQuadActor::Awake()
 {
 	
