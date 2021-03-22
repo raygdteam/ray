@@ -12,6 +12,7 @@ class RAY_ENGINE_API CameraComponent : public IComponent
 	FMatrix4x4 _view;
 	FMatrix4x4 _viewProjection;
 public:
+	FVector2 ViewportSize = { 1280, 720 };
 
 	void Init() override { UpdateMVP(); }
 	void Tick() override {}

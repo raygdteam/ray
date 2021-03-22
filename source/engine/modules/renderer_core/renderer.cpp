@@ -298,7 +298,7 @@ void IRenderer::OnResize(u32 width, u32 height)
 
 	// There is no need to reset gEditorColorBuffer when we don't use Editor
 	gEditorColorBuffer.Reset(width, height, DXGI_FORMAT_R8G8B8A8_UNORM, "gEditorColorBuffer");
-	gSceneColorBuffer.Reset(width, height, DXGI_FORMAT_R8G8B8A8_UNORM, "gSceneColorBuffer");
+	//gSceneColorBuffer.Reset(width, height, DXGI_FORMAT_R8G8B8A8_UNORM, "gSceneColorBuffer");
 	gDepthBuffer.Reset(width, height, DXGI_FORMAT_D32_FLOAT, "gDepthBuffer");
 
 	gCurrentBuffer = 0;

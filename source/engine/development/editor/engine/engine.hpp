@@ -35,6 +35,7 @@ public:
 	void ApplyMouseZoomOnViewport(f32 dz);
 	FVector2& GetCameraPos();
 	float* GetCameraZoom();
+	void ResizeCameraViewport(FVector2 size);
 	void RunCommand(EditorCommand* command);
 
 	float MouseDragSensitivity = 1.75f;

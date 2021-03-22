@@ -152,6 +152,7 @@
     <ClCompile Include="renderer\render_pass.cpp" />
     <ClCompile Include="renderer\shader.cpp" />
     <ClCompile Include="ui\editor_ui.cpp" />
+    <ClCompile Include="windows\actor_properties.cpp" />
     <ClCompile Include="windows\debug_window.cpp" />
     <ClCompile Include="windows\level_chooser.cpp" />
     <ClCompile Include="windows\level_outline.cpp" />
@@ -170,6 +171,8 @@
     <ClInclude Include="renderer\renderer.hpp" />
     <ClInclude Include="renderer\shader.hpp" />
     <ClInclude Include="ui\editor_ui.hpp" />
+    <ClInclude Include="windows\about_window.hpp" />
+    <ClInclude Include="windows\actor_properties.hpp" />
     <ClInclude Include="windows\debug_window.hpp" />
     <ClInclude Include="windows\level_chooser.hpp" />
     <ClInclude Include="windows\level_outline.hpp" />
@@ -204,6 +207,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="renderer\render_pass.hpp" />
+    <ClCompile Include="windows\dockspace.cpp" />
+    <ClInclude Include="windows\dockspace.hpp" />
+    <ClCompile Include="windows\about_window.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

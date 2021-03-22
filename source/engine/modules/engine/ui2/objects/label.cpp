@@ -7,6 +7,6 @@ UiLabel::UiLabel(UiWindow* window, String& text) : UiObject(window), _text(text)
 
 void UiLabel::Tick()
 {
-	ImGui::Text("%s", _text.AsRawStr());
+	ImGui::TextUnformatted(_text.AsRawStr());
 }
 

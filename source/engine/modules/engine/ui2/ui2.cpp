@@ -22,6 +22,13 @@ static void ImguiCallback(void* hWnd, u32 msg, u64 wParam, s64 lParam)
 void UiWindow::TickBegin()
 {
 	u32 pushCount = 0x0;
+
+	if (bDestroyOnClose && !_isOpen)
+	{
+		_parent->RemoveWindow(this);
+		delete this;
+		return;
+	}
 	
 	if (Size.x != 0.0f && Size.y != 0.0f)
 	{
@@ -45,7 +52,7 @@ void UiWindow::TickBegin()
 		bCenterOnFirstTime = false;
 	}
 
-	ImGui::Begin(Title.AsRawStr(), 0, bNoScrollbar ? ImGuiWindowFlags_NoScrollbar : 0);
+	ImGui::Begin(Title.AsRawStr(), bDestroyOnClose ? &_isOpen : nullptr, bNoScrollbar ? ImGuiWindowFlags_NoScrollbar : 0);
 	{
 		Size.x = ImGui::GetWindowWidth();
 		Size.y = ImGui::GetWindowHeight();
@@ -105,23 +112,10 @@ void UiRootObject::Tick()
 
 void UiRootObject::RunDockspace()
 {
-	ImGuiViewport* viewport = ImGui::GetMainViewport();
-	ImGuiWindowFlags window_flags = ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoDocking;
-	ImGui::SetNextWindowPos(viewport->GetWorkPos());
-	ImGui::SetNextWindowSize(viewport->GetWorkSize());
-	ImGui::SetNextWindowViewport(viewport->ID);
-	ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 0.0f);
-	ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
-	window_flags |= ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove;
-	window_flags |= ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoNavFocus;
-
-	ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
-	ImGui::Begin("DOCKSPACE", nullptr, window_flags);
-	ImGui::PopStyleVar();
-	ImGui::PopStyleVar(2);
-
-	ImGui::DockSpace(1, ImVec2(0, 0));
-	ImGui::End();
+	if (_dockspace != nullptr)
+	{
+		_dockspace->Tick();
+	}
 }
 
 void UiRootObject::RenderAll(GraphicsContext& gfxContext)
@@ -195,6 +189,7 @@ void UiRootObject::RenderAll(GraphicsContext& gfxContext)
 
 void UiRootObject::AddWindow(UiWindow* window)
 {
+	window->_parent = this;
 	_windows.PushBack(window);
 	if (window->IsDockingEnabled())
 		window->DockingOneTimeSetup();
@@ -205,7 +200,8 @@ void UiRootObject::RemoveWindow(UiWindow* window)
 	_windows.erase_first(window);
 }
 
-void UiRootObject::SetDockspaceEnabled(bool state)
+void UiRootObject::SetDockspace(UiDockspace* dockspace)
 {
-	_dockspaceEnabled = state;
+	dockspace->_parent = this;
+	_dockspace = dockspace;
 }

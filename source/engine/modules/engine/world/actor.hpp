@@ -33,6 +33,7 @@ class RAY_ENGINE_API Actor : public RayObject
 	friend class Level;
 	friend class World;
 	friend class IComponent;
+	friend class EdActorProperties;
 	
 	RAYOBJECT_BODY(Actor, RayObject);
 
@@ -87,7 +88,7 @@ public:
 	void Serialize(Archive&) override;
 	void Deserialize(Archive&) override;
 
-	inline String GetName()
+	inline String& GetName()
 	{
 		return Name;
 	}

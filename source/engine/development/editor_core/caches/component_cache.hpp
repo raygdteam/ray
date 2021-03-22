@@ -6,15 +6,14 @@
 
 class ComponentCache
 {
-	struct ComponentCacheEntry;
-	Array<ComponentCacheEntry> _cache;
+	Array<Type*> _cache;
 	Logger _log;
 
 public:
 	ComponentCache();
 	void Rebuild();
 
-	Array<ComponentCacheEntry>& GetCache();
+	Array<Type*>& GetCache();
 };
 
 extern ComponentCache* gComponentCache;
