@@ -24,6 +24,7 @@ void ColorBuffer::CreateFromSwapChain(ID3D12Resource* inResource, pcstr debugNam
 	WCHAR dest[128];
 	MultiByteToWideChar(0, 0, debugName, debugNameSize, dest, debugNameSize + 1);
 	_resource->SetName(dest);
+	_debugName = String(debugName);
 #endif
 }
 

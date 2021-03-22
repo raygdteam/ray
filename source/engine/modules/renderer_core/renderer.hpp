@@ -3,6 +3,7 @@
 //fix it pls
 #undef CreateWindow
 #include <app_framework/base/platform_window.hpp>
+#include <core/math/vector.hpp>
 
 #include "ray_renderer_core_class_helper.hpp"
 #include "resources/gpu_buffer.hpp"
@@ -15,7 +16,6 @@
 #include <d3d12.h>
 #include <dxgi1_4.h>
 
-#include "core/math/vector.hpp"
 
 class CommandListManager;
 class CommandContext;
@@ -40,6 +40,8 @@ class RingBuffer;
 class UploadBuffer;
 class ColorBuffer;
 
+class Logger;
+
 // ============================= GLOBAL VARIABLES ============================= //
 
 extern CommandListManager gCommandListManager;
@@ -53,6 +55,8 @@ extern GpuResourceAllocator<GpuPixelBufferMemoryPool> gPixelBufferAllocator;
 extern RingBuffer gRingBuffer;
 extern RAY_RENDERERCORE_API UploadBuffer* gUploadBuffer;
 extern DescriptorAllocator gDescriptorAllocator[];
+
+extern Logger* gRendererLogger;
 
 inline D3D12_CPU_DESCRIPTOR_HANDLE RAY_RENDERERCORE_API AllocateDescriptor(D3D12_DESCRIPTOR_HEAP_TYPE type, u32 count = 1)
 {

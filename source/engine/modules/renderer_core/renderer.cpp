@@ -19,6 +19,7 @@
 #include <d3dcompiler.h>
 
 #include <engine/state/state.hpp>
+#include <core/log/log.hpp>
 
 CommandListManager gCommandListManager;
 ContextManager gContextManager;
@@ -28,6 +29,7 @@ GpuResourceAllocator<GpuBufferMemoryPool> gBufferAllocator;
 GpuResourceAllocator<GpuPixelBufferMemoryPool> gPixelBufferAllocator;
 RingBuffer gRingBuffer;
 RAY_RENDERERCORE_API UploadBuffer* gUploadBuffer;
+Logger* gRendererLogger = nullptr;
 
 RendererStats_t sRendererStats;
 
@@ -45,8 +47,11 @@ RendererInfo_t IRenderer::sRendererInfo;
 
 void IRenderer::Initialize(IPlatformWindow* window) noexcept
 {
-	ray_assert(_swapChain == nullptr, "Renderer has been already initialized")
+	ray_assert(_swapChain == nullptr, "Renderer has been already initialized");
 
+	gRendererLogger = new Logger("renderer_core");
+
+	gRendererLogger->Log("Starting renderer initialization...");
 	ID3D12Debug* spDebugController0;
 	ID3D12Debug1* spDebugController1;
 	check(D3D12GetDebugInterface(IID_PPV_ARGS(&spDebugController0)) == S_OK)
@@ -88,6 +93,7 @@ void IRenderer::Initialize(IPlatformWindow* window) noexcept
 	}
 
 	sRendererInfo.MaxGpuMemorySize = maxSize;
+	gRendererLogger->Log("Detected video memory size %u MB", maxSize / 1024 / 1024);
 
 	D3D12_FEATURE_DATA_D3D12_OPTIONS  options;
 	gDevice->CheckFeatureSupport(D3D12_FEATURE_D3D12_OPTIONS, &options, sizeof(options));
@@ -138,6 +144,8 @@ void IRenderer::Initialize(IPlatformWindow* window) noexcept
 	});
 	
 	window->RegisterWindowResizeEventCallback(a);
+
+	gRendererLogger->Log("Renderer initialization has been finished");
 }
 
 struct PresentVertex

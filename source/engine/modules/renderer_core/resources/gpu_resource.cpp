@@ -1,6 +1,7 @@
 #include "gpu_resource.hpp"
 #include <renderer_core/dx12_helper_functions.hpp>
 #include <renderer_core/renderer.hpp>
+#include <core/log/log.hpp>
 
 template<typename TGpuMemoryPool>
 void GpuResourceAllocator<TGpuMemoryPool>::Allocate(GpuResource& resource) noexcept
@@ -34,7 +35,8 @@ void GpuResourceAllocator<TGpuMemoryPool>::Allocate(GpuResource& resource) noexc
 template<typename TGpuMemoryPool>
 void GpuResourceAllocator<TGpuMemoryPool>::Free(GpuResource& resource) noexcept
 {
-	resource._resource->Release();
+	u32 refCount = resource._resource->Release();
+	gRendererLogger->Log("Releasing GpuResource. Name: %s Reference count: %u", resource._debugName.c_str(), refCount);
 	if (resource.IsManaged())
 	{
 		resource._underlyingPool->_availableSize += resource._resourceSize;
@@ -58,5 +60,6 @@ void GpuResource::Create(GpuResourceAllocator<TGpuMemoryPool>& allocator, GpuRes
 	MultiByteToWideChar(0, 0, debugName, debugNameSize, dest, debugNameSize);
 	dest[debugNameSize] = '\0';
 	_resource->SetName(dest);
+	_debugName = String(debugName);
 #endif
 }
