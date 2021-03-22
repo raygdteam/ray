@@ -8,6 +8,7 @@
 #include <editor/windows/level_viewport.hpp>
 #include <editor/windows/log_window.hpp>
 #include <editor/windows/level_chooser.hpp>
+#include <editor/windows/actor_properties.hpp>
 
 class EditorUi
 {
@@ -19,6 +20,8 @@ class EditorUi
 	EdLevelOutline* _levelOutline = nullptr;
 	EdLevelViewport* _levelViewport = nullptr;
 	EdLogWindow* _logWindow = nullptr;
+	EdActorProperties* _actorProperties = nullptr;
+
 public:
 	EditorUi();
 	void Initialize(IPlatformWindow* window);

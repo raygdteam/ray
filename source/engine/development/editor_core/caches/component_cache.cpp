@@ -3,12 +3,6 @@
 #include <engine/world/components/component_base.hpp>
 #include "component_cache.hpp"
 
-
-struct ComponentCache::ComponentCacheEntry
-{
-	Type* Type;
-};
-
 ComponentCache::ComponentCache() : _log("ComponentCache")
 {
 }
@@ -25,7 +19,7 @@ void ComponentCache::Rebuild()
 
 		if (dynamic_cast<IComponent*>(obj) != nullptr)
 		{
-			_cache.PushBack(ComponentCacheEntry{ type });
+			_cache.PushBack(type);
 		}
 
 		delete obj;
@@ -34,7 +28,7 @@ void ComponentCache::Rebuild()
 	_log.Log("Cached %llu objects out of %llu total.", _cache.Size(), types.Size());
 }
 
-Array<ComponentCache::ComponentCacheEntry>& ComponentCache::GetCache()
+Array<Type*>& ComponentCache::GetCache()
 {
 	return _cache;
 }

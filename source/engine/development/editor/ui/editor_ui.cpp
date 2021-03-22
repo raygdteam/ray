@@ -32,12 +32,13 @@ void EditorUi::Initialize(IPlatformWindow* window)
 		u32 dockMain = 1;
 		u32 dockRight = ImGui::DockBuilderSplitNode(1, ImGuiDir_Right, 0.25f, nullptr, &dockMain);
 		u32 dockRightBottom = ImGui::DockBuilderSplitNode(dockRight, ImGuiDir_Down, 0.20f, nullptr, &dockRight);
-		u32 dockLeftTop = ImGui::DockBuilderSplitNode(dockMain, ImGuiDir_Up, 0.70f, nullptr, &dockMain);
+		u32 dockLeftTop = ImGui::DockBuilderSplitNode(dockMain, ImGuiDir_Up, 0.90f, nullptr, &dockMain);
 		
 		ImGui::DockBuilderDockWindow("Level Outline", dockRight);
 		ImGui::DockBuilderDockWindow("Log", dockMain);
 		ImGui::DockBuilderDockWindow("Level Viewport", dockLeftTop);
 		ImGui::DockBuilderDockWindow("EdDebugWindow", dockRightBottom);
+		ImGui::DockBuilderDockWindow("Actor Properties", dockRightBottom);
 		ImGui::DockBuilderFinish(1);
 	}
 
@@ -50,6 +51,7 @@ void EditorUi::Initialize(IPlatformWindow* window)
 	_levelViewport = new EdLevelViewport();
 	_levelOutline = new EdLevelOutline();
 	_logWindow = new EdLogWindow();
+	_actorProperties = new EdActorProperties();
 }
 
 void EditorUi::Tick()
@@ -73,6 +75,7 @@ void EditorUi::CmdLevelLoaded()
 	_rootObject->AddWindow(_levelViewport);
 	_rootObject->AddWindow(_levelOutline);
 	_rootObject->AddWindow(_logWindow);
+	_rootObject->AddWindow(_actorProperties);
 
 	_rootObject->RemoveWindow(_levelChooser);
 	delete _levelChooser;
@@ -85,6 +88,7 @@ void EditorUi::CmdCloseLevel()
 	_rootObject->RemoveWindow(_levelViewport);
 	_rootObject->RemoveWindow(_levelOutline);
 	_rootObject->RemoveWindow(_logWindow);
+	_rootObject->RemoveWindow(_actorProperties);
 
 	_levelChooser = new LevelChooser();
 	_rootObject->AddWindow(_levelChooser);
