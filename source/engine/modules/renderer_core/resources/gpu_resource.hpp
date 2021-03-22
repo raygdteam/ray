@@ -96,7 +96,7 @@ public:
 		_memoryManager.Destroy();
 	}
 
-	NODISCARD GpuResource&& Allocate(GpuResourceDescription& desc) noexcept;
+	void Allocate(GpuResource& resource) noexcept;
 	void Free(GpuResource& resource) noexcept;
 
 };

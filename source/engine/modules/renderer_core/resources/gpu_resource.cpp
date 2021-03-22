@@ -3,8 +3,9 @@
 #include <renderer_core/renderer.hpp>
 
 template<typename TGpuMemoryPool>
-NODISCARD GpuResource&& GpuResourceAllocator<TGpuMemoryPool>::Allocate(GpuResourceDescription& desc) noexcept
+void GpuResourceAllocator<TGpuMemoryPool>::Allocate(GpuResource& resource) noexcept
 {
+	auto desc = resource.GetDesc();
 	D3D12_RESOURCE_DESC resourceDesc = ConvertResourceDescToD3D12_Type(desc);
 	resourceDesc.Alignment = 0;
 
@@ -14,8 +15,7 @@ NODISCARD GpuResource&& GpuResourceAllocator<TGpuMemoryPool>::Allocate(GpuResour
 	if (!_currentPool->IsEnough(resourceAllocationInfo.SizeInBytes))
 		_currentPool = &_memoryManager.RequestPool(resourceAllocationInfo.SizeInBytes);
 
-	ID3D12Resource* resource;
-	auto hr = gDevice->CreatePlacedResource(_currentPool->_heap, _currentPool->_offset, &resourceDesc, D3D12_RESOURCE_STATE_COPY_DEST, desc.ClearValue, IID_PPV_ARGS(&resource));
+	auto hr = gDevice->CreatePlacedResource(_currentPool->_heap, _currentPool->_offset, &resourceDesc, D3D12_RESOURCE_STATE_COPY_DEST, desc.ClearValue, IID_PPV_ARGS(&resource._resource));
 
 	ray_assert(hr == S_OK, "Could not create gpu resource");
 
@@ -25,15 +25,10 @@ NODISCARD GpuResource&& GpuResourceAllocator<TGpuMemoryPool>::Allocate(GpuResour
 
 	IRenderer::sRendererStats.UsedGpuMemory += resourceAllocationInfo.SizeInBytes;
 
-	GpuResource ret;
-	ret._desc = std::move(desc);
-	ret._underlyingPool = _currentPool;
-	ret._resource = resource;
-	ret._resourceSize = resourceAllocationInfo.SizeInBytes;
-	ret._usageState = D3D12_RESOURCE_STATE_COPY_DEST;
-	ret._bManaged = true;
-
-	return std::move(ret);
+	resource._underlyingPool = _currentPool;
+	resource._resourceSize = resourceAllocationInfo.SizeInBytes;
+	resource._usageState = D3D12_RESOURCE_STATE_COPY_DEST;
+	resource._bManaged = true;
 }
 
 template<typename TGpuMemoryPool>
@@ -51,7 +46,8 @@ void GpuResourceAllocator<TGpuMemoryPool>::Free(GpuResource& resource) noexcept
 template<typename TGpuMemoryPool>
 void GpuResource::Create(GpuResourceAllocator<TGpuMemoryPool>& allocator, GpuResourceDescription& desc, pcstr debugName) noexcept
 {
-	*this = std::move(allocator.Allocate(desc));
+	_desc = desc;
+	allocator.Allocate(*this);
 
 #if defined(RAY_DEBUG) || defined(RAY_DEVELOPMENT)
 	if (debugName == nullptr)
