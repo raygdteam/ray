@@ -240,7 +240,6 @@ void World::UnloadLevel()
 	for (MaterialInstance& materialInstance : _materialInstances)
 	{
 		materialInstance.Texture->Release();
-		materialInstance.Texture->Destroy();
 		delete materialInstance.Texture;
 	}
 
