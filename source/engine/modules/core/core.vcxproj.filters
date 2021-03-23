@@ -158,6 +158,9 @@
     <ClInclude Include="json\json.hpp">
       <Filter>json</Filter>
     </ClInclude>
+    <ClInclude Include="lib\json.hpp">
+      <Filter>lib</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="context">
