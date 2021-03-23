@@ -1,56 +1,50 @@
 #include "gpu_memory_pool.hpp"
 #include <renderer_core/renderer.hpp>
+#include <core/log/log.hpp>
 
-void GpuMemoryPool::Create(size_t maxMemoryPoolSize, size_t index) noexcept
+GpuMemoryPool::GpuMemoryPool(size_t poolSize, size_t poolIndex, D3D12_HEAP_FLAGS flags) noexcept
+	: IMemoryPool(poolSize, poolIndex)
+	, _allocator(poolSize)
 {
-	IMemoryPool::Create(maxMemoryPoolSize, index);
-
 	auto heapProps = DescribeHeapProps(D3D12_HEAP_TYPE_DEFAULT);
-	auto heapDesc = DescribeHeap(heapProps, D3D12_HEAP_FLAG_NONE, maxMemoryPoolSize);
+	auto heapDesc = DescribeHeap(heapProps, flags, poolSize);
 	MAYBE_UNUSED auto hr = gDevice->CreateHeap(&heapDesc, IID_PPV_ARGS(&_heap));
 	ray_assert(hr == S_OK, "Cannot create a gpu pool");
 
-	IRenderer::sRendererStats.AllocatedGpuMemory += maxMemoryPoolSize;
+	IRenderer::sRendererStats.AllocatedGpuMemory += poolSize;
+	gRendererLogger->Log("Allocating GpuMemoryPool. Allocated Gpu Memory: %u KB", IRenderer::sRendererStats.AllocatedGpuMemory / 1024);
+}
+
+bool GpuMemoryPool::IsEnough(size_t size) const noexcept
+{
+	return size <= _allocator.GetMaxAvailableSpace();
+}
+
+size_t GpuMemoryPool::Allocate(size_t size) noexcept
+{
+	return  _allocator.Allocate(size);
+}
+
+void GpuMemoryPool::Free(size_t offset, size_t size) noexcept
+{
+	_allocator.Free(offset, size);
 }
 
 void GpuMemoryPool::Destroy() noexcept
 {
 	_heap->Release();
-	IRenderer::sRendererStats.AllocatedGpuMemory -= this->_maxMemoryPoolSize;
+	IRenderer::sRendererStats.AllocatedGpuMemory -= this->_poolSize;
+	gRendererLogger->Log("Releasing GpuMemoryPool. Allocated Gpu Memory: %u KB", IRenderer::sRendererStats.AllocatedGpuMemory / 1024);
 }
 
-void GpuTextureMemoryPool::Create(size_t maxMemoryPoolSize, size_t index) noexcept
-{
-	IMemoryPool::Create(maxMemoryPoolSize, index);
+GpuTextureMemoryPool::GpuTextureMemoryPool(size_t poolSize, size_t poolIndex)
+	: GpuMemoryPool(poolSize, poolIndex, D3D12_HEAP_FLAG_ALLOW_ONLY_NON_RT_DS_TEXTURES)
+{}
 
-	auto heapProps = DescribeHeapProps(D3D12_HEAP_TYPE_DEFAULT);
-	auto heapDesc = DescribeHeap(heapProps, D3D12_HEAP_FLAG_ALLOW_ONLY_NON_RT_DS_TEXTURES, maxMemoryPoolSize);
-	MAYBE_UNUSED auto hr = gDevice->CreateHeap(&heapDesc, IID_PPV_ARGS(&_heap));
-	ray_assert(hr == S_OK, "Cannot create a gpu pool");
+GpuBufferMemoryPool::GpuBufferMemoryPool(size_t poolSize, size_t poolIndex)
+	: GpuMemoryPool(poolSize, poolIndex, D3D12_HEAP_FLAG_ALLOW_ONLY_BUFFERS)
+{}
 
-	IRenderer::sRendererStats.AllocatedGpuMemory += maxMemoryPoolSize;
-}
-
-void GpuBufferMemoryPool::Create(size_t maxMemoryPoolSize, size_t index) noexcept
-{
-	IMemoryPool::Create(maxMemoryPoolSize, index);
-
-	auto heapProps = DescribeHeapProps(D3D12_HEAP_TYPE_DEFAULT);
-	auto heapDesc = DescribeHeap(heapProps, D3D12_HEAP_FLAG_ALLOW_ONLY_BUFFERS, maxMemoryPoolSize);
-	MAYBE_UNUSED auto hr = gDevice->CreateHeap(&heapDesc, IID_PPV_ARGS(&_heap));
-	ray_assert(hr == S_OK, "Cannot create a gpu pool");
-
-	IRenderer::sRendererStats.AllocatedGpuMemory += maxMemoryPoolSize;
-}
-
-void GpuPixelBufferMemoryPool::Create(size_t maxMemoryPoolSize, size_t index) noexcept
-{
-	IMemoryPool::Create(maxMemoryPoolSize, index);
-
-	auto heapProps = DescribeHeapProps(D3D12_HEAP_TYPE_DEFAULT);
-	auto heapDesc = DescribeHeap(heapProps, D3D12_HEAP_FLAG_ALLOW_ONLY_RT_DS_TEXTURES, maxMemoryPoolSize);
-	MAYBE_UNUSED auto hr = gDevice->CreateHeap(&heapDesc, IID_PPV_ARGS(&_heap));
-	ray_assert(hr == S_OK, "Cannot create a gpu pool");
-
-	IRenderer::sRendererStats.AllocatedGpuMemory += maxMemoryPoolSize;
-}
+GpuPixelBufferMemoryPool::GpuPixelBufferMemoryPool(size_t poolSize, size_t poolIndex)
+	: GpuMemoryPool(poolSize, poolIndex, D3D12_HEAP_FLAG_ALLOW_ONLY_RT_DS_TEXTURES)
+{}

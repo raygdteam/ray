@@ -3,7 +3,7 @@
 
 #include <core/core.hpp>
 #include <core/lib/string.hpp>
-#include <core/memory/memory_manager.hpp>
+#include <core/memory/memory_pool_manager.hpp>
 #include "gpu_memory_pool.hpp"
 #include <renderer_core/descriptor_heap.hpp>
 #include <renderer_core/renderer_core.hpp>
@@ -76,7 +76,7 @@ template <typename TGpuMemoryPool>
 class RAY_RENDERERCORE_API GpuResourceAllocator
 {
 protected:
-	MemoryManager<TGpuMemoryPool> _memoryManager;
+	MemoryPoolManager<TGpuMemoryPool> _memoryManager;
 	TGpuMemoryPool* _currentPool;
 
 public:
@@ -88,7 +88,7 @@ public:
 	void Initialize(size_t preferredSize) noexcept
 	{
 		_memoryManager.Initialize(preferredSize);
-		_currentPool = &_memoryManager.RequestPool(preferredSize);
+		_currentPool = _memoryManager.RequestPool(preferredSize);
 	}
 
 	virtual void Destroy() noexcept
@@ -115,7 +115,8 @@ protected:
 	D3D12_RESOURCE_STATES _usageState;
 	D3D12_RESOURCE_STATES _transitioningState;
 	u64 _resourceSize;
-	ray::IMemoryPool* _underlyingPool;
+	u64 _resourceOffset;
+	GpuMemoryPool* _underlyingPool;
 	GpuResourceDescription _desc;
 	bool _bManaged;
 	String _debugName;
@@ -126,6 +127,7 @@ public:
 		, _usageState(D3D12_RESOURCE_STATE_COMMON)
 		, _transitioningState(static_cast<D3D12_RESOURCE_STATES>(-1))
 		, _resourceSize(0)
+		, _resourceOffset(0)
 		, _underlyingPool(nullptr)
 		, _bManaged(true)
 		, _debugName("GpuResource::Unnamed")
@@ -160,6 +162,7 @@ public:
 		{
 			Release();
 			_resourceSize = 0;
+			_resourceOffset = 0;
 		}
 	}
 
@@ -193,7 +196,7 @@ public:
 public:
 	ID3D12Resource* GetNativeResource() const noexcept { return _resource; }
 	u64 GetResourceSize() const noexcept { return _resourceSize; }
-	ray::IMemoryPool* GetUnderlyingPool() const noexcept { return _underlyingPool; }
+	GpuMemoryPool* GetUnderlyingPool() const noexcept { return _underlyingPool; }
 	GpuResourceDescription GetDesc() const noexcept { return _desc; }
 	// whether resource is managed by allocator
 	bool IsManaged() const noexcept { return _bManaged; }

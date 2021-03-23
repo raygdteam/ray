@@ -50,6 +50,12 @@
     <ClCompile Include="json\json.cpp">
       <Filter>json</Filter>
     </ClCompile>
+    <ClCompile Include="memory\pool_allocator.cpp">
+      <Filter>memory</Filter>
+    </ClCompile>
+    <ClCompile Include="memory\fast_pool_allocator.cpp">
+      <Filter>memory</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="core.hpp" />
@@ -157,6 +163,15 @@
     </ClInclude>
     <ClInclude Include="json\json.hpp">
       <Filter>json</Filter>
+    </ClInclude>
+    <ClInclude Include="memory\memory_pool_manager.hpp">
+      <Filter>memory</Filter>
+    </ClInclude>
+    <ClInclude Include="memory\pool_allocator.hpp">
+      <Filter>memory</Filter>
+    </ClInclude>
+    <ClInclude Include="memory\fast_pool_allocator.hpp">
+      <Filter>memory</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -1,64 +1,75 @@
 #pragma once 
 #include <core/core.hpp>
 #include <core/memory/memory_pool.hpp>
+#include <core/memory/pool_allocator.hpp>
 #include <renderer_core/dx12_helper_functions.hpp>
 #include <d3d12.h>
 
-class GpuMemoryPool : public ray::IMemoryPool
+class GpuMemoryPool : public IMemoryPool
 {
 private:
 	ID3D12Heap* _heap;
+	PoolAllocator _allocator;
 
 public:
+	GpuMemoryPool()
+		: IMemoryPool(0, 0)
+	{}
+
+	GpuMemoryPool(size_t poolSize, size_t poolIndex, D3D12_HEAP_FLAGS flags) noexcept;
 	~GpuMemoryPool() override {}
 
 public:
-	void Create(size_t maxMemoryPoolSize, size_t index) noexcept override;
 	void Destroy() noexcept override;
+	bool IsEnough(size_t size) const noexcept override;
+	void* GetPool() const noexcept override
+	{
+		return _heap;
+	}
+
+	size_t Allocate(size_t size) noexcept override;
+	void Free(size_t offset, size_t size) noexcept override;
 
 };
 
-class GpuTextureMemoryPool : public ray::IMemoryPool
+class GpuTextureMemoryPool : public GpuMemoryPool
 {
 	friend class GpuResourceAllocator<GpuTextureMemoryPool>;
 
-private:
-	ID3D12Heap* _heap;
-
 public:
+	GpuTextureMemoryPool()
+		: GpuMemoryPool()
+	{}
+
+	GpuTextureMemoryPool(size_t poolSize, size_t poolIndex);
 	~GpuTextureMemoryPool() override {}
-
-public:
-	void Create(size_t maxMemoryPoolSize, size_t index) noexcept override;
 
 };
 
-class GpuBufferMemoryPool : public ray::IMemoryPool
+class GpuBufferMemoryPool : public GpuMemoryPool
 {
 	friend class GpuResourceAllocator<GpuBufferMemoryPool>;
 
-private:
-	ID3D12Heap* _heap;
-
 public:
+	GpuBufferMemoryPool()
+		: GpuMemoryPool()
+	{}
+
+	GpuBufferMemoryPool(size_t poolSize, size_t poolIndex);
 	~GpuBufferMemoryPool() override {}
-
-public:
-	void Create(size_t maxMemoryPoolSize, size_t index) noexcept override;
 
 };
 
-class GpuPixelBufferMemoryPool : public ray::IMemoryPool
+class GpuPixelBufferMemoryPool : public GpuMemoryPool
 {
 	friend class GpuResourceAllocator<GpuPixelBufferMemoryPool>;
 
-private:
-	ID3D12Heap* _heap;
-
 public:
+	GpuPixelBufferMemoryPool()
+		: GpuMemoryPool()
+	{}
+
+	GpuPixelBufferMemoryPool(size_t poolSize, size_t poolIndex);
 	~GpuPixelBufferMemoryPool() override {}
-
-public:
-	void Create(size_t maxMemoryPoolSize, size_t index) noexcept override;
 
 };
