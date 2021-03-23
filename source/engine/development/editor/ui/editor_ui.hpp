@@ -12,6 +12,15 @@
 
 class EditorUi
 {
+	enum EditorUiState
+	{
+		eInvalid = 0,
+		eChooseLevel,
+		eEditingLevel
+	};
+
+	EditorUiState _state;
+	
 	UiRootObject* _rootObject = nullptr;
 
 	LevelChooser* _levelChooser = nullptr;
