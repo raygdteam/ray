@@ -1,6 +1,9 @@
 #include "dockspace.hpp"
 
-
+#ifdef RAY_PLATFORM_WIN
+	#include <windows.h>
+	#include <commdlg.h>
+#endif
 
 #include "about_window.hpp"
 #include "editor/engine/engine.hpp"
@@ -8,9 +11,36 @@
 
 void EdDockspace::MenuBar()
 {
-	if (ImGui::BeginMenu("File"))
+#ifdef RAY_PLATFORM_WIN
+	if (ImGui::BeginMenu("Level"))
 	{
-		if (ImGui::MenuItem("Close Level", nullptr))
+		if (ImGui::MenuItem("Open", nullptr))
+		{
+			OPENFILENAME open_file_name = {};
+
+			char file_name[MAX_PATH] = {};
+
+			open_file_name.lStructSize = sizeof(open_file_name);
+			open_file_name.hwndOwner = NULL;
+			open_file_name.lpstrFilter = "Json Files (*.json)\0*.json\0";
+			open_file_name.lpstrFile = file_name;
+			open_file_name.nMaxFile = MAX_PATH;
+			open_file_name.Flags = OFN_EXPLORER | OFN_FILEMUSTEXIST | OFN_HIDEREADONLY;
+			open_file_name.lpstrDefExt = "";
+
+			if (GetOpenFileName(&open_file_name))
+			{
+				EditorCommand* cmd1 = new EditorCommand();
+				cmd1->Type = eCloseLevel;
+				gEditorEngine->RunCommand(cmd1);
+
+				EditorCommand_LoadLevel* cmd = new EditorCommand_LoadLevel;
+				cmd->Path = String(file_name);
+				gEditorEngine->RunCommand(cmd);
+			}
+		}
+
+		if (ImGui::MenuItem("Close", nullptr))
 		{
 			EditorCommand* cmd = new EditorCommand();
 			cmd->Type = eCloseLevel;
@@ -18,6 +48,7 @@ void EdDockspace::MenuBar()
 		}
 		ImGui::EndMenu();
 	}
+#endif
 
 	if (ImGui::BeginMenu("Help"))
 	{

@@ -50,9 +50,13 @@
     <ClCompile Include="windows\level_chooser.cpp">
       <Filter>windows</Filter>
     </ClCompile>
-    <ClCompile Include="windows\dockspace.cpp" />
-    <ClCompile Include="windows\about_window.cpp" />
     <ClCompile Include="windows\actor_properties.cpp">
+      <Filter>windows</Filter>
+    </ClCompile>
+    <ClCompile Include="windows\dockspace.cpp">
+      <Filter>windows</Filter>
+    </ClCompile>
+    <ClCompile Include="windows\about_window.cpp">
       <Filter>windows</Filter>
     </ClCompile>
   </ItemGroup>
@@ -131,8 +135,10 @@
     <ClInclude Include="windows\about_window.hpp">
       <Filter>windows</Filter>
     </ClInclude>
-    <ClInclude Include="windows\dockspace.hpp" />
     <ClInclude Include="windows\actor_properties.hpp">
+      <Filter>windows</Filter>
+    </ClInclude>
+    <ClInclude Include="windows\dockspace.hpp">
       <Filter>windows</Filter>
     </ClInclude>
   </ItemGroup>
