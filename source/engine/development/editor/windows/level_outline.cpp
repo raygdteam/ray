@@ -182,3 +182,8 @@ void EdLevelOutline::Tick()
 	//ImGui::End();
 }
 
+void EdLevelOutline::Reset()
+{
+	gSelectedActor = nullptr;
+}
+

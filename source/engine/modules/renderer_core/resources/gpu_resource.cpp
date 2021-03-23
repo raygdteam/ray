@@ -40,6 +40,7 @@ void GpuResourceAllocator<TGpuMemoryPool>::Free(GpuResource& resource) noexcept
 	if (resource.IsManaged())
 	{
 		resource._underlyingPool->_availableSize += resource._resourceSize;
+		resource._underlyingPool->_offset -= resource._resourceSize;
 		IRenderer::sRendererStats.UsedGpuMemory -= resource._resourceSize;
 	}
 	// TODO: MemorySegment

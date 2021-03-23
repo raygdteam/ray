@@ -65,10 +65,13 @@
 	template<typename MemoryPool>
 	MemoryPool& MemoryManager<MemoryPool>::RequestPool(size_t requestedSize) noexcept
 	{
-		auto& pool = _listOfPools.Buffer[_listOfPools.ElementsCount - 1];
+		for (size_t i = 0; i < _listOfPools.ElementsCount - 1; ++i)
+		{
+			auto& pool = _listOfPools.Buffer[i];
 
-		if (pool.IsEnough(requestedSize))
-			return pool;
+			if (pool.IsEnough(requestedSize))
+				return pool;
+		}
 
 		size_t size = requestedSize > _preferredPoolSize ? requestedSize : _preferredPoolSize;
 		return CreatePool(size);
