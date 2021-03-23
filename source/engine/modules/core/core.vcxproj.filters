@@ -173,6 +173,9 @@
     <ClInclude Include="memory\fast_pool_allocator.hpp">
       <Filter>memory</Filter>
     </ClInclude>
+    <ClInclude Include="lib\json.hpp">
+      <Filter>lib</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="context">

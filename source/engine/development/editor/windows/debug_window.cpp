@@ -47,6 +47,10 @@ void EdDebugWindow::Tick()
 
 	if (ImGui::Button("Load Level1"))
 	{
+		EditorCommand* cmd1 = new EditorCommand();
+		cmd1->Type = eCloseLevel;
+		gEditorEngine->RunCommand(cmd1);
+		
 		EditorCommand_LoadLevel* cmd = new EditorCommand_LoadLevel;
 		cmd->Path = String("../../engine/resources/level.json");
 		gEditorEngine->RunCommand(cmd);
@@ -54,6 +58,10 @@ void EdDebugWindow::Tick()
 	
 	if (ImGui::Button("Load Level2"))
 	{
+		EditorCommand* cmd1 = new EditorCommand();
+		cmd1->Type = eCloseLevel;
+		gEditorEngine->RunCommand(cmd1);
+		
 		EditorCommand_LoadLevel* cmd = new EditorCommand_LoadLevel;
 		cmd->Path = String("../../engine/resources/level2.json");
 		gEditorEngine->RunCommand(cmd);

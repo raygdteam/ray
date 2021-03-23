@@ -1,6 +1,8 @@
 #include "dockspace.hpp"
 
-
+#include <core/core.hpp>
+#include <windows.h>
+#include <commdlg.h>
 
 #include "about_window.hpp"
 #include "editor/engine/engine.hpp"
@@ -10,12 +12,39 @@ void EdDockspace::MenuBar()
 {
 	if (ImGui::BeginMenu("File"))
 	{
+		if (ImGui::MenuItem("Open Level...", nullptr))
+		{
+			OPENFILENAMEA openFileName = {};
+
+			char fileName[MAX_PATH] = {};
+
+			openFileName.lStructSize = sizeof(openFileName);
+			openFileName.hwndOwner = NULL;
+			openFileName.lpstrFilter = "Json Files (*.json)\0*.json\0";
+			openFileName.lpstrFile = fileName;
+			openFileName.nMaxFile = MAX_PATH;
+			openFileName.Flags = OFN_EXPLORER | OFN_FILEMUSTEXIST | OFN_HIDEREADONLY;
+			openFileName.lpstrDefExt = "";
+
+			if (GetOpenFileNameA(&openFileName))
+			{
+				EditorCommand* cmd1 = new EditorCommand();
+				cmd1->Type = eCloseLevel;
+				gEditorEngine->RunCommand(cmd1);
+
+				EditorCommand_LoadLevel* cmd = new EditorCommand_LoadLevel;
+				cmd->Path = String(fileName);
+				gEditorEngine->RunCommand(cmd);
+			}
+		}
+
 		if (ImGui::MenuItem("Close Level", nullptr))
 		{
 			EditorCommand* cmd = new EditorCommand();
 			cmd->Type = eCloseLevel;
 			gEditorEngine->RunCommand(cmd);
 		}
+		
 		ImGui::EndMenu();
 	}
 
@@ -25,6 +54,7 @@ void EdDockspace::MenuBar()
 		{
 			_parent->AddWindow(new EdAboutWindow());
 		}
+		
 		ImGui::EndMenu();
 	}
 }

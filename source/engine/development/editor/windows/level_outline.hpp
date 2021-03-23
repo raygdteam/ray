@@ -9,4 +9,6 @@ class EdLevelOutline : public UiWindow
 public:
 	EdLevelOutline();
 	void Tick() override;
+
+	void Reset();
 };

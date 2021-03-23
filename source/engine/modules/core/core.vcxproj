@@ -27,6 +27,7 @@
     <ClInclude Include="lib\algorithms.hpp" />
     <ClInclude Include="lib\array.hpp" />
     <ClInclude Include="lib\delegate.hpp" />
+    <ClInclude Include="lib\json.hpp" />
     <ClInclude Include="lib\queue.hpp" />
     <ClInclude Include="lib\scoped_allocation.hpp" />
     <ClInclude Include="lib\string.hpp" />

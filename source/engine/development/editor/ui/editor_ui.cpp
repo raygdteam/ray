@@ -52,6 +52,8 @@ void EditorUi::Initialize(IPlatformWindow* window)
 	_levelOutline = new EdLevelOutline();
 	_logWindow = new EdLogWindow();
 	_actorProperties = new EdActorProperties();
+
+	_state = eChooseLevel;
 }
 
 void EditorUi::Tick()
@@ -80,10 +82,14 @@ void EditorUi::CmdLevelLoaded()
 	_rootObject->RemoveWindow(_levelChooser);
 	delete _levelChooser;
 	_levelChooser = nullptr;
+
+	_state = eEditingLevel;
 }
 
 void EditorUi::CmdCloseLevel()
 {
+	if (_state == eChooseLevel) return;
+	
 	_rootObject->RemoveWindow(_debugWindow);
 	_rootObject->RemoveWindow(_levelViewport);
 	_rootObject->RemoveWindow(_levelOutline);
@@ -92,4 +98,8 @@ void EditorUi::CmdCloseLevel()
 
 	_levelChooser = new LevelChooser();
 	_rootObject->AddWindow(_levelChooser);
+
+	_levelOutline->Reset();
+	
+	_state = eChooseLevel;
 }

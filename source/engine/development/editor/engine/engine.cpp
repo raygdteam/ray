@@ -33,10 +33,11 @@ void EditorEngine::ProcessCommands()
 {
 	while (!_pendingEditorCommands.empty())
 	{
-		EditorCommand* cmd = _pendingEditorCommands.back();
+		EditorCommand* cmd = _pendingEditorCommands.front();
 
 		if (cmd->Type == eLoadLevel)
 		{
+			gEditorLogger->Log("EDITOR CMD: eLoadLevel");
 			EditorCommand_LoadLevel* loadLevelCmd = reinterpret_cast<EditorCommand_LoadLevel*>(cmd);
 			gEditorLogger->Log("BEGIN Loading Level !!!");
 			_world->LoadLevel(loadLevelCmd->Path);
@@ -47,6 +48,7 @@ void EditorEngine::ProcessCommands()
 		}
 		else if (cmd->Type == eCloseLevel)
 		{
+			gEditorLogger->Log("EDITOR CMD: eCloseLevel");
 			_world->UnloadLevel();
 			_level = nullptr;
 			_editorUi.CmdCloseLevel();
