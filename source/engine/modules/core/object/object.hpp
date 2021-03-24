@@ -17,7 +17,7 @@ struct RayObject
 	virtual void Deserialize(Archive&) = 0;
 
 	virtual void LoadFromJson(JsonValue& json) {}
-	//virtual void LoadFromJson(ray::json::value& json) {}
+	virtual void LoadFromJson(ray::json::value& json) {}
 };
 
 class RAY_CORE_API ObjectDb

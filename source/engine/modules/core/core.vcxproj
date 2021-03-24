@@ -63,6 +63,7 @@
     <ClCompile Include="extended_instuctions\sse\common.cpp" />
     <ClCompile Include="file_system\file_system.cpp" />
     <ClCompile Include="json\json.cpp" />
+    <ClCompile Include="lib\json.cpp" />
     <ClCompile Include="lib\thread.cpp" />
     <ClCompile Include="log\log.cpp" />
     <ClCompile Include="math\math_common.cpp" />

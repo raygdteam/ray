@@ -18,9 +18,9 @@ void RenderingPropertiesComponent::Deserialize(Archive&)
 {
 }
 
-void RenderingPropertiesComponent::LoadFromJson(JsonValue& json)
+void RenderingPropertiesComponent::LoadFromJson(ray::json::value& json)
 {
-	_materialRef.MaterialName = String(json["material_name"].AsString());
+	_materialRef.MaterialName = String(json.as_dictionary()->operator[]("material_name").as_string());
 }
 
 RAYOBJECT_DESCRIPTION_BEGIN(RenderingPropertiesComponent)

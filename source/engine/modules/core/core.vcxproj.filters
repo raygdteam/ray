@@ -56,6 +56,9 @@
     <ClCompile Include="memory\fast_pool_allocator.cpp">
       <Filter>memory</Filter>
     </ClCompile>
+    <ClCompile Include="lib\json.cpp">
+      <Filter>lib</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="core.hpp" />
