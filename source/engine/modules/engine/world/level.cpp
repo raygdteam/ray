@@ -11,6 +11,7 @@
 #include "world.hpp"
 #include "components/rendering_properties.hpp"
 #include "core/json/json.hpp"
+#include "core/lib/json.hpp"
 
 Level::Level()
 {
@@ -158,7 +159,7 @@ void Level::LoadFrom(String& path)
 		MaterialCompileProperties props = { name, texture };
 		_owningWorld->CompileMaterial(props);
 	}
-	
+
 	JsonValue& actors = json["actors"];
 
 	for (u32 i = 0; i < actors.Size(); ++i)
@@ -173,7 +174,7 @@ void Level::LoadFrom(String& path)
 		for (IComponent* component1 : instance->_components)
 			delete component1;
 		instance->_components.Clear();
-		
+
 		JsonValue& components = actor["components"];
 		for (u32 j = 0; j < components.Size(); ++j)
 		{
@@ -188,6 +189,54 @@ void Level::LoadFrom(String& path)
 
 		SpawnActor(instance);
 	}
+
+	/*String text;
+	IFile* file = gFileSystem.OpenFile(path.AsRawStr(), eRead);
+	text.resize(file->Size());
+	file->Read((u8*)text.data(), file->Size());
+	file->Close();
+	delete file;
+
+	auto json = ray::json::parse(text.c_str());
+	auto& materialInstances = json["material_instances"];
+	for (u32 i = 0; i < materialInstances.as_array()->Size(); ++i)
+	{
+		auto& materialInstance = materialInstances.as_array()->operator[](i);
+		String name(materialInstance.as_dictionary()->operator[]("name").as_string());
+		String texture(materialInstance.as_dictionary()->operator[]("properties").as_dictionary()->operator[]("texture").as_string());
+		MaterialCompileProperties props = { name, texture };
+		_owningWorld->CompileMaterial(props);
+	}
+	
+	auto& actors = json["actors"];
+
+	for (u32 i = 0; i < actors.as_array()->Size(); ++i)
+	{
+		auto& actor = actors.as_array()->operator[](i);
+
+		// TODO: error checking
+		Type* actorType = RayState()->ObjectDb->GetTypeByName(actor.as_dictionary()->operator[]("type").as_string());
+		Actor* instance = (Actor*)actorType->CreateInstance();
+		instance->Name = String(actor.as_dictionary()->operator[]("name").as_string());
+
+		for (IComponent* component1 : instance->_components)
+			delete component1;
+		instance->_components.Clear();
+		
+		auto& components = actor.as_dictionary()->operator[]("components");
+		for (u32 j = 0; j < components.as_array()->Size(); ++j)
+		{
+			auto& component = components.as_array()->operator[](j);
+
+			Type* componentType = RayState()->ObjectDb->GetTypeByName(component.as_dictionary()->operator[]("type").as_string());
+			IComponent* componentInstance = (IComponent*)componentType->CreateInstance();
+
+			componentInstance->LoadFromJson(component.as_dictionary()->operator[]("properties"));
+			instance->_components.PushBack(componentInstance);
+		}
+
+		SpawnActor(instance);
+	}*/
 }
 
 Array<Actor*>& Level::GetActors()
