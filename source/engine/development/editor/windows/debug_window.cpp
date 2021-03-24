@@ -2,6 +2,7 @@
 
 
 #include "editor/engine/engine.hpp"
+#include "engine/state/state.hpp"
 #include "engine/ui2/ext/imgui.h"
 #include "engine/ui2/objects/label.hpp"
 #include "renderer_core/renderer.hpp"
@@ -52,7 +53,7 @@ void EdDebugWindow::Tick()
 		gEditorEngine->RunCommand(cmd1);
 		
 		EditorCommand_LoadLevel* cmd = new EditorCommand_LoadLevel;
-		cmd->Path = String("../../engine/resources/level.json");
+		cmd->Path = String("../../engine/test_project1/resources/levels/level.json");
 		gEditorEngine->RunCommand(cmd);
 	}
 	
@@ -80,5 +81,20 @@ void EdDebugWindow::Tick()
 		cmd->Type = eCloseLevel;
 		gEditorEngine->RunCommand(cmd);
 	}
+	
+	ImGui::Separator();
+	ImGui::Spacing();
+
+	Array<RayObject*>& objs = RayState()->ObjectDb->GetAllObjects();
+
+	ImGui::Text("%llu objects:", objs.Size());
+	
+	for (RayObject* obj : objs)
+	{
+		ImGui::TextUnformatted(obj->GetType()->Name);
+	}
+	
+	ImGui::Separator();
+	ImGui::Spacing();
 }
 

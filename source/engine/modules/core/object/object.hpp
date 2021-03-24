@@ -5,10 +5,10 @@
 
 #include "core/lib/json.hpp"
 
-struct RayObject
+struct RAY_CORE_API RayObject
 {
-	RayObject() {}
-	virtual ~RayObject() {}
+	RayObject();
+	virtual ~RayObject();
 
 	static Type* GetStaticType();
 	virtual Type* GetType() = 0;
@@ -29,7 +29,8 @@ public:
 	Type* GetTypeByCrc(u32 crc);
 	
 	Array<Type*>& GetAllTypes();
-
+	Array<RayObject*>& GetAllObjects();
+	
 	static void __Internal_RegisterObjectStatic(Type*);
 };
 

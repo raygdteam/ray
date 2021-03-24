@@ -271,6 +271,7 @@ void World::UnloadLevel()
 
 	delete _levelData;
 	
+	delete _primaryCameraActor;
 	_primaryCameraActor = nullptr;
 	_levelData = nullptr;
 }

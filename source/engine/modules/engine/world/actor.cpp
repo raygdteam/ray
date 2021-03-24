@@ -20,6 +20,7 @@ Actor::~Actor()
 {
 	for (IComponent* component : _components)
 	{
+		component->OnDestroy();
 		delete component;
 	}
 	

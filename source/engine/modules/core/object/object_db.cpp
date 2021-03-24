@@ -6,6 +6,17 @@
 #include "core/extended_instuctions/sse/common.hpp"
 
 static Type* gStaticallyLoadedObjects[32] = {};
+static Array<RayObject*> gInstances;
+
+RayObject::RayObject()
+{
+	gInstances.PushBack(this);
+}
+
+RayObject::~RayObject()
+{
+	gInstances.erase_first(this);
+}
 
 ObjectDb::ObjectDb()
 {
@@ -49,6 +60,11 @@ Type* ObjectDb::GetTypeByCrc(u32 crc)
 Array<Type*>& ObjectDb::GetAllTypes()
 {
 	return _objects;
+}
+
+Array<RayObject*>& ObjectDb::GetAllObjects()
+{
+	return gInstances;
 }
 
 void ObjectDb::__Internal_RegisterObjectStatic(Type* type)
