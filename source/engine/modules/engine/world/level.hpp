@@ -47,6 +47,8 @@ public:
 
 #ifdef RAY_EDITOR
 	Array<Actor*>& GetActors();
+	void RebuildATD();
+	void EditorCallbackOnActorModified(Actor* actor);
 #endif
 	
 	void Serialize(Archive&) override;

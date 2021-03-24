@@ -9,15 +9,22 @@ struct IRayState;
 
 // Internal use only;
 struct ResourceData;
-struct ResourceMapping;
 
 class RAY_RESOURCES_API ResourceManager
 {
+	struct ResourceMapping
+	{
+		String Path;
+		String Mapping;
+	};
+	
 	IRayState* _state;
 	
 	CriticalSection _mutex;
 	Array<ResourceData> _resources;
-	Array<ResourceMapping> _mapping;
+	
+	ResourceMapping _engineMap;
+	ResourceMapping _gameMap;
 
 	/* data cache */
 	String _dataCacheDirectory;
@@ -26,8 +33,10 @@ class RAY_RESOURCES_API ResourceManager
 public:
 	ResourceManager(IRayState* state);
 
-	void SetResourceDirectory(pcstr directory, pcstr mapping = "");
-
+	void SetEngineResourcesDirectory(String& directory);
+	void SetGameResourceDirectory(String& directory);
+	void UnloadAllResources();
+	
 	IRResource* LoadResourceSync(pcstr name, ResourceType desiredType);
 
 	void LoadResource(pcstr name, ResourceType desiredType, Function<void(IRResource*)> callback);

@@ -26,6 +26,26 @@ Actor::~Actor()
 	_components.Clear();
 }
 
+void Actor::Setup(World* world, Level* level)
+{
+	_owningWorld = world;
+	_owningLevel = level;
+}
+
+World* Actor::GetWorld()
+{
+	check(!!_owningWorld);
+	
+	return _owningWorld;
+}
+
+Level* Actor::GetLevel()
+{
+	check(!!_owningLevel);
+	
+	return _owningLevel;
+}
+
 Transform* Actor::GetTransform()
 {
 	return GetComponent<Transform>();

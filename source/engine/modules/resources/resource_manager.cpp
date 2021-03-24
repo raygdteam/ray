@@ -96,6 +96,11 @@ void RTexture::Deserialize(Archive& ar)
 	ar.Read((u8*)_data.GetData(), size * sizeof(FVector4));
 }
 
+void RTexture::Unload()
+{
+	_data.Clear();
+}
+
 /* ------------------------ LEVEL ----------------------- */
 
 void RLevel::Serialize(Archive&)
@@ -137,23 +142,11 @@ struct ResourceData
 	IRResource* ResourceRef;
 };
 
-struct ResourceMapping
-{
-	String Path;
-	String Mapping;
-	bool IsEngineCoreResources;
-};
-
 ResourceManager::ResourceManager(IRayState* state)
 {
 	_state = state;
 	gDbgLog = new Logger("ResourceManager");
 	
-	_mapping.PushBack(ResourceMapping { 
-		.Path = String("../../engine/resources"),
-		.Mapping = String("/engine/"),
-		.IsEngineCoreResources = true
-	});
 	_dataCacheDirectory = String("../../engine/datacache");
 	//LoadResourceSync("/engine/tex.png", eTexture);
 }
@@ -162,36 +155,9 @@ IRResource* ResourceManager::LoadResourceResolved(pcstr path, pcstr resorcePath,
 {
 	check(type == eTexture);
 
-	/* check in data cache */
-	/*{
-		String dcPath = _dataCacheDirectory;
-		dcPath += "/";
-		
-		char crc32[32] = {};
-		sprintf_s(crc32, "%u", Crc32((u8*)resorcePath, strlen(resorcePath)));
-		dcPath.append(crc32);
-		dcPath.append(".bundle");
-		
-		IFile* dcFile = _state->FileSystem->OpenFile(dcPath.c_str(), ReadBinary);
-
-		if (dcFile != nullptr)
-		{
-			FileArchive ar;
-			ar.file = dcFile;
-
-			RTexture* texture = new RTexture;
-
-			texture->Deserialize(ar);
-			
-			dcFile->Close();
-			delete dcFile;
-			return texture;
-		}
-	}*/
-	
 	IFile* file = gFileSystem.OpenFile(path, eReadBinary);
 	check(file != nullptr);
-	
+
 	RTexture* texture = new RTexture;
 	if (!texture->LoadFrom(file))
 	{
@@ -202,57 +168,33 @@ IRResource* ResourceManager::LoadResourceResolved(pcstr path, pcstr resorcePath,
 
 		return nullptr;
 	}
-	
+
 	file->Close();
 	delete file;
 
-	/* Serialize into data cache */
-	/*String dcPath = _dataCacheDirectory;
-	dcPath += "/";
-	char crc32[32] = {};
-	sprintf_s(crc32, "%u", Crc32((u8*)resorcePath, strlen(resorcePath)));
-	dcPath.append(crc32);
-	dcPath.append(".bundle");
-	IFile* dcFile = _state->FileSystem->OpenFile(dcPath.c_str(), WriteBinary);
-	FileArchive ar;
-	ar.file = dcFile;
-
-	texture->Serialize(ar);
-	
-	dcFile->Close();
-	delete dcFile;*/
-	
 	return texture;
 }
 
-void ResourceManager::SetResourceDirectory(pcstr directory, pcstr mapping)
+void ResourceManager::SetEngineResourcesDirectory(String& directory)
 {
-	/* BUG: assuming no dublicates */
-	/* BUG: assuming no concurrency */
-	
-	if (mapping != nullptr)
+	_engineMap.Path = directory;
+	_engineMap.Mapping = String("/engine/");
+}
+
+void ResourceManager::SetGameResourceDirectory(String& directory)
+{
+	_gameMap.Path = directory;
+	_gameMap.Mapping = String("/game/");
+}
+
+void ResourceManager::UnloadAllResources()
+{
+	for (ResourceData& resource : _resources)
 	{
-		_mapping.PushBack(ResourceMapping { .Path = String(directory), .Mapping = String(mapping), .IsEngineCoreResources = false });
-		return;
+		resource.ResourceRef->Unload();
 	}
 
-	String path = {};
-	path += "resource_info.ray";
-	
-	IFile* info = gFileSystem.OpenFile(path.c_str(), eRead);
-	ray_assert(info != nullptr, "Invalid mapping");
-	ray_assert(info->Size() != 0, "Invalid mapping");
-
-	String mappingPath;
-	u64 size = info->Size() / sizeof(char);
-	mappingPath.resize(size);
-
-	// info->Read((void*)mappingPath.c_str(), size);
-	
-	info->Close();
-	delete info;
-
-	_mapping.PushBack(ResourceMapping { .Path = String(directory), .Mapping = String(mapping), .IsEngineCoreResources = false });
+	_resources.Clear();
 }
 
 IRResource* ResourceManager::LoadResourceSync(pcstr inName, ResourceType desiredType)
@@ -277,12 +219,15 @@ IRResource* ResourceManager::LoadResourceSync(pcstr inName, ResourceType desired
 
 	_mutex.Enter();
 
-	for (ResourceMapping& resourceMapping : _mapping)
+	ResourceMapping mappings[2] = {_engineMap, _gameMap};
+
+	for (ResourceMapping& resourceMapping : mappings)
 	{
 		if (resourceMapping.Mapping == mapping)
 		{
 			String resolvedPath(resourceMapping.Path);
 			resolvedPath += (inName + mappingEnd);
+			
 			IRResource* resource = LoadResourceResolved(resolvedPath.c_str(), inName, desiredType);
 
 			if (resource == nullptr)

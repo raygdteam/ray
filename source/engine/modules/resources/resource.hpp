@@ -21,6 +21,8 @@ public:
 	
 	u64 GetId()
 	{ return _id; }
+
+	virtual void Unload() = 0;
 };
 
 class RAY_RESOURCES_API RTexture final : public IRResource
@@ -44,6 +46,8 @@ public:
 
 	void Serialize(Archive&) override;
 	void Deserialize(Archive&) override;
+
+	void Unload() override;
 };
 
 class RAY_RESOURCES_API RLevel final : public IRResource

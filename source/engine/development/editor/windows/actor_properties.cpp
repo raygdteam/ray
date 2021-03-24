@@ -1,5 +1,6 @@
 #include "actor_properties.hpp"
 #include "level_outline.hpp"
+#include "editor/engine/engine.hpp"
 #include "editor_core/caches/component_cache.hpp"
 #include "engine/ui2/ext/imgui.h"
 
@@ -163,6 +164,11 @@ void EdActorProperties::Tick()
 						//ImGui::SameLine();
 						ImGui::DragScalar("w", ImGuiDataType_Float, &((FVector4*)((u8*)component + field.Offset))->w, 1.f);
 						break;
+					case eString:
+						ImGui::PushID((u8*)component + field.Offset);
+						InputText("##StringValue", (String*)((u8*)component + field.Offset), 0, nullptr, nullptr);
+						ImGui::PopID();
+						break;
 					default:
 						break;
 					}
@@ -179,6 +185,13 @@ void EdActorProperties::Tick()
 	if (ImGui::Button("Add Component..."))
 	{
 		ImGui::OpenPopup("Add Component");
+	}
+
+	ImGui::SameLine();
+
+	if (ImGui::Button("Apply"))
+	{
+		gEditorEngine->FireCallbackOnActorModified(gSelectedActor);
 	}
 
 	if (ImGui::BeginPopupModal("Add Component"))

@@ -20,7 +20,9 @@ Level::Level()
 
 void Level::SpawnActor(Actor* actor)
 {
-	actor->Awake(); // ??
+	actor->Setup(_owningWorld, this);
+	
+	actor->Awake();
 	_actors.PushBack(actor);
 
 	// TODO: memory leak and error
@@ -194,6 +196,52 @@ void Level::LoadFrom(String& path)
 Array<Actor*>& Level::GetActors()
 {
 	return _actors;
+}
+
+void Level::RebuildATD()
+{
+	_atd.Clear();
+
+	for (Actor* actor : _actors)
+	{
+		StaticQuadSceneProxy* proxy = nullptr;
+
+		RenderingPropertiesComponent* rendering = actor->GetComponent<RenderingPropertiesComponent>();
+
+		if (rendering != nullptr)
+		{
+			proxy = new StaticQuadSceneProxy;
+			proxy->Transform = actor->GetTransform();
+			proxy->MaterialId = _owningWorld->GetMaterialIdForName(rendering->GetMaterialName());
+		}
+
+		_atd.PushBack(ActorData { actor, actor->ATD, proxy });
+	}
+}
+
+void Level::EditorCallbackOnActorModified(Actor* actor)
+{
+	for (size_t i = 0; i < _atd.Size(); ++i)
+	{
+		if (_atd[i].Actor == actor)
+		{
+			_atd.erase(&_atd[i]);
+			break;
+		}
+	}
+
+	StaticQuadSceneProxy* proxy = nullptr;
+
+	RenderingPropertiesComponent* rendering = actor->GetComponent<RenderingPropertiesComponent>();
+
+	if (rendering != nullptr)
+	{
+		proxy = new StaticQuadSceneProxy;
+		proxy->Transform = actor->GetTransform();
+		proxy->MaterialId = _owningWorld->GetMaterialIdForName(rendering->GetMaterialName());
+	}
+
+	_atd.PushBack(ActorData{ actor, actor->ATD, proxy });
 }
 
 void Level::Serialize(Archive&)

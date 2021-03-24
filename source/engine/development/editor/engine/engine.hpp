@@ -7,6 +7,7 @@
 #include <editor/ui/editor_ui.hpp>
 
 #include "editor_cmd.hpp"
+#include "editor/project/project_file.hpp"
 
 #ifdef RAY_BUILD_EDITOR
 #define EDITOR_API RAY_DLLEXPORTS
@@ -26,6 +27,8 @@ class EDITOR_API EditorEngine : public IEngine
 
 	std::queue<EditorCommand*> _pendingEditorCommands;
 
+	void LoadProject(ProjectFile* project);
+	
 	void ProcessCommands();
 public:
 	void Initialize(IEngineLoop* engineLoop) override;
@@ -37,7 +40,8 @@ public:
 	float* GetCameraZoom();
 	void ResizeCameraViewport(FVector2 size);
 	void RunCommand(EditorCommand* command);
-
+	void FireCallbackOnActorModified(Actor* actor);
+	
 	float MouseDragSensitivity = 1.75f;
 
 	Level* GetLevel()

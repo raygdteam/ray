@@ -37,12 +37,20 @@ class RAY_ENGINE_API Actor : public RayObject
 	
 	RAYOBJECT_BODY(Actor, RayObject);
 
+	World* _owningWorld;
+	Level* _owningLevel;
+	
 	MovementType _movementType;
 	Array<IComponent*> _components;
 	
 protected:
 	String Name;
 	ActorTick ATD;
+
+	void Setup(World* world, Level* level);
+
+	World* GetWorld();
+	Level* GetLevel();
 	
 	virtual void Awake() = 0;
 	

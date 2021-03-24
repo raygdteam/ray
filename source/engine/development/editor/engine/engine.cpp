@@ -19,6 +19,7 @@
 
 #include "editor/windows/level_outline.hpp"
 #include "editor/windows/log_window.hpp"
+#include "engine/state/state.hpp"
 #include "engine/ui2/ui2.hpp"
 #include "renderer_core/renderer_2d.hpp"
 
@@ -28,6 +29,17 @@ IRenderer* gRenderer;
 EditorEngine* gEditorEngine;
 Logger* gEditorLogger;
 
+
+void EditorEngine::LoadProject(ProjectFile* project)
+{
+	check(_world == nullptr);
+	check(_level == nullptr);
+
+	RayState()->ResourceManager->UnloadAllResources();
+	RayState()->ResourceManager->SetGameResourceDirectory(project->Path);
+
+	
+}
 
 void EditorEngine::ProcessCommands()
 {
@@ -160,4 +172,9 @@ void EditorEngine::ResizeCameraViewport(FVector2 size)
 void EditorEngine::RunCommand(EditorCommand* command)
 {
 	_pendingEditorCommands.push(command);
+}
+
+void EditorEngine::FireCallbackOnActorModified(Actor* actor)
+{
+	_level->EditorCallbackOnActorModified(actor);
 }

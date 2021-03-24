@@ -3,16 +3,11 @@
 #include <engine/world/components/component_base.hpp>
 #include <core/math/vector.hpp>
 
-struct MaterialRef
-{
-	String MaterialName;
-};
-
 class RenderingPropertiesComponent : public IComponent
 {
 	RAYOBJECT_BODY(RenderingComponent, IComponent);
 
-	MaterialRef _materialRef;
+	String MaterialName;
 public:
 	void Init() override {}
 	void Tick() override {}

@@ -17,6 +17,11 @@ enum class ProjectFileVersion
 struct ProjectFile
 {
 	/**
+	 * Path to the project folder.
+	 */
+	String Path;
+	
+	/**
 	 * Project file version number.
 	 */
 	ProjectFileVersion Version;
