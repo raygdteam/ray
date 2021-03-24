@@ -64,9 +64,9 @@ u32 GuardedMain()
 	/* For Debug and Development allocate a console. */
 	/* For some unknown reason works only in .exe module.*/
 #if !defined(RAY_RELEASE)
-	AllocConsole();
-	freopen_s((FILE**)stdout, "CONOUT$", "w", stdout);
-	DeleteMenu(GetSystemMenu(GetConsoleWindow(), false), SC_CLOSE, MF_BYCOMMAND);
+	//AllocConsole();
+	//freopen_s((FILE**)stdout, "CONOUT$", "w", stdout);
+	//DeleteMenu(GetSystemMenu(GetConsoleWindow(), false), SC_CLOSE, MF_BYCOMMAND);
 #endif
 	
 	return RayMain();
