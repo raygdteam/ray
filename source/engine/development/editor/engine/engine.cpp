@@ -113,6 +113,7 @@ void EditorEngine::Tick()
 	_window->Update();
 	if (_window->ShouldClose())
 	{
+		_world->UnloadLevel();
 		RequestEngineExit(true);
 		return;
 	}

@@ -199,7 +199,7 @@ u64 World::CompileMaterial(RMaterialInstance* instance)
 	auto textureDesc = GpuTextureDescription::Texture2D(texture->GetDimensions().x, texture->GetDimensions().y, DXGI_FORMAT_R32G32B32A32_FLOAT, 1, D3D12_RESOURCE_FLAG_NONE);
 	gUploadBuffer->SetTextureData(textureDesc, texture->GetData().GetData());
 	GpuTexture* actorTexture = new GpuTexture();
-	actorTexture->Create(textureDesc, "material texture");
+	actorTexture->Create(textureDesc, String(String("Actor Texture(") + instance->GetName() + String(")")).AsRawStr());
 
 	TextureView actorTextureView;
 	actorTextureView.Create(*actorTexture);
@@ -232,9 +232,7 @@ u64 World::GetMaterialIdForName(String& name)
 	RMaterialInstance* material = static_cast<RMaterialInstance*>(RayState()->ResourceManager->LoadResourceSync(name.AsRawStr(), eMaterialInstance));
 	if (material != nullptr)
 	{
-		CompileMaterial(material);
-		// we should not recurse now..
-		return GetMaterialIdForName(name);
+		return CompileMaterial(material);
 	}
 	
 	return -1;
