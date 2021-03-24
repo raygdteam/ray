@@ -1,9 +1,6 @@
 #pragma once
 #include <core/core.hpp>
 
-// temporary
-#include <Windows.h>
-
 template<typename TGpuMemoryPool>
 class GpuResourceAllocator;
 
@@ -11,62 +8,41 @@ class GpuTextureMemoryPool;
 class GpuBufferMemoryPool;
 class GpuPixelBufferMemoryPool;
 
-namespace ray
+class IMemoryPool
 {
-	struct MemorySegment
+	friend class GpuResourceAllocator<GpuTextureMemoryPool>;
+	friend class GpuResourceAllocator<GpuBufferMemoryPool>;
+	friend class GpuResourceAllocator<GpuPixelBufferMemoryPool>;
+
+protected:
+	void* _pool;
+	size_t _index;
+	size_t _poolSize;
+
+public:
+	IMemoryPool() = default;
+	IMemoryPool(size_t poolSize, size_t index) noexcept
+		: _index(index)
+		, _poolSize(poolSize)
+	{}
+
+	virtual ~IMemoryPool() {}
+
+public:
+	virtual void Destroy() noexcept = 0;
+
+public:
+	virtual size_t Allocate(size_t size) noexcept = 0;
+	virtual void Free(size_t offset, size_t size) noexcept = 0;
+
+public:
+	virtual bool IsEnough(size_t size) const noexcept = 0;
+
+	size_t GetIndex() const noexcept
 	{
-		size_t Offset;
-		size_t Size;
-	};
+		return _index;
+	}
 
-	class IMemoryPool
-	{
-		friend class GpuResourceAllocator<GpuTextureMemoryPool>;
-		friend class GpuResourceAllocator<GpuBufferMemoryPool>;
-		friend class GpuResourceAllocator<GpuPixelBufferMemoryPool>;
+	virtual void* GetPool() const noexcept = 0;
 
-	public:
-		virtual ~IMemoryPool() { Destroy(); }
-
-		virtual void Create(size_t maxMemoryPoolSize, size_t index) noexcept
-		{
-			_listOfSegments.Buffer = static_cast<MemorySegment*>(VirtualAlloc(nullptr, KB(64), MEM_COMMIT, PAGE_READWRITE));
-			_maxMemoryPoolSize = maxMemoryPoolSize;
-			_offset = 0;
-			_availableSize = maxMemoryPoolSize;
-			_index = index;
-		}
-
-		virtual void Destroy() noexcept
-		{
-			VirtualFree(_listOfSegments.Buffer, 0, MEM_RELEASE);
-		}
-
-		bool IsEnough(size_t size) const noexcept
-		{
-			return _offset + size <= _maxMemoryPoolSize;
-		}
-
-		size_t GetIndex() const noexcept
-		{
-			return _index;
-		}
-
-	protected:
-		size_t _maxMemoryPoolSize;
-		void* _pool;
-		size_t _offset;
-		size_t _availableSize;
-		size_t _index;
-
-		struct
-		{
-			MemorySegment* Buffer;
-			size_t ElementsCount = 0;
-			size_t MaxElementsCount = KB(64) / sizeof(MemorySegment);
-
-			size_t FreedSpace = 0;
-		} _listOfSegments;
-
-	};
-}
+};

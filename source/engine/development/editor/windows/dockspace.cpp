@@ -1,9 +1,8 @@
 #include "dockspace.hpp"
 
-#ifdef RAY_PLATFORM_WIN
-	#include <windows.h>
-	#include <commdlg.h>
-#endif
+#include <core/core.hpp>
+#include <windows.h>
+#include <commdlg.h>
 
 #include "about_window.hpp"
 #include "editor/engine/engine.hpp"
@@ -11,44 +10,43 @@
 
 void EdDockspace::MenuBar()
 {
-#ifdef RAY_PLATFORM_WIN
-	if (ImGui::BeginMenu("Level"))
+	if (ImGui::BeginMenu("File"))
 	{
-		if (ImGui::MenuItem("Open", nullptr))
+		if (ImGui::MenuItem("Open Level...", nullptr))
 		{
-			OPENFILENAME open_file_name = {};
+			OPENFILENAMEA openFileName = {};
 
-			char file_name[MAX_PATH] = {};
+			char fileName[MAX_PATH] = {};
 
-			open_file_name.lStructSize = sizeof(open_file_name);
-			open_file_name.hwndOwner = NULL;
-			open_file_name.lpstrFilter = "Json Files (*.json)\0*.json\0";
-			open_file_name.lpstrFile = file_name;
-			open_file_name.nMaxFile = MAX_PATH;
-			open_file_name.Flags = OFN_EXPLORER | OFN_FILEMUSTEXIST | OFN_HIDEREADONLY;
-			open_file_name.lpstrDefExt = "";
+			openFileName.lStructSize = sizeof(openFileName);
+			openFileName.hwndOwner = NULL;
+			openFileName.lpstrFilter = "Json Files (*.json)\0*.json\0";
+			openFileName.lpstrFile = fileName;
+			openFileName.nMaxFile = MAX_PATH;
+			openFileName.Flags = OFN_EXPLORER | OFN_FILEMUSTEXIST | OFN_HIDEREADONLY;
+			openFileName.lpstrDefExt = "";
 
-			if (GetOpenFileName(&open_file_name))
+			if (GetOpenFileNameA(&openFileName))
 			{
 				EditorCommand* cmd1 = new EditorCommand();
 				cmd1->Type = eCloseLevel;
 				gEditorEngine->RunCommand(cmd1);
 
 				EditorCommand_LoadLevel* cmd = new EditorCommand_LoadLevel;
-				cmd->Path = String(file_name);
+				cmd->Path = String(fileName);
 				gEditorEngine->RunCommand(cmd);
 			}
 		}
 
-		if (ImGui::MenuItem("Close", nullptr))
+		if (ImGui::MenuItem("Close Level", nullptr))
 		{
 			EditorCommand* cmd = new EditorCommand();
 			cmd->Type = eCloseLevel;
 			gEditorEngine->RunCommand(cmd);
 		}
+		
 		ImGui::EndMenu();
 	}
-#endif
 
 	if (ImGui::BeginMenu("Help"))
 	{
@@ -56,6 +54,7 @@ void EdDockspace::MenuBar()
 		{
 			_parent->AddWindow(new EdAboutWindow());
 		}
+		
 		ImGui::EndMenu();
 	}
 }

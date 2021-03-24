@@ -37,6 +37,9 @@
     <ClInclude Include="math\matrix.hpp" />
     <ClInclude Include="math\vector.hpp" />
     <ClInclude Include="memory\allocator.hpp" />
+    <ClInclude Include="memory\fast_pool_allocator.hpp" />
+    <ClInclude Include="memory\memory_pool_manager.hpp" />
+    <ClInclude Include="memory\pool_allocator.hpp" />
     <ClInclude Include="memory\system_allocator.hpp" />
     <ClInclude Include="memory\memory_debug.hpp" />
     <ClInclude Include="memory\memory_manager.hpp" />
@@ -64,7 +67,9 @@
     <ClCompile Include="log\log.cpp" />
     <ClCompile Include="math\math_common.cpp" />
     <ClCompile Include="memory\allocator.cpp" />
+    <ClCompile Include="memory\fast_pool_allocator.cpp" />
     <ClCompile Include="memory\memory_manager.cpp" />
+    <ClCompile Include="memory\pool_allocator.cpp" />
     <ClCompile Include="module\module.cpp" />
     <ClCompile Include="object\object_db.cpp" />
     <ClCompile Include="os\miniwin.cpp">

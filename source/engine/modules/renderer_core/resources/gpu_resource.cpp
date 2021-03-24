@@ -14,20 +14,19 @@ void GpuResourceAllocator<TGpuMemoryPool>::Allocate(GpuResource& resource) noexc
 	resourceDesc.Alignment = resourceAllocationInfo.Alignment;
 
 	if (!_currentPool->IsEnough(resourceAllocationInfo.SizeInBytes))
-		_currentPool = &_memoryManager.RequestPool(resourceAllocationInfo.SizeInBytes);
+		_currentPool = _memoryManager.RequestPool(resourceAllocationInfo.SizeInBytes);
 
-	auto hr = gDevice->CreatePlacedResource(_currentPool->_heap, _currentPool->_offset, &resourceDesc, D3D12_RESOURCE_STATE_COPY_DEST, desc.ClearValue, IID_PPV_ARGS(&resource._resource));
+	size_t offset = _currentPool->Allocate(resourceAllocationInfo.SizeInBytes);
+	auto hr = gDevice->CreatePlacedResource(static_cast<ID3D12Heap*>(_currentPool->GetPool()), offset, &resourceDesc, D3D12_RESOURCE_STATE_COPY_DEST, desc.ClearValue, IID_PPV_ARGS(&resource._resource));
 
 	ray_assert(hr == S_OK, "Could not create gpu resource");
 
-	// TODO: Memory Segment
-	_currentPool->_offset += resourceAllocationInfo.SizeInBytes;
-	_currentPool->_availableSize = _currentPool->_maxMemoryPoolSize - _currentPool->_offset;
-
 	IRenderer::sRendererStats.UsedGpuMemory += resourceAllocationInfo.SizeInBytes;
+	gRendererLogger->Log("Creating GpuResource. Used Gpu Memory: %u KB", IRenderer::sRendererStats.UsedGpuMemory / 1024);
 
 	resource._underlyingPool = _currentPool;
 	resource._resourceSize = resourceAllocationInfo.SizeInBytes;
+	resource._resourceOffset = offset;
 	resource._usageState = D3D12_RESOURCE_STATE_COPY_DEST;
 	resource._bManaged = true;
 }
@@ -39,11 +38,11 @@ void GpuResourceAllocator<TGpuMemoryPool>::Free(GpuResource& resource) noexcept
 	gRendererLogger->Log("Releasing GpuResource. Name: %s Reference count: %u", resource._debugName.c_str(), refCount);
 	if (resource.IsManaged())
 	{
-		resource._underlyingPool->_availableSize += resource._resourceSize;
-		resource._underlyingPool->_offset -= resource._resourceSize;
+		resource._underlyingPool->Free(resource._resourceOffset, resource._resourceSize);
 		IRenderer::sRendererStats.UsedGpuMemory -= resource._resourceSize;
+
+		gRendererLogger->Log("Releasing GpuResource. Used Gpu Memory: %u KB", IRenderer::sRendererStats.UsedGpuMemory / 1024);
 	}
-	// TODO: MemorySegment
 }
 
 template<typename TGpuMemoryPool>
