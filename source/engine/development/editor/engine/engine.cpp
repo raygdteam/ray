@@ -86,6 +86,9 @@ void EditorEngine::Initialize(IEngineLoop* engineLoop)
 
 	gActorCache = new ActorCache();
 	gActorCache->Rebuild();
+
+	String path("../../engine/resources");
+	RayState()->ResourceManager->SetEngineResourcesDirectory(path);
 	
 	gRenderer = new IRenderer();
 	gRenderer->Initialize(_window);

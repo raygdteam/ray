@@ -7,8 +7,6 @@ enum ResourceType
 	eConfig,
 
 	eTexture,
-	eShader,
 	eMaterial,
-
-	eLevel
+	eMaterialInstance,
 };

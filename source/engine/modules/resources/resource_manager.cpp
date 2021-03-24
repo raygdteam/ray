@@ -101,35 +101,77 @@ void RTexture::Unload()
 	_data.Clear();
 }
 
-/* ------------------------ LEVEL ----------------------- */
-
-void RLevel::Serialize(Archive&)
-{	
-}
-
-void RLevel::Deserialize(Archive&)
-{
-}
-
-bool RLevel::LoadFrom(IFile* path)
-{
-	//String data = {};
-	//data.resize(path->Size());
-	//path->Read((u8*)data.data(), path->Size());
-
-	//nlohmann::json file = data.AsRawStr();
-	//file["name"]
-	return false;
-}
-
-ResourceType RLevel::GetResourceType() const noexcept
-{
-	return eLevel;
-}
-
 RAYOBJECT_DESCRIPTION_BEGIN(RTexture)
 RAYOBJECT_DESCRIPTION_NAME("engine://resources/Texture")
 RAYOBJECT_DESCRIPTION_END(RTexture);
+
+/* ----------------------- MATERIAL ---------------------- */
+
+void RMaterial::Serialize(Archive&)
+{
+}
+
+void RMaterial::Deserialize(Archive&)
+{
+}
+
+bool RMaterial::LoadFrom(IFile* file)
+{
+	String text;
+	text.resize(file->Size());
+	file->Read((u8*)text.data(), file->Size());
+	file->Close();
+	delete file;
+
+	JsonValue json = JsonParser::Parse(text);
+	check(json["ResourceType"].AsString() == String("Material"));
+
+	return true;
+}
+
+ResourceType RMaterial::GetResourceType() const noexcept
+{
+	return eMaterial;
+}
+
+void RMaterial::Unload()
+{
+}
+
+/* ----------------- MATERIAL INSTANCE ----------------- */
+
+void RMaterialInstance::Serialize(Archive&)
+{
+}
+
+void RMaterialInstance::Deserialize(Archive&)
+{
+}
+
+bool RMaterialInstance::LoadFrom(IFile* file)
+{
+	String text;
+	text.resize(file->Size());
+	file->Read((u8*)text.data(), file->Size());
+	file->Close();
+	delete file;
+
+	JsonValue json = JsonParser::Parse(text);
+	check(json["ResourceType"].AsString() == String("MaterialInstance"));
+
+	Texture = json["Properties"]["TextureName"].AsString();
+
+	return true;
+}
+
+ResourceType RMaterialInstance::GetResourceType() const noexcept
+{
+	return eMaterialInstance;
+}
+
+void RMaterialInstance::Unload()
+{
+}
 
 
 /* ------------------ RESOURCE MANAGER ------------------ */
@@ -148,7 +190,6 @@ ResourceManager::ResourceManager(IRayState* state)
 	gDbgLog = new Logger("ResourceManager");
 	
 	_dataCacheDirectory = String("../../engine/datacache");
-	//LoadResourceSync("/engine/tex.png", eTexture);
 }
 
 IRResource* ResourceManager::LoadResourceResolved(pcstr path, pcstr resorcePath, ResourceType type)
@@ -158,21 +199,28 @@ IRResource* ResourceManager::LoadResourceResolved(pcstr path, pcstr resorcePath,
 	IFile* file = gFileSystem.OpenFile(path, eReadBinary);
 	check(file != nullptr);
 
-	RTexture* texture = new RTexture;
-	if (!texture->LoadFrom(file))
+	IRResource* resource = nullptr;
+	
+	if (type == eTexture)
 	{
-		delete texture;
-
-		file->Close();
-		delete file;
-
-		return nullptr;
+		resource = new RTexture();
+		
+	}
+	else if (type == eMaterial)
+	{
+		resource = new RMaterial();
+	}
+	else if (type == eMaterialInstance)
+	{
+		resource = new RMaterialInstance();
 	}
 
+	resource->LoadFrom(file);
+	
 	file->Close();
 	delete file;
 
-	return texture;
+	return resource;
 }
 
 void ResourceManager::SetEngineResourcesDirectory(String& directory)
