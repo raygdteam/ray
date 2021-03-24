@@ -11,7 +11,7 @@
 					"type": "engine://world/components/Transform",
 					"properties": {
 						"position_x": 1,
-						"position_y": 200,
+						"position_y": 100,
 						"scale_x": 1,
 						"scale_y": 1
 					}
@@ -33,8 +33,8 @@
 					"type": "engine://world/components/Transform",
 					"properties": {
 						"position_x": 1,
-						"position_y": -700,
-						"scale_x": 1,
+						"position_y": -150,
+						"scale_x": 6,
 						"scale_y": 1
 					}
 				},

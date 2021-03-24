@@ -120,8 +120,6 @@ bool RMaterial::LoadFrom(IFile* file)
 	String text;
 	text.resize(file->Size());
 	file->Read((u8*)text.data(), file->Size());
-	file->Close();
-	delete file;
 
 	JsonValue json = JsonParser::Parse(text);
 	check(json["ResourceType"].AsString() == String("Material"));
@@ -153,8 +151,6 @@ bool RMaterialInstance::LoadFrom(IFile* file)
 	String text;
 	text.resize(file->Size());
 	file->Read((u8*)text.data(), file->Size());
-	file->Close();
-	delete file;
 
 	JsonValue json = JsonParser::Parse(text);
 	check(json["ResourceType"].AsString() == String("MaterialInstance"));
@@ -194,9 +190,11 @@ ResourceManager::ResourceManager(IRayState* state)
 
 IRResource* ResourceManager::LoadResourceResolved(pcstr path, pcstr resorcePath, ResourceType type)
 {
-	check(type == eTexture);
-
-	IFile* file = gFileSystem.OpenFile(path, eReadBinary);
+	// TODO: kostil
+	String realPath(path);
+	if (type != eTexture) realPath.append(".json");
+	
+	IFile* file = gFileSystem.OpenFile(realPath.AsRawStr(), eReadBinary);
 	check(file != nullptr);
 
 	IRResource* resource = nullptr;
@@ -204,7 +202,6 @@ IRResource* ResourceManager::LoadResourceResolved(pcstr path, pcstr resorcePath,
 	if (type == eTexture)
 	{
 		resource = new RTexture();
-		
 	}
 	else if (type == eMaterial)
 	{
@@ -215,6 +212,7 @@ IRResource* ResourceManager::LoadResourceResolved(pcstr path, pcstr resorcePath,
 		resource = new RMaterialInstance();
 	}
 
+	resource->_name = String(resorcePath);
 	resource->LoadFrom(file);
 	
 	file->Close();

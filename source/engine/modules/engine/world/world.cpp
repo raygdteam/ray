@@ -190,9 +190,9 @@ void World::SetPrimaryCamera(CameraActor* camera)
 	_primaryCameraActor = camera;
 }
 
-u64 World::CompileMaterial(MaterialCompileProperties& props)
+u64 World::CompileMaterial(RMaterialInstance* instance)
 {
-	RTexture* texture = dynamic_cast<RTexture*>(RayState()->ResourceManager->LoadResourceSync(props.Texture.AsRawStr(), eTexture));
+	RTexture* texture = dynamic_cast<RTexture*>(RayState()->ResourceManager->LoadResourceSync(instance->Texture.AsRawStr(), eTexture));
 
 	if (texture == nullptr) *(u64*)0xFFFFFFFFFFFFFFFF = 0xDED;
 
@@ -206,7 +206,7 @@ u64 World::CompileMaterial(MaterialCompileProperties& props)
 
 	MaterialInstance entry = {
 		.Id = _materialInstances.Size(),
-		.Name = props.Name,
+		.Name = instance->GetName(),
 		.Texture = actorTexture,
 		.TextureView = actorTextureView
 	};
@@ -224,8 +224,19 @@ u64 World::GetMaterialIdForName(String& name)
 {
 	for (MaterialInstance& materialInstance : _materialInstances)
 	{
-		if (materialInstance.Name == name) return materialInstance.Id;
+		if (materialInstance.Name == name) 
+			return materialInstance.Id;
 	}
+
+	// try to load
+	RMaterialInstance* material = static_cast<RMaterialInstance*>(RayState()->ResourceManager->LoadResourceSync(name.AsRawStr(), eMaterialInstance));
+	if (material != nullptr)
+	{
+		CompileMaterial(material);
+		// we should not recurse now..
+		return GetMaterialIdForName(name);
+	}
+	
 	return -1;
 }
 

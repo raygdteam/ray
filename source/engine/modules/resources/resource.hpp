@@ -12,6 +12,8 @@ class RAY_RESOURCES_API IRResource : public RayObject
 	RAYOBJECT_BODY(IRResource, RayObject);
 
 	friend class ResourceManager;
+
+	String _name;
 protected:
 	u64 _id = -1;
 	
@@ -22,6 +24,11 @@ public:
 	u64 GetId()
 	{ return _id; }
 
+	String& GetName()
+	{
+		return _name;
+	}
+	
 	virtual void Unload() = 0;
 };
 

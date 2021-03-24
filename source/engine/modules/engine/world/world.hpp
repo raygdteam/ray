@@ -10,6 +10,7 @@
 #include <renderer_core/renderer.hpp>
 
 #include "renderer_core/resources/gpu_texture.hpp"
+#include "resources/resource.hpp"
 
 
 // Internal use only.
@@ -86,7 +87,7 @@ public:
 
 	void SetPrimaryCamera(CameraActor* camera);
 
-	u64 CompileMaterial(MaterialCompileProperties& props);
+	u64 CompileMaterial(RMaterialInstance* instance);
 
 	MaterialInstance& GetMaterialInstance(u64 id);
 	u64 GetMaterialIdForName(String& name);

@@ -49,6 +49,9 @@ void RayEngine::Initialize(IEngineLoop* engineLoop)
 
 	state->Input->Initialize(_window);
 
+	String path("../../engine/resources");
+	state->ResourceManager->SetEngineResourcesDirectory(path);
+
 	eng->Log("renderer load begin");
 
 	// Load renderer module

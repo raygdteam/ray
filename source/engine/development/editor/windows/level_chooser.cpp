@@ -18,7 +18,7 @@ void LevelChooser::Tick()
 	if (ImGui::Button("Level1"))
 	{
 		EditorCommand_LoadLevel* cmd = new EditorCommand_LoadLevel;
-		cmd->Path = String("../../engine/resources/level.json");
+		cmd->Path = String("../../engine/test_project1/resources/levels/level.json");
 		gEditorEngine->RunCommand(cmd);
 	}
 

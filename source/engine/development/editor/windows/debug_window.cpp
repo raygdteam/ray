@@ -44,7 +44,7 @@ void EdDebugWindow::Tick()
 		avg += frametimeFrame;
 	avg /= 256;
 	ImGui::PlotHistogram("Frametime dt", &gFrametimeFrames[0], 256, 0,0,avg - 10.f, avg + 10.f, ImVec2(0, 80.0f));
-
+	ImGui::Text("Delta = %f", gEditorEngine->GetDelta());
 	if (ImGui::Button("Load Level1"))
 	{
 		EditorCommand* cmd1 = new EditorCommand();

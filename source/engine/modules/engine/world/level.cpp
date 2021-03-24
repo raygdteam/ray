@@ -151,41 +151,31 @@ void Level::LoadFrom(String& path)
 	file->Close();
 	delete file;
 
-	auto json = ray::json::parse(text.c_str());
-	auto& materialInstances = json["material_instances"];
-	for (u32 i = 0; i < materialInstances.as_array()->Size(); ++i)
-	{
-		auto& materialInstance = materialInstances.as_array()->operator[](i);
-		String name(materialInstance.as_dictionary()->operator[]("name").as_string());
-		String texture(materialInstance.as_dictionary()->operator[]("properties").as_dictionary()->operator[]("texture").as_string());
-		MaterialCompileProperties props = { name, texture };
-		_owningWorld->CompileMaterial(props);
-	}
-	
-	auto& actors = json["actors"];
+	JsonValue json = JsonParser::Parse(text);
 
-	for (u32 i = 0; i < actors.as_array()->Size(); ++i)
+	JsonValue& actors = json["actors"];
+	for (u32 i = 0; i < actors.Size(); ++i)
 	{
-		auto& actor = actors.as_array()->operator[](i);
+		JsonValue& actor = actors[i];
 
 		// TODO: error checking
-		Type* actorType = RayState()->ObjectDb->GetTypeByName(actor.as_dictionary()->operator[]("type").as_string());
+		Type* actorType = RayState()->ObjectDb->GetTypeByName(actor["type"].AsString().AsRawStr());
 		Actor* instance = (Actor*)actorType->CreateInstance();
-		instance->Name = String(actor.as_dictionary()->operator[]("name").as_string());
+		instance->Name = actor["name"].AsString();
 
 		for (IComponent* component1 : instance->_components)
 			delete component1;
 		instance->_components.Clear();
-		
-		auto& components = actor.as_dictionary()->operator[]("components");
-		for (u32 j = 0; j < components.as_array()->Size(); ++j)
-		{
-			auto& component = components.as_array()->operator[](j);
 
-			Type* componentType = RayState()->ObjectDb->GetTypeByName(component.as_dictionary()->operator[]("type").as_string());
+		JsonValue& components = actor["components"];
+		for (u32 j = 0; j < components.Size(); ++j)
+		{
+			JsonValue& component = components[j];
+
+			Type* componentType = RayState()->ObjectDb->GetTypeByName(component["type"].AsString().AsRawStr());
 			IComponent* componentInstance = (IComponent*)componentType->CreateInstance();
 
-			componentInstance->LoadFromJson(component.as_dictionary()->operator[]("properties"));
+			componentInstance->LoadFromJson(component["properties"]);
 			instance->_components.PushBack(componentInstance);
 		}
 

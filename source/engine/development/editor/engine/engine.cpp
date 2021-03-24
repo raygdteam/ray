@@ -89,6 +89,9 @@ void EditorEngine::Initialize(IEngineLoop* engineLoop)
 
 	String path("../../engine/resources");
 	RayState()->ResourceManager->SetEngineResourcesDirectory(path);
+
+	path = String("../../engine/test_project1/resources");
+	RayState()->ResourceManager->SetGameResourceDirectory(path);
 	
 	gRenderer = new IRenderer();
 	gRenderer->Initialize(_window);
