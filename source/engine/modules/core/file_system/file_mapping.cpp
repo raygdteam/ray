@@ -87,7 +87,7 @@ void MappedFile::Reset(size_t newSize) noexcept
 	Create(_path, newSize, _mode);
 }
 
-u64 MappedFile::Read(u8* buffer, u64 size) noexcept
+u64 MappedFile::Read(u8* buffer, u64 size)
 {
 	check(this->_current + size < this->_end);
 	memcpy(buffer, this->_current, size);
@@ -97,7 +97,7 @@ u64 MappedFile::Read(u8* buffer, u64 size) noexcept
 	return size;
 }
 
-u64 MappedFile::Write(void* buffer, u64 size) noexcept
+u64 MappedFile::Write(void* buffer, u64 size)
 {
 	check(this->_current + size < this->_end);
 	memcpy(_current, buffer, size);
@@ -106,7 +106,7 @@ u64 MappedFile::Write(void* buffer, u64 size) noexcept
 	return size;
 }
 
-u64 MappedFile::Seek(size_t offset, SeekOrigin origin) noexcept
+u64 MappedFile::Seek(size_t offset, SeekOrigin origin)
 {
 	switch (origin)
 	{

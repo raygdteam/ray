@@ -52,7 +52,7 @@ public:
 
 	u64 Read(u8* buffer, u64 size) override;
 	u64 Write(void* buffer, u64 size) override;
-	u64 Seek(size_t offset, SeekOrigin origin) noexcept;
+	u64 Seek(size_t offset, SeekOrigin origin) override;
 
 public:
 	u64 Size() override
