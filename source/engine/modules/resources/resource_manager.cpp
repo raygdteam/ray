@@ -99,6 +99,7 @@ void RTexture::Deserialize(Archive& ar)
 void RTexture::Unload()
 {
 	_data.Clear();
+	_data.shrink_to_fit();
 }
 
 RAYOBJECT_DESCRIPTION_BEGIN(RTexture)
@@ -172,6 +173,7 @@ ResourceType RMaterialInstance::GetResourceType() const noexcept
 
 void RMaterialInstance::Unload()
 {
+	Texture = String("");
 }
 
 RAYOBJECT_DESCRIPTION_BEGIN(RMaterialInstance)
@@ -206,6 +208,7 @@ ResourceType RConfiguration::GetResourceType() const noexcept
 
 void RConfiguration::Unload()
 {
+	Root = JsonValue();
 }
 
 RAYOBJECT_DESCRIPTION_BEGIN(RConfiguration)
@@ -215,20 +218,24 @@ RAYOBJECT_DESCRIPTION_END(RConfiguration)
 
 /* ------------------ RESOURCE MANAGER ------------------ */
 
-struct ResourceData
-{
-	String Name;
-	u16 ReferenceCount;
-	ResourceType Type;
-	IRResource* ResourceRef;
-};
-
 ResourceManager::ResourceManager(IRayState* state)
 {
 	_state = state;
 	gDbgLog = new Logger("ResourceManager");
 	
 	_dataCacheDirectory = String("../../engine/datacache");
+}
+
+void ResourceManager::LoadPreloadedResource(ResourceData& data)
+{
+	IFile* file = gFileSystem.OpenFile(data.PhysicalPath.AsRawStr(), eReadBinary);
+	check(file != nullptr);
+
+	data.ResourceRef->LoadFrom(file);
+	data.ResourceRef->_loaded = true;
+
+	file->Close();
+	delete file;
 }
 
 IRResource* ResourceManager::LoadResourceResolved(pcstr path, pcstr resorcePath, ResourceType type)
@@ -261,11 +268,56 @@ IRResource* ResourceManager::LoadResourceResolved(pcstr path, pcstr resorcePath,
 
 	resource->_name = String(resorcePath);
 	resource->LoadFrom(file);
+	resource->_loaded = true;
 	
 	file->Close();
 	delete file;
 
 	return resource;
+}
+
+void ResourceManager::PreloadResource(String& path, String& resourcePath)
+{
+	String extension(path.substr(path.find_last_of(".") + 1));
+	IRResource* res = nullptr;
+	
+	if (extension == "ray_level")
+	{
+		return;
+	}
+	else if(extension == "ray_material")
+	{
+		resourcePath = String(resourcePath.substr(0, resourcePath.find_last_of(".")));
+		gDbgLog->Log("PreloadResource(): Loading '%s' as RMaterial", resourcePath.AsRawStr());
+		res = new RMaterial();
+	}
+	else if (extension == "ray_materialinstance")
+	{
+		resourcePath = String(resourcePath.substr(0, resourcePath.find_last_of(".")));
+		gDbgLog->Log("PreloadResource(): Loading '%s' as RMaterialInstance", resourcePath.AsRawStr());
+		res = new RMaterialInstance();
+	}
+	else if(extension == "ray_config")
+	{
+		resourcePath = String(resourcePath.substr(0, resourcePath.find_last_of(".")));
+		gDbgLog->Log("PreloadResource(): Loading '%s' as RConfiguration", resourcePath.AsRawStr());
+		res = new RConfiguration();
+	}
+	else
+	{
+		gDbgLog->Log("PreloadResource(): Loading '%s' as RTexture", resourcePath.AsRawStr());
+		res = new RTexture();
+	}
+
+	res->_name = resourcePath;
+
+	_resources.PushBack(ResourceData {
+		.Name = resourcePath,
+		.PhysicalPath = path,
+		.ReferenceCount = 0xffff,
+		.Type = res->GetResourceType(),
+		.ResourceRef = res
+	});
 }
 
 void ResourceManager::SetEngineResourcesDirectory(String& directory)
@@ -286,8 +338,6 @@ void ResourceManager::UnloadAllResources()
 	{
 		resource.ResourceRef->Unload();
 	}
-
-	_resources.Clear();
 }
 
 IRResource* ResourceManager::LoadResourceSync(pcstr inName, ResourceType desiredType)
@@ -299,6 +349,11 @@ IRResource* ResourceManager::LoadResourceSync(pcstr inName, ResourceType desired
 	{
 		if (resource.Type == desiredType && resource.Name == inName)
 		{
+			if (!resource.ResourceRef->IsLoaded())
+			{
+				gDbgLog->Log("Loading %s", inName);
+				LoadPreloadedResource(resource);
+			}
 			return resource.ResourceRef;
 		}
 	}
@@ -333,6 +388,7 @@ IRResource* ResourceManager::LoadResourceSync(pcstr inName, ResourceType desired
 			/* shortcut */
 			_resources.PushBack(ResourceData {
 				.Name = String(inName),
+				.PhysicalPath = resolvedPath,
 				.ReferenceCount = 0xffff,
 				.Type = desiredType,
 				.ResourceRef = resource
@@ -398,5 +454,31 @@ void ResourceManager::LoadResource(pcstr inName, ResourceType desiredType, Funct
 	//		callback(resource);
 	//	}
 	//}
+}
+
+void ResourceManager::PreloadAllEngineResources()
+{
+	Array<String> files;
+	gFileSystem.ListFilesRecursively(_engineMap.Path, files);
+
+	for (String& file : files)
+	{
+		String resPath = file;
+		resPath.replace(0, _engineMap.Path.Length() + 1, _engineMap.Mapping);
+		PreloadResource(file, resPath);
+	}
+}
+
+void ResourceManager::PreloadAllGameResources()
+{
+	Array<String> files;
+	gFileSystem.ListFilesRecursively(_gameMap.Path, files);
+
+	for (String& file : files)
+	{
+		String resPath = file;
+		resPath.replace(0, _gameMap.Path.Length() + 1, _gameMap.Mapping);
+		PreloadResource(file, resPath);
+	}
 }
 

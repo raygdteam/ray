@@ -44,6 +44,8 @@ public:
 	void RunCommand(EditorCommand* command);
 	void FireCallbackOnActorModified(Actor* actor);
 
+	String& GetCurrentProjectPath();
+	
 	bool IsCurrentlyInLevel();
 	
 	float MouseDragSensitivity = 1.75f;

@@ -1,0 +1,6 @@
+{
+	"ResourceType": "MaterialInstance",
+	"Properties": {
+		"TextureName": "/engine/editor_splash.png"
+	}
+}

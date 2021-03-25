@@ -2,6 +2,8 @@
 #include <core/core.hpp>
 #include <core/file_system/file.hpp>
 
+
+#include "core/lib/array.hpp"
 #include "core/lib/string.hpp"
 
 enum FileMode
@@ -38,6 +40,8 @@ public:
 	void CreateAllDirectories(pcstr path);
 
 	void ReadTextFile(const String& path, String& trg);
+
+	void ListFilesRecursively(String path, Array<String>& out);
 };
 
 extern RAY_CORE_API FileSystem gFileSystem;

@@ -158,6 +158,7 @@
     <ClCompile Include="windows\level_outline.cpp" />
     <ClCompile Include="windows\level_viewport.cpp" />
     <ClCompile Include="windows\log_window.cpp" />
+    <ClCompile Include="windows\resource_browser.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="context\context.hpp" />
@@ -178,6 +179,7 @@
     <ClInclude Include="windows\level_outline.hpp" />
     <ClInclude Include="windows\level_viewport.hpp" />
     <ClInclude Include="windows\log_window.hpp" />
+    <ClInclude Include="windows\resource_browser.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\modules\app_framework\app_framework.vcxproj">

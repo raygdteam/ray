@@ -1,4 +1,5 @@
 ﻿#include <core/core.hpp>
+#include <filesystem>
 #include "file_system.hpp"
 #include <cstdio>
 
@@ -124,5 +125,24 @@ void FileSystem::ReadTextFile(const String& path, String& trg)
 	file->Read((u8*)trg.data(), file->Size());
 	file->Close();
 	delete file;
+}
+
+void FileSystem::ListFilesRecursively(String path, Array<String>& out)
+{
+	std::filesystem::recursive_directory_iterator it(std::filesystem::path(path.AsRawStr()));
+
+	for (const std::filesystem::directory_entry& directory : it)
+	{
+		std::filesystem::path path = directory.path();
+		
+		if (directory.is_directory()) continue;
+		
+		String res ((char*)path.u8string().c_str());
+		while(res.find_first_of("\\") != String::npos)
+		{
+			res.replace(res.find_first_of("\\"), 1, "/", 1);
+		}
+		out.PushBack(res);
+	}
 }
 

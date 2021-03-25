@@ -154,6 +154,7 @@
     <ClInclude Include="ui2\ext\imgui.h" />
     <ClInclude Include="ui2\ext\imgui_impl_win32.h" />
     <ClInclude Include="ui2\ext\imgui_internal.h" />
+    <ClInclude Include="ui2\ext\imgui_user.h" />
     <ClInclude Include="ui2\ext\imstb_rectpack.h" />
     <ClInclude Include="ui2\ext\imstb_textedit.h" />
     <ClInclude Include="ui2\ext\imstb_truetype.h" />
