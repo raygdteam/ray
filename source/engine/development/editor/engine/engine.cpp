@@ -35,10 +35,27 @@ void EditorEngine::LoadProject(ProjectFile* project)
 	check(_world == nullptr);
 	check(_level == nullptr);
 
-	RayState()->ResourceManager->UnloadAllResources();
-	RayState()->ResourceManager->SetGameResourceDirectory(project->Path);
-
+	String resourcePath = String(project->Path + String("/resources"));
 	
+	RayState()->ResourceManager->UnloadAllResources();
+	RayState()->ResourceManager->SetGameResourceDirectory(resourcePath);
+
+
+	delete _currentProject;
+	_currentProject = project;
+
+	LoadProjectSettings();
+
+	_editorUi.CmdLevelLoaded();
+}
+
+void EditorEngine::LoadProjectSettings()
+{
+	_world = new World();
+	_world->Initialize(nullptr);
+
+	_world->RendererInitialize(nullptr);
+
 }
 
 void EditorEngine::ProcessCommands()
@@ -89,19 +106,14 @@ void EditorEngine::Initialize(IEngineLoop* engineLoop)
 
 	String path("../../engine/resources");
 	RayState()->ResourceManager->SetEngineResourcesDirectory(path);
-
-	path = String("../../engine/test_project1/resources");
-	RayState()->ResourceManager->SetGameResourceDirectory(path);
 	
 	gRenderer = new IRenderer();
 	gRenderer->Initialize(_window);
 
-	_world = new World();
-	_world->Initialize(nullptr);
-
-	_world->RendererInitialize(nullptr);
-
 	_editorUi.Initialize(_window);
+
+	path = String("../../engine/test_project1/project.json");
+	LoadProject(ProjectManager::ReadProjectFile(path));
 
 	_window->SetWindowVisibility(true);
 }
@@ -184,4 +196,9 @@ void EditorEngine::RunCommand(EditorCommand* command)
 void EditorEngine::FireCallbackOnActorModified(Actor* actor)
 {
 	_level->EditorCallbackOnActorModified(actor);
+}
+
+bool EditorEngine::IsCurrentlyInLevel()
+{
+	return _level != nullptr;
 }

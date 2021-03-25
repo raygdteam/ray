@@ -41,10 +41,10 @@ struct ProjectFile
 
 class ProjectManager
 {
-	bool SanityCheckProject(ProjectFile& project);
-	bool IsProjectCompatible(ProjectFileVersion version);
-	ProjectFile* ReadProjectFile(JsonValue& file);
+	static bool SanityCheckProject(ProjectFile& project);
+	static bool IsProjectCompatible(ProjectFileVersion version);
+	static ProjectFile* ReadProjectFile(JsonValue& file);
 public:
-	ProjectFile* ReadProjectFile(String& path);
+	static ProjectFile* ReadProjectFile(String& path);
 };
 

@@ -9,13 +9,15 @@
 EdLevelViewport::EdLevelViewport()
 {
 	Title = String("Level Viewport");
-	this->_objects.PushBack(new UiImage(this));
+	//this->_objects.PushBack(new UiImage(this));
 	Padding = { 4.f, 0.f };
 	bNoScrollbar = true;
 }
 
 void EdLevelViewport::Tick()
 {
+	if (!gEditorEngine->IsCurrentlyInLevel()) return;
+
 	static u32 oldWidth;
 	static u32 oldHeight;
 	
@@ -31,6 +33,10 @@ void EdLevelViewport::Tick()
 
 		gEditorEngine->ResizeCameraViewport({ f32(width), f32(height) });
 	}
+
+	ImGui::Image((ImTextureID)1, ImVec2(width, height), ImVec2(0, 0), ImVec2(1, 1),
+		ImColor(255, 255, 255, 255),
+		ImColor(50, 127, 166, 255));
 }
 
 void EdLevelViewport::LateTick()

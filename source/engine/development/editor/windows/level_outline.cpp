@@ -15,7 +15,11 @@ void EdLevelOutline::Tick()
 {
 	Level* level = gEditorEngine->GetLevel();
 
-	//ImGui::Begin("Level Outline");
+	if (level == nullptr)
+	{
+		ImGui::TextUnformatted("No Level loaded.");
+		return;
+	}
 
 	if (ImGui::Button("Add actor"))
 	{

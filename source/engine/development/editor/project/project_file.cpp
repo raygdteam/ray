@@ -38,11 +38,18 @@ ProjectFile* ProjectManager::ReadProjectFile(JsonValue& file)
 
 ProjectFile* ProjectManager::ReadProjectFile(String& path)
 {
-	//String _path = String(path.substr(0, path.find_last_of("/")));
-	//String projectFile;
-	//gFileSystem.ReadTextFile(path, projectFile);
+	String _path = String(path.substr(0, path.find_last_of("/")));
+	String projectFile;
+	gFileSystem.ReadTextFile(path, projectFile);
 
-	//JsonValue projectFileJson = JsonParser::Parse(projectFile);
-	//ProjectFile* project = ReadProjectFile(projectFileJson);
+	JsonValue projectFileJson = JsonParser::Parse(projectFile);
+	ProjectFile* project = ReadProjectFile(projectFileJson);
+
+	if (project != nullptr)
+	{
+		project->Path = _path;
+		return project;
+	}
+	
 	return nullptr;
 }

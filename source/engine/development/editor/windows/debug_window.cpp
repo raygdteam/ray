@@ -28,14 +28,22 @@ void EdDebugWindow::Tick()
 	gText.append_sprintf("AllocatedVirtualMemory = %i\n", IRenderer::sRendererStats.AllocatedVirtualMemory);
 	gText.append_sprintf("UsedVirtualMemory = %llu", IRenderer::sRendererStats.UsedVirtualMemory);
 
-	FVector2& pos = gEditorEngine->GetCameraPos();
-	float* posx = (float*)&pos.x;
-	
-	if (ImGui::SliderFloat2("Camera pos", posx, -1000.f, 1000.f))
+	if (gEditorEngine->IsCurrentlyInLevel())
 	{
-		gEditorEngine->ApplyMouseDragOnViewport(FVector2{ 0,0 });
-	}
+		FVector2& pos = gEditorEngine->GetCameraPos();
+		float* posx = (float*)&pos.x;
 
+		if (ImGui::SliderFloat2("Camera pos", posx, -1000.f, 1000.f))
+		{
+			gEditorEngine->ApplyMouseDragOnViewport(FVector2{ 0,0 });
+		}
+
+		if (ImGui::DragFloat("Camera zoom", gEditorEngine->GetCameraZoom(), 0.025f))
+		{
+			gEditorEngine->ApplyMouseDragOnViewport(FVector2{ 0,0 });
+		}
+	}
+	
 	ImGui::SliderFloat("Sensitivity", &gEditorEngine->MouseDragSensitivity, 1.f, 10.f);
 
 	memcpy(&gFrametimeFrames[1], &gFrametimeFrames[0], 255 * sizeof(f32));
@@ -66,11 +74,6 @@ void EdDebugWindow::Tick()
 		EditorCommand_LoadLevel* cmd = new EditorCommand_LoadLevel;
 		cmd->Path = String("../../engine/resources/level2.json");
 		gEditorEngine->RunCommand(cmd);
-	}
-
-	if(ImGui::DragFloat("Camera zoom", gEditorEngine->GetCameraZoom(), 0.025f))
-	{
-		gEditorEngine->ApplyMouseDragOnViewport(FVector2 { 0,0 });
 	}
 
 	ImGui::Checkbox("Show Demo Window", &gShowDemoWindow);

@@ -59,10 +59,13 @@ public:
 
 class RMaterial : public IRResource
 {
+	RAYOBJECT_BODY(RMaterial, IRResource);
+	friend class ResourceManager;
 public:
 	void Serialize(Archive&) override;
 	void Deserialize(Archive&) override;
 protected:
+	RMaterial() {}
 	bool LoadFrom(IFile* path) override;
 public:
 	ResourceType GetResourceType() const noexcept override;
@@ -74,10 +77,13 @@ public:
 
 class RMaterialInstance : public IRResource
 {
+	RAYOBJECT_BODY(RMaterialInstance, IRResource);
+	friend class ResourceManager;
 public:
 	void Serialize(Archive&) override;
 	void Deserialize(Archive&) override;
 protected:
+	RMaterialInstance() {}
 	bool LoadFrom(IFile* path) override;
 public:
 	ResourceType GetResourceType() const noexcept override;
@@ -86,4 +92,21 @@ public:
 public:
 	// Add properties here
 	String Texture;
+};
+
+class RConfiguration : public IRResource
+{
+	RAYOBJECT_BODY(RConfiguration, IRResource);
+	friend class ResourceManager;
+public:
+	void Serialize(Archive&) override;
+	void Deserialize(Archive&) override;
+protected:
+	RConfiguration() {}
+	bool LoadFrom(IFile* path) override;
+public:
+	ResourceType GetResourceType() const noexcept override;
+	void Unload() override;
+
+	JsonValue Root;
 };

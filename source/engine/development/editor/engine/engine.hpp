@@ -20,6 +20,7 @@ class EDITOR_API EditorEngine : public IEngine
 	IPlatformWindow* _window = nullptr;
 	float _delta = .0f;
 	//IVkRenderer* _renderer = nullptr;
+	ProjectFile* _currentProject = nullptr;
 	World* _world = nullptr;
 	Level* _level = nullptr;
 
@@ -28,6 +29,7 @@ class EDITOR_API EditorEngine : public IEngine
 	std::queue<EditorCommand*> _pendingEditorCommands;
 
 	void LoadProject(ProjectFile* project);
+	void LoadProjectSettings();
 	
 	void ProcessCommands();
 public:
@@ -41,6 +43,8 @@ public:
 	void ResizeCameraViewport(FVector2 size);
 	void RunCommand(EditorCommand* command);
 	void FireCallbackOnActorModified(Actor* actor);
+
+	bool IsCurrentlyInLevel();
 	
 	float MouseDragSensitivity = 1.75f;
 

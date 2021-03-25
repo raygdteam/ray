@@ -136,6 +136,11 @@ void RMaterial::Unload()
 {
 }
 
+RAYOBJECT_DESCRIPTION_BEGIN(RMaterial)
+RAYOBJECT_DESCRIPTION_NAME("engine://resources/Material")
+RAYOBJECT_DESCRIPTION_CREATEABLE()
+RAYOBJECT_DESCRIPTION_END(RMaterial)
+
 /* ----------------- MATERIAL INSTANCE ----------------- */
 
 void RMaterialInstance::Serialize(Archive&)
@@ -169,6 +174,44 @@ void RMaterialInstance::Unload()
 {
 }
 
+RAYOBJECT_DESCRIPTION_BEGIN(RMaterialInstance)
+RAYOBJECT_DESCRIPTION_NAME("engine://resources/MaterialInstance")
+RAYOBJECT_DESCRIPTION_CREATEABLE()
+RAYOBJECT_DESCRIPTION_END(RMaterialInstance)
+
+/* --------------- CONFIGURATION -------------- */
+
+void RConfiguration::Serialize(Archive&)
+{
+}
+
+void RConfiguration::Deserialize(Archive&)
+{
+}
+
+bool RConfiguration::LoadFrom(IFile* path)
+{
+	String text;
+	text.resize(path->Size());
+	path->Read((u8*)text.data(), path->Size());
+
+	Root = JsonParser::Parse(text);
+	return true;
+}
+
+ResourceType RConfiguration::GetResourceType() const noexcept
+{
+	return eConfig;
+}
+
+void RConfiguration::Unload()
+{
+}
+
+RAYOBJECT_DESCRIPTION_BEGIN(RConfiguration)
+RAYOBJECT_DESCRIPTION_NAME("engine://resources/Configuration")
+RAYOBJECT_DESCRIPTION_CREATEABLE()
+RAYOBJECT_DESCRIPTION_END(RConfiguration)
 
 /* ------------------ RESOURCE MANAGER ------------------ */
 
@@ -210,6 +253,10 @@ IRResource* ResourceManager::LoadResourceResolved(pcstr path, pcstr resorcePath,
 	else if (type == eMaterialInstance)
 	{
 		resource = new RMaterialInstance();
+	}
+	else if (type == eConfig)
+	{
+		resource = new RConfiguration();
 	}
 
 	resource->_name = String(resorcePath);
