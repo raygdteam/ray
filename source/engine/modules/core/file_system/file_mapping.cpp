@@ -118,7 +118,7 @@ u64 MappedFile::Seek(size_t offset, SeekOrigin origin)
 		break;
 	case End:
 		// ???
-		_end -= offset;
+		_current = _end - offset;
 		break;
 	default:
 		check(false);
