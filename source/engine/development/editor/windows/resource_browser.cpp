@@ -22,15 +22,21 @@ void EdResourceBrowser::Tick()
 	String filter(gFilter);
 	if (filter.length() != 0 && filter[strlen(filter.data()) - 1] == '/')
 		filter = String(filter.substr(0, filter.Length() - 1));
+
+	/*******************************************/
+
+	struct File
+	{
+		IRResource* Resource;
+	};
+
+	
 	
 	for (ResourceData& resource : resources)
 	{
 		String resourcePath(resource.Name.substr(0, resource.Name.find_last_of("/")));
 
-		if (filter == resourcePath)
-		{
-			ImGui::TextUnformatted(resource.Name.AsRawStr());
-		}
+		
 	}
 	
 }

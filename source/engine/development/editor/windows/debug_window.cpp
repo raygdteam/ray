@@ -61,7 +61,7 @@ void EdDebugWindow::Tick()
 		gEditorEngine->RunCommand(cmd1);
 		
 		EditorCommand_LoadLevel* cmd = new EditorCommand_LoadLevel;
-		cmd->Path = String("../../engine/test_project1/resources/levels/level.json");
+		cmd->Path = String("../../engine/test_project1/resources/levels/level.ray_level");
 		gEditorEngine->RunCommand(cmd);
 	}
 	
@@ -72,7 +72,7 @@ void EdDebugWindow::Tick()
 		gEditorEngine->RunCommand(cmd1);
 		
 		EditorCommand_LoadLevel* cmd = new EditorCommand_LoadLevel;
-		cmd->Path = String("../../engine/resources/level2.json");
+		cmd->Path = String("../../engine/resources/level2.ray_level");
 		gEditorEngine->RunCommand(cmd);
 	}
 
