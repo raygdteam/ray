@@ -16,6 +16,7 @@ class RAY_RESOURCES_API IRResource : public RayObject
 	String _name;
 protected:
 	u64 _id = -1;
+	bool _loaded = false;
 	
 	virtual bool LoadFrom(IFile* path) = 0;
 public:
@@ -27,6 +28,11 @@ public:
 	String& GetName()
 	{
 		return _name;
+	}
+
+	bool IsLoaded()
+	{
+		return _loaded;
 	}
 	
 	virtual void Unload() = 0;
@@ -44,7 +50,7 @@ class RAY_RESOURCES_API RTexture final : public IRResource
 protected:
 	RTexture();
 	bool LoadFrom(IFile* path) override;
-	
+
 public:
 	ResourceType GetResourceType() const noexcept override;
 	

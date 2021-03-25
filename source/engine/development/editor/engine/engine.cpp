@@ -39,13 +39,13 @@ void EditorEngine::LoadProject(ProjectFile* project)
 	
 	RayState()->ResourceManager->UnloadAllResources();
 	RayState()->ResourceManager->SetGameResourceDirectory(resourcePath);
-
-
 	delete _currentProject;
 	_currentProject = project;
 
 	LoadProjectSettings();
 
+	RayState()->ResourceManager->PreloadAllGameResources();
+	
 	_editorUi.CmdLevelLoaded();
 }
 
@@ -105,7 +105,9 @@ void EditorEngine::Initialize(IEngineLoop* engineLoop)
 	gActorCache->Rebuild();
 
 	String path("../../engine/resources");
+
 	RayState()->ResourceManager->SetEngineResourcesDirectory(path);
+	RayState()->ResourceManager->PreloadAllEngineResources();
 	
 	gRenderer = new IRenderer();
 	gRenderer->Initialize(_window);
@@ -196,6 +198,11 @@ void EditorEngine::RunCommand(EditorCommand* command)
 void EditorEngine::FireCallbackOnActorModified(Actor* actor)
 {
 	_level->EditorCallbackOnActorModified(actor);
+}
+
+String& EditorEngine::GetCurrentProjectPath()
+{
+	return _currentProject->Path;
 }
 
 bool EditorEngine::IsCurrentlyInLevel()

@@ -8,7 +8,14 @@
 struct IRayState;
 
 // Internal use only;
-struct ResourceData;
+struct ResourceData
+{
+	String Name;
+	String PhysicalPath;
+	u16 ReferenceCount;
+	ResourceType Type;
+	IRResource* ResourceRef;
+};
 
 class RAY_RESOURCES_API ResourceManager
 {
@@ -29,7 +36,9 @@ class RAY_RESOURCES_API ResourceManager
 	/* data cache */
 	String _dataCacheDirectory;
 
+	void LoadPreloadedResource(ResourceData& data);
 	IRResource* LoadResourceResolved(pcstr path, pcstr resorcePath, ResourceType type);
+	void PreloadResource(String& path, String& resourcePath);
 public:
 	ResourceManager(IRayState* state);
 
@@ -40,4 +49,12 @@ public:
 	IRResource* LoadResourceSync(pcstr name, ResourceType desiredType);
 
 	void LoadResource(pcstr name, ResourceType desiredType, Function<void(IRResource*)> callback);
+
+	void PreloadAllEngineResources();
+	void PreloadAllGameResources();
+
+	Array<ResourceData>& GetAllResources()
+	{
+		return _resources;
+	}
 };

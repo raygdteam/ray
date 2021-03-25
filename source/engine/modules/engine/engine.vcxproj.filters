@@ -80,6 +80,9 @@
     <ClInclude Include="ui2\objects\image.hpp">
       <Filter>ui2\objects</Filter>
     </ClInclude>
+    <ClInclude Include="ui2\ext\imgui_user.h">
+      <Filter>ui2\ext</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="engine">

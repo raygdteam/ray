@@ -20,7 +20,7 @@ void EdDockspace::MenuBar()
 
 			openFileName.lStructSize = sizeof(openFileName);
 			openFileName.hwndOwner = NULL;
-			openFileName.lpstrFilter = "Json Files (*.json)\0*.json\0";
+			openFileName.lpstrFilter = "Ray Levels (*.ray_level)\0*.ray_level\0";
 			openFileName.lpstrFile = fileName;
 			openFileName.nMaxFile = MAX_PATH;
 			openFileName.Flags = OFN_EXPLORER | OFN_FILEMUSTEXIST | OFN_HIDEREADONLY | OFN_NOCHANGEDIR;

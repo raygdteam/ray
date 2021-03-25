@@ -9,6 +9,7 @@
 #include <editor/windows/log_window.hpp>
 #include <editor/windows/level_chooser.hpp>
 #include <editor/windows/actor_properties.hpp>
+#include <editor/windows/resource_browser.hpp>
 
 class EditorUi
 {
@@ -30,6 +31,7 @@ class EditorUi
 	EdLevelViewport* _levelViewport = nullptr;
 	EdLogWindow* _logWindow = nullptr;
 	EdActorProperties* _actorProperties = nullptr;
+	EdResourceBrowser* _resourceBrowser = nullptr;
 
 public:
 	EditorUi();

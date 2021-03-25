@@ -59,6 +59,9 @@
     <ClCompile Include="windows\about_window.cpp">
       <Filter>windows</Filter>
     </ClCompile>
+    <ClCompile Include="windows\resource_browser.cpp">
+      <Filter>windows</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="renderer">
@@ -139,6 +142,9 @@
       <Filter>windows</Filter>
     </ClInclude>
     <ClInclude Include="windows\dockspace.hpp">
+      <Filter>windows</Filter>
+    </ClInclude>
+    <ClInclude Include="windows\resource_browser.hpp">
       <Filter>windows</Filter>
     </ClInclude>
   </ItemGroup>

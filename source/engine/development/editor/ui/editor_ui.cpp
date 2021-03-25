@@ -39,6 +39,7 @@ void EditorUi::Initialize(IPlatformWindow* window)
 		ImGui::DockBuilderDockWindow("Level Viewport", dockLeftTop);
 		ImGui::DockBuilderDockWindow("EdDebugWindow", dockRightBottom);
 		ImGui::DockBuilderDockWindow("Actor Properties", dockRightBottom);
+		ImGui::DockBuilderDockWindow("Resource Browser", dockMain);
 		ImGui::DockBuilderFinish(1);
 	}
 
@@ -52,6 +53,7 @@ void EditorUi::Initialize(IPlatformWindow* window)
 	_levelOutline = new EdLevelOutline();
 	_logWindow = new EdLogWindow();
 	_actorProperties = new EdActorProperties();
+	_resourceBrowser = new EdResourceBrowser();
 
 	_state = eChooseLevel;
 }
@@ -78,6 +80,7 @@ void EditorUi::CmdLevelLoaded()
 	_rootObject->AddWindow(_levelOutline);
 	_rootObject->AddWindow(_logWindow);
 	_rootObject->AddWindow(_actorProperties);
+	_rootObject->AddWindow(_resourceBrowser);
 
 	_rootObject->RemoveWindow(_levelChooser);
 	delete _levelChooser;
@@ -95,6 +98,7 @@ void EditorUi::CmdCloseLevel()
 	_rootObject->RemoveWindow(_levelOutline);
 	_rootObject->RemoveWindow(_logWindow);
 	_rootObject->RemoveWindow(_actorProperties);
+	_rootObject->RemoveWindow(_resourceBrowser);
 
 	_levelChooser = new LevelChooser();
 	_rootObject->AddWindow(_levelChooser);
