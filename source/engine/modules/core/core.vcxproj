@@ -61,6 +61,7 @@
     <ClCompile Include="core_entry_point.cpp" />
     <ClCompile Include="debug\debug.cpp" />
     <ClCompile Include="extended_instuctions\sse\common.cpp" />
+    <ClCompile Include="file_system\file_mapping.cpp" />
     <ClCompile Include="file_system\file_system.cpp" />
     <ClCompile Include="json\json.cpp" />
     <ClCompile Include="lib\json.cpp" />

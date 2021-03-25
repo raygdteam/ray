@@ -59,6 +59,9 @@
     <ClCompile Include="lib\json.cpp">
       <Filter>lib</Filter>
     </ClCompile>
+    <ClCompile Include="file_system\file_mapping.cpp">
+      <Filter>file_system</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="core.hpp" />
