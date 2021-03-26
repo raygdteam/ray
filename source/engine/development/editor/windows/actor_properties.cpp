@@ -22,7 +22,7 @@ void EdActorProperties::Tick()
 
 	Actor* actor = gSelectedActor;
 
-	ImGui::TextUnformatted("Name "); ImGui::SameLine();
+	ImGui::TextUnformatted("Name  "); ImGui::SameLine();
 	InputText("##ActorNameEnter", &actor->GetName(), 0, 0, 0);
 
 	ImGui::TextUnformatted("Active"); ImGui::SameLine();
