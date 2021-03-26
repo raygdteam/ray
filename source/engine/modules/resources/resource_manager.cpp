@@ -217,6 +217,36 @@ RAYOBJECT_DESCRIPTION_END(RConfiguration)
 
 /* ------------------ RESOURCE MANAGER ------------------ */
 
+void SplitPath(String path, String& outName, Array<String>& out)
+{
+	if (*path.begin() == '/') 
+		path = String(path.substr(1));
+
+	outName = String(path.substr(path.find_last_of("/") + 1));
+	path = String(path.substr(0, path.find_last_of("/")));
+	
+	if (path.find_first_of("/") != String::npos)
+	{
+		while (path.find_first_of("/") != String::npos)
+		{
+			size_t n = path.find_first_of("/");
+			out.PushBack(String(path.substr(0, n)));
+			path = String(path.substr(n + 1));
+		}
+
+		// there is only one left
+		out.PushBack(path);
+	}
+	else
+	{
+		// rpath contains the only component
+		if (!path.empty())
+		{
+			out.PushBack(path);
+		}
+	}
+}
+
 ResourceManager::ResourceManager(IRayState* state)
 {
 	_state = state;
@@ -310,13 +340,72 @@ void ResourceManager::PreloadResource(String& path, String& resourcePath)
 
 	res->_name = resourcePath;
 
-	_resources.PushBack(ResourceData {
+	String resName;
+	Array<String> resPathComponents;
+	SplitPath(resourcePath, resName, resPathComponents);
+
+	InsertResource(ResourceData {
 		.Name = resourcePath,
 		.PhysicalPath = path,
 		.ReferenceCount = 0xffff,
 		.Type = res->GetResourceType(),
 		.ResourceRef = res
-	});
+	}, resName, resPathComponents);
+}
+
+void ResourceManager::InsertResource(ResourceData data, String& name, Array<String>& components)
+{
+	Directory* dir = &_rootDirectory.Directories[components[0]];
+	bool bFirst = true;
+
+	for (String& pathComponent : components)
+	{
+		if (bFirst)
+		{
+			dir = &_rootDirectory.Directories[pathComponent];
+			bFirst = false;
+		}
+		else
+		{
+			dir = &dir->Directories[pathComponent];
+		}
+	}
+
+	dir->Resources[name] = data;
+}
+
+Directory& ResourceManager::GetDirectory(Array<String>& components)
+{
+	Directory* dir = &_rootDirectory.Directories[components[0]];
+	bool bFirst = true;
+
+	for (String& pathComponent : components)
+	{
+		if (bFirst)
+		{
+			dir = &_rootDirectory.Directories[pathComponent];
+			bFirst = false;
+		}
+		else
+		{
+			dir = &dir->Directories[pathComponent];
+		}
+	}
+
+	return *dir;
+}
+
+void ResourceManager::UnloadResourcesInternal(Directory& dir)
+{
+	for (eastl::pair<const String, ResourceData>& pair : dir.Resources)
+	{
+		pair.second.ResourceRef->Unload();
+	}
+
+	for (eastl::pair<const String, Directory>& directory : dir.Directories)
+	{
+		UnloadResourcesInternal(directory.second);
+	}
 }
 
 void ResourceManager::SetEngineResourcesDirectory(String& directory)
@@ -333,10 +422,7 @@ void ResourceManager::SetGameResourceDirectory(String& directory)
 
 void ResourceManager::UnloadAllResources()
 {
-	for (ResourceData& resource : _resources)
-	{
-		resource.ResourceRef->Unload();
-	}
+	UnloadResourcesInternal(_rootDirectory);
 }
 
 IRResource* ResourceManager::LoadResourceSync(pcstr inName, ResourceType desiredType)
@@ -344,8 +430,15 @@ IRResource* ResourceManager::LoadResourceSync(pcstr inName, ResourceType desired
 	check(inName != nullptr);
 	check(inName[0] == '/');
 
-	for (ResourceData& resource : _resources)
+
+	String resName;
+	Array<String> resPathComponents;
+	SplitPath(String(inName), resName, resPathComponents);
+
+	for (eastl::pair<const String, ResourceData>& pair : GetDirectory(resPathComponents).Resources)
 	{
+		ResourceData& resource = pair.second;
+		
 		if (resource.Type == desiredType && resource.Name == inName)
 		{
 			if (!resource.ResourceRef->IsLoaded())
@@ -385,13 +478,13 @@ IRResource* ResourceManager::LoadResourceSync(pcstr inName, ResourceType desired
 			}
 
 			/* shortcut */
-			_resources.PushBack(ResourceData {
+			InsertResource(ResourceData {
 				.Name = String(inName),
 				.PhysicalPath = resolvedPath,
 				.ReferenceCount = 0xffff,
 				.Type = desiredType,
 				.ResourceRef = resource
-			});
+			}, resName, resPathComponents);
 			
 			_mutex.Leave();
 			return resource;

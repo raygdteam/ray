@@ -5,7 +5,7 @@
 #include "engine/ui2/ext/imgui_internal.h"
 #include "resources/resource_manager.hpp"
 
-String gFilter("/");
+String gFilter("/engine");
 const String gSlash("/");
 
 
@@ -44,61 +44,17 @@ void EdResourceBrowser::Tick()
 	ImGui::TextUnformatted(gFilter.AsRawStr());
 	ImGui::Separator();
 
-	Array<ResourceData>& resources = RayState()->ResourceManager->GetAllResources();
+	Directory& rootDir = RayState()->ResourceManager->GetRootDirectory();
 
 	String filter(gFilter);
 	if (filter != gSlash && filter.length() != 0 && filter[strlen(filter.data()) - 1] == '/')
 		filter = String(filter.substr(0, filter.Length() - 1));
 
-	/*******************************************/
-
-	struct File
-	{
-		IRResource* Resource;
-	};
-
-	struct Directory
-	{
-		eastl::map<String, File> Files;
-		eastl::map<String, Directory> Directories;
-	};
-
-	Directory rootDir;
-	
-	for (ResourceData& resource : resources)
-	{
-		String resourcePath(resource.Name.substr(0, resource.Name.find_last_of("/")));
-		String resourceName(resource.Name.substr(resource.Name.find_last_of("/") + 1));
-		Array<String> pathComponents;
-
-		SplitPath(resourcePath, pathComponents);
-
-		{
-			Directory* dir = &rootDir.Directories[pathComponents[0]];
-			bool bFirst = true;
-			
-			for (String& pathComponent : pathComponents)
-			{
-				if (bFirst)
-				{
-					dir = &rootDir.Directories[pathComponent];
-					bFirst = false;
-				}
-				else
-				{
-					dir = &dir->Directories[pathComponent];
-				}
-			}
-			
-			dir->Files[resourceName] = File { resource.ResourceRef };
-		}
-	}
-
 	Array<String> pathComponents;
 	SplitPath(filter, pathComponents);
-	
-	Directory* dir = &rootDir;
 
+	Directory* dir = &rootDir;
+	
 	if (!pathComponents.empty())
 	{
 		bool bFirst = true;
@@ -143,9 +99,16 @@ void EdResourceBrowser::Tick()
 		}
 	}
 	
-	for (eastl::pair<const String, File>& pair : dir->Files)
+	for (eastl::pair<const String, ResourceData>& pair : dir->Resources)
 	{
-		ImGui::Text("%s", pair.first.AsRawStr());
+		ImVec4 color(1.f, 0.f, 0.f, 1.f);
+		ImGui::ColorButton(pair.first.AsRawStr(), color);
+		if (ImGui::BeginDragDropSource())
+		{
+			ImGui::Text("Dragging %s...", pair.second.Name.AsRawStr());
+			ImGui::SetDragDropPayload("RESOURCE", pair.second.ResourceRef, sizeof(pair.second.ResourceRef));
+			ImGui::EndDragDropSource();
+		}
 	}
 }
 
