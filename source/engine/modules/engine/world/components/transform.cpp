@@ -12,13 +12,13 @@ void Transform::Deserialize(Archive& ar)
 	ar.Read(this->Position);
 }
 
-void Transform::LoadFromJson(JsonValue& json)
+void Transform::LoadFromJson(ray::json::value& json)
 {
-	Position.x = f32(json["position_x"].AsDouble());
-	Position.y = f32(json["position_y"].AsDouble());
+	Position.x = f32(json.as_dictionary()["position_x"].as_integer());
+	Position.y = f32(json.as_dictionary()["position_y"].as_integer());
 
-	Scale.x = f32(json["scale_x"].AsDouble());
-	Scale.y = f32(json["scale_y"].AsDouble());
+	Scale.x = f32(json.as_dictionary()["scale_x"].as_integer());
+	Scale.y = f32(json.as_dictionary()["scale_y"].as_integer());
 }
 
 RAYOBJECT_DESCRIPTION_BEGIN(Transform)

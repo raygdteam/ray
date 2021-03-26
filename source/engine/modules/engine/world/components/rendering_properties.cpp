@@ -6,7 +6,7 @@
 void RenderingPropertiesComponent::Init()
 {
 	if (Material != nullptr) return;
-	
+
 	String name("/game/materials/default");
 	Material = _world->GetMaterialInstance(_world->GetMaterialIdForName(name)).Material;
 }
@@ -29,9 +29,9 @@ void RenderingPropertiesComponent::Deserialize(Archive&)
 {
 }
 
-void RenderingPropertiesComponent::LoadFromJson(JsonValue& json)
+void RenderingPropertiesComponent::LoadFromJson(ray::json::value& json)
 {
-	String name = json["material_name"].AsString();
+	String name(json.as_dictionary()["material_name"].as_string())
 	Material = _world->GetMaterialInstance(_world->GetMaterialIdForName(name)).Material;
 }
 
