@@ -78,16 +78,16 @@ namespace ray::json
 			return this->_integer_value;
 		}
 
-		Array<value>* as_array()
+		Array<value>& as_array()
 		{
 			//assert
-			return this->_array_value;
+			return *this->_array_value;
 		}
 
-		dictionary* as_dictionary()
+		dictionary& as_dictionary()
 		{
 			//assert
-			return this->_dictionary_value;
+			return *this->_dictionary_value;
 		}
 	};
 

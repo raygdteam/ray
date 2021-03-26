@@ -10,7 +10,6 @@
 
 #include "world.hpp"
 #include "components/rendering_properties.hpp"
-#include "core/json/json.hpp"
 #include "core/lib/json.hpp"
 
 Level::Level()
@@ -151,31 +150,31 @@ void Level::LoadFrom(String& path)
 	file->Close();
 	delete file;
 
-	JsonValue json = JsonParser::Parse(text);
+	auto json = ray::json::parse(text.c_str());
 
-	JsonValue& actors = json["actors"];
-	for (u32 i = 0; i < actors.Size(); ++i)
+	auto& actors = json["actors"];
+	for (u32 i = 0; i < actors.as_array().Size(); ++i)
 	{
-		JsonValue& actor = actors[i];
+		auto& actor = actors.as_array()[i];
 
 		// TODO: error checking
-		Type* actorType = RayState()->ObjectDb->GetTypeByName(actor["type"].AsString().AsRawStr());
+		Type* actorType = RayState()->ObjectDb->GetTypeByName(actor.as_dictionary()["type"].as_string());
 		Actor* instance = (Actor*)actorType->CreateInstance();
-		instance->Name = actor["name"].AsString();
+		instance->Name = String(actor.as_dictionary()["name"].as_string());
 
 		for (IComponent* component1 : instance->_components)
 			delete component1;
 		instance->_components.Clear();
 
-		JsonValue& components = actor["components"];
-		for (u32 j = 0; j < components.Size(); ++j)
+		auto& components = actor.as_dictionary()["components"];
+		for (u32 j = 0; j < components.as_array().Size(); ++j)
 		{
-			JsonValue& component = components[j];
+			auto& component = components.as_array()[j];
 
-			Type* componentType = RayState()->ObjectDb->GetTypeByName(component["type"].AsString().AsRawStr());
+			Type* componentType = RayState()->ObjectDb->GetTypeByName(component.as_dictionary()["type"].as_string());
 			IComponent* componentInstance = (IComponent*)componentType->CreateInstance();
 
-			componentInstance->LoadFromJson(component["properties"]);
+			componentInstance->LoadFromJson(component.as_dictionary()["properties"]);
 			instance->_components.PushBack(componentInstance);
 		}
 

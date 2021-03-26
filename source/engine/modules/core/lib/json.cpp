@@ -78,7 +78,7 @@ ray::json::value ray::json::parser::array(int& iterator, long size, char** token
 		case ray::json::parser::type::ocbraces:
 			ray::json::value svalue;
 			svalue = ray::json::parser::dictionary(iterator, size, tokens, types);
-			fvalue.as_array()->push_back(svalue);
+			fvalue.as_array().push_back(svalue);
 			break;
 		case ray::json::parser::type::csbraces:
 			return fvalue;
@@ -120,14 +120,14 @@ ray::json::dictionary ray::json::parse(const char* result)
 			break;
 		case 44: case 58: case 91: case 93: case 123: case 125:
 			size++; break;
-		case 9: case 10: case 32:
+		case 9: case 10: case 13: case 32:
 			break;
 		default:
 			for (iterator++; result[iterator]; iterator++)
 			{
 				switch (result[iterator])
 				{
-				case 9: case 10: case 32: case 44:
+				case 9: case 10: case 13: case 32: case 44:
 					size++; iterator++;
 					goto flabel;
 				default:
@@ -191,7 +191,7 @@ ray::json::dictionary ray::json::parse(const char* result)
 			tokens_range[siterator++][1] = fiterator;
 			tokens_type[titerator++] = ray::json::parser::type::ccbraces;
 			break;
-		case 9: case 10: case 32:
+		case 9: case 10: case 13: case 32:
 			break;
 		default:
 			tokens_range[siterator][0] = fiterator;
@@ -199,7 +199,7 @@ ray::json::dictionary ray::json::parse(const char* result)
 			{
 				switch (result[fiterator])
 				{
-				case 9: case 10: case 32: case 44:
+				case 9: case 10: case 13: case 32: case 44:
 					if (tokens_type[titerator - 2] == ray::json::parser::type::key)
 						tokens_type[titerator++] = ray::json::parser::type::value;
 					else

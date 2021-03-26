@@ -19,5 +19,5 @@ public:
 	void Serialize(Archive&) override;
 	void Deserialize(Archive&) override;
 
-	void LoadFromJson(JsonValue& json) override;
+	void LoadFromJson(ray::json::value& json) override;
 };
