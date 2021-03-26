@@ -17,6 +17,12 @@ struct ResourceData
 	IRResource* ResourceRef;
 };
 
+struct Directory
+{
+	eastl::map<String, ResourceData> Resources;
+	eastl::map<String, Directory> Directories;
+};
+
 class RAY_RESOURCES_API ResourceManager
 {
 	struct ResourceMapping
@@ -28,7 +34,7 @@ class RAY_RESOURCES_API ResourceManager
 	IRayState* _state;
 	
 	CriticalSection _mutex;
-	Array<ResourceData> _resources;
+	Directory _rootDirectory;
 	
 	ResourceMapping _engineMap;
 	ResourceMapping _gameMap;
@@ -39,6 +45,10 @@ class RAY_RESOURCES_API ResourceManager
 	void LoadPreloadedResource(ResourceData& data);
 	IRResource* LoadResourceResolved(pcstr path, pcstr resorcePath, ResourceType type);
 	void PreloadResource(String& path, String& resourcePath);
+	void InsertResource(ResourceData data, String& name, Array<String>& components);
+	Directory& GetDirectory(Array<String>& components);
+	
+	void UnloadResourcesInternal(Directory& dir);
 public:
 	ResourceManager(IRayState* state);
 
@@ -53,8 +63,8 @@ public:
 	void PreloadAllEngineResources();
 	void PreloadAllGameResources();
 
-	Array<ResourceData>& GetAllResources()
+	Directory& GetRootDirectory()
 	{
-		return _resources;
+		return _rootDirectory;
 	}
 };
