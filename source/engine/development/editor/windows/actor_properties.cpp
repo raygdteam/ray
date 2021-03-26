@@ -149,9 +149,9 @@ void EdActorProperties::Tick()
 							const ImGuiPayload* payload = ImGui::AcceptDragDropPayload(type.AsRawStr());
 							if (payload != nullptr)
 							{
-								ResourceData* res = (ResourceData*)payload->Data;
+								IRResource* res = *(IRResource**)payload->Data;
 
-								*data = (RMaterialInstance*)res->ResourceRef;
+								*data = (RMaterialInstance*)res;
 								
 								gEditorEngine->FireCallbackOnActorModified(gSelectedActor);
 							}
