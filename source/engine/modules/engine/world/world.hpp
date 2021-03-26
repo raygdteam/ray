@@ -26,6 +26,7 @@ struct MaterialInstance
 {
 	u64 Id;
 	String Name;
+	RMaterialInstance* Material;
 	GpuTexture* Texture;
 	TextureView TextureView;
 	// ...
@@ -87,6 +88,7 @@ public:
 
 	void SetPrimaryCamera(CameraActor* camera);
 
+	u64 CompileMaterial(String& res);
 	u64 CompileMaterial(RMaterialInstance* instance);
 
 	MaterialInstance& GetMaterialInstance(u64 id);

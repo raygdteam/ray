@@ -190,6 +190,11 @@ void World::SetPrimaryCamera(CameraActor* camera)
 	_primaryCameraActor = camera;
 }
 
+u64 World::CompileMaterial(String& res)
+{
+	return CompileMaterial(static_cast<RMaterialInstance*>(RayState()->ResourceManager->LoadResourceSync(res.AsRawStr(), eMaterialInstance)));
+}
+
 u64 World::CompileMaterial(RMaterialInstance* instance)
 {
 	RTexture* texture = dynamic_cast<RTexture*>(RayState()->ResourceManager->LoadResourceSync(instance->Texture.AsRawStr(), eTexture));
@@ -207,6 +212,7 @@ u64 World::CompileMaterial(RMaterialInstance* instance)
 	MaterialInstance entry = {
 		.Id = _materialInstances.Size(),
 		.Name = instance->GetName(),
+		.Material = instance,
 		.Texture = actorTexture,
 		.TextureView = actorTextureView
 	};

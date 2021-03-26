@@ -106,7 +106,9 @@ void EdResourceBrowser::Tick()
 		if (ImGui::BeginDragDropSource())
 		{
 			ImGui::Text("Dragging %s...", pair.second.Name.AsRawStr());
-			ImGui::SetDragDropPayload("RESOURCE", pair.second.ResourceRef, sizeof(pair.second.ResourceRef));
+			String type(pair.second.ResourceRef->GetType()->Name);
+			if (type.Length() >= 32) type = String(type.substr(0, 32));
+			ImGui::SetDragDropPayload(type.AsRawStr(), &pair.second, sizeof(ResourceData));
 			ImGui::EndDragDropSource();
 		}
 	}

@@ -29,6 +29,8 @@ enum FieldType
 	eVector2,
 	eVector3,
 	eVector4,
+
+	eResourceRef
 };
 
 struct FieldInfo

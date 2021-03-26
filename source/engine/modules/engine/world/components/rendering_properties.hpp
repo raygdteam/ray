@@ -2,14 +2,15 @@
 #include <core/core.hpp>
 #include <engine/world/components/component_base.hpp>
 #include <core/math/vector.hpp>
+#include "resources/resource.hpp"
 
 class RenderingPropertiesComponent : public IComponent
 {
 	RAYOBJECT_BODY(RenderingComponent, IComponent);
 
-	String MaterialName;
+	RMaterialInstance* Material = nullptr;
 public:
-	void Init() override {}
+	void Init() override;
 	void Tick() override {}
 	void OnDestroy() override {}
 	

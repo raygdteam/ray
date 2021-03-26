@@ -3,6 +3,7 @@
 #include "editor/engine/engine.hpp"
 #include "editor_core/caches/component_cache.hpp"
 #include "engine/ui2/ext/imgui.h"
+#include "resources/resource_manager.hpp"
 
 
 static Type* gCurrentlyChosenComponent = nullptr;
@@ -127,11 +128,36 @@ void EdActorProperties::Tick()
 					case eString:
 						ImGui::PushID((u8*)component + field.Offset);
 						InputText("##StringValue", (String*)((u8*)component + field.Offset), 0, nullptr, nullptr);
-						ImGui::PopID();
+						ImGui::PopID();						
 						break;
 					default:
 						break;
 					}
+
+					if (field.Type == eResourceRef)
+					{
+						RMaterialInstance** data = (RMaterialInstance**)((u8*)component + field.Offset);
+
+						ImGui::PushID((u8*)component + field.Offset);
+						ImGui::Selectable((*data)->GetName().AsRawStr());
+						ImGui::PopID();
+
+						if (ImGui::BeginDragDropTarget())
+						{
+							String type(RMaterialInstance::GetStaticType()->Name);
+							type = String(type.substr(0, 32));
+							const ImGuiPayload* payload = ImGui::AcceptDragDropPayload(type.AsRawStr());
+							if (payload != nullptr)
+							{
+								ResourceData* res = (ResourceData*)payload->Data;
+
+								*data = (RMaterialInstance*)res->ResourceRef;
+								
+								gEditorEngine->FireCallbackOnActorModified(gSelectedActor);
+							}
+						}
+					}
+					
 					ImGui::NextColumn();
 				}
 				ImGui::Columns(1);
@@ -168,7 +194,8 @@ void EdActorProperties::Tick()
 
 		if (ImGui::Button("OK"))
 		{
-			gSelectedActor->GetComponents().PushBack((IComponent*)gCurrentlyChosenComponent->CreateInstance());
+			IComponent* instance = (IComponent*)gCurrentlyChosenComponent->CreateInstance();
+			gSelectedActor->EdAddComponent(instance);
 			gCurrentlyChosenComponent = nullptr;
 			ImGui::CloseCurrentPopup();
 		}

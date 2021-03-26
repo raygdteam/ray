@@ -175,7 +175,9 @@ void Level::LoadFrom(String& path)
 			Type* componentType = RayState()->ObjectDb->GetTypeByName(component["type"].AsString().AsRawStr());
 			IComponent* componentInstance = (IComponent*)componentType->CreateInstance();
 
+			componentInstance->Setup(_owningWorld, this);
 			componentInstance->LoadFromJson(component["properties"]);
+			componentInstance->Init();
 			instance->_components.PushBack(componentInstance);
 		}
 
