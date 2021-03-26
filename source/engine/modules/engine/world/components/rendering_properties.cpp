@@ -31,7 +31,7 @@ void RenderingPropertiesComponent::Deserialize(Archive&)
 
 void RenderingPropertiesComponent::LoadFromJson(ray::json::value& json)
 {
-	String name(json.as_dictionary()["material_name"].as_string())
+	String name(json.as_dictionary()["material_name"].as_string());
 	Material = _world->GetMaterialInstance(_world->GetMaterialIdForName(name)).Material;
 }
 
