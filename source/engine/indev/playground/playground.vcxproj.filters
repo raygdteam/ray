@@ -14,6 +14,9 @@
     <ClCompile Include="dark\ui.cpp">
       <Filter>dark</Filter>
     </ClCompile>
+    <ClCompile Include="nikita\nikita.cpp">
+      <Filter>nikita</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="dark">

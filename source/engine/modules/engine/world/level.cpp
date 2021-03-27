@@ -150,32 +150,32 @@ void Level::LoadFrom(String& path)
 	file->Close();
 	delete file;
 
-	auto json = ray::json::parse(text.c_str());
+	auto json = DictionaryParse(text.c_str());
 
 	auto& actors = json["actors"];
-	for (u32 i = 0; i < actors.as_array().Size(); ++i)
+	for (u32 i = 0; i < actors.AsArray().Size(); ++i)
 	{
-		auto& actor = actors.as_array()[i];
+		auto& actor = actors.AsArray()[i];
 
 		// TODO: error checking
-		Type* actorType = RayState()->ObjectDb->GetTypeByName(actor.as_dictionary()["type"].as_string());
+		Type* actorType = RayState()->ObjectDb->GetTypeByName(actor.AsObject()["type"].AsString());
 		Actor* instance = (Actor*)actorType->CreateInstance();
-		instance->Name = String(actor.as_dictionary()["name"].as_string());
+		instance->Name = String(actor.AsObject()["name"].AsString());
 
 		for (IComponent* component1 : instance->_components)
 			delete component1;
 		instance->_components.Clear();
 
-		auto& components = actor.as_dictionary()["components"];
-		for (u32 j = 0; j < components.as_array().Size(); ++j)
+		auto& components = actor.AsObject()["components"];
+		for (u32 j = 0; j < components.AsArray().Size(); ++j)
 		{
-			auto& component = components.as_array()[j];
+			auto& component = components.AsArray()[j];
 
-			Type* componentType = RayState()->ObjectDb->GetTypeByName(component.as_dictionary()["type"].as_string());
+			Type* componentType = RayState()->ObjectDb->GetTypeByName(component.AsObject()["type"].AsString());
 			IComponent* componentInstance = (IComponent*)componentType->CreateInstance();
 
 			componentInstance->Setup(_owningWorld, this);
-			componentInstance->LoadFromJson(component.as_dictionary()["properties"]);
+			componentInstance->LoadFromJson(component.AsObject()["properties"]);
 			componentInstance->Init();
 			instance->_components.PushBack(componentInstance);
 		}
