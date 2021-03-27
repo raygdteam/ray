@@ -2,14 +2,25 @@
 #include <core/object/object.hpp>
 
 class Actor;
+class Level;
+class World;
 
 class IComponent : public RayObject
 {
-	friend class Actor;
-	
 	RAYOBJECT_BODY(IComponent, RayObject);
+	friend class Actor;
+	friend class Level;
+	
 protected:
 	Actor* _parent = nullptr;
+	World* _world = nullptr;
+	Level* _level = nullptr;
+
+	void Setup(World* world, Level* level)
+	{
+		_world = world;
+		_level = level;
+	}
 public:
 	virtual ~IComponent() = default;
 	

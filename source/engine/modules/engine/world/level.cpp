@@ -14,13 +14,13 @@
 
 Level::Level()
 {
-	
+
 }
 
 void Level::SpawnActor(Actor* actor)
 {
 	actor->Setup(_owningWorld, this);
-	
+
 	actor->Awake();
 	_actors.PushBack(actor);
 
@@ -35,7 +35,7 @@ void Level::SpawnActor(Actor* actor)
 		proxy->Transform = actor->GetTransform();
 		proxy->MaterialId = _owningWorld->GetMaterialIdForName(rendering->GetMaterialName());
 	}
-	
+
 	if (_jobCurrentSize >= ChunkSize)
 	{
 		_jobCurrentNum += 1;
@@ -43,7 +43,7 @@ void Level::SpawnActor(Actor* actor)
 		_jobs.PushBack(new ActorTickJob());
 	}
 	_jobs.At(_jobCurrentNum)->Actors.PushBack(actor);
-	
+
 	_atd.PushBack(ActorData { actor, actor->ATD, proxy });
 	actor->BeginPlay(); // ??
 }
@@ -99,13 +99,13 @@ bool Level::LoadLevel()
 			actor->GetComponents().PushBack(component);
 
 			auto props = componentJson["properties"];
-			
+
 			for (FieldInfo& field : componentType->Fields)
 			{
 				auto prop = props[field.Name.AsRawStr()];
 
 #define SET_PROP(x) *(x*)(component + field.Offset) = prop.get<x>();
-				
+
 				switch(field.Type)
 				{
 				case eU8:		SET_PROP(u8); break;
@@ -124,7 +124,7 @@ bool Level::LoadLevel()
 				case eVector2:	__debugbreak(); break;
 				case eVector3:	__debugbreak(); break;
 				case eVector4:	__debugbreak(); break;
-				default: 
+				default:
 					__debugbreak();
 				}
 			}
@@ -134,7 +134,7 @@ bool Level::LoadLevel()
 			SpawnActor(actor);
 		}
 	}
-	
+
 	path->Close();
 	delete path;*/
 
@@ -150,31 +150,33 @@ void Level::LoadFrom(String& path)
 	file->Close();
 	delete file;
 
-	auto json = DictionaryParse(text.c_str());
+	auto json = ray::json::parse(text.c_str());
 
 	auto& actors = json["actors"];
-	for (u32 i = 0; i < actors.AsArray().Size(); ++i)
+	for (u32 i = 0; i < actors.as_array().Size(); ++i)
 	{
-		auto& actor = actors.AsArray()[i];
+		auto& actor = actors.as_array()[i];
 
 		// TODO: error checking
-		Type* actorType = RayState()->ObjectDb->GetTypeByName(actor.AsObject()["type"].AsString());
+		Type* actorType = RayState()->ObjectDb->GetTypeByName(actor.as_dictionary()["type"].as_string());
 		Actor* instance = (Actor*)actorType->CreateInstance();
-		instance->Name = String(actor.AsObject()["name"].AsString());
+		instance->Name = String(actor.as_dictionary()["name"].as_string());
 
 		for (IComponent* component1 : instance->_components)
 			delete component1;
 		instance->_components.Clear();
 
-		auto& components = actor.AsObject()["components"];
-		for (u32 j = 0; j < components.AsArray().Size(); ++j)
+		auto& components = actor.as_dictionary()["components"];
+		for (u32 j = 0; j < components.as_array().Size(); ++j)
 		{
-			auto& component = components.AsArray()[j];
+			auto& component = components.as_array()[j];
 
-			Type* componentType = RayState()->ObjectDb->GetTypeByName(component.AsObject()["type"].AsString());
+			Type* componentType = RayState()->ObjectDb->GetTypeByName(component.as_dictionary()["type"].as_string());
 			IComponent* componentInstance = (IComponent*)componentType->CreateInstance();
 
-			componentInstance->LoadFromJson(component.AsObject()["properties"]);
+			componentInstance->Setup(_owningWorld, this);
+			componentInstance->LoadFromJson(component.as_dictionary()["properties"]);
+			componentInstance->Init();
 			instance->_components.PushBack(componentInstance);
 		}
 
@@ -239,11 +241,10 @@ void Level::Serialize(Archive&)
 
 void Level::Deserialize(Archive&)
 {
-	
+
 }
 
 RAYOBJECT_DESCRIPTION_BEGIN(Level)
 	RAYOBJECT_DESCRIPTION_CREATEABLE();
 	RAYOBJECT_DESCRIPTION_NAME("engine://world/Level")
 RAYOBJECT_DESCRIPTION_END(Level)
-

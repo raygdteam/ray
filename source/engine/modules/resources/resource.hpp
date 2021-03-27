@@ -63,7 +63,7 @@ public:
 	void Unload() override;
 };
 
-class RMaterial : public IRResource
+class RAY_RESOURCES_API RMaterial : public IRResource
 {
 	RAYOBJECT_BODY(RMaterial, IRResource);
 	friend class ResourceManager;
@@ -81,7 +81,7 @@ public:
 	// Add properties here
 };
 
-class RMaterialInstance : public IRResource
+class RAY_RESOURCES_API RMaterialInstance : public IRResource
 {
 	RAYOBJECT_BODY(RMaterialInstance, IRResource);
 	friend class ResourceManager;

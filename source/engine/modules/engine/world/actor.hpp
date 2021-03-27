@@ -78,13 +78,16 @@ protected:
 
 		return nullptr;
 	}
-
+	
 	void AddComponent(IComponent* component)
 	{
-		_components.PushBack(component);
+		component->Setup(_owningWorld, _owningLevel);
 		component->_parent = this;
+		_components.PushBack(component);
+
+		component->Init();
 	}
-	
+
 public:
 	Actor();
 	virtual ~Actor();
@@ -104,5 +107,10 @@ public:
 	Array<IComponent*>& GetComponents()
 	{
 		return _components;
+	}
+
+	void EdAddComponent(IComponent* component)
+	{
+		AddComponent(component);
 	}
 };
