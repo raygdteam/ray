@@ -121,8 +121,8 @@ bool RMaterial::LoadFrom(IFile* file)
 	text.resize(file->Size());
 	file->Read((u8*)text.data(), file->Size());
 
-	ray::json::dictionary json = ray::json::parse(text.c_str());
-	check(json["ResourceType"].as_string() == String("Material"));
+	DictionaryObject json = DictionaryParse(text.c_str());
+	check(json["ResourceType"].AsString() == String("Material"));
 
 	return true;
 }
@@ -157,10 +157,10 @@ bool RMaterialInstance::LoadFrom(IFile* file)
 	text.resize(file->Size());
 	file->Read((u8*)text.data(), file->Size());
 
-	ray::json::dictionary json = ray::json::parse(text.c_str());
-	check(json["ResourceType"].as_string() == String("MaterialInstance"));
+	DictionaryObject json = DictionaryParse(text.c_str());
+	check(json["ResourceType"].AsString() == String("MaterialInstance"));
 
-	Texture = String(json["Properties"].as_dictionary()["TextureName"].as_string());
+	Texture = String(json["Properties"].AsObject()["TextureName"].AsString());
 
 	return true;
 }
@@ -196,7 +196,7 @@ bool RConfiguration::LoadFrom(IFile* path)
 	text.resize(path->Size());
 	path->Read((u8*)text.data(), path->Size());
 
-	Root = ray::json::parse(text.c_str());
+	Root = DictionaryParse(text.c_str());
 	return true;
 }
 
@@ -207,7 +207,7 @@ ResourceType RConfiguration::GetResourceType() const noexcept
 
 void RConfiguration::Unload()
 {
-	Root = ray::json::dictionary();
+	Root = DictionaryObject();
 }
 
 RAYOBJECT_DESCRIPTION_BEGIN(RConfiguration)

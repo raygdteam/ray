@@ -41,7 +41,7 @@ void UploadBuffer::Destroy() noexcept
 {
 	if (_begin != nullptr)
 	{
-		IRenderer::sRendererStats.AllocatedVirtualMemory -= (_end - _begin);
+		IRenderer::sRendererStats.AllocatedVirtualMemory -= _end - _begin;
 
 		_pool->Unmap(0, nullptr);
 		_pool->Release();

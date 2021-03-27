@@ -25,5 +25,5 @@ public:
 	void Serialize(Archive&) override;
 	void Deserialize(Archive&) override;
 
-	void LoadFromJson(ray::json::value& json) override;
+	void LoadFromJson(DictionaryValue& json) override;
 };

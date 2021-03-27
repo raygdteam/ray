@@ -5,128 +5,123 @@
 
 #include <eastl/map.h>
 
-namespace ray::json
+enum DictionaryValueType
 {
-	enum class value_type
-	{
-		none,
-		string,
-		integer,
-		array,
-		dictionary
+	eDictionaryValueNone,
+	eDictionaryValueString,
+	eDictionaryValueObject,
+	eDictionaryValueArray,
+	eDictionaryValueBoolean,
+	eDictionaryValueInteger
+};
+
+class RAY_CORE_API DictionaryObject;
+
+class RAY_CORE_API DictionaryValue
+{
+	union {
+		char* _string_value;
+		int _integer_value;
+		bool _boolean_value;
+		Array<DictionaryValue>* _array_value;
+		DictionaryObject* _object_value;
 	};
 
-	class dictionary;
-
-	class value
+	DictionaryValueType _type;
+public:
+	void operator=(char* value)
 	{
-		union {
-			char* _string_value;
-			int _integer_value;
-			bool _boolean_value;
-			Array<value>* _array_value;//rewrite
-			dictionary* _dictionary_value;
-		};
-
-		value_type _type;
-	public:
-		void operator=(char* value)
-		{
-			this->_type = value_type::string;
-			this->_string_value = value;
-		}
-
-		void operator=(int value)
-		{
-			this->_type = value_type::integer;
-			this->_integer_value = value;
-		}
-
-		void operator=(bool value)
-		{
-			this->_type = value_type::integer;
-			this->_boolean_value = value;
-		}
-
-		void operator=(Array<value>* value)
-		{
-			this->_type = value_type::array;
-			this->_array_value = value;
-		}
-
-		void operator=(dictionary* value)
-		{
-			this->_type = value_type::dictionary;
-			this->_dictionary_value = value;
-		}
-
-		char* as_string()
-		{
-			//assert
-			return this->_string_value;
-		}
-
-		bool as_boolean()
-		{
-			//assert
-			return this->_boolean_value;
-		}
-
-		int as_integer()
-		{
-			//assert
-			return this->_integer_value;
-		}
-
-		Array<value>& as_array()
-		{
-			//assert
-			return *this->_array_value;
-		}
-
-		dictionary& as_dictionary()
-		{
-			//assert
-			return *this->_dictionary_value;
-		}
-	};
-
-	class dictionary
-	{
-		eastl::map<String, value> _unnamed;
-	public:
-		dictionary() {}
-		~dictionary() {}
-
-		dictionary(dictionary* dictionary)
-		{
-			this->_unnamed = dictionary->_unnamed;
-		}
-
-		value& operator[](const char* key)
-		{
-			return this->_unnamed[String(key)];
-		}
-	};
-
-	namespace parser
-	{
-		enum class type
-		{
-			none,
-			ocbraces,
-			ccbraces,
-			osbraces,
-			csbraces,
-			key,
-			value,
-			colon,
-			comma
-		};
-
-		ray::json::value array(int&, long, char**, ray::json::parser::type*);
-		ray::json::dictionary* dictionary(int&, long, char**, ray::json::parser::type*);
+		this->_type = eDictionaryValueString;
+		this->_string_value = value;
 	}
 
-	ray::json::dictionary __declspec(dllexport) parse(const char*);
-}
+	void operator=(int value)
+	{
+		this->_type = eDictionaryValueInteger;
+		this->_integer_value = value;
+	}
+
+	void operator=(bool value)
+	{
+		this->_type = eDictionaryValueBoolean;
+		this->_boolean_value = value;
+	}
+
+	void operator=(Array<DictionaryValue>* value)
+	{
+		this->_type = eDictionaryValueArray;
+		this->_array_value = value;
+	}
+
+	void operator=(DictionaryObject* value)
+	{
+		this->_type = eDictionaryValueObject;
+		this->_object_value = value;
+	}
+
+	char* AsString()
+	{
+		//assert
+		return this->_string_value;
+	}
+
+	bool AsBoolean()
+	{
+		//assert
+		return this->_boolean_value;
+	}
+
+	int AsInteger()
+	{
+		//assert
+		return this->_integer_value;
+	}
+
+	Array<DictionaryValue>& AsArray()
+	{
+		//assert
+		return *this->_array_value;
+	}
+
+	DictionaryObject& AsObject()
+	{
+		//assert
+		return *this->_object_value;
+	}
+};
+
+class RAY_CORE_API DictionaryObject
+{
+	eastl::map<String, DictionaryValue> _map;
+public:
+	DictionaryObject() {}
+	~DictionaryObject() {}
+
+	DictionaryObject(DictionaryObject* dictionary)
+	{
+		this->_map = dictionary->_map;
+	}
+
+	DictionaryValue& operator[](const char* key)
+	{
+		return this->_map[String(key)];
+	}
+};
+
+enum class DictionaryParserValueType
+{
+	eDictionaryParserValueTypeNone,
+	eDictionaryParserValueTypeOCBraces,
+	eDictionaryParserValueTypeCCBraces,
+	eDictionaryParserValueTypeOSBraces,
+	eDictionaryParserValueTypeCSBraces,
+	eDictionaryParserValueTypeKey,
+	eDictionaryParserValueTypeValue,
+	eDictionaryParserValueTypeColon,
+	eDictionaryParserValueTypeComma
+};
+
+DictionaryValue DictionaryParseArray(int&, long, char**, DictionaryParserValueType*);
+DictionaryObject* DictionaryParseObject(int&, long, char**, DictionaryParserValueType*);
+
+DictionaryObject RAY_CORE_API DictionaryParse(const char*);

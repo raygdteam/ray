@@ -1,52 +1,52 @@
 #include "json.hpp"
 
-ray::json::dictionary* ray::json::parser::dictionary(int& fiterator, long size, char** tokens, ray::json::parser::type* types)
+DictionaryObject* DictionaryParseObject(int& fiterator, long size, char** tokens, DictionaryParserValueType* types)
 {
-	auto dictionary = new ray::json::dictionary;
+	auto dictionary = new DictionaryObject;
 
 	for (fiterator++; fiterator < size; fiterator++)
 	{
 	label:
 		switch (types[fiterator])
 		{
-		case ray::json::parser::type::key: {
-			auto key = tokens[fiterator++];
+		case DictionaryParserValueType::eDictionaryParserValueTypeKey: {
+			auto eDictionaryParserValueTypeKey = tokens[fiterator++];
 			switch (types[++fiterator])
 			{
-			case ray::json::parser::type::value:
+			case DictionaryParserValueType::eDictionaryParserValueTypeValue:
 				//rewrite this
 				if (String(tokens[fiterator]) == String("true"))
-					dictionary->operator[](key) = true;
+					dictionary->operator[](eDictionaryParserValueTypeKey) = true;
 				else if (String(tokens[fiterator]) == String("true"))
-					dictionary->operator[](key) = true;
+					dictionary->operator[](eDictionaryParserValueTypeKey) = true;
 				else
 					if (tokens[fiterator][0] == '-')
 					{
 						for (auto siterator = 1; tokens[fiterator][siterator]; siterator++)
 							if (isdigit(tokens[fiterator][siterator]) == 0)
 							{
-								dictionary->operator[](key) = tokens[fiterator++];
+								dictionary->operator[](eDictionaryParserValueTypeKey) = tokens[fiterator++];
 								goto label;
 							}
-						dictionary->operator[](key) = atoi(tokens[fiterator]);
+						dictionary->operator[](eDictionaryParserValueTypeKey) = atoi(tokens[fiterator]);
 					}
 					else
 					{
 						for (auto siterator = 0; tokens[fiterator][siterator]; siterator++)
 							if (isdigit(tokens[fiterator][siterator]) == 0)
 							{
-								dictionary->operator[](key) = tokens[fiterator++];
+								dictionary->operator[](eDictionaryParserValueTypeKey) = tokens[fiterator++];
 								goto label;
 							}
-						dictionary->operator[](key) = atoi(tokens[fiterator]);
+						dictionary->operator[](eDictionaryParserValueTypeKey) = atoi(tokens[fiterator]);
 					}
 				//rewrite this
 				break;
-			case ray::json::parser::type::osbraces:
-				dictionary->operator[](key) = ray::json::parser::array(fiterator, size, tokens, types);
+			case DictionaryParserValueType::eDictionaryParserValueTypeOSBraces:
+				dictionary->operator[](eDictionaryParserValueTypeKey) = DictionaryParseArray(fiterator, size, tokens, types);
 				break;
-			case ray::json::parser::type::ocbraces:
-				dictionary->operator[](key) = ray::json::parser::dictionary(fiterator, size, tokens, types);
+			case DictionaryParserValueType::eDictionaryParserValueTypeOCBraces:
+				dictionary->operator[](eDictionaryParserValueTypeKey) = DictionaryParseObject(fiterator, size, tokens, types);
 				break;
 			default:
 				//error
@@ -54,7 +54,7 @@ ray::json::dictionary* ray::json::parser::dictionary(int& fiterator, long size, 
 			}
 			break;
 		}
-		case ray::json::parser::type::ccbraces:
+		case DictionaryParserValueType::eDictionaryParserValueTypeCCBraces:
 			return dictionary;
 			break;
 		default:
@@ -66,21 +66,21 @@ ray::json::dictionary* ray::json::parser::dictionary(int& fiterator, long size, 
 	return dictionary;
 }
 
-ray::json::value ray::json::parser::array(int& iterator, long size, char** tokens, ray::json::parser::type* types)
+DictionaryValue DictionaryParseArray(int& iterator, long size, char** tokens, DictionaryParserValueType* types)
 {
-	ray::json::value fvalue;
-	fvalue = new Array<ray::json::value>;
+	DictionaryValue fvalue;
+	fvalue = new Array<DictionaryValue>;
 
 	for (iterator++; iterator < size; iterator++)
 	{
 		switch (types[iterator])
 		{
-		case ray::json::parser::type::ocbraces:
-			ray::json::value svalue;
-			svalue = ray::json::parser::dictionary(iterator, size, tokens, types);
-			fvalue.as_array().push_back(svalue);
+		case DictionaryParserValueType::eDictionaryParserValueTypeOCBraces:
+			DictionaryValue svalue;
+			svalue = DictionaryParseObject(iterator, size, tokens, types);
+			fvalue.AsArray().push_back(svalue);
 			break;
-		case ray::json::parser::type::csbraces:
+		case DictionaryParserValueType::eDictionaryParserValueTypeCSBraces:
 			return fvalue;
 			break;
 		default:
@@ -92,7 +92,7 @@ ray::json::value ray::json::parser::array(int& iterator, long size, char** token
 	return fvalue;
 }
 
-ray::json::dictionary ray::json::parse(const char* result)
+DictionaryObject DictionaryParse(const char* result)
 {
 	auto size = 0;
 
@@ -139,7 +139,7 @@ ray::json::dictionary ray::json::parse(const char* result)
 	}
 
 	auto tokens_range = new int[size][2];
-	auto tokens_type = new ray::json::parser::type[size];
+	auto tokens_type = new DictionaryParserValueType[size];
 
 	for (auto fiterator = 0, siterator = 0, titerator = 0; result[fiterator]; fiterator++)
 	{
@@ -153,7 +153,7 @@ ray::json::dictionary ray::json::parse(const char* result)
 				switch (result[fiterator])
 				{
 				case 34:
-					tokens_type[titerator++] = tokens_type[titerator - 2] == ray::json::parser::type::key ? ray::json::parser::type::value : ray::json::parser::type::key;
+					tokens_type[titerator++] = tokens_type[titerator - 2] == DictionaryParserValueType::eDictionaryParserValueTypeKey ? DictionaryParserValueType::eDictionaryParserValueTypeValue : DictionaryParserValueType::eDictionaryParserValueTypeKey;
 					tokens_range[siterator++][1] = fiterator - 1;
 					fiterator++; goto slabel;
 				default:
@@ -164,32 +164,32 @@ ray::json::dictionary ray::json::parse(const char* result)
 		case 44:
 			tokens_range[siterator][0] = fiterator;
 			tokens_range[siterator++][1] = fiterator;
-			tokens_type[titerator++] = ray::json::parser::type::comma;
+			tokens_type[titerator++] = DictionaryParserValueType::eDictionaryParserValueTypeComma;
 			break;
 		case 58:
 			tokens_range[siterator][0] = fiterator;
 			tokens_range[siterator++][1] = fiterator;
-			tokens_type[titerator++] = ray::json::parser::type::colon;
+			tokens_type[titerator++] = DictionaryParserValueType::eDictionaryParserValueTypeColon;
 			break;
 		case 91:
 			tokens_range[siterator][0] = fiterator;
 			tokens_range[siterator++][1] = fiterator;
-			tokens_type[titerator++] = ray::json::parser::type::osbraces;
+			tokens_type[titerator++] = DictionaryParserValueType::eDictionaryParserValueTypeOSBraces;
 			break;
 		case 93:
 			tokens_range[siterator][0] = fiterator;
 			tokens_range[siterator++][1] = fiterator;
-			tokens_type[titerator++] = ray::json::parser::type::csbraces;
+			tokens_type[titerator++] = DictionaryParserValueType::eDictionaryParserValueTypeCSBraces;
 			break;
 		case 123:
 			tokens_range[siterator][0] = fiterator;
 			tokens_range[siterator++][1] = fiterator;
-			tokens_type[titerator++] = ray::json::parser::type::ocbraces;
+			tokens_type[titerator++] = DictionaryParserValueType::eDictionaryParserValueTypeOCBraces;
 			break;
 		case 125:
 			tokens_range[siterator][0] = fiterator;
 			tokens_range[siterator++][1] = fiterator;
-			tokens_type[titerator++] = ray::json::parser::type::ccbraces;
+			tokens_type[titerator++] = DictionaryParserValueType::eDictionaryParserValueTypeCCBraces;
 			break;
 		case 9: case 10: case 13: case 32:
 			break;
@@ -200,8 +200,8 @@ ray::json::dictionary ray::json::parse(const char* result)
 				switch (result[fiterator])
 				{
 				case 9: case 10: case 13: case 32: case 44:
-					if (tokens_type[titerator - 2] == ray::json::parser::type::key)
-						tokens_type[titerator++] = ray::json::parser::type::value;
+					if (tokens_type[titerator - 2] == DictionaryParserValueType::eDictionaryParserValueTypeKey)
+						tokens_type[titerator++] = DictionaryParserValueType::eDictionaryParserValueTypeValue;
 					else
 						;//error
 					tokens_range[siterator++][1] = fiterator - 1;
@@ -225,5 +225,5 @@ ray::json::dictionary ray::json::parse(const char* result)
 	}
 
 	int iterator = 0;
-	return ray::json::parser::dictionary(iterator, size, tokens_buffer, tokens_type);
+	return DictionaryParseObject(iterator, size, tokens_buffer, tokens_type);
 }

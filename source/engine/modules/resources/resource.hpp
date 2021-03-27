@@ -114,5 +114,5 @@ public:
 	ResourceType GetResourceType() const noexcept override;
 	void Unload() override;
 
-	ray::json::dictionary Root;
+	DictionaryObject Root;
 };
